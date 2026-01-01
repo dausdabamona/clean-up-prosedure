@@ -6,6 +6,7 @@
 // CONFIGURATION - GANTI URL INI DENGAN URL WEB APP KAMU!
 // ==========================================================================
 const API_URL = 'https://script.google.com/macros/s/AKfycbwC-zuAzqjFki7Gy1zyt0sq6ohWGzADKvCeN4rCr49Pl_0IznTdxzIOyfHkLOxsjteg1A/exec';
+const DEFAULT_NAME = 'Firdaus Dabamona';
 
 // ==========================================================================
 // GLOBAL STATE
@@ -80,8 +81,8 @@ function generateSesiId() {
 }
 
 function loadSavedName() {
-  const savedName = localStorage.getItem('cleanupUserName');
-  if (savedName) document.getElementById('nama').value = savedName;
+  const savedName = localStorage.getItem('cleanupUserName') || DEFAULT_NAME;
+  document.getElementById('nama').value = savedName;
 }
 
 function saveName() {
