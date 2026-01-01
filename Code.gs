@@ -17,40 +17,53 @@ function getSpreadsheet() {
   return SpreadsheetApp.getActiveSpreadsheet();
 }
 
-function getOrCreateSheet(name, headers) {
-  const ss = getSpreadsheet();
-  let sheet = ss.getSheetByName(name);
-
-  if (!sheet) {
-    sheet = ss.insertSheet(name);
-    if (headers && headers.length > 0) {
-      sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-      sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
-      sheet.setFrozenRows(1);
-    }
-  }
-
-  return sheet;
-}
-
 // ==========================================================================
 // SHEET HEADERS
 // ==========================================================================
 const TRACKER_HEADERS = [
-  'No', 'Timestamp', 'SesiId', 'Nama', 'Issue', 'Kategori',
-  'SurfaceKeyakinan', 'SurfaceLokasi', 'SurfaceIntensity',
-  'L1Pertanyaan', 'L1Jawaban', 'L1Emosi', 'L1IntensityAwal', 'L1Bisakah', 'L1Mau', 'L1Kapan', 'L1ReleaseData', 'L1IntensityAfter',
-  'L2Pertanyaan', 'L2Jawaban', 'L2Emosi', 'L2IntensityAwal', 'L2Bisakah', 'L2Mau', 'L2Kapan', 'L2ReleaseData', 'L2IntensityAfter',
-  'L3Pertanyaan', 'L3Jawaban', 'L3Emosi', 'L3IntensityAwal', 'L3Bisakah', 'L3Mau', 'L3Kapan', 'L3ReleaseData', 'L3IntensityAfter',
-  'RootPertanyaan', 'RootWanting', 'RootIntensityAwal', 'RootDeskripsi', 'RootBisakah', 'RootMau', 'RootKapan', 'RootReleaseData', 'RootIntensityAfter',
-  'HasilStatus', 'EmotionalState', 'HasilInsight', 'HasilNextStep',
-  'LayerStuck', 'CurrentIntensity', 'Status'
+  'No', 'Timestamp', 'Sesi_ID', 'Nama', 'Issue', 'Kategori',
+  'Surface_Keyakinan', 'Surface_Lokasi', 'Surface_Intensity',
+  'L1_Sessions', 'L1_Total_Sesi', 'L1_IntAkhir',
+  'L2_Sessions', 'L2_Total_Sesi', 'L2_IntAkhir',
+  'L3_Sessions', 'L3_Total_Sesi', 'L3_IntAkhir',
+  'Root_Sessions', 'Root_Total_Sesi', 'Root_IntAkhir', 'Root_Wanting',
+  'Status', 'Emotional_State', 'Emotion_Level',
+  'Insight', 'Next_Step', 'Durasi_Hari'
 ];
 
 const DRAFT_HEADERS = [
-  'SesiId', 'TerakhirEdit', 'Nama', 'Issue', 'Kategori',
-  'LayerStuck', 'CurrentIntensity', 'RootWanting', 'Status', 'FullData'
+  'Sesi_ID', 'Tanggal_Mulai', 'Terakhir_Edit', 'Nama', 'Issue', 'Kategori',
+  'Root_Wanting', 'Int_Awal', 'Current_Int', 'Layer_Stuck', 'Status', 'Full_Data'
 ];
+
+// ==========================================================================
+// SETUP FUNCTION - Run once to initialize sheets
+// ==========================================================================
+function setup() {
+  const ss = getSpreadsheet();
+
+  // Create Tracker sheet
+  let trackerSheet = ss.getSheetByName('Tracker');
+  if (!trackerSheet) {
+    trackerSheet = ss.insertSheet('Tracker');
+  }
+  trackerSheet.clear();
+  trackerSheet.getRange(1, 1, 1, TRACKER_HEADERS.length).setValues([TRACKER_HEADERS]);
+  trackerSheet.getRange(1, 1, 1, TRACKER_HEADERS.length).setFontWeight('bold').setBackground('#1a5276').setFontColor('#ffffff');
+  trackerSheet.setFrozenRows(1);
+
+  // Create Draft sheet
+  let draftSheet = ss.getSheetByName('Draft');
+  if (!draftSheet) {
+    draftSheet = ss.insertSheet('Draft');
+  }
+  draftSheet.clear();
+  draftSheet.getRange(1, 1, 1, DRAFT_HEADERS.length).setValues([DRAFT_HEADERS]);
+  draftSheet.getRange(1, 1, 1, DRAFT_HEADERS.length).setFontWeight('bold').setBackground('#f39c12').setFontColor('#ffffff');
+  draftSheet.setFrozenRows(1);
+
+  return { success: true, message: 'Sheets initialized successfully!' };
+}
 
 // ==========================================================================
 // WEB APP HANDLER
@@ -64,6 +77,9 @@ function doGet(e) {
 
   try {
     switch (action) {
+      case 'setup':
+        result = setup();
+        break;
       case 'saveDraft':
         result = saveDraft(data);
         break;
@@ -83,13 +99,13 @@ function doGet(e) {
         result = getStats();
         break;
       case 'ping':
-        result = { success: true, message: 'API is working!' };
+        result = { success: true, message: 'API is working!', timestamp: new Date().toISOString() };
         break;
       default:
         result = { success: false, message: 'Invalid action: ' + action };
     }
   } catch (error) {
-    result = { success: false, message: error.toString() };
+    result = { success: false, message: error.toString(), stack: error.stack };
   }
 
   return ContentService
@@ -97,46 +113,116 @@ function doGet(e) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
+function doPost(e) {
+  return doGet(e);
+}
+
+// ==========================================================================
+// HELPER: Get or Create Sheet
+// ==========================================================================
+function getOrCreateSheet(name, headers) {
+  const ss = getSpreadsheet();
+  let sheet = ss.getSheetByName(name);
+
+  if (!sheet) {
+    sheet = ss.insertSheet(name);
+    if (headers && headers.length > 0) {
+      sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+      sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
+      sheet.setFrozenRows(1);
+    }
+  }
+
+  return sheet;
+}
+
+// ==========================================================================
+// HELPER: Find Row by Sesi ID
+// ==========================================================================
+function findRowBySesiId(sheet, sesiId) {
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === sesiId) {
+      return i + 1;
+    }
+  }
+  return -1;
+}
+
+// ==========================================================================
+// HELPER: Parse Sessions Array
+// ==========================================================================
+function parseSessionsArray(data) {
+  if (!data || !Array.isArray(data)) return [];
+  return data.filter(v => v !== '' && v !== null && v !== undefined)
+             .map((val, idx) => ({ sesi: idx + 1, intAfter: parseInt(val) || 0 }));
+}
+
+// ==========================================================================
+// HELPER: Get Session Stats
+// ==========================================================================
+function getSessionStats(sessions) {
+  if (!sessions || sessions.length === 0) {
+    return { totalSesi: 0, intAkhir: null };
+  }
+  const lastSession = sessions[sessions.length - 1];
+  return {
+    totalSesi: sessions.length,
+    intAkhir: lastSession.intAfter
+  };
+}
+
 // ==========================================================================
 // DRAFT FUNCTIONS
 // ==========================================================================
 function saveDraft(data) {
   if (!data || !data.sesiId) {
-    return { success: false, message: 'Invalid data' };
+    return { success: false, message: 'Invalid data - sesiId required' };
   }
 
-  const sheet = getOrCreateSheet('Drafts', DRAFT_HEADERS);
+  const sheet = getOrCreateSheet('Draft', DRAFT_HEADERS);
   const sesiId = data.sesiId;
-
-  // Check if draft exists
   const existingRow = findRowBySesiId(sheet, sesiId);
+
+  // Parse sessions
+  const l1Sessions = parseSessionsArray(data.l1ReleaseData);
+  const l2Sessions = parseSessionsArray(data.l2ReleaseData);
+  const l3Sessions = parseSessionsArray(data.l3ReleaseData);
+  const rootSessions = parseSessionsArray(data.rootReleaseData);
+
+  // Determine current state
+  const intAwal = parseInt(data.surfaceIntensity) || 0;
+  const currentInt = data.rootIntensityAfter || data.l3IntensityAfter ||
+                     data.l2IntensityAfter || data.l1IntensityAfter ||
+                     data.surfaceIntensity || 0;
+  const layerStuck = determineLayerStuck(data);
 
   const draftRow = [
     sesiId,
+    data.tanggalMulai || new Date().toISOString(),
     new Date().toISOString(),
     data.nama || '',
     data.issue || '',
     data.kategori || '',
-    data.layerStuck || '',
-    data.currentIntensity || '',
     data.rootWanting || '',
+    intAwal,
+    currentInt,
+    layerStuck,
     data.status || 'IN PROGRESS',
-    JSON.stringify(data) // Store full data as JSON
+    JSON.stringify(data)
   ];
 
   if (existingRow > 0) {
-    // Update existing draft
     sheet.getRange(existingRow, 1, 1, draftRow.length).setValues([draftRow]);
   } else {
-    // Add new draft
     sheet.appendRow(draftRow);
   }
 
-  return { success: true, message: 'Draft saved', sesiId: sesiId };
+  return { success: true, message: 'Draft saved!', sesiId: sesiId };
 }
 
 function getDrafts() {
-  const sheet = getOrCreateSheet('Drafts', DRAFT_HEADERS);
+  const sheet = getOrCreateSheet('Draft', DRAFT_HEADERS);
   const data = sheet.getDataRange().getValues();
 
   if (data.length <= 1) {
@@ -149,26 +235,27 @@ function getDrafts() {
     let fullData = {};
 
     try {
-      fullData = JSON.parse(row[9] || '{}');
+      fullData = JSON.parse(row[11] || '{}');
     } catch (e) {
       fullData = {};
     }
 
     drafts.push({
       sesiId: row[0],
-      terakhirEdit: row[1],
-      nama: row[2],
-      issue: row[3],
-      kategori: row[4],
-      layerStuck: row[5],
-      currentIntensity: row[6],
-      rootWanting: row[7],
-      status: row[8],
+      tanggalMulai: row[1],
+      terakhirEdit: row[2],
+      nama: row[3],
+      issue: row[4],
+      kategori: row[5],
+      rootWanting: row[6],
+      intAwal: row[7],
+      currentInt: row[8],
+      layerStuck: row[9],
+      status: row[10],
       fullData: fullData
     });
   }
 
-  // Sort by terakhirEdit descending
   drafts.sort((a, b) => new Date(b.terakhirEdit) - new Date(a.terakhirEdit));
 
   return { success: true, drafts: drafts };
@@ -179,12 +266,12 @@ function deleteDraft(sesiId) {
     return { success: false, message: 'SesiId required' };
   }
 
-  const sheet = getOrCreateSheet('Drafts', DRAFT_HEADERS);
+  const sheet = getOrCreateSheet('Draft', DRAFT_HEADERS);
   const row = findRowBySesiId(sheet, sesiId);
 
   if (row > 0) {
     sheet.deleteRow(row);
-    return { success: true, message: 'Draft deleted' };
+    return { success: true, message: 'Draft deleted!' };
   }
 
   return { success: false, message: 'Draft not found' };
@@ -195,22 +282,28 @@ function deleteDraft(sesiId) {
 // ==========================================================================
 function saveComplete(data) {
   if (!data || !data.sesiId) {
-    return { success: false, message: 'Invalid data' };
+    return { success: false, message: 'Invalid data - sesiId required' };
   }
 
   const sheet = getOrCreateSheet('Tracker', TRACKER_HEADERS);
-  const lastRow = sheet.getLastRow();
-  const no = lastRow > 0 ? lastRow : 1;
+  const lastRow = Math.max(sheet.getLastRow(), 1);
+  const no = lastRow;
 
-  // Serialize release data arrays to JSON strings
-  const l1ReleaseData = Array.isArray(data.l1ReleaseData) ? JSON.stringify(data.l1ReleaseData) : '';
-  const l2ReleaseData = Array.isArray(data.l2ReleaseData) ? JSON.stringify(data.l2ReleaseData) : '';
-  const l3ReleaseData = Array.isArray(data.l3ReleaseData) ? JSON.stringify(data.l3ReleaseData) : '';
-  const rootReleaseData = Array.isArray(data.rootReleaseData) ? JSON.stringify(data.rootReleaseData) : '';
+  // Parse sessions
+  const l1Sessions = parseSessionsArray(data.l1ReleaseData);
+  const l2Sessions = parseSessionsArray(data.l2ReleaseData);
+  const l3Sessions = parseSessionsArray(data.l3ReleaseData);
+  const rootSessions = parseSessionsArray(data.rootReleaseData);
 
-  // Calculate layer stuck and current intensity
-  const layerStuck = determineLayerStuck(data);
-  const currentIntensity = data.rootIntensityAfter || data.l3IntensityAfter || data.l2IntensityAfter || data.l1IntensityAfter || data.surfaceIntensity || 0;
+  const l1Stats = getSessionStats(l1Sessions);
+  const l2Stats = getSessionStats(l2Sessions);
+  const l3Stats = getSessionStats(l3Sessions);
+  const rootStats = getSessionStats(rootSessions);
+
+  // Calculate duration
+  const startDate = data.tanggalMulai ? new Date(data.tanggalMulai) : new Date();
+  const endDate = new Date();
+  const durasiHari = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) || 1;
 
   const trackerRow = [
     no,
@@ -222,57 +315,33 @@ function saveComplete(data) {
     data.surfaceKeyakinan || '',
     data.surfaceLokasi || '',
     data.surfaceIntensity || '',
-    data.l1Pertanyaan || '',
-    data.l1Jawaban || '',
-    data.l1Emosi || '',
-    data.l1IntensityAwal || '',
-    data.l1Bisakah || '',
-    data.l1Mau || '',
-    data.l1Kapan || '',
-    l1ReleaseData,
-    data.l1IntensityAfter || '',
-    data.l2Pertanyaan || '',
-    data.l2Jawaban || '',
-    data.l2Emosi || '',
-    data.l2IntensityAwal || '',
-    data.l2Bisakah || '',
-    data.l2Mau || '',
-    data.l2Kapan || '',
-    l2ReleaseData,
-    data.l2IntensityAfter || '',
-    data.l3Pertanyaan || '',
-    data.l3Jawaban || '',
-    data.l3Emosi || '',
-    data.l3IntensityAwal || '',
-    data.l3Bisakah || '',
-    data.l3Mau || '',
-    data.l3Kapan || '',
-    l3ReleaseData,
-    data.l3IntensityAfter || '',
-    data.rootPertanyaan || '',
+    JSON.stringify(l1Sessions),
+    l1Stats.totalSesi,
+    l1Stats.intAkhir,
+    JSON.stringify(l2Sessions),
+    l2Stats.totalSesi,
+    l2Stats.intAkhir,
+    JSON.stringify(l3Sessions),
+    l3Stats.totalSesi,
+    l3Stats.intAkhir,
+    JSON.stringify(rootSessions),
+    rootStats.totalSesi,
+    rootStats.intAkhir,
     data.rootWanting || '',
-    data.rootIntensityAwal || '',
-    data.rootDeskripsi || '',
-    data.rootBisakah || '',
-    data.rootMau || '',
-    data.rootKapan || '',
-    rootReleaseData,
-    data.rootIntensityAfter || '',
     data.hasilStatus || '',
     data.emotionalState || '',
+    getEmotionLevel(data.emotionalState),
     data.hasilInsight || '',
     data.hasilNextStep || '',
-    layerStuck,
-    currentIntensity,
-    data.hasilStatus || 'COMPLETED'
+    durasiHari
   ];
 
   sheet.appendRow(trackerRow);
 
-  // Delete from drafts if exists
+  // Delete from drafts
   deleteDraft(data.sesiId);
 
-  return { success: true, message: 'Session saved', no: no };
+  return { success: true, message: 'Session completed!', no: no };
 }
 
 function getTracker() {
@@ -293,13 +362,25 @@ function getTracker() {
       nama: row[3],
       issue: row[4],
       kategori: row[5],
-      rootWanting: row[37], // RootWanting column
-      emotionLevel: row[46], // EmotionalState column
-      status: row[51] // Status column
+      surfaceIntensity: row[8],
+      l1TotalSesi: row[10],
+      l1IntAkhir: row[11],
+      l2TotalSesi: row[13],
+      l2IntAkhir: row[14],
+      l3TotalSesi: row[16],
+      l3IntAkhir: row[17],
+      rootTotalSesi: row[19],
+      rootIntAkhir: row[20],
+      rootWanting: row[21],
+      status: row[22],
+      emotionalState: row[23],
+      emotionLevel: row[24],
+      insight: row[25],
+      nextStep: row[26],
+      durasiHari: row[27]
     });
   }
 
-  // Sort by timestamp descending
   sessions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
   return { success: true, sessions: sessions };
@@ -310,7 +391,7 @@ function getTracker() {
 // ==========================================================================
 function getStats() {
   const trackerSheet = getOrCreateSheet('Tracker', TRACKER_HEADERS);
-  const draftSheet = getOrCreateSheet('Drafts', DRAFT_HEADERS);
+  const draftSheet = getOrCreateSheet('Draft', DRAFT_HEADERS);
 
   const trackerData = trackerSheet.getDataRange().getValues();
   const draftData = draftSheet.getDataRange().getValues();
@@ -318,23 +399,28 @@ function getStats() {
   const totalSesi = trackerData.length > 1 ? trackerData.length - 1 : 0;
   const pendingDrafts = draftData.length > 1 ? draftData.length - 1 : 0;
 
-  // Count successes and emotion distribution
   let totalSukses = 0;
   const emotionCount = {};
   const wantingCount = {};
+  let totalL1Sesi = 0, countL1 = 0;
+  let totalL2Sesi = 0, countL2 = 0;
+  let totalL3Sesi = 0, countL3 = 0;
+  let totalRootSesi = 0, countRoot = 0;
 
   for (let i = 1; i < trackerData.length; i++) {
     const row = trackerData[i];
-    const status = row[45]; // HasilStatus
-    const emotion = row[46]; // EmotionalState
-    const wanting = row[37]; // RootWanting
+    const status = row[22];
+    const emotionalState = row[23];
+    const emotionLevel = row[24];
+    const wanting = row[21];
+    const l1Total = parseInt(row[10]) || 0;
+    const l2Total = parseInt(row[13]) || 0;
+    const l3Total = parseInt(row[16]) || 0;
+    const rootTotal = parseInt(row[19]) || 0;
 
-    if (status === 'SUKSES') {
-      totalSukses++;
-    }
+    if (status === 'SUKSES') totalSukses++;
 
     // Count emotions
-    const emotionLevel = parseInt(emotion) || 0;
     if (emotionLevel >= 1 && emotionLevel <= 9) {
       emotionCount[emotionLevel] = (emotionCount[emotionLevel] || 0) + 1;
     }
@@ -343,9 +429,15 @@ function getStats() {
     if (wanting) {
       wantingCount[wanting] = (wantingCount[wanting] || 0) + 1;
     }
+
+    // Session averages
+    if (l1Total > 0) { totalL1Sesi += l1Total; countL1++; }
+    if (l2Total > 0) { totalL2Sesi += l2Total; countL2++; }
+    if (l3Total > 0) { totalL3Sesi += l3Total; countL3++; }
+    if (rootTotal > 0) { totalRootSesi += rootTotal; countRoot++; }
   }
 
-  // Find primary wanting
+  // Primary wanting
   let primaryWanting = '-';
   let maxWantingCount = 0;
   for (const [wanting, count] of Object.entries(wantingCount)) {
@@ -357,6 +449,19 @@ function getStats() {
 
   const successRate = totalSesi > 0 ? Math.round((totalSukses / totalSesi) * 100) : 0;
 
+  // Calculate positive vs negative sessions
+  let positiveCount = 0;
+  let negativeCount = 0;
+  for (const [level, count] of Object.entries(emotionCount)) {
+    if (parseInt(level) >= 7) {
+      positiveCount += count;
+    } else {
+      negativeCount += count;
+    }
+  }
+  const totalEmotions = positiveCount + negativeCount;
+  const positiveRate = totalEmotions > 0 ? Math.round((positiveCount / totalEmotions) * 100) : 0;
+
   return {
     success: true,
     stats: {
@@ -366,7 +471,14 @@ function getStats() {
       pendingDrafts: pendingDrafts,
       primaryWanting: primaryWanting,
       emotionCount: emotionCount,
-      wantingCount: wantingCount
+      wantingCount: wantingCount,
+      avgL1Sesi: countL1 > 0 ? (totalL1Sesi / countL1).toFixed(1) : '-',
+      avgL2Sesi: countL2 > 0 ? (totalL2Sesi / countL2).toFixed(1) : '-',
+      avgL3Sesi: countL3 > 0 ? (totalL3Sesi / countL3).toFixed(1) : '-',
+      avgRootSesi: countRoot > 0 ? (totalRootSesi / countRoot).toFixed(1) : '-',
+      positiveRate: positiveRate,
+      positiveCount: positiveCount,
+      negativeCount: negativeCount
     }
   };
 }
@@ -374,54 +486,66 @@ function getStats() {
 // ==========================================================================
 // HELPER FUNCTIONS
 // ==========================================================================
-function findRowBySesiId(sheet, sesiId) {
-  const data = sheet.getDataRange().getValues();
-  for (let i = 1; i < data.length; i++) {
-    if (data[i][0] === sesiId) {
-      return i + 1; // Return 1-based row number
-    }
-  }
-  return -1;
+function determineLayerStuck(data) {
+  const rootInt = parseInt(data.rootIntensityAfter);
+  const l3Int = parseInt(data.l3IntensityAfter);
+  const l2Int = parseInt(data.l2IntensityAfter);
+  const l1Int = parseInt(data.l1IntensityAfter);
+
+  if (!isNaN(rootInt) && rootInt > 1) return `ROOT (${rootInt})`;
+  if (!isNaN(l3Int) && l3Int > 1) return `L3 (${l3Int})`;
+  if (!isNaN(l2Int) && l2Int > 1) return `L2 (${l2Int})`;
+  if (!isNaN(l1Int) && l1Int > 1) return `L1 (${l1Int})`;
+
+  if (!isNaN(rootInt) && rootInt <= 1) return 'DONE';
+  if (!isNaN(l3Int) && l3Int <= 1) return 'L3 Done';
+  if (!isNaN(l2Int) && l2Int <= 1) return 'L2 Done';
+  if (!isNaN(l1Int) && l1Int <= 1) return 'L1 Done';
+
+  return 'SURFACE';
 }
 
-function determineLayerStuck(data) {
-  const vals = [
-    { name: 'ROOT', val: parseInt(data.rootIntensityAfter) || 99 },
-    { name: 'L3', val: parseInt(data.l3IntensityAfter) || 99 },
-    { name: 'L2', val: parseInt(data.l2IntensityAfter) || 99 },
-    { name: 'L1', val: parseInt(data.l1IntensityAfter) || 99 }
-  ];
-
-  for (let v of vals) {
-    if (v.val > 2 && v.val < 99) {
-      return `${v.name} (${v.val})`;
-    }
-  }
-
-  return 'DONE';
+function getEmotionLevel(emotionalState) {
+  if (!emotionalState) return 0;
+  const match = emotionalState.toString().match(/^(\d)/);
+  return match ? parseInt(match[1]) : 0;
 }
 
 // ==========================================================================
-// TEST FUNCTION
+// TEST FUNCTIONS
 // ==========================================================================
 function testAPI() {
-  // Test ping
+  Logger.log('=== Testing API ===');
+
   Logger.log('Testing ping...');
-  const pingResult = doGet({ parameter: { action: 'ping' } });
-  Logger.log(pingResult.getContent());
+  const ping = doGet({ parameter: { action: 'ping' } });
+  Logger.log(ping.getContent());
 
-  // Test getDrafts
   Logger.log('Testing getDrafts...');
-  const draftsResult = doGet({ parameter: { action: 'getDrafts' } });
-  Logger.log(draftsResult.getContent());
+  const drafts = doGet({ parameter: { action: 'getDrafts' } });
+  Logger.log(drafts.getContent());
 
-  // Test getTracker
   Logger.log('Testing getTracker...');
-  const trackerResult = doGet({ parameter: { action: 'getTracker' } });
-  Logger.log(trackerResult.getContent());
+  const tracker = doGet({ parameter: { action: 'getTracker' } });
+  Logger.log(tracker.getContent());
 
-  // Test getStats
   Logger.log('Testing getStats...');
-  const statsResult = doGet({ parameter: { action: 'getStats' } });
-  Logger.log(statsResult.getContent());
+  const stats = doGet({ parameter: { action: 'getStats' } });
+  Logger.log(stats.getContent());
+}
+
+function testSaveDraft() {
+  const testData = {
+    sesiId: 'TEST-123',
+    nama: 'Test User',
+    issue: 'Test Issue',
+    kategori: 'Keyakinan Negatif',
+    surfaceIntensity: '8',
+    l1ReleaseData: ['8', '6', '3'],
+    l1IntensityAfter: 3,
+    rootWanting: 'Control'
+  };
+
+  const result = saveDraft(testData);
+  Logger.log(result);
 }

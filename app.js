@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
   loadSavedName();
   setupIntensityListeners();
   initReleaseTrackers();
+  setupFormListeners();
 
   if (API_URL !== 'YOUR_WEBAPP_URL_HERE') {
     loadDrafts();
@@ -105,6 +106,60 @@ function getIntensityStatus(val) {
   return '❌';
 }
 
+function setupFormListeners() {
+  // Listen for changes in form fields to update layer progress
+  const formFields = document.querySelectorAll('#tab-worksheet input, #tab-worksheet select, #tab-worksheet textarea');
+  formFields.forEach(field => {
+    field.addEventListener('change', updateLayerProgress);
+    field.addEventListener('input', updateLayerProgress);
+  });
+}
+
+function updateLayerProgress() {
+  // Surface
+  const surfaceComplete = !!document.getElementById('surfaceKeyakinan')?.value &&
+                          !!document.getElementById('surfaceIntensity')?.value;
+  updateProgressItem('progSurface', 'Surface', surfaceComplete, isLayerComplete('surface', 0));
+
+  // Layer 1
+  const l1Started = !!document.getElementById('l1Jawaban')?.value;
+  const l1Done = isLayerComplete('l1', 10);
+  updateProgressItem('progL1', 'L1', l1Started || l1Done, l1Done);
+
+  // Layer 2
+  const l2Started = !!document.getElementById('l2Jawaban')?.value;
+  const l2Done = isLayerComplete('l2', 10);
+  updateProgressItem('progL2', 'L2', l2Started || l2Done, l2Done);
+
+  // Layer 3
+  const l3Started = !!document.getElementById('l3Jawaban')?.value;
+  const l3Done = isLayerComplete('l3', 10);
+  updateProgressItem('progL3', 'L3', l3Started || l3Done, l3Done);
+
+  // ROOT
+  const rootStarted = !!document.getElementById('rootWanting')?.value;
+  const rootDone = isLayerComplete('root', 20);
+  updateProgressItem('progRoot', 'ROOT', rootStarted || rootDone, rootDone);
+}
+
+function updateProgressItem(id, label, started, done) {
+  const item = document.getElementById(id);
+  if (!item) return;
+
+  item.classList.remove('pending', 'active', 'done');
+
+  if (done) {
+    item.classList.add('done');
+    item.innerHTML = `<span>✅</span> ${label}`;
+  } else if (started) {
+    item.classList.add('active');
+    item.innerHTML = `<span>🔄</span> ${label}`;
+  } else {
+    item.classList.add('pending');
+    item.innerHTML = `<span>⬜</span> ${label}`;
+  }
+}
+
 // ==========================================================================
 // RELEASE TRACKER WITH AUTO-HIDE
 // ==========================================================================
@@ -178,6 +233,7 @@ function handleReleaseInput(prefix, num, count) {
       // Hide remaining sessions and mark layer as complete
       hideRemainingSessions(prefix, num, count);
       markLayerComplete(prefix);
+      updateLayerProgress();
       // Auto-scroll to next layer after short delay
       setTimeout(() => scrollToNextLayer(prefix), 500);
     } else {
@@ -186,6 +242,7 @@ function handleReleaseInput(prefix, num, count) {
       unlockNextSession(prefix, num, count);
       // Remove layer complete status if re-editing
       removeLayerComplete(prefix);
+      updateLayerProgress();
     }
   } else {
     item.classList.remove('filled', 'done');
@@ -329,6 +386,14 @@ function scrollToNextLayer(prefix) {
 }
 
 function isLayerComplete(prefix, count) {
+  // Surface is "complete" when it has keyakinan and intensity filled
+  if (prefix === 'surface') {
+    const keyakinan = document.getElementById('surfaceKeyakinan')?.value;
+    const intensity = document.getElementById('surfaceIntensity')?.value;
+    return !!keyakinan && !!intensity;
+  }
+
+  // For other layers, check if any release session reached 0-1
   for (let i = 1; i <= count; i++) {
     const input = document.getElementById(`${prefix}Int${i}`);
     const val = parseInt(input?.value);
@@ -704,6 +769,27 @@ function renderStats() {
   document.getElementById('statRate').textContent = (stats.successRate || 0) + '%';
   document.getElementById('statPending').textContent = stats.pendingDrafts || 0;
   document.getElementById('primaryWanting').textContent = stats.primaryWanting || '-';
+
+  // Positive/Negative counts
+  const ec = stats.emotionCount || {};
+  const positive = (ec[9] || 0) + (ec[8] || 0) + (ec[7] || 0);
+  const negative = (ec[6] || 0) + (ec[5] || 0) + (ec[4] || 0) + (ec[3] || 0) + (ec[2] || 0) + (ec[1] || 0);
+
+  const statPositive = document.getElementById('statPositive');
+  const statNegative = document.getElementById('statNegative');
+  if (statPositive) statPositive.textContent = positive;
+  if (statNegative) statNegative.textContent = negative;
+
+  // Efficiency stats (average sessions per layer)
+  const avgL1El = document.getElementById('avgL1');
+  const avgL2El = document.getElementById('avgL2');
+  const avgL3El = document.getElementById('avgL3');
+  const avgRootEl = document.getElementById('avgRoot');
+
+  if (avgL1El) avgL1El.textContent = stats.avgL1Sesi || '-';
+  if (avgL2El) avgL2El.textContent = stats.avgL2Sesi || '-';
+  if (avgL3El) avgL3El.textContent = stats.avgL3Sesi || '-';
+  if (avgRootEl) avgRootEl.textContent = stats.avgRootSesi || '-';
 }
 
 function renderEmotionScale() {
