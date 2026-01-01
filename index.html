@@ -185,6 +185,51 @@
 
     @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 
+    /* Grounding Panel */
+    .grounding-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:1rem}
+    .grounding-overlay.show{display:flex}
+    .grounding-panel{background:var(--white);border-radius:12px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 10px 40px rgba(0,0,0,0.3);animation:slideDown 0.4s ease}
+    .grounding-panel .card-header{background:linear-gradient(135deg,#8e44ad,#9b59b6);font-size:1rem;padding:1rem}
+    .grounding-panel .card-body{padding:1.25rem;position:relative}
+    .grounding-panel .skip-btn{position:absolute;top:0.5rem;right:0.5rem;background:none;border:none;color:var(--text-light);cursor:pointer;font-size:0.8rem;padding:0.3rem 0.5rem}
+    .grounding-panel .skip-btn:hover{color:var(--primary)}
+    .grounding-panel ul{margin:0.75rem 0 1rem 1.5rem;font-size:0.9rem}
+    .grounding-panel ul li{margin-bottom:0.4rem}
+    .grounding-panel .breath-text{font-size:1.1rem;text-align:center;margin:1rem 0;color:#8e44ad}
+    .grounding-panel .affirmation{font-style:italic;text-align:center;padding:1rem;background:var(--bg-light);border-radius:8px;margin:1rem 0;font-size:0.95rem}
+    .grounding-panel .btn-ready{width:100%;padding:0.75rem;font-size:1rem}
+
+    /* Welcoming Panel */
+    .welcoming-panel{display:none;background:linear-gradient(135deg,#f5eef8,#ebdef0);border:2px solid #d7bde2;border-radius:10px;padding:1rem;margin-bottom:0.75rem;animation:slideDown 0.3s ease}
+    .welcoming-panel.show{display:block}
+    .welcoming-panel .welcoming-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem}
+    .welcoming-panel h5{color:#6c3483;font-size:0.9rem;margin:0;display:flex;align-items:center;gap:0.3rem}
+    .welcoming-panel .skip-btn{background:none;border:none;color:var(--text-light);cursor:pointer;font-size:0.75rem;padding:0.2rem 0.4rem}
+    .welcoming-panel .skip-btn:hover{color:var(--primary)}
+    .welcoming-panel .welcome-question{font-size:0.85rem;color:var(--text-dark);margin:0.75rem 0;font-style:italic;text-align:center;background:var(--white);padding:0.75rem;border-radius:6px}
+    .welcoming-panel ul{margin:0.5rem 0 0.75rem 1.2rem;font-size:0.8rem;color:var(--text-dark)}
+    .welcoming-panel ul li{margin-bottom:0.3rem}
+    .welcoming-panel .welcome-close{font-size:0.8rem;color:#6c3483;text-align:center;margin:0.5rem 0}
+    .welcoming-panel .btn-welcome{width:100%;background:linear-gradient(135deg,#8e44ad,#9b59b6);color:var(--white);border:none;padding:0.6rem;border-radius:6px;font-size:0.85rem;cursor:pointer;margin-top:0.5rem}
+    .welcoming-panel .btn-welcome:hover{background:linear-gradient(135deg,#7d3c98,#8e44ad)}
+
+    /* Responsive Form Layouts */
+    .form-inline{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.6rem}
+    .form-inline label{min-width:90px;font-weight:600;font-size:0.8rem;margin:0;flex-shrink:0}
+    .form-inline input,.form-inline select{flex:1;padding:0.5rem;border:1px solid var(--border);border-radius:6px;font-size:0.85rem;background:var(--bg-input)}
+    .form-stack{margin-bottom:0.6rem}
+    .form-stack label{display:block;font-weight:600;font-size:0.8rem;margin-bottom:0.25rem}
+    .form-stack textarea{width:100%;padding:0.5rem;border:1px solid var(--border);border-radius:6px;font-size:0.85rem;background:var(--bg-input);min-height:60px;resize:vertical}
+    .form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.6rem}
+    .form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.4rem;margin-bottom:0.6rem}
+    .form-grid-3 .form-item{text-align:center}
+    .form-grid-3 .form-item label{display:block;font-weight:600;font-size:0.7rem;margin-bottom:0.15rem;color:var(--text-light)}
+    .form-grid-3 .form-item select{width:100%;padding:0.4rem;border:1px solid var(--border);border-radius:6px;font-size:0.8rem;background:var(--bg-input);text-align:center}
+    .intensity-row{display:flex;align-items:center;gap:0.4rem}
+    .intensity-row label{min-width:70px;font-weight:600;font-size:0.8rem}
+    .intensity-row input{width:55px;padding:0.4rem;border:1px solid var(--border);border-radius:6px;text-align:center;font-size:0.9rem;font-weight:600}
+    .intensity-row .status{font-size:1.1rem}
+
     /* Responsive */
     @media(max-width:600px){
       .form-row,.form-row-3{grid-template-columns:1fr}
@@ -247,6 +292,27 @@
         </div>
       </div>
 
+      <!-- Surface Welcoming -->
+      <div class="welcoming-panel" id="surfaceWelcoming">
+        <div class="welcoming-header">
+          <h5>💭 UNDANGAN UNTUK MENYAMBUT</h5>
+          <button class="skip-btn" onclick="skipWelcoming('surface')">Skip →</button>
+        </div>
+        <p>Sekarang, dengan lembut tanyakan pada dirimu:</p>
+        <div class="welcome-question" id="surfaceWelcomeQ">"Apa yang sedang saya rasakan tentang [Issue]?"</div>
+        <p>Apapun yang muncul:</p>
+        <ul>
+          <li>Biarkan hadir apa adanya</li>
+          <li>Tidak perlu dianalisis</li>
+          <li>Tidak perlu di-judge baik atau buruk</li>
+          <li>Tidak perlu dipaksa pergi</li>
+          <li>Tidak perlu dipaksa berubah</li>
+          <li>Cukup RASAKAN dan AKUI kehadirannya</li>
+        </ul>
+        <p class="welcome-close">Emosi adalah tamu - sambut dengan terbuka.</p>
+        <button class="btn-welcome" onclick="completeWelcoming('surface')">🌸 Saya Menyambut Apapun yang Muncul</button>
+      </div>
+
       <!-- Surface -->
       <div class="card" id="surfaceCard">
         <div class="card-header surface">🌊 LAYER 0: SURFACE</div>
@@ -273,6 +339,25 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Layer 1 Welcoming -->
+      <div class="welcoming-panel" id="l1Welcoming">
+        <div class="welcoming-header">
+          <h5>💭 UNDANGAN UNTUK MENYAMBUT</h5>
+          <button class="skip-btn" onclick="skipWelcoming('l1')">Skip →</button>
+        </div>
+        <p>Sekarang kita akan melihat lebih dalam...</p>
+        <div class="welcome-question">"Jika keyakinan/emosi di permukaan ini tidak ada, apa yang saya TAKUTKAN akan terjadi?"</div>
+        <p>Biarkan ketakutan itu muncul:</p>
+        <ul>
+          <li>Tidak perlu dilawan</li>
+          <li>Tidak perlu dihakimi</li>
+          <li>Tidak perlu malu dengan ketakutan</li>
+          <li>Ketakutan adalah bagian dari pengalaman manusia</li>
+          <li>Cukup AKUI dan IJINKAN hadir</li>
+        </ul>
+        <button class="btn-welcome" onclick="completeWelcoming('l1')">🌸 Saya Mengijinkan Ketakutan untuk Hadir</button>
       </div>
 
       <!-- Layer 1 -->
@@ -393,6 +478,25 @@
         </div>
       </div>
 
+      <!-- Layer 2 Welcoming -->
+      <div class="welcoming-panel" id="l2Welcoming">
+        <div class="welcoming-header">
+          <h5>💭 UNDANGAN UNTUK MENYAMBUT</h5>
+          <button class="skip-btn" onclick="skipWelcoming('l2')">Skip →</button>
+        </div>
+        <p>Mari kita lihat apa yang tersembunyi di bawah...</p>
+        <div class="welcome-question">"Apa yang LEBIH DALAM di bawah emosi Layer 1?"</div>
+        <p>Apapun yang muncul:</p>
+        <ul>
+          <li>Mungkin terasa tidak nyaman - itu wajar</li>
+          <li>Mungkin terasa memalukan - itu manusiawi</li>
+          <li>Mungkin terasa menyakitkan - itu valid</li>
+          <li>Tidak ada yang salah dengan merasakan ini</li>
+          <li>Emosi ini sudah lama menunggu untuk diakui</li>
+        </ul>
+        <button class="btn-welcome" onclick="completeWelcoming('l2')">🌸 Saya Menyambut yang Tersembunyi</button>
+      </div>
+
       <!-- Layer 2 -->
       <div class="card" id="layer2Card">
         <div class="card-header layer">🔍 LAYER 2: LEBIH DALAM</div>
@@ -511,6 +615,25 @@
         </div>
       </div>
 
+      <!-- Layer 3 Welcoming -->
+      <div class="welcoming-panel" id="l3Welcoming">
+        <div class="welcoming-header">
+          <h5>💭 UNDANGAN UNTUK MENYAMBUT</h5>
+          <button class="skip-btn" onclick="skipWelcoming('l3')">Skip →</button>
+        </div>
+        <p>Kita semakin dekat dengan akar...</p>
+        <div class="welcome-question">"Apa yang LEBIH DALAM LAGI di bawah semua ini?"</div>
+        <p>Di kedalaman ini:</p>
+        <ul>
+          <li>Mungkin ada luka lama - biarkan terlihat</li>
+          <li>Mungkin ada kesedihan yang lama disimpan - ijinkan mengalir</li>
+          <li>Mungkin ada bagian diri yang lama diabaikan - sambut pulang</li>
+          <li>Kamu aman untuk merasakan semua ini</li>
+          <li>Tidak ada yang perlu diperbaiki, hanya dirasakan</li>
+        </ul>
+        <button class="btn-welcome" onclick="completeWelcoming('l3')">🌸 Saya Menyambut Akar yang Dalam</button>
+      </div>
+
       <!-- Layer 3 -->
       <div class="card" id="layer3Card">
         <div class="card-header layer">🔍 LAYER 3: LEBIH DALAM LAGI</div>
@@ -627,6 +750,25 @@
             <div class="release-tracker" id="l3ReleaseTracker"></div>
           </div>
         </div>
+      </div>
+
+      <!-- ROOT Welcoming -->
+      <div class="welcoming-panel" id="rootWelcoming">
+        <div class="welcoming-header">
+          <h5>💭 UNDANGAN UNTUK MENYAMBUT</h5>
+          <button class="skip-btn" onclick="skipWelcoming('root')">Skip →</button>
+        </div>
+        <p>Ini adalah inti dari semuanya...</p>
+        <div class="welcome-question">"Apa WANTING (keinginan terdalam) di balik semua emosi ini?"</div>
+        <p>Di sinilah letak kebebasan:</p>
+        <ul>
+          <li>Wanting adalah manusiawi - semua orang punya</li>
+          <li>Tidak ada wanting yang memalukan</li>
+          <li>Control, Approval, Security, Worth, Freedom - semuanya valid</li>
+          <li>Kamu tidak salah karena menginginkan ini</li>
+          <li>Dengan mengakui wanting, kamu sudah setengah jalan melepaskannya</li>
+        </ul>
+        <button class="btn-welcome" onclick="completeWelcoming('root')">🌸 Saya Menyambut Wanting Terdalam Saya</button>
       </div>
 
       <!-- ROOT -->
@@ -945,14 +1087,49 @@
             <label>Default Nama</label>
             <input type="text" id="settingsDefaultName" placeholder="Nama default untuk sesi baru">
           </div>
+          <button class="btn btn-primary" onclick="saveUserSettings()" style="margin-top:0.5rem">💾 Simpan Settings</button>
+        </div>
+      </div>
+
+      <!-- Session Settings -->
+      <div class="card">
+        <div class="card-header" style="background:#8e44ad">🧘 Pengaturan Sesi</div>
+        <div class="card-body">
           <div class="form-group">
             <label style="display:flex;align-items:center;gap:0.5rem">
-              <input type="checkbox" id="settingsDebugMode" style="width:auto">
+              <input type="checkbox" id="settingsShowGrounding" style="width:auto" checked onchange="saveSessionSettings()">
+              <span>Tampilkan Grounding di awal sesi</span>
+            </label>
+            <p style="font-size:0.65rem;color:var(--text-light);margin-top:0.2rem">Panel STOP untuk hadir sepenuhnya sebelum mulai</p>
+          </div>
+          <div class="form-group">
+            <label style="display:flex;align-items:center;gap:0.5rem">
+              <input type="checkbox" id="settingsShowWelcoming" style="width:auto" checked onchange="saveSessionSettings()">
+              <span>Tampilkan Welcoming per layer</span>
+            </label>
+            <p style="font-size:0.65rem;color:var(--text-light);margin-top:0.2rem">Panel undangan menyambut sebelum setiap layer</p>
+          </div>
+          <div class="form-group">
+            <label style="display:flex;align-items:center;gap:0.5rem">
+              <input type="checkbox" id="settingsQuickMode" style="width:auto" onchange="saveSessionSettings()">
+              <span>Mode Cepat (skip semua pengantar)</span>
+            </label>
+            <p style="font-size:0.65rem;color:var(--text-light);margin-top:0.2rem">Untuk praktisi berpengalaman</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Developer Settings -->
+      <div class="card">
+        <div class="card-header" style="background:var(--text-dark)">🛠️ Developer Options</div>
+        <div class="card-body">
+          <div class="form-group">
+            <label style="display:flex;align-items:center;gap:0.5rem">
+              <input type="checkbox" id="settingsDebugMode" style="width:auto" onchange="saveUserSettings()">
               <span>Debug Mode</span>
             </label>
             <p style="font-size:0.65rem;color:var(--text-light);margin-top:0.2rem">Tampilkan log detail di console browser</p>
           </div>
-          <button class="btn btn-primary" onclick="saveUserSettings()" style="margin-top:0.5rem">💾 Simpan Settings</button>
         </div>
       </div>
 
@@ -989,6 +1166,33 @@
   </div>
 
   <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Grounding Overlay -->
+  <div class="grounding-overlay" id="groundingOverlay">
+    <div class="grounding-panel">
+      <div class="card-header">🛑 STOP - HADIR SEPENUHNYA</div>
+      <div class="card-body">
+        <button class="skip-btn" onclick="skipGrounding()">Skip →</button>
+
+        <p>Sebelum melanjutkan, berhenti sejenak...</p>
+
+        <p class="breath-text">🧘 Tarik napas dalam... tahan... buang perlahan...</p>
+
+        <p>Ijinkan dirimu untuk:</p>
+        <ul>
+          <li>Berhenti dari kesibukan pikiran</li>
+          <li>Hadir di sini, saat ini</li>
+          <li>Menjadi <strong>APA ADANYA, SEAPA ADANYA</strong></li>
+          <li>Tidak perlu memperbaiki apapun dulu</li>
+          <li>Tidak perlu menjadi berbeda dari sekarang</li>
+        </ul>
+
+        <div class="affirmation">"Saya hadir sepenuhnya di sini, saat ini."</div>
+
+        <button class="btn btn-primary btn-ready" onclick="completeGrounding()">✅ Saya Siap Melanjutkan</button>
+      </div>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>

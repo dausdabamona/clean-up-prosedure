@@ -49,6 +49,9 @@ document.addEventListener('DOMContentLoaded', function() {
   initReleaseTrackers();
   setupFormListeners();
   loadSettings();
+  loadSessionSettings();
+  setupGroundingTrigger();
+  setupWelcomingTriggers();
 
   const apiUrl = getApiUrl();
   if (apiUrl && apiUrl !== 'YOUR_WEBAPP_URL_HERE') {
@@ -616,6 +619,16 @@ function resetForm() {
   resetResistancePanels('l3');
   resetResistancePanels('root');
 
+  // Reset welcoming panels
+  ['surface', 'l1', 'l2', 'l3', 'root'].forEach(layer => {
+    const panel = document.getElementById(`${layer}Welcoming`);
+    if (panel) panel.classList.remove('show');
+    welcomingCompleted[layer] = false;
+  });
+
+  // Reset session state
+  sessionStarted = false;
+
   generateSesiId();
   showToast('Form di-reset', 'success');
 }
@@ -1076,6 +1089,217 @@ function resetResistancePanels(layer) {
   if (tw3) tw3.value = '';
   if (twInt) twInt.value = '';
   if (twPanel) twPanel.classList.remove('show');
+}
+
+// ==========================================================================
+// GROUNDING & WELCOMING
+// ==========================================================================
+
+// Session settings getters
+function isShowGrounding() {
+  const quickMode = localStorage.getItem('cleanupQuickMode') === 'true';
+  if (quickMode) return false;
+  return localStorage.getItem('cleanupShowGrounding') !== 'false';
+}
+
+function isShowWelcoming() {
+  const quickMode = localStorage.getItem('cleanupQuickMode') === 'true';
+  if (quickMode) return false;
+  return localStorage.getItem('cleanupShowWelcoming') !== 'false';
+}
+
+// Track if session has started (grounding completed)
+let sessionStarted = false;
+let welcomingCompleted = {
+  surface: false,
+  l1: false,
+  l2: false,
+  l3: false,
+  root: false
+};
+
+// Show grounding panel
+function showGrounding() {
+  if (!isShowGrounding()) {
+    sessionStarted = true;
+    checkShowSurfaceWelcoming();
+    return;
+  }
+
+  const overlay = document.getElementById('groundingOverlay');
+  if (overlay) {
+    overlay.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+// Skip grounding
+function skipGrounding() {
+  completeGrounding();
+}
+
+// Complete grounding
+function completeGrounding() {
+  const overlay = document.getElementById('groundingOverlay');
+  if (overlay) {
+    overlay.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  sessionStarted = true;
+  checkShowSurfaceWelcoming();
+}
+
+// Check if surface welcoming should show
+function checkShowSurfaceWelcoming() {
+  if (!sessionStarted) return;
+  if (welcomingCompleted.surface) return;
+
+  if (isShowWelcoming()) {
+    showWelcoming('surface');
+  }
+}
+
+// Show welcoming for a layer
+function showWelcoming(layer) {
+  if (!isShowWelcoming()) {
+    welcomingCompleted[layer] = true;
+    return;
+  }
+
+  const panel = document.getElementById(`${layer}Welcoming`);
+  if (panel) {
+    panel.classList.add('show');
+
+    // Update the issue in the question for surface
+    if (layer === 'surface') {
+      const issue = document.getElementById('issue')?.value || '[Issue]';
+      const questionEl = document.getElementById('surfaceWelcomeQ');
+      if (questionEl) {
+        questionEl.textContent = `"Apa yang sedang saya rasakan tentang ${issue}?"`;
+      }
+    }
+
+    // Scroll to panel
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+// Skip welcoming
+function skipWelcoming(layer) {
+  completeWelcoming(layer);
+}
+
+// Complete welcoming
+function completeWelcoming(layer) {
+  const panel = document.getElementById(`${layer}Welcoming`);
+  if (panel) {
+    panel.classList.remove('show');
+  }
+  welcomingCompleted[layer] = true;
+}
+
+// Trigger grounding when issue is filled (first significant input)
+function setupGroundingTrigger() {
+  const issueField = document.getElementById('issue');
+  const kategoriField = document.getElementById('kategori');
+
+  let triggered = false;
+
+  const checkTrigger = () => {
+    if (triggered) return;
+    if (issueField?.value && kategoriField?.value) {
+      triggered = true;
+      setTimeout(() => {
+        if (!sessionStarted) {
+          showGrounding();
+        }
+      }, 300);
+    }
+  };
+
+  if (issueField) issueField.addEventListener('change', checkTrigger);
+  if (kategoriField) kategoriField.addEventListener('change', checkTrigger);
+}
+
+// Setup welcoming triggers for each layer
+function setupWelcomingTriggers() {
+  // L1 welcoming triggered when surface is filled
+  const surfaceIntensity = document.getElementById('surfaceIntensity');
+  if (surfaceIntensity) {
+    surfaceIntensity.addEventListener('change', () => {
+      if (!welcomingCompleted.l1 && surfaceIntensity.value) {
+        setTimeout(() => showWelcoming('l1'), 500);
+      }
+    });
+  }
+
+  // L2 welcoming triggered when L1 is complete
+  // L3 welcoming triggered when L2 is complete
+  // ROOT welcoming triggered when L3 is complete
+  // These are triggered by the layer complete logic
+}
+
+// Override scrollToNextLayer to show welcoming
+const originalScrollToNextLayer = scrollToNextLayer;
+scrollToNextLayer = function(prefix) {
+  const currentIndex = LAYER_ORDER.indexOf(prefix);
+  if (currentIndex < LAYER_ORDER.length - 1) {
+    const nextPrefix = LAYER_ORDER[currentIndex + 1];
+
+    // Show welcoming for next layer first
+    if (!welcomingCompleted[nextPrefix] && isShowWelcoming()) {
+      showWelcoming(nextPrefix);
+    }
+  }
+
+  // Call original function
+  originalScrollToNextLayer(prefix);
+};
+
+// Save session settings
+function saveSessionSettings() {
+  const showGroundingEl = document.getElementById('settingsShowGrounding');
+  const showWelcomingEl = document.getElementById('settingsShowWelcoming');
+  const quickModeEl = document.getElementById('settingsQuickMode');
+
+  if (showGroundingEl) {
+    localStorage.setItem('cleanupShowGrounding', showGroundingEl.checked ? 'true' : 'false');
+  }
+
+  if (showWelcomingEl) {
+    localStorage.setItem('cleanupShowWelcoming', showWelcomingEl.checked ? 'true' : 'false');
+  }
+
+  if (quickModeEl) {
+    localStorage.setItem('cleanupQuickMode', quickModeEl.checked ? 'true' : 'false');
+
+    // If quick mode enabled, uncheck and disable others
+    if (quickModeEl.checked) {
+      if (showGroundingEl) showGroundingEl.checked = false;
+      if (showWelcomingEl) showWelcomingEl.checked = false;
+    }
+  }
+
+  showToast('Pengaturan sesi tersimpan!', 'success');
+}
+
+// Load session settings
+function loadSessionSettings() {
+  const showGroundingEl = document.getElementById('settingsShowGrounding');
+  const showWelcomingEl = document.getElementById('settingsShowWelcoming');
+  const quickModeEl = document.getElementById('settingsQuickMode');
+
+  if (showGroundingEl) {
+    showGroundingEl.checked = localStorage.getItem('cleanupShowGrounding') !== 'false';
+  }
+
+  if (showWelcomingEl) {
+    showWelcomingEl.checked = localStorage.getItem('cleanupShowWelcoming') !== 'false';
+  }
+
+  if (quickModeEl) {
+    quickModeEl.checked = localStorage.getItem('cleanupQuickMode') === 'true';
+  }
 }
 
 // ==========================================================================
