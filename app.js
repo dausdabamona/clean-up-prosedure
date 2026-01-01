@@ -25,7 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
   generateSesiId();
   loadSavedName();
   setupIntensityListeners();
-  
+  initReleaseTrackers();
+
   if (API_URL !== 'YOUR_WEBAPP_URL_HERE') {
     loadDrafts();
     loadTracker();
@@ -90,23 +91,13 @@ function saveName() {
 }
 
 function setupIntensityListeners() {
-  const fields = [
-    { input: 'surfaceIntensity', status: 'surfaceStatus' },
-    { input: 'l1IntensityAfter', status: 'l1Status' },
-    { input: 'l2IntensityAfter', status: 'l2Status' },
-    { input: 'l3IntensityAfter', status: 'l3Status' },
-    { input: 'rootIntensityAfter', status: 'rootStatus' }
-  ];
-  
-  fields.forEach(f => {
-    const input = document.getElementById(f.input);
-    const status = document.getElementById(f.status);
-    if (input && status) {
-      input.addEventListener('input', function() {
-        status.textContent = getIntensityStatus(parseInt(this.value) || 0);
-      });
-    }
-  });
+  const input = document.getElementById('surfaceIntensity');
+  const status = document.getElementById('surfaceStatus');
+  if (input && status) {
+    input.addEventListener('input', function() {
+      status.textContent = getIntensityStatus(parseInt(this.value) || 0);
+    });
+  }
 }
 
 function getIntensityStatus(val) {
@@ -114,6 +105,133 @@ function getIntensityStatus(val) {
   if (val <= 3) return '⚠️';
   if (val <= 6) return '🔶';
   return '❌';
+}
+
+// ==========================================================================
+// RELEASE TRACKER
+// ==========================================================================
+function initReleaseTrackers() {
+  createReleaseTracker('l1ReleaseTracker', 'l1', 10);
+  createReleaseTracker('l2ReleaseTracker', 'l2', 10);
+  createReleaseTracker('l3ReleaseTracker', 'l3', 10);
+  createReleaseTracker('rootReleaseTracker', 'root', 20);
+}
+
+function createReleaseTracker(containerId, prefix, count) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  let html = '';
+  for (let i = 1; i <= count; i++) {
+    html += `
+      <div class="release-item" id="${prefix}R${i}">
+        <span class="r-num">${i}</span>
+        <input type="number" id="${prefix}Int${i}" min="0" max="10" placeholder="-"
+               onchange="updateReleaseDelta('${prefix}', ${i}, ${count})"
+               onfocus="setActiveRelease('${prefix}', ${i})">
+        <span class="r-delta" id="${prefix}Delta${i}"></span>
+      </div>
+    `;
+  }
+  container.innerHTML = html;
+}
+
+function setActiveRelease(prefix, num) {
+  // Remove active class from all items in this tracker
+  const container = document.getElementById(`${prefix}ReleaseTracker`);
+  if (container) {
+    container.querySelectorAll('.release-item').forEach(item => item.classList.remove('active'));
+    const current = document.getElementById(`${prefix}R${num}`);
+    if (current) current.classList.add('active');
+  }
+}
+
+function updateReleaseDelta(prefix, num, count) {
+  const currentInput = document.getElementById(`${prefix}Int${num}`);
+  const currentVal = parseInt(currentInput.value);
+  const item = document.getElementById(`${prefix}R${num}`);
+  const deltaSpan = document.getElementById(`${prefix}Delta${num}`);
+
+  // Mark as filled if has value
+  if (!isNaN(currentVal) && currentVal >= 0) {
+    item.classList.add('filled');
+    // Mark as done if intensity is 0 or 1
+    if (currentVal <= 1) {
+      item.classList.add('done');
+    } else {
+      item.classList.remove('done');
+    }
+  } else {
+    item.classList.remove('filled', 'done');
+  }
+
+  // Calculate delta from previous
+  if (num > 1) {
+    const prevInput = document.getElementById(`${prefix}Int${num - 1}`);
+    const prevVal = parseInt(prevInput.value);
+
+    if (!isNaN(currentVal) && !isNaN(prevVal)) {
+      const delta = currentVal - prevVal;
+      if (delta < 0) {
+        deltaSpan.textContent = `↓${Math.abs(delta)}`;
+        deltaSpan.className = 'r-delta down';
+      } else if (delta > 0) {
+        deltaSpan.textContent = `↑${delta}`;
+        deltaSpan.className = 'r-delta up';
+      } else {
+        deltaSpan.textContent = '=';
+        deltaSpan.className = 'r-delta same';
+      }
+    } else {
+      deltaSpan.textContent = '';
+      deltaSpan.className = 'r-delta';
+    }
+  }
+
+  // Update next item's delta if exists
+  if (num < count) {
+    updateReleaseDelta(prefix, num + 1, count);
+  }
+}
+
+function getReleaseTrackerData(prefix, count) {
+  const data = [];
+  for (let i = 1; i <= count; i++) {
+    const input = document.getElementById(`${prefix}Int${i}`);
+    data.push(input ? input.value : '');
+  }
+  return data;
+}
+
+function setReleaseTrackerData(prefix, count, data) {
+  if (!data || !Array.isArray(data)) return;
+  for (let i = 1; i <= count; i++) {
+    const input = document.getElementById(`${prefix}Int${i}`);
+    if (input && data[i - 1] !== undefined) {
+      input.value = data[i - 1];
+      updateReleaseDelta(prefix, i, count);
+    }
+  }
+}
+
+function getLastIntensity(prefix, count) {
+  for (let i = count; i >= 1; i--) {
+    const input = document.getElementById(`${prefix}Int${i}`);
+    const val = parseInt(input?.value);
+    if (!isNaN(val)) return val;
+  }
+  return null;
+}
+
+function resetReleaseTracker(prefix, count) {
+  for (let i = 1; i <= count; i++) {
+    const input = document.getElementById(`${prefix}Int${i}`);
+    const item = document.getElementById(`${prefix}R${i}`);
+    const delta = document.getElementById(`${prefix}Delta${i}`);
+    if (input) input.value = '';
+    if (item) item.classList.remove('filled', 'done', 'active');
+    if (delta) { delta.textContent = ''; delta.className = 'r-delta'; }
+  }
 }
 
 // ==========================================================================
@@ -153,9 +271,9 @@ function collectFormData() {
     l1Bisakah: document.getElementById('l1Bisakah').value,
     l1Mau: document.getElementById('l1Mau').value,
     l1Kapan: document.getElementById('l1Kapan').value,
-    l1Release: document.getElementById('l1Release').value,
-    l1IntensityAfter: document.getElementById('l1IntensityAfter').value,
-    
+    l1ReleaseData: getReleaseTrackerData('l1', 10),
+    l1IntensityAfter: getLastIntensity('l1', 10),
+
     l2Pertanyaan: document.getElementById('l2Pertanyaan').value,
     l2Jawaban: document.getElementById('l2Jawaban').value,
     l2Emosi: document.getElementById('l2Emosi').value,
@@ -163,9 +281,9 @@ function collectFormData() {
     l2Bisakah: document.getElementById('l2Bisakah').value,
     l2Mau: document.getElementById('l2Mau').value,
     l2Kapan: document.getElementById('l2Kapan').value,
-    l2Release: document.getElementById('l2Release').value,
-    l2IntensityAfter: document.getElementById('l2IntensityAfter').value,
-    
+    l2ReleaseData: getReleaseTrackerData('l2', 10),
+    l2IntensityAfter: getLastIntensity('l2', 10),
+
     l3Pertanyaan: document.getElementById('l3Pertanyaan').value,
     l3Jawaban: document.getElementById('l3Jawaban').value,
     l3Emosi: document.getElementById('l3Emosi').value,
@@ -173,9 +291,9 @@ function collectFormData() {
     l3Bisakah: document.getElementById('l3Bisakah').value,
     l3Mau: document.getElementById('l3Mau').value,
     l3Kapan: document.getElementById('l3Kapan').value,
-    l3Release: document.getElementById('l3Release').value,
-    l3IntensityAfter: document.getElementById('l3IntensityAfter').value,
-    
+    l3ReleaseData: getReleaseTrackerData('l3', 10),
+    l3IntensityAfter: getLastIntensity('l3', 10),
+
     rootPertanyaan: document.getElementById('rootPertanyaan').value,
     rootWanting: document.getElementById('rootWanting').value,
     rootIntensityAwal: document.getElementById('rootIntensityAwal').value,
@@ -183,8 +301,8 @@ function collectFormData() {
     rootBisakah: document.getElementById('rootBisakah').value,
     rootMau: document.getElementById('rootMau').value,
     rootKapan: document.getElementById('rootKapan').value,
-    rootRelease: document.getElementById('rootRelease').value,
-    rootIntensityAfter: document.getElementById('rootIntensityAfter').value,
+    rootReleaseData: getReleaseTrackerData('root', 20),
+    rootIntensityAfter: getLastIntensity('root', 20),
     
     hasilStatus: document.getElementById('hasilStatus').value,
     emotionalState: document.getElementById('emotionalState').value,
@@ -197,34 +315,44 @@ function loadFormData(data) {
   const fields = [
     'sesiId', 'nama', 'issue', 'kategori',
     'surfaceKeyakinan', 'surfaceLokasi', 'surfaceIntensity',
-    'l1Pertanyaan', 'l1Jawaban', 'l1Emosi', 'l1IntensityAwal', 'l1Bisakah', 'l1Mau', 'l1Kapan', 'l1Release', 'l1IntensityAfter',
-    'l2Pertanyaan', 'l2Jawaban', 'l2Emosi', 'l2IntensityAwal', 'l2Bisakah', 'l2Mau', 'l2Kapan', 'l2Release', 'l2IntensityAfter',
-    'l3Pertanyaan', 'l3Jawaban', 'l3Emosi', 'l3IntensityAwal', 'l3Bisakah', 'l3Mau', 'l3Kapan', 'l3Release', 'l3IntensityAfter',
-    'rootPertanyaan', 'rootWanting', 'rootIntensityAwal', 'rootDeskripsi', 'rootBisakah', 'rootMau', 'rootKapan', 'rootRelease', 'rootIntensityAfter',
+    'l1Pertanyaan', 'l1Jawaban', 'l1Emosi', 'l1IntensityAwal', 'l1Bisakah', 'l1Mau', 'l1Kapan',
+    'l2Pertanyaan', 'l2Jawaban', 'l2Emosi', 'l2IntensityAwal', 'l2Bisakah', 'l2Mau', 'l2Kapan',
+    'l3Pertanyaan', 'l3Jawaban', 'l3Emosi', 'l3IntensityAwal', 'l3Bisakah', 'l3Mau', 'l3Kapan',
+    'rootPertanyaan', 'rootWanting', 'rootIntensityAwal', 'rootDeskripsi', 'rootBisakah', 'rootMau', 'rootKapan',
     'hasilStatus', 'emotionalState', 'hasilInsight', 'hasilNextStep'
   ];
-  
+
   fields.forEach(f => {
     const el = document.getElementById(f);
     if (el) el.value = data[f] || '';
   });
-  
-  // Update status indicators
-  ['surfaceIntensity', 'l1IntensityAfter', 'l2IntensityAfter', 'l3IntensityAfter', 'rootIntensityAfter'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.dispatchEvent(new Event('input'));
-  });
+
+  // Load release tracker data
+  if (data.l1ReleaseData) setReleaseTrackerData('l1', 10, data.l1ReleaseData);
+  if (data.l2ReleaseData) setReleaseTrackerData('l2', 10, data.l2ReleaseData);
+  if (data.l3ReleaseData) setReleaseTrackerData('l3', 10, data.l3ReleaseData);
+  if (data.rootReleaseData) setReleaseTrackerData('root', 20, data.rootReleaseData);
+
+  // Update surface intensity status
+  const surfaceEl = document.getElementById('surfaceIntensity');
+  if (surfaceEl) surfaceEl.dispatchEvent(new Event('input'));
 }
 
 function resetForm() {
   if (!confirm('Reset semua field?')) return;
-  
+
   document.querySelectorAll('#tab-worksheet input, #tab-worksheet select, #tab-worksheet textarea').forEach(el => {
     if (el.id !== 'nama' && el.id !== 'sesiId') {
       el.tagName === 'SELECT' ? el.selectedIndex = 0 : el.value = '';
     }
   });
-  
+
+  // Reset release trackers
+  resetReleaseTracker('l1', 10);
+  resetReleaseTracker('l2', 10);
+  resetReleaseTracker('l3', 10);
+  resetReleaseTracker('root', 20);
+
   generateSesiId();
   showToast('Form di-reset', 'success');
 }

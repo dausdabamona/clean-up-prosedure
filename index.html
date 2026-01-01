@@ -85,7 +85,21 @@
     .toast.success{background:var(--success)}
     .toast.error{background:var(--danger)}
     @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
-    @media(max-width:600px){.form-row,.form-row-3{grid-template-columns:1fr}.btn-group{flex-direction:column}.btn-group .btn{width:100%}}
+    .release-tracker{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+    .release-tracker-20{grid-template-columns:repeat(5,1fr)}
+    .release-item{display:flex;flex-direction:column;align-items:center;background:var(--bg-input);border:1px solid var(--border);border-radius:4px;padding:2px;font-size:0.7rem;position:relative}
+    .release-item.active{border-color:var(--primary);background:var(--white)}
+    .release-item.filled{background:var(--white)}
+    .release-item .r-num{font-weight:700;color:var(--text-light);font-size:0.65rem}
+    .release-item input{width:100%;text-align:center;border:none;background:transparent;font-size:0.75rem;font-weight:600;padding:2px 0;color:var(--text-dark)}
+    .release-item input:focus{outline:none;background:rgba(26,82,118,0.1)}
+    .release-item .r-delta{font-size:0.6rem;font-weight:700;min-height:12px}
+    .release-item .r-delta.down{color:var(--success)}
+    .release-item .r-delta.up{color:var(--danger)}
+    .release-item .r-delta.same{color:var(--text-light)}
+    .release-item.done{background:linear-gradient(135deg,#d5f5e3,#a9dfbf);border-color:var(--success)}
+    .release-item.done .r-num{color:var(--success)}
+    @media(max-width:600px){.form-row,.form-row-3{grid-template-columns:1fr}.btn-group{flex-direction:column}.btn-group .btn{width:100%}.release-tracker{grid-template-columns:repeat(5,1fr)}}
   </style>
 </head>
 <body>
@@ -145,9 +159,9 @@
             <div class="form-group"><label>Mau?</label><select id="l1Mau"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
             <div class="form-group"><label>Kapan?</label><select id="l1Kapan"><option value="">--</option><option>Sekarang</option><option>Nanti</option></select></div>
           </div>
-          <div class="form-row">
-            <div class="form-group"><label>Release</label><select id="l1Release"><option value="0">0/10</option><option value="1">1/10</option><option value="2">2/10</option><option value="3">3/10</option><option value="4">4/10</option><option value="5">5/10</option><option value="6">6/10</option><option value="7">7/10</option><option value="8">8/10</option><option value="9">9/10</option><option value="10">10/10 ✓</option></select></div>
-            <div class="form-group"><label>Int After</label><div class="intensity-input"><input type="number" id="l1IntensityAfter" min="0" max="10" placeholder="0"><span class="intensity-status" id="l1Status"></span></div></div>
+          <div class="form-group">
+            <label>Release Tracker (1-10)</label>
+            <div class="release-tracker" id="l1ReleaseTracker"></div>
           </div>
         </div>
       </div>
@@ -167,9 +181,9 @@
             <div class="form-group"><label>Mau?</label><select id="l2Mau"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
             <div class="form-group"><label>Kapan?</label><select id="l2Kapan"><option value="">--</option><option>Sekarang</option><option>Nanti</option></select></div>
           </div>
-          <div class="form-row">
-            <div class="form-group"><label>Release</label><select id="l2Release"><option value="0">0/10</option><option value="1">1/10</option><option value="2">2/10</option><option value="3">3/10</option><option value="4">4/10</option><option value="5">5/10</option><option value="6">6/10</option><option value="7">7/10</option><option value="8">8/10</option><option value="9">9/10</option><option value="10">10/10 ✓</option></select></div>
-            <div class="form-group"><label>Int After</label><div class="intensity-input"><input type="number" id="l2IntensityAfter" min="0" max="10" placeholder="0"><span class="intensity-status" id="l2Status"></span></div></div>
+          <div class="form-group">
+            <label>Release Tracker (1-10)</label>
+            <div class="release-tracker" id="l2ReleaseTracker"></div>
           </div>
         </div>
       </div>
@@ -189,9 +203,9 @@
             <div class="form-group"><label>Mau?</label><select id="l3Mau"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
             <div class="form-group"><label>Kapan?</label><select id="l3Kapan"><option value="">--</option><option>Sekarang</option><option>Nanti</option></select></div>
           </div>
-          <div class="form-row">
-            <div class="form-group"><label>Release</label><select id="l3Release"><option value="0">0/10</option><option value="1">1/10</option><option value="2">2/10</option><option value="3">3/10</option><option value="4">4/10</option><option value="5">5/10</option><option value="6">6/10</option><option value="7">7/10</option><option value="8">8/10</option><option value="9">9/10</option><option value="10">10/10 ✓</option></select></div>
-            <div class="form-group"><label>Int After</label><div class="intensity-input"><input type="number" id="l3IntensityAfter" min="0" max="10" placeholder="0"><span class="intensity-status" id="l3Status"></span></div></div>
+          <div class="form-group">
+            <label>Release Tracker (1-10)</label>
+            <div class="release-tracker" id="l3ReleaseTracker"></div>
           </div>
         </div>
       </div>
@@ -211,9 +225,9 @@
             <div class="form-group"><label>Mau?</label><select id="rootMau"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
             <div class="form-group"><label>Kapan?</label><select id="rootKapan"><option value="">--</option><option>Sekarang</option><option>Nanti</option></select></div>
           </div>
-          <div class="form-row">
-            <div class="form-group"><label>Release</label><select id="rootRelease"><option value="0">0/20</option><option value="5">5/20</option><option value="10">10/20</option><option value="15">15/20</option><option value="20">20/20 ✓</option></select></div>
-            <div class="form-group"><label>Int After</label><div class="intensity-input"><input type="number" id="rootIntensityAfter" min="0" max="10" placeholder="0"><span class="intensity-status" id="rootStatus"></span></div></div>
+          <div class="form-group">
+            <label>Release Tracker (1-20)</label>
+            <div class="release-tracker release-tracker-20" id="rootReleaseTracker"></div>
           </div>
         </div>
       </div>
