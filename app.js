@@ -108,13 +108,27 @@ function getIntensityStatus(val) {
 }
 
 // ==========================================================================
-// RELEASE TRACKER
+// RELEASE TRACKER WITH AUTO-HIDE
 // ==========================================================================
+const LAYER_ORDER = ['l1', 'l2', 'l3', 'root'];
+const LAYER_CARD_IDS = {
+  'l1': 'layer1Card',
+  'l2': 'layer2Card',
+  'l3': 'layer3Card',
+  'root': 'rootCard'
+};
+
 function initReleaseTrackers() {
   createReleaseTracker('l1ReleaseTracker', 'l1', 10);
   createReleaseTracker('l2ReleaseTracker', 'l2', 10);
   createReleaseTracker('l3ReleaseTracker', 'l3', 10);
   createReleaseTracker('rootReleaseTracker', 'root', 20);
+
+  // Initialize visibility - only show first session of each tracker
+  updateTrackerVisibility('l1', 10);
+  updateTrackerVisibility('l2', 10);
+  updateTrackerVisibility('l3', 10);
+  updateTrackerVisibility('root', 20);
 }
 
 function createReleaseTracker(containerId, prefix, count) {
@@ -123,11 +137,14 @@ function createReleaseTracker(containerId, prefix, count) {
 
   let html = '';
   for (let i = 1; i <= count; i++) {
+    // First item is visible, others start locked
+    const lockedClass = i > 1 ? 'locked' : '';
     html += `
-      <div class="release-item" id="${prefix}R${i}">
+      <div class="release-item ${lockedClass}" id="${prefix}R${i}">
         <span class="r-num">${i}</span>
         <input type="number" id="${prefix}Int${i}" min="0" max="10" placeholder="-"
-               onchange="updateReleaseDelta('${prefix}', ${i}, ${count})"
+               onchange="handleReleaseInput('${prefix}', ${i}, ${count})"
+               oninput="handleReleaseInput('${prefix}', ${i}, ${count})"
                onfocus="setActiveRelease('${prefix}', ${i})">
         <span class="r-delta" id="${prefix}Delta${i}"></span>
       </div>
@@ -137,16 +154,17 @@ function createReleaseTracker(containerId, prefix, count) {
 }
 
 function setActiveRelease(prefix, num) {
-  // Remove active class from all items in this tracker
   const container = document.getElementById(`${prefix}ReleaseTracker`);
   if (container) {
     container.querySelectorAll('.release-item').forEach(item => item.classList.remove('active'));
     const current = document.getElementById(`${prefix}R${num}`);
-    if (current) current.classList.add('active');
+    if (current && !current.classList.contains('locked') && !current.classList.contains('hidden')) {
+      current.classList.add('active');
+    }
   }
 }
 
-function updateReleaseDelta(prefix, num, count) {
+function handleReleaseInput(prefix, num, count) {
   const currentInput = document.getElementById(`${prefix}Int${num}`);
   const currentVal = parseInt(currentInput.value);
   const item = document.getElementById(`${prefix}R${num}`);
@@ -155,17 +173,36 @@ function updateReleaseDelta(prefix, num, count) {
   // Mark as filled if has value
   if (!isNaN(currentVal) && currentVal >= 0) {
     item.classList.add('filled');
-    // Mark as done if intensity is 0 or 1
+
+    // Check if intensity reached 0-1 (done state)
     if (currentVal <= 1) {
       item.classList.add('done');
+      // Hide remaining sessions and mark layer as complete
+      hideRemainingSessions(prefix, num, count);
+      markLayerComplete(prefix);
+      // Auto-scroll to next layer after short delay
+      setTimeout(() => scrollToNextLayer(prefix), 500);
     } else {
       item.classList.remove('done');
+      // Show next session if not done
+      unlockNextSession(prefix, num, count);
+      // Remove layer complete status if re-editing
+      removeLayerComplete(prefix);
     }
   } else {
     item.classList.remove('filled', 'done');
   }
 
   // Calculate delta from previous
+  updateDelta(prefix, num, currentVal);
+
+  // Update visibility for all items
+  updateTrackerVisibility(prefix, count);
+}
+
+function updateDelta(prefix, num, currentVal) {
+  const deltaSpan = document.getElementById(`${prefix}Delta${num}`);
+
   if (num > 1) {
     const prevInput = document.getElementById(`${prefix}Int${num - 1}`);
     const prevVal = parseInt(prevInput.value);
@@ -187,11 +224,121 @@ function updateReleaseDelta(prefix, num, count) {
       deltaSpan.className = 'r-delta';
     }
   }
+}
 
-  // Update next item's delta if exists
-  if (num < count) {
-    updateReleaseDelta(prefix, num + 1, count);
+function updateTrackerVisibility(prefix, count) {
+  let foundDone = false;
+  let lastFilledIndex = 0;
+
+  // First pass: find if any session is "done" (0-1) and last filled
+  for (let i = 1; i <= count; i++) {
+    const input = document.getElementById(`${prefix}Int${i}`);
+    const val = parseInt(input?.value);
+
+    if (!isNaN(val)) {
+      lastFilledIndex = i;
+      if (val <= 1) {
+        foundDone = true;
+        break;
+      }
+    }
   }
+
+  // Second pass: update visibility
+  for (let i = 1; i <= count; i++) {
+    const item = document.getElementById(`${prefix}R${i}`);
+    if (!item) continue;
+
+    if (foundDone && i > lastFilledIndex) {
+      // Hide sessions after done
+      item.classList.add('hidden');
+      item.classList.remove('locked');
+    } else if (i <= lastFilledIndex + 1) {
+      // Show filled sessions and next one
+      item.classList.remove('hidden', 'locked');
+    } else {
+      // Lock future sessions
+      item.classList.remove('hidden');
+      item.classList.add('locked');
+    }
+  }
+}
+
+function unlockNextSession(prefix, currentNum, count) {
+  const nextNum = currentNum + 1;
+  if (nextNum <= count) {
+    const nextItem = document.getElementById(`${prefix}R${nextNum}`);
+    if (nextItem) {
+      nextItem.classList.remove('locked', 'hidden');
+    }
+  }
+}
+
+function hideRemainingSessions(prefix, fromNum, count) {
+  for (let i = fromNum + 1; i <= count; i++) {
+    const item = document.getElementById(`${prefix}R${i}`);
+    if (item) {
+      item.classList.add('hidden');
+      item.classList.remove('locked');
+      // Clear values in hidden sessions
+      const input = document.getElementById(`${prefix}Int${i}`);
+      if (input) input.value = '';
+    }
+  }
+}
+
+function markLayerComplete(prefix) {
+  const cardId = LAYER_CARD_IDS[prefix];
+  const card = document.getElementById(cardId);
+  if (card) {
+    card.classList.add('layer-complete');
+  }
+}
+
+function removeLayerComplete(prefix) {
+  const cardId = LAYER_CARD_IDS[prefix];
+  const card = document.getElementById(cardId);
+  if (card) {
+    card.classList.remove('layer-complete');
+  }
+}
+
+function scrollToNextLayer(prefix) {
+  const currentIndex = LAYER_ORDER.indexOf(prefix);
+  if (currentIndex < LAYER_ORDER.length - 1) {
+    const nextPrefix = LAYER_ORDER[currentIndex + 1];
+    const nextCardId = LAYER_CARD_IDS[nextPrefix];
+    const nextCard = document.getElementById(nextCardId);
+
+    if (nextCard) {
+      nextCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast(`Layer ${prefix.toUpperCase()} selesai! Lanjut ke ${nextPrefix.toUpperCase()}`, 'success');
+
+      // Focus on first input of next layer
+      setTimeout(() => {
+        const firstInput = document.getElementById(`${nextPrefix}Int1`);
+        if (firstInput) firstInput.focus();
+      }, 600);
+    }
+  } else {
+    // All layers done, scroll to hasil
+    const hasilCard = document.querySelector('.card-header.hasil')?.parentElement;
+    if (hasilCard) {
+      hasilCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast('Semua layer selesai! Isi Hasil Akhir', 'success');
+    }
+  }
+}
+
+function isLayerComplete(prefix, count) {
+  for (let i = 1; i <= count; i++) {
+    const input = document.getElementById(`${prefix}Int${i}`);
+    const val = parseInt(input?.value);
+    if (!isNaN(val) && val <= 1) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function getReleaseTrackerData(prefix, count) {
@@ -207,10 +354,15 @@ function setReleaseTrackerData(prefix, count, data) {
   if (!data || !Array.isArray(data)) return;
   for (let i = 1; i <= count; i++) {
     const input = document.getElementById(`${prefix}Int${i}`);
-    if (input && data[i - 1] !== undefined) {
+    if (input && data[i - 1] !== undefined && data[i - 1] !== '') {
       input.value = data[i - 1];
-      updateReleaseDelta(prefix, i, count);
     }
+  }
+  // Update visibility after loading data
+  updateTrackerVisibility(prefix, count);
+  // Check if layer is complete
+  if (isLayerComplete(prefix, count)) {
+    markLayerComplete(prefix);
   }
 }
 
@@ -229,9 +381,18 @@ function resetReleaseTracker(prefix, count) {
     const item = document.getElementById(`${prefix}R${i}`);
     const delta = document.getElementById(`${prefix}Delta${i}`);
     if (input) input.value = '';
-    if (item) item.classList.remove('filled', 'done', 'active');
+    if (item) {
+      item.classList.remove('filled', 'done', 'active', 'hidden');
+      // Lock all except first
+      if (i > 1) {
+        item.classList.add('locked');
+      } else {
+        item.classList.remove('locked');
+      }
+    }
     if (delta) { delta.textContent = ''; delta.className = 'r-delta'; }
   }
+  removeLayerComplete(prefix);
 }
 
 // ==========================================================================

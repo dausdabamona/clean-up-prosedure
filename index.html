@@ -87,8 +87,10 @@
     @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
     .release-tracker{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
     .release-tracker-20{grid-template-columns:repeat(5,1fr)}
-    .release-item{display:flex;flex-direction:column;align-items:center;background:var(--bg-input);border:1px solid var(--border);border-radius:4px;padding:2px;font-size:0.7rem;position:relative}
-    .release-item.active{border-color:var(--primary);background:var(--white)}
+    .release-item{display:flex;flex-direction:column;align-items:center;background:var(--bg-input);border:1px solid var(--border);border-radius:4px;padding:2px;font-size:0.7rem;position:relative;transition:all 0.3s ease}
+    .release-item.hidden{display:none}
+    .release-item.locked{opacity:0.4;pointer-events:none}
+    .release-item.active{border-color:var(--primary);background:var(--white);box-shadow:0 0 0 2px rgba(26,82,118,0.2)}
     .release-item.filled{background:var(--white)}
     .release-item .r-num{font-weight:700;color:var(--text-light);font-size:0.65rem}
     .release-item input{width:100%;text-align:center;border:none;background:transparent;font-size:0.75rem;font-weight:600;padding:2px 0;color:var(--text-dark)}
@@ -99,6 +101,8 @@
     .release-item .r-delta.same{color:var(--text-light)}
     .release-item.done{background:linear-gradient(135deg,#d5f5e3,#a9dfbf);border-color:var(--success)}
     .release-item.done .r-num{color:var(--success)}
+    .layer-complete{background:linear-gradient(135deg,#d5f5e3,#e8f6e9);border-left:4px solid var(--success);position:relative}
+    .layer-complete::after{content:'✅ Layer Selesai';position:absolute;top:0.5rem;right:0.5rem;background:var(--success);color:var(--white);padding:0.2rem 0.5rem;border-radius:4px;font-size:0.7rem;font-weight:600}
     @media(max-width:600px){.form-row,.form-row-3{grid-template-columns:1fr}.btn-group{flex-direction:column}.btn-group .btn{width:100%}.release-tracker{grid-template-columns:repeat(5,1fr)}}
   </style>
 </head>
@@ -145,7 +149,7 @@
       </div>
       
       <!-- LAYER 1 -->
-      <div class="card">
+      <div class="card" id="layer1Card">
         <div class="card-header layer">🔍 LAYER 1: EMOSI PERTAMA</div>
         <div class="card-body">
           <div class="form-group"><label>Pertanyaan</label><select id="l1Pertanyaan"><option value="">-- Pilih --</option><option>Kalau tidak punya ini, apa yang saya TAKUTKAN?</option><option>Apa yang terjadi jika ini hilang?</option><option>Mengapa saya BUTUH mempertahankan ini?</option></select></div>
@@ -167,7 +171,7 @@
       </div>
       
       <!-- LAYER 2 -->
-      <div class="card">
+      <div class="card" id="layer2Card">
         <div class="card-header layer">🔍 LAYER 2: LEBIH DALAM</div>
         <div class="card-body">
           <div class="form-group"><label>Pertanyaan</label><select id="l2Pertanyaan"><option value="">-- Pilih --</option><option>Apa yang LEBIH DALAM di bawah Layer 1?</option><option>Apa yang sebenarnya saya rasakan?</option><option>Emosi apa yang tersembunyi?</option></select></div>
@@ -189,7 +193,7 @@
       </div>
       
       <!-- LAYER 3 -->
-      <div class="card">
+      <div class="card" id="layer3Card">
         <div class="card-header layer">🔍 LAYER 3: LEBIH DALAM LAGI</div>
         <div class="card-body">
           <div class="form-group"><label>Pertanyaan</label><select id="l3Pertanyaan"><option value="">-- Pilih --</option><option>Apa yang LEBIH DALAM LAGI?</option><option>Apa akar dari perasaan ini?</option><option>Dari mana perasaan ini berasal?</option></select></div>
@@ -211,7 +215,7 @@
       </div>
       
       <!-- ROOT -->
-      <div class="card">
+      <div class="card" id="rootCard">
         <div class="card-header root">🎯 ROOT: WANTING TERDALAM</div>
         <div class="card-body">
           <div class="form-group"><label>Pertanyaan</label><select id="rootPertanyaan"><option value="">-- Pilih --</option><option>Apa WANTING terdalam di balik semua ini?</option><option>Apa yang sebenarnya saya INGINKAN?</option><option>Kebutuhan dasar apa yang tidak terpenuhi?</option></select></div>
