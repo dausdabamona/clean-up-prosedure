@@ -477,18 +477,18 @@ function showToast(message, type = 'info') {
 // ==========================================================================
 function collectFormData() {
   saveName();
-  
+
   return {
     sesiId: document.getElementById('sesiId').value,
     tanggalMulai: new Date().toISOString(),
     nama: document.getElementById('nama').value,
     issue: document.getElementById('issue').value,
     kategori: document.getElementById('kategori').value,
-    
+
     surfaceKeyakinan: document.getElementById('surfaceKeyakinan').value,
     surfaceLokasi: document.getElementById('surfaceLokasi').value,
     surfaceIntensity: document.getElementById('surfaceIntensity').value,
-    
+
     l1Pertanyaan: document.getElementById('l1Pertanyaan').value,
     l1Jawaban: document.getElementById('l1Jawaban').value,
     l1Emosi: document.getElementById('l1Emosi').value,
@@ -498,6 +498,8 @@ function collectFormData() {
     l1Kapan: document.getElementById('l1Kapan').value,
     l1ReleaseData: getReleaseTrackerData('l1', 10),
     l1IntensityAfter: getLastIntensity('l1', 10),
+    l1Resistance: getResistanceData('l1'),
+    l1TripleWelcoming: getTripleWelcomingData('l1'),
 
     l2Pertanyaan: document.getElementById('l2Pertanyaan').value,
     l2Jawaban: document.getElementById('l2Jawaban').value,
@@ -508,6 +510,8 @@ function collectFormData() {
     l2Kapan: document.getElementById('l2Kapan').value,
     l2ReleaseData: getReleaseTrackerData('l2', 10),
     l2IntensityAfter: getLastIntensity('l2', 10),
+    l2Resistance: getResistanceData('l2'),
+    l2TripleWelcoming: getTripleWelcomingData('l2'),
 
     l3Pertanyaan: document.getElementById('l3Pertanyaan').value,
     l3Jawaban: document.getElementById('l3Jawaban').value,
@@ -518,6 +522,8 @@ function collectFormData() {
     l3Kapan: document.getElementById('l3Kapan').value,
     l3ReleaseData: getReleaseTrackerData('l3', 10),
     l3IntensityAfter: getLastIntensity('l3', 10),
+    l3Resistance: getResistanceData('l3'),
+    l3TripleWelcoming: getTripleWelcomingData('l3'),
 
     rootPertanyaan: document.getElementById('rootPertanyaan').value,
     rootWanting: document.getElementById('rootWanting').value,
@@ -528,7 +534,8 @@ function collectFormData() {
     rootKapan: document.getElementById('rootKapan').value,
     rootReleaseData: getReleaseTrackerData('root', 20),
     rootIntensityAfter: getLastIntensity('root', 20),
-    
+    rootResistance: getResistanceData('root'),
+
     hasilStatus: document.getElementById('hasilStatus').value,
     emotionalState: document.getElementById('emotionalState').value,
     hasilInsight: document.getElementById('hasilInsight').value,
@@ -577,6 +584,12 @@ function resetForm() {
   resetReleaseTracker('l2', 10);
   resetReleaseTracker('l3', 10);
   resetReleaseTracker('root', 20);
+
+  // Reset resistance panels
+  resetResistancePanels('l1');
+  resetResistancePanels('l2');
+  resetResistancePanels('l3');
+  resetResistancePanels('root');
 
   generateSesiId();
   showToast('Form di-reset', 'success');
@@ -832,6 +845,204 @@ function renderEmotionScale() {
       </div>
     `;
   }).join('');
+}
+
+// ==========================================================================
+// RESISTANCE HANDLING
+// ==========================================================================
+
+// Track resistance state
+const resistanceState = {
+  l1: { Bisakah: false, Mau: false, Kapan: false },
+  l2: { Bisakah: false, Mau: false, Kapan: false },
+  l3: { Bisakah: false, Mau: false, Kapan: false },
+  root: { Bisakah: false, Mau: false, Kapan: false }
+};
+
+// Handle emotion change - show Triple Welcoming for Pride
+function handleEmosiChange(layer) {
+  const emosiEl = document.getElementById(`${layer}Emosi`);
+  const twPanel = document.getElementById(`${layer}TripleWelcoming`);
+
+  if (!emosiEl || !twPanel) return;
+
+  const isPride = emosiEl.value.toLowerCase().includes('pride');
+
+  if (isPride) {
+    twPanel.classList.add('show');
+    showToast('Ego terdeteksi! Gunakan Triple Welcoming', 'warning');
+  } else {
+    twPanel.classList.remove('show');
+  }
+}
+
+// Handle resistance - show panel when answer is Tidak/Mungkin
+function handleResistance(layer, type) {
+  const selectEl = document.getElementById(`${layer}${type}`);
+  const panel = document.getElementById(`${layer}${type}Resist`);
+  const badge = document.getElementById(`${layer}${type}Badge`);
+
+  if (!selectEl || !panel) return;
+
+  const val = selectEl.value;
+
+  // Check if resistance is needed
+  let needsResistance = false;
+  if (type === 'Bisakah' || type === 'Mau') {
+    needsResistance = (val === 'Tidak' || val === 'Mungkin');
+  } else if (type === 'Kapan') {
+    needsResistance = (val === 'Nanti' || val === 'Tidak Tahu');
+  }
+
+  if (needsResistance) {
+    panel.classList.add('show');
+    // Hide badge when resistance panel opens
+    if (badge) badge.style.display = 'none';
+    showToast('Resistensi terdeteksi! Release dulu...', 'warning');
+  } else {
+    panel.classList.remove('show');
+    // If answered Ya/Sekarang after releasing resistance, show badge
+    if (resistanceState[layer][type] && badge) {
+      badge.style.display = 'inline';
+    }
+  }
+}
+
+// Check if resistance release is complete
+function checkResistanceComplete(layer, type) {
+  const r1 = document.getElementById(`${layer}${type}R1`)?.value;
+  const r2 = document.getElementById(`${layer}${type}R2`)?.value;
+  const r3 = document.getElementById(`${layer}${type}R3`)?.value;
+  const intAfter = parseInt(document.getElementById(`${layer}${type}RInt`)?.value);
+  const statusEl = document.getElementById(`${layer}${type}RStatus`);
+  const retryBtn = document.getElementById(`${layer}${type}Retry`);
+
+  // Update status
+  if (statusEl && !isNaN(intAfter)) {
+    statusEl.textContent = getIntensityStatus(intAfter);
+  }
+
+  // Enable retry button if all answered and int is low enough
+  const allAnswered = r1 && r2 && r3;
+  const intensityLow = !isNaN(intAfter) && intAfter <= 3;
+
+  if (retryBtn) {
+    retryBtn.disabled = !(allAnswered && intensityLow);
+  }
+}
+
+// Retry main question after resistance release
+function retryQuestion(layer, type) {
+  const panel = document.getElementById(`${layer}${type}Resist`);
+  const selectEl = document.getElementById(`${layer}${type}`);
+  const badge = document.getElementById(`${layer}${type}Badge`);
+
+  // Mark that this question had resistance released
+  resistanceState[layer][type] = true;
+
+  // Hide panel
+  if (panel) panel.classList.remove('show');
+
+  // Show badge
+  if (badge) badge.style.display = 'inline';
+
+  // Reset main question to empty
+  if (selectEl) {
+    selectEl.value = '';
+    selectEl.focus();
+  }
+
+  showToast('Resistensi released! Coba jawab lagi...', 'success');
+
+  // Scroll to question
+  if (selectEl) {
+    selectEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+// Get resistance data for a layer
+function getResistanceData(layer) {
+  const types = ['Bisakah', 'Mau', 'Kapan'];
+  const data = {};
+
+  types.forEach(type => {
+    const r1 = document.getElementById(`${layer}${type}R1`)?.value;
+    const r2 = document.getElementById(`${layer}${type}R2`)?.value;
+    const r3 = document.getElementById(`${layer}${type}R3`)?.value;
+    const intAfter = document.getElementById(`${layer}${type}RInt`)?.value;
+
+    if (r1 || r2 || r3 || intAfter) {
+      data[type] = {
+        r1: r1 || '',
+        r2: r2 || '',
+        r3: r3 || '',
+        intAfter: intAfter || '',
+        released: resistanceState[layer][type]
+      };
+    }
+  });
+
+  return Object.keys(data).length > 0 ? data : null;
+}
+
+// Get Triple Welcoming data for a layer
+function getTripleWelcomingData(layer) {
+  const tw1 = document.getElementById(`${layer}TW1`)?.value;
+  const tw2 = document.getElementById(`${layer}TW2`)?.value;
+  const tw3 = document.getElementById(`${layer}TW3`)?.value;
+  const twInt = document.getElementById(`${layer}TWInt`)?.value;
+
+  if (tw1 || tw2 || tw3 || twInt) {
+    return {
+      tw1: tw1 || '',
+      tw2: tw2 || '',
+      tw3: tw3 || '',
+      intAfter: twInt || ''
+    };
+  }
+  return null;
+}
+
+// Reset resistance panels for a layer
+function resetResistancePanels(layer) {
+  const types = ['Bisakah', 'Mau', 'Kapan'];
+
+  types.forEach(type => {
+    // Reset dropdowns
+    const r1 = document.getElementById(`${layer}${type}R1`);
+    const r2 = document.getElementById(`${layer}${type}R2`);
+    const r3 = document.getElementById(`${layer}${type}R3`);
+    const rInt = document.getElementById(`${layer}${type}RInt`);
+    const status = document.getElementById(`${layer}${type}RStatus`);
+    const panel = document.getElementById(`${layer}${type}Resist`);
+    const badge = document.getElementById(`${layer}${type}Badge`);
+    const retry = document.getElementById(`${layer}${type}Retry`);
+
+    if (r1) r1.value = '';
+    if (r2) r2.value = '';
+    if (r3) r3.value = '';
+    if (rInt) rInt.value = '';
+    if (status) status.textContent = '';
+    if (panel) panel.classList.remove('show');
+    if (badge) badge.style.display = 'none';
+    if (retry) retry.disabled = true;
+
+    // Reset state
+    resistanceState[layer][type] = false;
+  });
+
+  // Reset Triple Welcoming
+  const tw1 = document.getElementById(`${layer}TW1`);
+  const tw2 = document.getElementById(`${layer}TW2`);
+  const tw3 = document.getElementById(`${layer}TW3`);
+  const twInt = document.getElementById(`${layer}TWInt`);
+  const twPanel = document.getElementById(`${layer}TripleWelcoming`);
+
+  if (tw1) tw1.value = '';
+  if (tw2) tw2.value = '';
+  if (tw3) tw3.value = '';
+  if (twInt) twInt.value = '';
+  if (twPanel) twPanel.classList.remove('show');
 }
 
 // ==========================================================================

@@ -28,7 +28,9 @@ const TRACKER_HEADERS = [
   'L3_Sessions', 'L3_Total_Sesi', 'L3_IntAkhir',
   'Root_Sessions', 'Root_Total_Sesi', 'Root_IntAkhir', 'Root_Wanting',
   'Status', 'Emotional_State', 'Emotion_Level',
-  'Insight', 'Next_Step', 'Durasi_Hari'
+  'Insight', 'Next_Step', 'Durasi_Hari',
+  'L1_Resist_Count', 'L2_Resist_Count', 'L3_Resist_Count', 'Root_Resist_Count',
+  'Triple_Welcoming_Used'
 ];
 
 const DRAFT_HEADERS = [
@@ -305,6 +307,15 @@ function saveComplete(data) {
   const endDate = new Date();
   const durasiHari = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) || 1;
 
+  // Count resistances
+  const l1ResistCount = countResistances(data.l1Resistance);
+  const l2ResistCount = countResistances(data.l2Resistance);
+  const l3ResistCount = countResistances(data.l3Resistance);
+  const rootResistCount = countResistances(data.rootResistance);
+
+  // Check Triple Welcoming
+  const twUsed = !!(data.l1TripleWelcoming || data.l2TripleWelcoming || data.l3TripleWelcoming);
+
   const trackerRow = [
     no,
     new Date().toISOString(),
@@ -333,7 +344,12 @@ function saveComplete(data) {
     getEmotionLevel(data.emotionalState),
     data.hasilInsight || '',
     data.hasilNextStep || '',
-    durasiHari
+    durasiHari,
+    l1ResistCount,
+    l2ResistCount,
+    l3ResistCount,
+    rootResistCount,
+    twUsed
   ];
 
   sheet.appendRow(trackerRow);
@@ -342,6 +358,16 @@ function saveComplete(data) {
   deleteDraft(data.sesiId);
 
   return { success: true, message: 'Session completed!', no: no };
+}
+
+// Count resistances in resistance data
+function countResistances(resistanceData) {
+  if (!resistanceData) return 0;
+  let count = 0;
+  if (resistanceData.Bisakah && resistanceData.Bisakah.released) count++;
+  if (resistanceData.Mau && resistanceData.Mau.released) count++;
+  if (resistanceData.Kapan && resistanceData.Kapan.released) count++;
+  return count;
 }
 
 function getTracker() {
@@ -407,6 +433,11 @@ function getStats() {
   let totalL3Sesi = 0, countL3 = 0;
   let totalRootSesi = 0, countRoot = 0;
 
+  // Resistance tracking
+  let totalResistance = 0;
+  let l1ResistTotal = 0, l2ResistTotal = 0, l3ResistTotal = 0, rootResistTotal = 0;
+  let twCount = 0;
+
   for (let i = 1; i < trackerData.length; i++) {
     const row = trackerData[i];
     const status = row[22];
@@ -417,6 +448,13 @@ function getStats() {
     const l2Total = parseInt(row[13]) || 0;
     const l3Total = parseInt(row[16]) || 0;
     const rootTotal = parseInt(row[19]) || 0;
+
+    // Resistance columns (28-32)
+    const l1Resist = parseInt(row[28]) || 0;
+    const l2Resist = parseInt(row[29]) || 0;
+    const l3Resist = parseInt(row[30]) || 0;
+    const rootResist = parseInt(row[31]) || 0;
+    const twUsed = row[32];
 
     if (status === 'SUKSES') totalSukses++;
 
@@ -435,6 +473,14 @@ function getStats() {
     if (l2Total > 0) { totalL2Sesi += l2Total; countL2++; }
     if (l3Total > 0) { totalL3Sesi += l3Total; countL3++; }
     if (rootTotal > 0) { totalRootSesi += rootTotal; countRoot++; }
+
+    // Resistance totals
+    l1ResistTotal += l1Resist;
+    l2ResistTotal += l2Resist;
+    l3ResistTotal += l3Resist;
+    rootResistTotal += rootResist;
+    totalResistance += (l1Resist + l2Resist + l3Resist + rootResist);
+    if (twUsed) twCount++;
   }
 
   // Primary wanting
@@ -447,7 +493,19 @@ function getStats() {
     }
   }
 
+  // Layer with most resistance
+  const resistByLayer = { L1: l1ResistTotal, L2: l2ResistTotal, L3: l3ResistTotal, ROOT: rootResistTotal };
+  let maxResistLayer = '-';
+  let maxResist = 0;
+  for (const [layer, count] of Object.entries(resistByLayer)) {
+    if (count > maxResist) {
+      maxResist = count;
+      maxResistLayer = layer;
+    }
+  }
+
   const successRate = totalSesi > 0 ? Math.round((totalSukses / totalSesi) * 100) : 0;
+  const twRate = totalSesi > 0 ? Math.round((twCount / totalSesi) * 100) : 0;
 
   // Calculate positive vs negative sessions
   let positiveCount = 0;
@@ -478,7 +536,11 @@ function getStats() {
       avgRootSesi: countRoot > 0 ? (totalRootSesi / countRoot).toFixed(1) : '-',
       positiveRate: positiveRate,
       positiveCount: positiveCount,
-      negativeCount: negativeCount
+      negativeCount: negativeCount,
+      totalResistance: totalResistance,
+      maxResistLayer: maxResistLayer,
+      twCount: twCount,
+      twRate: twRate
     }
   };
 }
