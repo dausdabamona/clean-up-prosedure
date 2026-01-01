@@ -5,7 +5,7 @@
 // ==========================================================================
 // CONFIGURATION - GANTI URL INI DENGAN URL WEB APP KAMU!
 // ==========================================================================
-const API_URL = 'https://script.google.com/macros/s/AKfycbzmfaTBqIO51RH5Yk7Az3b_Dviprw_5z0u-oPI-EaUpbRJjLvrR-I9hJ1EhrgPJQ6eTNg/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwC-zuAzqjFki7Gy1zyt0sq6ohWGzADKvCeN4rCr49Pl_0IznTdxzIOyfHkLOxsjteg1A/exec';
 
 // ==========================================================================
 // GLOBAL STATE
