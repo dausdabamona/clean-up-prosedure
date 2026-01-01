@@ -626,11 +626,22 @@ function resetForm() {
     welcomingCompleted[layer] = false;
   });
 
+  // Reset grounding panel
+  const groundingPanel = document.getElementById('groundingPanel');
+  if (groundingPanel) groundingPanel.style.display = 'none';
+
+  // Show Mulai Sesi button again
+  const btnMulai = document.getElementById('btnMulaiSesi');
+  if (btnMulai) btnMulai.style.display = 'block';
+
   // Reset session state
   sessionStarted = false;
 
   generateSesiId();
   showToast('Form di-reset', 'success');
+
+  // Scroll to top
+  document.getElementById('infoSesiCard')?.scrollIntoView({ behavior: 'smooth' });
 }
 
 // ==========================================================================
@@ -1257,42 +1268,95 @@ let welcomingCompleted = {
   root: false
 };
 
-// Show grounding panel
-function showGrounding() {
-  debugLog('showGrounding called, isShowGrounding:', isShowGrounding());
+// ==================== MULAI SESI ====================
+function mulaiSesi() {
+  debugLog('=== MULAI SESI ===');
 
-  if (!isShowGrounding()) {
-    debugLog('Grounding disabled, skipping to session start');
-    sessionStarted = true;
-    checkShowSurfaceWelcoming();
+  // Validate issue
+  const issue = document.getElementById('issue')?.value?.trim();
+  debugLog('Issue:', issue);
+
+  if (!issue) {
+    showToast('Issue/Target harus diisi!', 'error');
+    document.getElementById('issue')?.focus();
     return;
   }
 
-  const overlay = document.getElementById('groundingOverlay');
-  debugLog('Grounding overlay element:', overlay);
+  // Save name
+  saveName();
 
-  if (overlay) {
-    overlay.classList.add('show');
-    document.body.style.overflow = 'hidden';
-    debugLog('Grounding overlay shown');
+  // Generate sesi ID if needed
+  if (!document.getElementById('sesiId')?.value) {
+    generateSesiId();
+  }
+
+  // Hide the mulai button
+  const btn = document.getElementById('btnMulaiSesi');
+  if (btn) btn.style.display = 'none';
+
+  // Check if grounding should be shown
+  debugLog('isShowGrounding:', isShowGrounding());
+
+  if (isShowGrounding() && !sessionStarted) {
+    showGroundingPanel();
   } else {
-    console.error('ERROR: groundingOverlay element not found!');
+    // Skip grounding, go to surface
+    sessionStarted = true;
+    checkShowSurfaceWelcoming();
+  }
+}
+
+// Show grounding panel (inline version)
+function showGroundingPanel() {
+  debugLog('showGroundingPanel called');
+
+  const panel = document.getElementById('groundingPanel');
+  debugLog('Grounding panel element:', panel);
+
+  if (panel) {
+    panel.style.display = 'block';
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    debugLog('Grounding panel shown');
+  } else {
+    console.error('ERROR: groundingPanel element not found!');
+    // Fallback: skip to surface
+    sessionStarted = true;
+    checkShowSurfaceWelcoming();
+  }
+}
+
+// Show grounding overlay (legacy - for backward compatibility)
+function showGrounding() {
+  debugLog('showGrounding called (legacy), delegating to mulaiSesi');
+  // For backward compatibility, just call mulaiSesi
+  if (!sessionStarted) {
+    mulaiSesi();
   }
 }
 
 // Skip grounding
 function skipGrounding() {
+  debugLog('skipGrounding called');
   completeGrounding();
 }
 
 // Complete grounding
 function completeGrounding() {
   debugLog('completeGrounding called');
+
+  // Hide inline grounding panel
+  const panel = document.getElementById('groundingPanel');
+  if (panel) {
+    panel.style.display = 'none';
+  }
+
+  // Also hide overlay if it was used
   const overlay = document.getElementById('groundingOverlay');
   if (overlay) {
     overlay.classList.remove('show');
     document.body.style.overflow = '';
   }
+
   sessionStarted = true;
   showToast('🧘 Siap melanjutkan...', 'success');
   checkShowSurfaceWelcoming();
@@ -1347,41 +1411,11 @@ function completeWelcoming(layer) {
   welcomingCompleted[layer] = true;
 }
 
-// Trigger grounding when issue and kategori are filled
+// Setup grounding trigger (now using Mulai Sesi button)
 function setupGroundingTrigger() {
-  const issueField = document.getElementById('issue');
-  const kategoriField = document.getElementById('kategori');
-
-  let triggered = false;
-
-  const checkTrigger = () => {
-    if (triggered) return;
-    if (sessionStarted) return;
-
-    const hasIssue = issueField?.value?.trim().length > 0;
-    const hasKategori = kategoriField?.value?.length > 0;
-
-    debugLog('Grounding trigger check:', { hasIssue, hasKategori, triggered, sessionStarted });
-
-    if (hasIssue && hasKategori) {
-      triggered = true;
-      debugLog('Triggering Grounding Panel');
-      setTimeout(() => {
-        if (!sessionStarted) {
-          showGrounding();
-        }
-      }, 300);
-    }
-  };
-
-  // Listen for both input and change events
-  if (issueField) {
-    issueField.addEventListener('input', checkTrigger);
-    issueField.addEventListener('change', checkTrigger);
-  }
-  if (kategoriField) {
-    kategoriField.addEventListener('change', checkTrigger);
-  }
+  // The grounding is now triggered by the "Mulai Sesi" button
+  // This function is kept for backward compatibility
+  debugLog('Grounding trigger setup - using Mulai Sesi button approach');
 }
 
 // Setup welcoming triggers for each layer

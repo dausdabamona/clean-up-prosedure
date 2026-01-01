@@ -185,7 +185,13 @@
 
     @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 
-    /* Grounding Panel */
+    /* Grounding Panel - Inline */
+    .grounding-panel-inline{margin-bottom:0.75rem;animation:slideDown 0.4s ease}
+    .grounding-panel-inline .card{border-left:4px solid #8e44ad}
+    .grounding-panel-inline .skip-btn{position:absolute;top:0.5rem;right:0.5rem;background:none;border:none;color:var(--text-light);cursor:pointer;font-size:0.8rem;padding:0.3rem 0.5rem}
+    .grounding-panel-inline .skip-btn:hover{color:#8e44ad;text-decoration:underline}
+
+    /* Grounding Panel - Overlay (legacy) */
     .grounding-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:1rem}
     .grounding-overlay.show{display:flex}
     .grounding-panel{background:var(--white);border-radius:12px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 10px 40px rgba(0,0,0,0.3);animation:slideDown 0.4s ease}
@@ -344,7 +350,7 @@
     <!-- WORKSHEET TAB -->
     <div class="tab-content active" id="tab-worksheet">
       <!-- Info Sesi -->
-      <div class="card">
+      <div class="card" id="infoSesiCard">
         <div class="card-header">📋 INFORMASI SESI</div>
         <div class="card-body">
           <div class="form-row">
@@ -363,6 +369,44 @@
               <option>Suara Internal</option>
               <option>Lainnya</option>
             </select>
+          </div>
+          <button class="btn btn-primary" id="btnMulaiSesi" onclick="mulaiSesi()" style="width:100%;margin-top:0.75rem;padding:0.75rem;font-size:1rem">
+            🚀 Mulai Sesi Clean Up
+          </button>
+        </div>
+      </div>
+
+      <!-- GROUNDING PANEL - Inline, awalnya hidden -->
+      <div class="grounding-panel-inline" id="groundingPanel" style="display:none">
+        <div class="card" style="border-left:4px solid #8e44ad">
+          <div class="card-header" style="background:#8e44ad">🛑 STOP - HADIR SEPENUHNYA</div>
+          <div class="card-body" style="position:relative">
+            <button class="skip-btn" onclick="skipGrounding()">Skip →</button>
+
+            <p style="margin-bottom:1rem">Sebelum melanjutkan, berhenti sejenak...</p>
+
+            <p style="font-size:1.2rem;text-align:center;margin:1.5rem 0;color:#8e44ad">
+              🧘 Tarik napas dalam... tahan... buang perlahan...
+            </p>
+
+            <p style="margin-bottom:0.5rem">Ijinkan dirimu untuk:</p>
+            <ul style="margin:0 0 1rem 1.5rem;line-height:1.8">
+              <li>Berhenti dari kesibukan pikiran</li>
+              <li>Hadir di sini, saat ini</li>
+              <li>Menjadi <strong>APA ADANYA, SEAPA ADANYA</strong></li>
+              <li>Tidak perlu memperbaiki apapun dulu</li>
+              <li>Tidak perlu menjadi berbeda dari sekarang</li>
+            </ul>
+
+            <hr style="margin:1.5rem 0;border:none;border-top:1px solid var(--border)">
+
+            <p style="font-style:italic;text-align:center;margin-bottom:1.5rem;font-size:1.1rem">
+              "Saya hadir sepenuhnya di sini, saat ini."
+            </p>
+
+            <button class="btn btn-primary" onclick="completeGrounding()" style="width:100%;background:#8e44ad;padding:0.75rem">
+              ✅ Saya Siap Melanjutkan
+            </button>
           </div>
         </div>
       </div>
