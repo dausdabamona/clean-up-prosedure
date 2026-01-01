@@ -824,32 +824,171 @@ async function loadStats() {
 }
 
 function renderStats() {
+  // Main stats
   document.getElementById('statTotal').textContent = stats.totalSesi || 0;
   document.getElementById('statSukses').textContent = stats.totalSukses || 0;
   document.getElementById('statRate').textContent = (stats.successRate || 0) + '%';
   document.getElementById('statPending').textContent = stats.pendingDrafts || 0;
   document.getElementById('primaryWanting').textContent = stats.primaryWanting || '-';
 
-  // Positive/Negative counts
+  // Intensity stats
+  const statAvgIntAwal = document.getElementById('statAvgIntAwal');
+  const statAvgIntAkhir = document.getElementById('statAvgIntAkhir');
+  const statAvgReduction = document.getElementById('statAvgReduction');
+
+  if (statAvgIntAwal) statAvgIntAwal.textContent = stats.avgIntAwal?.toFixed(1) || '0';
+  if (statAvgIntAkhir) statAvgIntAkhir.textContent = stats.avgIntAkhir?.toFixed(1) || '0';
+  if (statAvgReduction) {
+    const reduction = stats.avgReduction || 0;
+    statAvgReduction.textContent = reduction > 0 ? `-${reduction.toFixed(1)}` : '0';
+  }
+
+  // Emotion breakdown
   const ec = stats.emotionCount || {};
   const positive = (ec[9] || 0) + (ec[8] || 0) + (ec[7] || 0);
-  const negative = (ec[6] || 0) + (ec[5] || 0) + (ec[4] || 0) + (ec[3] || 0) + (ec[2] || 0) + (ec[1] || 0);
+  const neutral = (ec[6] || 0) + (ec[5] || 0) + (ec[4] || 0);
+  const negative = (ec[3] || 0) + (ec[2] || 0) + (ec[1] || 0);
 
   const statPositive = document.getElementById('statPositive');
+  const statNeutral = document.getElementById('statNeutral');
   const statNegative = document.getElementById('statNegative');
   if (statPositive) statPositive.textContent = positive;
+  if (statNeutral) statNeutral.textContent = neutral;
   if (statNegative) statNegative.textContent = negative;
 
-  // Efficiency stats (average sessions per layer)
-  const avgL1El = document.getElementById('avgL1');
-  const avgL2El = document.getElementById('avgL2');
-  const avgL3El = document.getElementById('avgL3');
-  const avgRootEl = document.getElementById('avgRoot');
+  // Render sub-components
+  renderEfficiency();
+  renderResistensiStats();
+  renderTripleWelcomingStats();
+  renderWantingChart();
+  renderRecentSessions();
+}
 
-  if (avgL1El) avgL1El.textContent = stats.avgL1Sesi || '-';
-  if (avgL2El) avgL2El.textContent = stats.avgL2Sesi || '-';
-  if (avgL3El) avgL3El.textContent = stats.avgL3Sesi || '-';
-  if (avgRootEl) avgRootEl.textContent = stats.avgRootSesi || '-';
+function renderEfficiency() {
+  const avgL1 = stats.avgL1Sesi || 0;
+  const avgL2 = stats.avgL2Sesi || 0;
+  const avgL3 = stats.avgL3Sesi || 0;
+  const avgRoot = stats.avgRootSesi || 0;
+  const maxBar = 10; // Max for layers, 20 for root
+
+  // L1
+  const effL1 = document.getElementById('effL1');
+  const effL1Bar = document.getElementById('effL1Bar');
+  if (effL1) effL1.textContent = avgL1.toFixed(1);
+  if (effL1Bar) effL1Bar.style.width = `${Math.min((avgL1 / maxBar) * 100, 100)}%`;
+
+  // L2
+  const effL2 = document.getElementById('effL2');
+  const effL2Bar = document.getElementById('effL2Bar');
+  if (effL2) effL2.textContent = avgL2.toFixed(1);
+  if (effL2Bar) effL2Bar.style.width = `${Math.min((avgL2 / maxBar) * 100, 100)}%`;
+
+  // L3
+  const effL3 = document.getElementById('effL3');
+  const effL3Bar = document.getElementById('effL3Bar');
+  if (effL3) effL3.textContent = avgL3.toFixed(1);
+  if (effL3Bar) effL3Bar.style.width = `${Math.min((avgL3 / maxBar) * 100, 100)}%`;
+
+  // Root (max 20)
+  const effRoot = document.getElementById('effRoot');
+  const effRootBar = document.getElementById('effRootBar');
+  if (effRoot) effRoot.textContent = avgRoot.toFixed(1);
+  if (effRootBar) effRootBar.style.width = `${Math.min((avgRoot / 20) * 100, 100)}%`;
+}
+
+function renderResistensiStats() {
+  const totalRes = stats.totalResistensi || 0;
+  const avgRes = stats.avgResistensiPerSesi || 0;
+
+  const statTotalResistensi = document.getElementById('statTotalResistensi');
+  const statAvgResistensi = document.getElementById('statAvgResistensi');
+  if (statTotalResistensi) statTotalResistensi.textContent = totalRes;
+  if (statAvgResistensi) statAvgResistensi.textContent = avgRes.toFixed(1);
+
+  // Breakdown per layer
+  const res = stats.resistensiByLayer || {};
+  const resL1 = document.getElementById('resL1');
+  const resL2 = document.getElementById('resL2');
+  const resL3 = document.getElementById('resL3');
+  const resRoot = document.getElementById('resRoot');
+  if (resL1) resL1.textContent = res.l1 || 0;
+  if (resL2) resL2.textContent = res.l2 || 0;
+  if (resL3) resL3.textContent = res.l3 || 0;
+  if (resRoot) resRoot.textContent = res.root || 0;
+}
+
+function renderTripleWelcomingStats() {
+  const tripleCount = stats.tripleWelcomingCount || 0;
+  const total = stats.totalSesi || 1;
+  const percent = ((tripleCount / total) * 100).toFixed(0);
+
+  const statTripleCount = document.getElementById('statTripleCount');
+  const statTriplePercent = document.getElementById('statTriplePercent');
+  if (statTripleCount) statTripleCount.textContent = tripleCount;
+  if (statTriplePercent) statTriplePercent.textContent = `${percent}%`;
+}
+
+function renderWantingChart() {
+  const container = document.getElementById('wantingChart');
+  if (!container) return;
+
+  const wantingData = stats.wantingDistribution || {};
+  const wantings = ['Control', 'Approval', 'Security', 'Worth', 'Freedom', 'Separation', 'Oneness'];
+  const total = Object.values(wantingData).reduce((a, b) => a + b, 0) || 1;
+
+  container.innerHTML = wantings.map(w => {
+    const count = wantingData[w] || 0;
+    const pct = (count / total) * 100;
+    return `
+      <div class="wanting-row">
+        <span>${w}</span>
+        <div class="wanting-bar-wrap"><div class="wanting-bar" style="width:${pct}%"></div></div>
+        <span class="wanting-count">${count}</span>
+      </div>
+    `;
+  }).join('');
+
+  // Update primary wanting description
+  const primaryWantingDesc = document.getElementById('primaryWantingDesc');
+  if (primaryWantingDesc && stats.primaryWanting) {
+    const descriptions = {
+      'Control': 'Kecenderungan untuk mengontrol situasi',
+      'Approval': 'Kebutuhan untuk diakui dan diterima',
+      'Security': 'Pencarian rasa aman dan stabil',
+      'Worth': 'Kebutuhan merasa berharga',
+      'Freedom': 'Keinginan untuk bebas',
+      'Separation': 'Kebutuhan untuk berbeda',
+      'Oneness': 'Keinginan untuk menyatu'
+    };
+    primaryWantingDesc.textContent = descriptions[stats.primaryWanting] || '';
+  }
+}
+
+function renderRecentSessions() {
+  const container = document.getElementById('recentSessions');
+  if (!container) return;
+
+  const recent = sessions.slice(0, 5);
+  if (!recent.length) {
+    container.innerHTML = '<p style="padding:1rem;text-align:center;color:var(--text-light)">Belum ada sesi</p>';
+    return;
+  }
+
+  container.innerHTML = recent.map(s => `
+    <div class="recent-item">
+      <div>
+        <div class="recent-issue">${s.issue || 'Untitled'}</div>
+        <div class="recent-meta">${s.rootWanting || '-'} • ${s.timestamp ? new Date(s.timestamp).toLocaleDateString('id-ID') : '-'}</div>
+      </div>
+      <span class="recent-status ${s.status === 'SUKSES' ? '' : 'pending'}">${s.emotionLevel || '-'}</span>
+    </div>
+  `).join('');
+}
+
+function refreshDashboard() {
+  showToast('🔄 Memuat data...', 'info');
+  loadStats();
+  loadTracker();
 }
 
 function renderEmotionScale() {
