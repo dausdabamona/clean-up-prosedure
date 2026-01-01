@@ -3,10 +3,32 @@
 // ==========================================================================
 
 // ==========================================================================
-// CONFIGURATION - GANTI URL INI DENGAN URL WEB APP KAMU!
+// CONFIGURATION - Stored in localStorage
 // ==========================================================================
-const API_URL = 'https://script.google.com/macros/s/AKfycbwC-zuAzqjFki7Gy1zyt0sq6ohWGzADKvCeN4rCr49Pl_0IznTdxzIOyfHkLOxsjteg1A/exec';
-const DEFAULT_NAME = 'Firdaus Dabamona';
+const FALLBACK_API_URL = 'https://script.google.com/macros/s/AKfycbwC-zuAzqjFki7Gy1zyt0sq6ohWGzADKvCeN4rCr49Pl_0IznTdxzIOyfHkLOxsjteg1A/exec';
+const FALLBACK_DEFAULT_NAME = 'Firdaus Dabamona';
+
+// Get API URL from localStorage or fallback
+function getApiUrl() {
+  return localStorage.getItem('cleanupApiUrl') || FALLBACK_API_URL;
+}
+
+// Get Default Name from localStorage or fallback
+function getDefaultName() {
+  return localStorage.getItem('cleanupDefaultName') || FALLBACK_DEFAULT_NAME;
+}
+
+// Check if debug mode is enabled
+function isDebugMode() {
+  return localStorage.getItem('cleanupDebugMode') === 'true';
+}
+
+// Debug log
+function debugLog(...args) {
+  if (isDebugMode()) {
+    console.log('[CleanUp Debug]', ...args);
+  }
+}
 
 // ==========================================================================
 // GLOBAL STATE
@@ -26,13 +48,16 @@ document.addEventListener('DOMContentLoaded', function() {
   setupIntensityListeners();
   initReleaseTrackers();
   setupFormListeners();
+  loadSettings();
 
-  if (API_URL !== 'YOUR_WEBAPP_URL_HERE') {
+  const apiUrl = getApiUrl();
+  if (apiUrl && apiUrl !== 'YOUR_WEBAPP_URL_HERE') {
     loadDrafts();
     loadTracker();
     loadStats();
   } else {
-    console.log('API belum dikonfigurasi. Set API_URL di app.js');
+    console.log('API belum dikonfigurasi. Buka Settings untuk konfigurasi.');
+    showApiWarning(true);
   }
 });
 
@@ -81,7 +106,7 @@ function generateSesiId() {
 }
 
 function loadSavedName() {
-  const savedName = localStorage.getItem('cleanupUserName') || DEFAULT_NAME;
+  const savedName = localStorage.getItem('cleanupUserName') || getDefaultName();
   document.getElementById('nama').value = savedName;
 }
 
@@ -599,20 +624,28 @@ function resetForm() {
 // API CALLS
 // ==========================================================================
 async function apiCall(action, data = null, extraParams = '') {
-  if (API_URL === 'YOUR_WEBAPP_URL_HERE') {
-    showToast('API belum dikonfigurasi! Edit API_URL di app.js', 'error');
+  const apiUrl = getApiUrl();
+
+  if (!apiUrl || apiUrl === 'YOUR_WEBAPP_URL_HERE') {
+    showToast('API belum dikonfigurasi! Buka Settings untuk konfigurasi.', 'error');
+    showApiWarning(true);
     return null;
   }
-  
-  let url = `${API_URL}?action=${action}`;
+
+  let url = `${apiUrl}?action=${action}`;
   if (data) url += `&data=${encodeURIComponent(JSON.stringify(data))}`;
   if (extraParams) url += extraParams;
-  
+
+  debugLog('API Call:', action, data);
+
   try {
     const response = await fetch(url);
-    return await response.json();
+    const result = await response.json();
+    debugLog('API Response:', result);
+    return result;
   } catch (error) {
     console.error('API Error:', error);
+    debugLog('API Error:', error);
     showToast('Gagal koneksi ke server', 'error');
     return null;
   }
@@ -1043,6 +1076,196 @@ function resetResistancePanels(layer) {
   if (tw3) tw3.value = '';
   if (twInt) twInt.value = '';
   if (twPanel) twPanel.classList.remove('show');
+}
+
+// ==========================================================================
+// SETTINGS FUNCTIONS
+// ==========================================================================
+
+// Show/hide API warning banner
+function showApiWarning(show) {
+  const banner = document.getElementById('apiWarning');
+  if (banner) {
+    banner.style.display = show ? 'block' : 'none';
+  }
+}
+
+// Load settings into Settings panel
+function loadSettings() {
+  // Load API URL
+  const apiUrlInput = document.getElementById('settingsApiUrl');
+  if (apiUrlInput) {
+    apiUrlInput.value = localStorage.getItem('cleanupApiUrl') || FALLBACK_API_URL;
+  }
+
+  // Load Default Name
+  const defaultNameInput = document.getElementById('settingsDefaultName');
+  if (defaultNameInput) {
+    defaultNameInput.value = localStorage.getItem('cleanupDefaultName') || FALLBACK_DEFAULT_NAME;
+  }
+
+  // Load Debug Mode
+  const debugModeInput = document.getElementById('settingsDebugMode');
+  if (debugModeInput) {
+    debugModeInput.checked = localStorage.getItem('cleanupDebugMode') === 'true';
+  }
+
+  // Update storage info
+  updateStorageInfo();
+
+  // Check if API is configured
+  const apiUrl = getApiUrl();
+  if (!apiUrl || apiUrl === 'YOUR_WEBAPP_URL_HERE') {
+    showApiWarning(true);
+  }
+}
+
+// Save API URL
+function saveApiUrl() {
+  const apiUrlInput = document.getElementById('settingsApiUrl');
+  if (!apiUrlInput) return;
+
+  const url = apiUrlInput.value.trim();
+
+  if (!url) {
+    showToast('URL tidak boleh kosong!', 'error');
+    return;
+  }
+
+  if (!url.startsWith('https://script.google.com/')) {
+    showToast('URL harus berupa Google Apps Script URL', 'warning');
+  }
+
+  localStorage.setItem('cleanupApiUrl', url);
+  showToast('API URL tersimpan!', 'success');
+  showApiWarning(false);
+
+  // Reload data with new URL
+  loadDrafts();
+  loadTracker();
+  loadStats();
+}
+
+// Test connection to API
+async function testConnection() {
+  const statusEl = document.getElementById('connectionStatus');
+  if (!statusEl) return;
+
+  statusEl.innerHTML = '<span style="color:var(--text-light)">🔄 Testing...</span>';
+
+  const apiUrl = getApiUrl();
+
+  if (!apiUrl || apiUrl === 'YOUR_WEBAPP_URL_HERE') {
+    statusEl.innerHTML = '<span style="color:var(--danger)">❌ API URL belum dikonfigurasi</span>';
+    return;
+  }
+
+  try {
+    const startTime = Date.now();
+    const response = await fetch(`${apiUrl}?action=getStats`);
+    const result = await response.json();
+    const latency = Date.now() - startTime;
+
+    if (result && result.success) {
+      statusEl.innerHTML = `<span style="color:var(--success)">✅ Terkoneksi! (${latency}ms)</span>`;
+      showToast('Koneksi berhasil!', 'success');
+    } else {
+      statusEl.innerHTML = `<span style="color:var(--warning)">⚠️ Response tidak valid</span>`;
+      showToast('Response tidak valid', 'warning');
+    }
+  } catch (error) {
+    console.error('Connection test failed:', error);
+    statusEl.innerHTML = `<span style="color:var(--danger)">❌ Gagal koneksi: ${error.message}</span>`;
+    showToast('Gagal koneksi ke server', 'error');
+  }
+}
+
+// Save user settings (default name, debug mode)
+function saveUserSettings() {
+  const defaultNameInput = document.getElementById('settingsDefaultName');
+  const debugModeInput = document.getElementById('settingsDebugMode');
+
+  if (defaultNameInput && defaultNameInput.value.trim()) {
+    localStorage.setItem('cleanupDefaultName', defaultNameInput.value.trim());
+  }
+
+  if (debugModeInput) {
+    localStorage.setItem('cleanupDebugMode', debugModeInput.checked ? 'true' : 'false');
+  }
+
+  showToast('Settings tersimpan!', 'success');
+  updateStorageInfo();
+}
+
+// Clear local storage (except API URL)
+function clearLocalStorage() {
+  if (!confirm('Hapus semua data lokal (kecuali API URL)?\n\nData yang akan dihapus:\n- Nama tersimpan\n- Debug mode\n\nAPI URL akan tetap tersimpan.')) {
+    return;
+  }
+
+  const apiUrl = localStorage.getItem('cleanupApiUrl');
+  const defaultName = localStorage.getItem('cleanupDefaultName');
+
+  // Clear user-specific data
+  localStorage.removeItem('cleanupUserName');
+  localStorage.removeItem('cleanupDebugMode');
+
+  showToast('Local storage dibersihkan', 'success');
+  updateStorageInfo();
+
+  // Reload settings
+  loadSettings();
+}
+
+// Reset all settings to default
+function resetAllSettings() {
+  if (!confirm('Reset SEMUA settings ke default?\n\nIni akan menghapus:\n- API URL (akan kembali ke default)\n- Default Name\n- Debug Mode\n- Nama tersimpan')) {
+    return;
+  }
+
+  // Clear all cleanup-related items
+  const keysToRemove = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith('cleanup')) {
+      keysToRemove.push(key);
+    }
+  }
+
+  keysToRemove.forEach(key => localStorage.removeItem(key));
+
+  showToast('Semua settings direset!', 'success');
+  updateStorageInfo();
+
+  // Reload settings and page data
+  loadSettings();
+  loadSavedName();
+  showApiWarning(false);
+
+  // Reload data
+  loadDrafts();
+  loadTracker();
+  loadStats();
+}
+
+// Update storage info display
+function updateStorageInfo() {
+  const storageInfoEl = document.getElementById('storageInfo');
+  if (!storageInfoEl) return;
+
+  let itemCount = 0;
+  let totalSize = 0;
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith('cleanup')) {
+      itemCount++;
+      totalSize += (localStorage.getItem(key) || '').length;
+    }
+  }
+
+  const sizeKB = (totalSize / 1024).toFixed(2);
+  storageInfoEl.textContent = `${itemCount} items (${sizeKB} KB)`;
 }
 
 // ==========================================================================
