@@ -1259,16 +1259,24 @@ let welcomingCompleted = {
 
 // Show grounding panel
 function showGrounding() {
+  debugLog('showGrounding called, isShowGrounding:', isShowGrounding());
+
   if (!isShowGrounding()) {
+    debugLog('Grounding disabled, skipping to session start');
     sessionStarted = true;
     checkShowSurfaceWelcoming();
     return;
   }
 
   const overlay = document.getElementById('groundingOverlay');
+  debugLog('Grounding overlay element:', overlay);
+
   if (overlay) {
     overlay.classList.add('show');
     document.body.style.overflow = 'hidden';
+    debugLog('Grounding overlay shown');
+  } else {
+    console.error('ERROR: groundingOverlay element not found!');
   }
 }
 
@@ -1279,12 +1287,14 @@ function skipGrounding() {
 
 // Complete grounding
 function completeGrounding() {
+  debugLog('completeGrounding called');
   const overlay = document.getElementById('groundingOverlay');
   if (overlay) {
     overlay.classList.remove('show');
     document.body.style.overflow = '';
   }
   sessionStarted = true;
+  showToast('🧘 Siap melanjutkan...', 'success');
   checkShowSurfaceWelcoming();
 }
 
@@ -1337,7 +1347,7 @@ function completeWelcoming(layer) {
   welcomingCompleted[layer] = true;
 }
 
-// Trigger grounding when issue is filled (first significant input)
+// Trigger grounding when issue and kategori are filled
 function setupGroundingTrigger() {
   const issueField = document.getElementById('issue');
   const kategoriField = document.getElementById('kategori');
@@ -1346,8 +1356,16 @@ function setupGroundingTrigger() {
 
   const checkTrigger = () => {
     if (triggered) return;
-    if (issueField?.value && kategoriField?.value) {
+    if (sessionStarted) return;
+
+    const hasIssue = issueField?.value?.trim().length > 0;
+    const hasKategori = kategoriField?.value?.length > 0;
+
+    debugLog('Grounding trigger check:', { hasIssue, hasKategori, triggered, sessionStarted });
+
+    if (hasIssue && hasKategori) {
       triggered = true;
+      debugLog('Triggering Grounding Panel');
       setTimeout(() => {
         if (!sessionStarted) {
           showGrounding();
@@ -1356,8 +1374,14 @@ function setupGroundingTrigger() {
     }
   };
 
-  if (issueField) issueField.addEventListener('change', checkTrigger);
-  if (kategoriField) kategoriField.addEventListener('change', checkTrigger);
+  // Listen for both input and change events
+  if (issueField) {
+    issueField.addEventListener('input', checkTrigger);
+    issueField.addEventListener('change', checkTrigger);
+  }
+  if (kategoriField) {
+    kategoriField.addEventListener('change', checkTrigger);
+  }
 }
 
 // Setup welcoming triggers for each layer
