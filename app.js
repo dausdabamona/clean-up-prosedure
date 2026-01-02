@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
   loadSessionSettings();
   setupGroundingTrigger();
   setupWelcomingTriggers();
+  loadUnfinishedCleanups();
 
   const apiUrl = getApiUrl();
   if (apiUrl && apiUrl !== 'YOUR_WEBAPP_URL_HERE') {
@@ -806,18 +807,21 @@ async function apiCall(action, data = null, extraParams = '') {
 // ==========================================================================
 async function saveDraft() {
   const data = collectFormData();
-  
+
   if (!data.issue) {
     showToast('Issue/Target harus diisi!', 'error');
     return;
   }
-  
+
   data.layerStuck = determineLayerStuck(data);
   data.currentIntensity = data.rootIntensityAfter || data.l3IntensityAfter || data.l2IntensityAfter || data.l1IntensityAfter || data.surfaceIntensity;
   data.status = data.layerStuck === 'DONE' ? 'READY' : 'IN PROGRESS';
-  
+
+  // Also save to local unfinished cleanups
+  addToUnfinishedCleanup();
+
   const result = await apiCall('saveDraft', data);
-  
+
   if (result && result.success) {
     showToast('💾 Draft tersimpan!', 'success');
     loadDrafts();
@@ -826,16 +830,20 @@ async function saveDraft() {
 
 async function saveComplete() {
   const data = collectFormData();
-  
+
   if (!data.issue) { showToast('Issue/Target harus diisi!', 'error'); return; }
   if (!data.hasilStatus) { showToast('Status Hasil Akhir harus diisi!', 'error'); return; }
   if (!data.emotionalState) { showToast('Emotional State harus diisi!', 'error'); return; }
-  
+
   if (!confirm('Tuntaskan sesi ini?')) return;
-  
+
   const result = await apiCall('saveComplete', data);
-  
+
   if (result && result.success) {
+    // Remove from unfinished cleanups when completed
+    removeFromUnfinishedCleanup();
+    isResumingCleanup = false;
+
     showToast('✅ Sesi tuntas! Alhamdulillah!', 'success');
     resetForm();
     loadTracker();
@@ -1813,6 +1821,207 @@ function updateStorageInfo() {
 
   const sizeKB = (totalSize / 1024).toFixed(2);
   storageInfoEl.textContent = `${itemCount} items (${sizeKB} KB)`;
+}
+
+// ==========================================================================
+// UNFINISHED CLEANUP RELEASES
+// ==========================================================================
+let unfinishedCleanups = [];
+let currentUnfinishedCleanupId = null;
+let isResumingCleanup = false;
+
+function saveUnfinishedCleanup() {
+  localStorage.setItem('cleanup_unfinished', JSON.stringify(unfinishedCleanups));
+}
+
+function loadUnfinishedCleanups() {
+  const saved = localStorage.getItem('cleanup_unfinished');
+  if (saved) {
+    try {
+      unfinishedCleanups = JSON.parse(saved);
+    } catch (e) {
+      unfinishedCleanups = [];
+    }
+  }
+  renderUnfinishedCleanups();
+}
+
+function renderUnfinishedCleanups() {
+  const container = document.getElementById('unfinishedCleanupContainer');
+  const section = document.getElementById('unfinishedCleanupSection');
+
+  if (!container || !section) return;
+
+  if (unfinishedCleanups.length === 0) {
+    section.classList.remove('show');
+    return;
+  }
+
+  section.classList.add('show');
+
+  container.innerHTML = unfinishedCleanups.map((item, index) => {
+    const time = new Date(item.timestamp).toLocaleString('id-ID', {
+      day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+    });
+
+    return `
+      <div class="unfinished-cleanup-item">
+        <div class="unfinished-cleanup-top">
+          <span class="unfinished-cleanup-issue">${item.issue || 'Untitled'}</span>
+          <span class="unfinished-cleanup-layer">${item.stuckLayer || 'L1'}</span>
+        </div>
+        <div class="unfinished-cleanup-meta">📅 ${time}</div>
+        ${item.rootWanting ? `<div class="unfinished-cleanup-wanting">Root: ${item.rootWanting}</div>` : ''}
+        <div class="unfinished-cleanup-actions">
+          <button class="btn btn-warning" onclick="resumeCleanup(${index})">▶️ Lanjutkan</button>
+          <button class="btn btn-danger" onclick="deleteUnfinishedCleanup(${index})">🗑️</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function addToUnfinishedCleanup() {
+  const data = collectFormData();
+
+  // Only save if has issue and intensity > 0
+  if (!data.issue) return;
+
+  const currentIntensity = parseInt(data.rootIntensityAfter) || parseInt(data.l3IntensityAfter) ||
+    parseInt(data.l2IntensityAfter) || parseInt(data.l1IntensityAfter) || parseInt(data.surfaceIntensity) || 0;
+
+  if (currentIntensity === 0) {
+    // Fully released - remove from unfinished
+    removeFromUnfinishedCleanup();
+    return;
+  }
+
+  const stuckLayer = determineLayerStuck(data);
+
+  const existingIndex = unfinishedCleanups.findIndex(item => item.id === currentUnfinishedCleanupId);
+
+  const unfinishedData = {
+    id: currentUnfinishedCleanupId || Date.now(),
+    issue: data.issue,
+    kategori: data.kategori,
+    surfaceIntensity: data.surfaceIntensity,
+    l1Bisakah: data.l1Bisakah,
+    l1Mau: data.l1Mau,
+    l1Kapan: data.l1Kapan,
+    l1IntensityAfter: data.l1IntensityAfter,
+    l2Bisakah: data.l2Bisakah,
+    l2Mau: data.l2Mau,
+    l2Kapan: data.l2Kapan,
+    l2IntensityAfter: data.l2IntensityAfter,
+    l3Bisakah: data.l3Bisakah,
+    l3Mau: data.l3Mau,
+    l3Kapan: data.l3Kapan,
+    l3IntensityAfter: data.l3IntensityAfter,
+    rootBisakah: data.rootBisakah,
+    rootMau: data.rootMau,
+    rootKapan: data.rootKapan,
+    rootIntensityAfter: data.rootIntensityAfter,
+    rootWanting: data.rootWanting,
+    stuckLayer: stuckLayer,
+    timestamp: new Date().toISOString()
+  };
+
+  if (existingIndex !== -1) {
+    unfinishedCleanups[existingIndex] = unfinishedData;
+  } else {
+    unfinishedCleanups.push(unfinishedData);
+  }
+
+  saveUnfinishedCleanup();
+}
+
+function removeFromUnfinishedCleanup() {
+  if (currentUnfinishedCleanupId) {
+    unfinishedCleanups = unfinishedCleanups.filter(item => item.id !== currentUnfinishedCleanupId);
+    saveUnfinishedCleanup();
+    currentUnfinishedCleanupId = null;
+  }
+}
+
+function resumeCleanup(index) {
+  const item = unfinishedCleanups[index];
+  if (!item) return;
+
+  // Restore state
+  currentUnfinishedCleanupId = item.id;
+  isResumingCleanup = true;
+
+  // Hide unfinished section
+  document.getElementById('unfinishedCleanupSection').classList.remove('show');
+
+  // Restore form data
+  document.getElementById('issue').value = item.issue || '';
+  document.getElementById('kategori').value = item.kategori || '';
+  document.getElementById('surfaceIntensity').value = item.surfaceIntensity || '';
+
+  // Restore layer answers
+  const layers = ['l1', 'l2', 'l3', 'root'];
+  const types = ['Bisakah', 'Mau', 'Kapan'];
+
+  layers.forEach(layer => {
+    types.forEach(type => {
+      const el = document.getElementById(`${layer}${type}`);
+      if (el && item[`${layer}${type}`]) {
+        el.value = item[`${layer}${type}`];
+      }
+    });
+
+    const intensityEl = document.getElementById(`${layer}IntensityAfter`);
+    if (intensityEl && item[`${layer}IntensityAfter`]) {
+      intensityEl.value = item[`${layer}IntensityAfter`];
+    }
+  });
+
+  if (item.rootWanting) {
+    document.getElementById('rootWanting').value = item.rootWanting;
+  }
+
+  // Start session and show the appropriate layer's merge panel
+  mulaiSesi();
+
+  // Determine which layer to show the merge panel for
+  const stuckLayer = item.stuckLayer || 'L1';
+  let targetLayer = 'l1';
+  let targetType = 'Bisakah';
+
+  if (stuckLayer.includes('ROOT')) {
+    targetLayer = 'root';
+  } else if (stuckLayer.includes('L3')) {
+    targetLayer = 'l3';
+  } else if (stuckLayer.includes('L2')) {
+    targetLayer = 'l2';
+  }
+
+  // Show the resistance panel with merge section after a short delay
+  setTimeout(() => {
+    const resistPanel = document.getElementById(`${targetLayer}${targetType}Resist`);
+    if (resistPanel) {
+      resistPanel.classList.add('show');
+      resistPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    showToast(`🔄 Melanjutkan cleanup - hadirkan kembali emosi, resistensi, dan ego`, 'info');
+  }, 500);
+}
+
+function deleteUnfinishedCleanup(index) {
+  if (confirm('Hapus cleanup yang belum tuntas ini?')) {
+    unfinishedCleanups.splice(index, 1);
+    saveUnfinishedCleanup();
+    renderUnfinishedCleanups();
+  }
+}
+
+function startFreshCleanup() {
+  // Hide unfinished section and reset
+  document.getElementById('unfinishedCleanupSection').classList.remove('show');
+  isResumingCleanup = false;
+  currentUnfinishedCleanupId = null;
+  resetForm();
 }
 
 // ==========================================================================

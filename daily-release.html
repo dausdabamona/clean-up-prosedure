@@ -213,6 +213,36 @@
       .btn-group{flex-direction:column}
       .btn-group .btn{min-width:100%}
     }
+
+    /* ==================== UNFINISHED RELEASES ==================== */
+    .unfinished-section{margin-bottom:0.75rem}
+    .unfinished-header{background:linear-gradient(135deg,var(--warning),#e67e22)}
+    .unfinished-item{background:var(--white);border-radius:10px;padding:1rem;margin-bottom:0.75rem;border-left:4px solid var(--warning);box-shadow:var(--shadow)}
+    .unfinished-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem}
+    .unfinished-emotion{display:flex;align-items:center;gap:0.5rem}
+    .unfinished-emotion .emoji{font-size:1.5rem}
+    .unfinished-emotion .name{font-weight:700;color:var(--purple);font-size:1rem}
+    .unfinished-intensity{text-align:right}
+    .unfinished-intensity .value{font-size:1.5rem;font-weight:700;color:var(--warning)}
+    .unfinished-intensity .label{font-size:0.7rem;color:var(--text-light)}
+    .unfinished-meta{font-size:0.75rem;color:var(--text-light);margin-bottom:0.5rem}
+    .unfinished-message{font-size:0.8rem;color:var(--text-dark);font-style:italic;background:#fef9e7;padding:0.5rem;border-radius:6px;margin-bottom:0.75rem}
+    .unfinished-actions{display:flex;gap:0.5rem}
+    .unfinished-actions .btn{flex:1;padding:0.5rem;font-size:0.8rem}
+    .btn-warning{background:linear-gradient(135deg,var(--warning),#e67e22);color:var(--white)}
+    .btn-danger{background:var(--danger);color:var(--white)}
+    .btn-danger:hover{background:#a93226}
+
+    /* Resume Summary */
+    .resume-summary{display:none;background:linear-gradient(135deg,#ebf5fb,#d4e6f1);border:2px solid var(--purple);border-radius:12px;padding:1rem;margin-bottom:1rem}
+    .resume-summary.show{display:block;animation:slideIn 0.3s ease}
+    @keyframes slideIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+    .resume-summary-header{display:flex;align-items:center;gap:0.5rem;font-weight:700;color:var(--purple);margin-bottom:0.75rem;font-size:0.9rem}
+    .resume-summary-content{font-size:0.85rem;color:var(--text-dark)}
+    .resume-summary-item{background:var(--white);padding:0.5rem 0.75rem;border-radius:8px;margin-bottom:0.5rem}
+    .resume-summary-item label{font-weight:600;color:var(--purple);font-size:0.75rem;display:block;margin-bottom:0.2rem}
+    .resume-summary-item span{color:var(--text-dark)}
+    .resume-summary-note{font-size:0.75rem;color:var(--warning);font-style:italic;margin-top:0.5rem;display:flex;align-items:center;gap:0.3rem}
   </style>
 </head>
 <body>
@@ -229,6 +259,22 @@
 
   <!-- Main Content -->
   <div class="main-content">
+
+    <!-- Unfinished Releases Section -->
+    <div class="card unfinished-section" id="unfinishedSection" style="display:none;">
+      <div class="card-header unfinished-header">⏳ Release Belum Tuntas</div>
+      <div class="card-body">
+        <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:0.75rem;">
+          Ada emosi yang belum sepenuhnya di-release. Lanjutkan untuk menyelesaikan.
+        </p>
+        <div id="unfinishedContainer">
+          <!-- Dynamic content -->
+        </div>
+        <button class="btn btn-outline btn-block" style="margin-top:0.5rem;" onclick="startFreshRelease()">
+          🆕 Mulai Release Baru
+        </button>
+      </div>
+    </div>
 
     <!-- SECTION 1: Wise Host Activation -->
     <div class="card" id="wiseHostCard">
@@ -459,6 +505,9 @@
     };
     let dailyLog = [];
     let timerInterval = null;
+    let unfinishedReleases = [];
+    let currentUnfinishedId = null;
+    let isResuming = false;
 
     // Emotion data
     const EMOTIONS = {
@@ -661,6 +710,27 @@
         6: `
           <div class="step-instruction">
             <h4>🔮 PELEBURAN - Hadirkan 3 Elemen</h4>
+
+            <!-- Resume Summary (shown when continuing unfinished release) -->
+            <div class="resume-summary ${isResuming ? 'show' : ''}" id="resumeSummary">
+              <div class="resume-summary-header">🔄 Melanjutkan Proses Sebelumnya</div>
+              <div class="resume-summary-content">
+                <div class="resume-summary-item">
+                  <label>Emosi:</label>
+                  <span>${emo.emoji} ${emo.name}</span>
+                </div>
+                <div class="resume-summary-item">
+                  <label>Message:</label>
+                  <span>${releaseData.message || '-'}</span>
+                </div>
+                <div class="resume-summary-item">
+                  <label>Intensitas Terakhir:</label>
+                  <span>${releaseData.intensityAfter || releaseData.intensityBefore}/10</span>
+                </div>
+              </div>
+              <div class="resume-summary-note">⚠️ Hadirkan kembali emosi, resistensi, dan ego untuk melanjutkan pelepasan</div>
+            </div>
+
             <p class="instruction-main">Sebelum melepaskan, hadirkan ketiganya:</p>
 
             <div class="merge-container">
@@ -944,6 +1014,18 @@
       dailyLog.push({...releaseData});
       saveDailyLog();
 
+      // Handle unfinished releases
+      if (releaseData.intensityAfter === 0) {
+        // Fully released - remove from unfinished
+        removeFromUnfinished();
+      } else {
+        // Still has intensity - save to unfinished for next session
+        addToUnfinished();
+      }
+
+      // Reset resume flag
+      isResuming = false;
+
       // Hide welcoming room, show completion
       document.getElementById('welcomingRoom').style.display = 'none';
       document.getElementById('completionCard').style.display = 'block';
@@ -966,7 +1048,10 @@
 
       document.getElementById('completionCard').scrollIntoView({ behavior: 'smooth' });
 
-      showToast(`🕊️ ${emo.name} sudah release dengan damai!`, 'success');
+      const toastMsg = releaseData.intensityAfter > 0
+        ? `🔄 ${emo.name} disimpan untuk dilanjutkan (${releaseData.intensityAfter}/10)`
+        : `🕊️ ${emo.name} sudah release dengan damai!`;
+      showToast(toastMsg, releaseData.intensityAfter > 0 ? 'info' : 'success');
     }
 
     // ==================== RELEASE ANOTHER ====================
@@ -983,12 +1068,16 @@
       };
       currentStep = 1;
       selectedEmotion = null;
+      isResuming = false;
+      currentUnfinishedId = null;
 
       // Clear timer
       clearInterval(timerInterval);
 
       // Reset UI
       document.getElementById('completionCard').style.display = 'none';
+      document.getElementById('welcomingRoom').style.display = 'none';
+      document.getElementById('emotionScaleCard').style.display = 'block';
       document.getElementById('guestChair').classList.remove('entering');
       document.getElementById('door').classList.remove('open');
       document.querySelectorAll('.emotion-btn').forEach(b => b.classList.remove('selected'));
@@ -1053,6 +1142,171 @@
       }).join('');
     }
 
+    // ==================== UNFINISHED RELEASES ====================
+    function saveUnfinished() {
+      localStorage.setItem('dailyRelease_unfinished', JSON.stringify(unfinishedReleases));
+    }
+
+    function loadUnfinished() {
+      const saved = localStorage.getItem('dailyRelease_unfinished');
+      if (saved) {
+        try {
+          unfinishedReleases = JSON.parse(saved);
+        } catch (e) {
+          unfinishedReleases = [];
+        }
+      }
+    }
+
+    function renderUnfinished() {
+      const container = document.getElementById('unfinishedContainer');
+      const section = document.getElementById('unfinishedSection');
+
+      if (unfinishedReleases.length === 0) {
+        section.style.display = 'none';
+        return;
+      }
+
+      section.style.display = 'block';
+
+      container.innerHTML = unfinishedReleases.map((item, index) => {
+        const emo = EMOTIONS[item.level];
+        const time = new Date(item.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+        return `
+          <div class="unfinished-item">
+            <div class="unfinished-top">
+              <div class="unfinished-emotion">
+                <span class="emoji">${emo.emoji}</span>
+                <span class="name">${emo.name}</span>
+              </div>
+              <div class="unfinished-intensity">
+                <span class="value">${item.intensityAfter || item.intensityBefore}/10</span>
+                <span class="label">Intensitas</span>
+              </div>
+            </div>
+            <div class="unfinished-meta">📅 ${time}</div>
+            ${item.message ? `<div class="unfinished-message">"${item.message}"</div>` : ''}
+            <div class="unfinished-actions">
+              <button class="btn btn-warning" onclick="resumeRelease(${index})">▶️ Lanjutkan</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteUnfinished(${index})">🗑️</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addToUnfinished() {
+      // Only save if has some data and intensity > 0
+      if (!releaseData.level || releaseData.intensityAfter === 0) return;
+
+      const existingIndex = unfinishedReleases.findIndex(item => item.id === currentUnfinishedId);
+
+      const unfinishedData = {
+        id: currentUnfinishedId || Date.now(),
+        level: releaseData.level,
+        emotion: releaseData.emotion,
+        bodyLocation: releaseData.bodyLocation,
+        intensityBefore: releaseData.intensityBefore,
+        intensityAfter: releaseData.intensityAfter,
+        message: releaseData.message,
+        currentStep: currentStep,
+        timestamp: releaseData.timestamp || new Date().toISOString()
+      };
+
+      if (existingIndex !== -1) {
+        unfinishedReleases[existingIndex] = unfinishedData;
+      } else {
+        unfinishedReleases.push(unfinishedData);
+      }
+
+      saveUnfinished();
+    }
+
+    function removeFromUnfinished() {
+      if (currentUnfinishedId) {
+        unfinishedReleases = unfinishedReleases.filter(item => item.id !== currentUnfinishedId);
+        saveUnfinished();
+        currentUnfinishedId = null;
+      }
+    }
+
+    function resumeRelease(index) {
+      const item = unfinishedReleases[index];
+      if (!item) return;
+
+      // Restore state
+      currentUnfinishedId = item.id;
+      isResuming = true;
+      selectedEmotion = item.level;
+      releaseData = {
+        emotion: item.emotion,
+        level: item.level,
+        bodyLocation: item.bodyLocation || '',
+        intensityBefore: item.intensityBefore || 5,
+        intensityAfter: item.intensityAfter || item.intensityBefore || 5,
+        message: item.message || '',
+        timestamp: item.timestamp
+      };
+
+      // Hide unfinished section
+      document.getElementById('unfinishedSection').style.display = 'none';
+
+      // Show welcoming room card
+      document.getElementById('wiseHostCard').style.display = 'none';
+      document.getElementById('emotionScaleCard').style.display = 'none';
+      document.getElementById('welcomingRoom').style.display = 'block';
+
+      // Update guest chair
+      const emo = EMOTIONS[item.level];
+      document.getElementById('guestEmoji').textContent = emo.emoji;
+      document.getElementById('guestName').textContent = emo.name;
+      document.getElementById('guestChair').classList.add('entering');
+      document.getElementById('door').classList.add('open');
+
+      // ALWAYS go to step 6 to repeat emosi/resistensi/ego questions
+      currentStep = 6;
+      renderStep(6);
+
+      showToast(`🔄 Melanjutkan release ${emo.name}...`, 'info');
+    }
+
+    function deleteUnfinished(index) {
+      if (confirm('Hapus release yang belum tuntas ini?')) {
+        unfinishedReleases.splice(index, 1);
+        saveUnfinished();
+        renderUnfinished();
+
+        if (unfinishedReleases.length === 0) {
+          document.getElementById('unfinishedSection').style.display = 'none';
+        }
+      }
+    }
+
+    function startFreshRelease() {
+      // Hide unfinished section and start fresh
+      document.getElementById('unfinishedSection').style.display = 'none';
+      isResuming = false;
+      currentUnfinishedId = null;
+
+      // Reset state
+      releaseData = {
+        emotion: '',
+        level: 0,
+        bodyLocation: '',
+        intensityBefore: 0,
+        intensityAfter: 0,
+        message: '',
+        timestamp: null
+      };
+      currentStep = 1;
+      selectedEmotion = null;
+
+      // Show wise host card
+      document.getElementById('wiseHostCard').style.display = 'block';
+      document.getElementById('wiseHostCard').scrollIntoView({ behavior: 'smooth' });
+    }
+
     // ==================== TOAST ====================
     function showToast(message, type = 'info') {
       const container = document.getElementById('toastContainer');
@@ -1069,6 +1323,8 @@
     // ==================== INIT ====================
     document.addEventListener('DOMContentLoaded', function() {
       loadDailyLog();
+      loadUnfinished();
+      renderUnfinished();
     });
   </script>
 </body>

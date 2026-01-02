@@ -201,6 +201,26 @@
     .kapan-btns .btn-sekarang:hover{background:#229954}
     .kapan-btns .btn-nanti{background:var(--bg-light);color:var(--text-dark);border:1px solid var(--border)}
 
+    /* Unfinished Releases Section */
+    .unfinished-cleanup-section{display:none;margin-bottom:0.75rem}
+    .unfinished-cleanup-section.show{display:block}
+    .unfinished-cleanup-header{background:linear-gradient(135deg,var(--warning),#e67e22)}
+    .unfinished-cleanup-item{background:var(--white);border-radius:10px;padding:0.75rem;margin-bottom:0.5rem;border-left:4px solid var(--warning);box-shadow:var(--shadow)}
+    .unfinished-cleanup-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem}
+    .unfinished-cleanup-issue{font-weight:700;color:var(--primary);font-size:0.9rem}
+    .unfinished-cleanup-layer{background:var(--warning);color:white;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.7rem;font-weight:600}
+    .unfinished-cleanup-meta{font-size:0.7rem;color:var(--text-light);margin-bottom:0.5rem}
+    .unfinished-cleanup-wanting{font-size:0.75rem;color:var(--text-dark);font-style:italic;background:#fef9e7;padding:0.4rem;border-radius:4px;margin-bottom:0.5rem}
+    .unfinished-cleanup-actions{display:flex;gap:0.4rem}
+    .unfinished-cleanup-actions .btn{flex:1;padding:0.4rem;font-size:0.75rem}
+
+    /* Resume Summary for Cleanup */
+    .resume-cleanup-summary{display:none;background:linear-gradient(135deg,#ebf5fb,#d4e6f1);border:2px solid var(--primary);border-radius:8px;padding:0.75rem;margin-bottom:0.75rem}
+    .resume-cleanup-summary.show{display:block;animation:slideDown 0.3s ease}
+    .resume-cleanup-summary h6{color:var(--primary);font-size:0.8rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.3rem}
+    .resume-cleanup-summary .resume-info{font-size:0.75rem;color:var(--text-dark);margin-bottom:0.5rem}
+    .resume-cleanup-summary .resume-note{font-size:0.7rem;color:var(--warning);font-style:italic}
+
     /* Triple Welcoming Panel */
     .triple-welcoming{display:none;background:#f5eef8;border:1px solid #d7bde2;border-radius:8px;padding:0.75rem;margin-bottom:0.6rem;animation:slideDown 0.3s ease}
     .triple-welcoming.show{display:block}
@@ -559,6 +579,22 @@
   <main class="main-content">
     <!-- WORKSHEET TAB -->
     <div class="tab-content active" id="tab-worksheet">
+      <!-- Unfinished Cleanup Releases -->
+      <div class="card unfinished-cleanup-section" id="unfinishedCleanupSection">
+        <div class="card-header unfinished-cleanup-header">⏳ Cleanup Belum Tuntas</div>
+        <div class="card-body">
+          <p style="font-size:0.75rem;color:var(--text-light);margin-bottom:0.5rem;">
+            Ada proses cleanup yang belum selesai. Lanjutkan untuk menyelesaikan.
+          </p>
+          <div id="unfinishedCleanupContainer">
+            <!-- Dynamic content -->
+          </div>
+          <button class="btn btn-outline btn-sm" style="width:100%;margin-top:0.5rem" onclick="startFreshCleanup()">
+            🆕 Mulai Cleanup Baru
+          </button>
+        </div>
+      </div>
+
       <!-- Info Sesi -->
       <div class="card" id="infoSesiCard">
         <div class="card-header">📋 INFORMASI SESI</div>
