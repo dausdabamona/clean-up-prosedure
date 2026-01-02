@@ -277,6 +277,13 @@
     /* Emotion Summary */
     .emotion-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--border)}
 
+    /* Summary Question Panel */
+    .summary-question-panel{display:none;background:linear-gradient(135deg,#fef9e7,#fcf3cf);border:2px solid #f7dc6f;border-radius:10px;padding:1rem;margin-top:0.75rem;animation:slideDown 0.3s ease}
+    .summary-question-panel.show{display:block}
+    .summary-question-panel h5{color:#9a7b0a;font-size:0.85rem;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.3rem}
+    .summary-question-panel .summary-text{font-size:0.9rem;color:var(--text-dark);font-style:italic;text-align:center;background:var(--white);padding:0.75rem 1rem;border-radius:8px;border-left:4px solid #f39c12;line-height:1.6}
+    .summary-question-panel .summary-hint{font-size:0.75rem;color:var(--text-light);margin-top:0.5rem;text-align:center}
+
     /* Wanting Distribution */
     .wanting-chart{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
     .wanting-row{display:grid;grid-template-columns:70px 1fr 35px;gap:0.4rem;align-items:center;font-size:0.75rem}
@@ -760,6 +767,13 @@
             <label>Release Tracker (1-10) - Isi Int After setiap sesi</label>
             <div class="release-tracker" id="l1ReleaseTracker"></div>
           </div>
+
+          <!-- Summary Question Panel -->
+          <div class="summary-question-panel" id="l1SummaryPanel">
+            <h5>🔄 PERTANYAAN LANJUTAN</h5>
+            <div class="summary-text" id="l1SummaryText"></div>
+            <div class="summary-hint">Intensitas masih di atas 1 - lanjutkan proses release</div>
+          </div>
         </div>
       </div>
 
@@ -906,6 +920,13 @@
           <div class="form-group">
             <label>Release Tracker (1-10) - Isi Int After setiap sesi</label>
             <div class="release-tracker" id="l2ReleaseTracker"></div>
+          </div>
+
+          <!-- Summary Question Panel -->
+          <div class="summary-question-panel" id="l2SummaryPanel">
+            <h5>🔄 PERTANYAAN LANJUTAN</h5>
+            <div class="summary-text" id="l2SummaryText"></div>
+            <div class="summary-hint">Intensitas masih di atas 1 - lanjutkan proses release</div>
           </div>
         </div>
       </div>
@@ -1054,6 +1075,13 @@
             <label>Release Tracker (1-10) - Isi Int After setiap sesi</label>
             <div class="release-tracker" id="l3ReleaseTracker"></div>
           </div>
+
+          <!-- Summary Question Panel -->
+          <div class="summary-question-panel" id="l3SummaryPanel">
+            <h5>🔄 PERTANYAAN LANJUTAN</h5>
+            <div class="summary-text" id="l3SummaryText"></div>
+            <div class="summary-hint">Intensitas masih di atas 1 - lanjutkan proses release</div>
+          </div>
         </div>
       </div>
 
@@ -1182,6 +1210,13 @@
           <div class="form-group">
             <label>Release Tracker (1-20) - Isi Int After setiap sesi</label>
             <div class="release-tracker release-tracker-20" id="rootReleaseTracker"></div>
+          </div>
+
+          <!-- Summary Question Panel -->
+          <div class="summary-question-panel" id="rootSummaryPanel">
+            <h5>🔄 PERTANYAAN LANJUTAN</h5>
+            <div class="summary-text" id="rootSummaryText"></div>
+            <div class="summary-hint">Intensitas masih di atas 1 - lanjutkan proses release</div>
           </div>
         </div>
       </div>

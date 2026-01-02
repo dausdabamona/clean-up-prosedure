@@ -282,6 +282,9 @@ function handleReleaseInput(prefix, num, count) {
 
   // Update visibility for all items
   updateTrackerVisibility(prefix, count);
+
+  // Update summary question panel
+  updateSummaryQuestion(prefix, count);
 }
 
 function updateDelta(prefix, num, currentVal) {
@@ -356,6 +359,104 @@ function unlockNextSession(prefix, currentNum, count) {
       nextItem.classList.remove('locked', 'hidden');
     }
   }
+}
+
+// ==========================================================================
+// SUMMARY QUESTION - Shows continuation question when intensity > 1
+// ==========================================================================
+function updateSummaryQuestion(prefix, count) {
+  const panel = document.getElementById(`${prefix}SummaryPanel`);
+  const textEl = document.getElementById(`${prefix}SummaryText`);
+  if (!panel || !textEl) return;
+
+  // Get last filled value
+  let lastValue = null;
+  for (let i = count; i >= 1; i--) {
+    const input = document.getElementById(`${prefix}Int${i}`);
+    const val = parseInt(input?.value);
+    if (!isNaN(val)) {
+      lastValue = val;
+      break;
+    }
+  }
+
+  // Hide if no value or value <= 1
+  if (lastValue === null || lastValue <= 1) {
+    panel.classList.remove('show');
+    return;
+  }
+
+  // Get layer data
+  let jawaban, emosi;
+
+  if (prefix === 'root') {
+    // ROOT uses wanting + deskripsi
+    const wanting = document.getElementById('rootWanting')?.value || '';
+    const deskripsi = document.getElementById('rootDeskripsi')?.value || '';
+    jawaban = deskripsi || wanting;
+    emosi = getWantingIndonesian(wanting);
+  } else {
+    jawaban = document.getElementById(`${prefix}Jawaban`)?.value || '';
+    const emosiRaw = document.getElementById(`${prefix}Emosi`)?.value || '';
+    emosi = getEmosiIndonesian(emosiRaw);
+  }
+
+  // Don't show if no answer
+  if (!jawaban.trim()) {
+    panel.classList.remove('show');
+    return;
+  }
+
+  // Generate summary question
+  const summaryText = generateSummaryText(jawaban, emosi);
+  textEl.innerHTML = summaryText;
+  panel.classList.add('show');
+}
+
+function getEmosiIndonesian(emosiRaw) {
+  const emosiMap = {
+    'Fear': 'rasa takut',
+    'Grief': 'kesedihan',
+    'Anger': 'kemarahan',
+    'Guilt': 'rasa bersalah',
+    'Shame': 'rasa malu',
+    'Apathy': 'keputusasaan',
+    'Pride': 'ego',
+    'Lust': 'nafsu keinginan'
+  };
+
+  // Extract emotion name from format like "Fear (Takut, Cemas, Khawatir)"
+  const match = emosiRaw.match(/^(\w+)/);
+  if (match) {
+    return emosiMap[match[1]] || emosiRaw.toLowerCase();
+  }
+  return emosiRaw.toLowerCase() || 'emosi ini';
+}
+
+function getWantingIndonesian(wanting) {
+  const wantingMap = {
+    'Control': 'keinginan untuk mengontrol',
+    'Approval': 'keinginan untuk diakui',
+    'Security': 'keinginan untuk aman',
+    'Worth': 'keinginan untuk merasa berharga',
+    'Freedom': 'keinginan untuk bebas',
+    'Separation': 'keinginan untuk berbeda',
+    'Oneness': 'keinginan untuk menyatu'
+  };
+
+  return wantingMap[wanting] || 'wanting ini';
+}
+
+function generateSummaryText(jawaban, emosi) {
+  // Clean up jawaban - first letter lowercase if needed
+  let jawabanClean = jawaban.trim();
+  if (jawabanClean.length > 0) {
+    jawabanClean = jawabanClean.charAt(0).toLowerCase() + jawabanClean.slice(1);
+    // Remove trailing punctuation
+    jawabanClean = jawabanClean.replace(/[.!?]+$/, '');
+  }
+
+  return `"Apakah <strong>${emosi}</strong> yang membuat kamu <em>${jawabanClean}</em> itu adalah dirimu, ataukah kamu yang <strong>SADAR</strong> bahwa ${emosi} itu ada?"`;
 }
 
 function hideRemainingSessions(prefix, fromNum, count) {
@@ -593,6 +694,12 @@ function loadFormData(data) {
   if (data.l3ReleaseData) setReleaseTrackerData('l3', 10, data.l3ReleaseData);
   if (data.rootReleaseData) setReleaseTrackerData('root', 20, data.rootReleaseData);
 
+  // Update summary question panels
+  updateSummaryQuestion('l1', 10);
+  updateSummaryQuestion('l2', 10);
+  updateSummaryQuestion('l3', 10);
+  updateSummaryQuestion('root', 20);
+
   // Update surface intensity status
   const surfaceEl = document.getElementById('surfaceIntensity');
   if (surfaceEl) surfaceEl.dispatchEvent(new Event('input'));
@@ -629,6 +736,12 @@ function resetForm() {
   // Reset grounding panel
   const groundingPanel = document.getElementById('groundingPanel');
   if (groundingPanel) groundingPanel.style.display = 'none';
+
+  // Reset summary question panels
+  ['l1', 'l2', 'l3', 'root'].forEach(prefix => {
+    const summaryPanel = document.getElementById(`${prefix}SummaryPanel`);
+    if (summaryPanel) summaryPanel.classList.remove('show');
+  });
 
   // Show Mulai Sesi button again
   const btnMulai = document.getElementById('btnMulaiSesi');
