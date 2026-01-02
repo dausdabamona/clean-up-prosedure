@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7 Core Wanting Release - Sedona Method</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #8e44ad;
+      --primary-light: #9b59b6;
+      --secondary: #3498db;
+      --success: #27ae60;
+      --warning: #f39c12;
+      --danger: #c0392b;
+      --peace-gold: #f4d03f;
+      --bg-light: #f5f0f7;
+      --bg-input: #f3e5f5;
+      --text-dark: #2c3e50;
+      --text-light: #7f8c8d;
+      --border: #d7bde2;
+      --white: #fff;
+      --shadow: 0 2px 15px rgba(142, 68, 173, 0.15);
+    }
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-light); color: var(--text-dark); line-height: 1.6; min-height: 100vh; }
+
+    /* Header */
+    .header { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: var(--white); padding: 1rem; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+    .header h1 { font-size: 1.3rem; margin-bottom: 0.25rem; }
+    .header p { font-size: 0.8rem; opacity: 0.9; }
+    .back-link { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--white); text-decoration: none; font-size: 1.2rem; opacity: 0.8; }
+    .back-link:hover { opacity: 1; }
+
+    /* Main Container */
+    .container { max-width: 600px; margin: 0 auto; padding: 1rem; padding-bottom: 2rem; }
+
+    /* Cards */
+    .card { background: var(--white); border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 1rem; overflow: hidden; }
+    .card-header { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: var(--white); padding: 0.75rem 1rem; font-weight: 600; font-size: 0.9rem; }
+    .card-body { padding: 1rem; }
+
+    /* Phase Indicator */
+    .phase-indicator { display: flex; justify-content: center; gap: 0.5rem; padding: 0.75rem; background: var(--white); margin-bottom: 1rem; border-radius: 10px; box-shadow: var(--shadow); flex-wrap: wrap; }
+    .phase-dot { width: 32px; height: 32px; border-radius: 50%; background: var(--bg-light); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; color: var(--text-light); transition: all 0.3s; }
+    .phase-dot.active { background: var(--primary); border-color: var(--primary); color: var(--white); transform: scale(1.15); }
+    .phase-dot.done { background: var(--success); border-color: var(--success); color: var(--white); }
+
+    /* Wise Host Section */
+    .wise-host-section { text-align: center; padding: 1.5rem; }
+    .wise-host-icon { font-size: 4rem; margin-bottom: 1rem; animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .wise-host-title { font-size: 1.2rem; color: var(--primary); margin-bottom: 0.5rem; }
+    .wise-host-desc { font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem; }
+    .breathing-guide { background: linear-gradient(135deg, #f5eef8, #ebdef0); border-radius: 10px; padding: 1rem; margin: 1rem 0; }
+    .breathing-text { font-size: 1.1rem; color: var(--primary); font-weight: 600; min-height: 30px; }
+    .breathing-circle { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--primary-light)); margin: 1rem auto; transition: transform 4s ease-in-out; }
+    .breathing-circle.expand { transform: scale(1.3); }
+    .affirmation { font-style: italic; color: var(--text-dark); margin-top: 1rem; padding: 0.75rem; background: rgba(142, 68, 173, 0.1); border-radius: 8px; font-size: 0.85rem; }
+
+    /* 7 Core Wanting Grid */
+    .wanting-grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+    .wanting-item { background: var(--white); border: 2px solid var(--border); border-radius: 10px; padding: 1rem; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+    .wanting-item:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: var(--shadow); }
+    .wanting-item.selected { border-color: var(--primary); background: linear-gradient(135deg, #f5eef8, #ebdef0); }
+    .wanting-item.selected::after { content: '✓'; position: absolute; top: 0.5rem; right: 0.5rem; background: var(--primary); color: var(--white); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
+    .wanting-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+    .wanting-emoji { font-size: 1.8rem; }
+    .wanting-name { font-weight: 700; color: var(--primary); font-size: 1rem; }
+    .wanting-desc { font-size: 0.8rem; color: var(--text-dark); margin-bottom: 0.4rem; }
+    .wanting-shadow { font-size: 0.75rem; color: var(--text-light); font-style: italic; }
+    .wanting-shadow::before { content: '⚠️ '; }
+
+    /* Exploration Room */
+    .exploration-room { background: linear-gradient(135deg, #f5eef8, #fff); border-radius: 12px; padding: 1.5rem; min-height: 300px; }
+    .step-title { font-size: 1.1rem; color: var(--primary); margin-bottom: 0.75rem; text-align: center; }
+    .step-subtitle { font-size: 0.85rem; color: var(--text-light); text-align: center; margin-bottom: 1rem; }
+    .step-content { margin-top: 1rem; }
+
+    /* Question Styles */
+    .question-box { background: var(--white); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; border-left: 4px solid var(--primary); }
+    .question-text { font-size: 0.95rem; color: var(--text-dark); margin-bottom: 0.75rem; line-height: 1.5; }
+    .question-hint { font-size: 0.8rem; color: var(--text-light); font-style: italic; margin-top: 0.5rem; }
+
+    /* Form Elements */
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.8rem; margin-bottom: 0.3rem; color: var(--text-dark); }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.6rem 0.75rem; border: 2px solid var(--border); border-radius: 8px; font-size: 0.9rem; background: var(--white); transition: border-color 0.3s; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+
+    /* Intensity Slider */
+    .intensity-container { text-align: center; }
+    .intensity-value { font-size: 3rem; font-weight: 700; color: var(--primary); }
+    .intensity-label { font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.5rem; }
+    .intensity-slider { width: 100%; height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--success), var(--warning), var(--danger)); -webkit-appearance: none; appearance: none; cursor: pointer; }
+    .intensity-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--white); border: 3px solid var(--primary); cursor: pointer; box-shadow: var(--shadow); }
+
+    /* Root Exploration */
+    .root-section { background: linear-gradient(135deg, #fef9e7, #fcf3cf); border-radius: 10px; padding: 1rem; margin: 1rem 0; border: 2px solid #f7dc6f; }
+    .root-title { color: #9a7d0a; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.9rem; }
+    .root-questions { list-style: none; }
+    .root-questions li { padding: 0.5rem 0; border-bottom: 1px dashed #f7dc6f; font-size: 0.85rem; }
+    .root-questions li:last-child { border-bottom: none; }
+
+    /* Release Options */
+    .release-options { display: grid; gap: 0.75rem; }
+    .release-option { background: var(--white); border: 2px solid var(--border); border-radius: 10px; padding: 1rem; cursor: pointer; transition: all 0.3s; text-align: center; }
+    .release-option:hover { border-color: var(--primary); background: #f5eef8; }
+    .release-option.selected { border-color: var(--success); background: #d5f5e3; }
+    .release-option-emoji { font-size: 1.5rem; margin-bottom: 0.3rem; }
+    .release-option-text { font-size: 0.85rem; font-weight: 600; }
+
+    /* Timer */
+    .timer-section { text-align: center; margin: 1.5rem 0; }
+    .timer-display { font-size: 3rem; font-weight: 700; color: var(--primary); font-family: monospace; }
+    .timer-controls { display: flex; justify-content: center; gap: 0.5rem; margin-top: 0.75rem; }
+
+    /* Buttons */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.7rem 1.2rem; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: var(--white); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(142, 68, 173, 0.3); }
+    .btn-success { background: linear-gradient(135deg, var(--success), #2ecc71); color: var(--white); }
+    .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+    .btn-outline:hover { background: var(--primary); color: var(--white); }
+    .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+    .btn-block { width: 100%; }
+    .btn-group { display: flex; gap: 0.5rem; justify-content: center; margin-top: 1rem; }
+
+    /* Completion Card */
+    .completion-card { background: linear-gradient(135deg, #d5f5e3, #a9dfbf); border-radius: 12px; padding: 2rem; text-align: center; }
+    .completion-icon { font-size: 4rem; margin-bottom: 1rem; }
+    .completion-title { font-size: 1.3rem; color: var(--success); margin-bottom: 0.5rem; }
+    .completion-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+    .stat-box { background: var(--white); border-radius: 8px; padding: 0.75rem; }
+    .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+    .stat-label { font-size: 0.75rem; color: var(--text-light); }
+    .insight-box { background: var(--white); border-radius: 8px; padding: 1rem; margin-top: 1rem; text-align: left; }
+    .insight-title { font-size: 0.85rem; font-weight: 600; color: var(--primary); margin-bottom: 0.5rem; }
+    .insight-text { font-size: 0.85rem; color: var(--text-dark); }
+
+    /* Daily Log */
+    .log-section { margin-top: 1.5rem; }
+    .log-item { background: var(--white); border-radius: 8px; padding: 0.75rem; margin-bottom: 0.5rem; border-left: 4px solid var(--primary); display: flex; justify-content: space-between; align-items: center; }
+    .log-wanting { font-weight: 600; color: var(--primary); }
+    .log-detail { font-size: 0.75rem; color: var(--text-light); }
+    .log-reduction { font-weight: 700; color: var(--success); }
+    .empty-log { text-align: center; color: var(--text-light); padding: 2rem; font-size: 0.9rem; }
+
+    /* Hidden */
+    .hidden { display: none !important; }
+
+    /* Animations */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeIn 0.4s ease-out; }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .wanting-grid { grid-template-columns: 1fr; }
+      .completion-stats { grid-template-columns: 1fr; }
+      .phase-dot { width: 28px; height: 28px; font-size: 0.65rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="index.html" class="back-link">←</a>
+    <h1>🎯 7 Core Wanting Release</h1>
+    <p>Melepaskan Keinginan Dasar Sampai ke Akar</p>
+  </header>
+
+  <div class="container">
+    <!-- Phase Indicator -->
+    <div class="phase-indicator" id="phaseIndicator">
+      <div class="phase-dot active" data-phase="1">1</div>
+      <div class="phase-dot" data-phase="2">2</div>
+      <div class="phase-dot" data-phase="3">3</div>
+      <div class="phase-dot" data-phase="4">4</div>
+      <div class="phase-dot" data-phase="5">5</div>
+      <div class="phase-dot" data-phase="6">6</div>
+      <div class="phase-dot" data-phase="7">7</div>
+      <div class="phase-dot" data-phase="8">8</div>
+    </div>
+
+    <!-- Phase 1: Wise Host Activation -->
+    <div class="card phase-content" id="phase1">
+      <div class="card-header">🧘 Fase 1: Aktivasi Wise Host</div>
+      <div class="card-body">
+        <div class="wise-host-section">
+          <div class="wise-host-icon">🎯</div>
+          <div class="wise-host-title">Aktifkan Pengamat Bijaksana</div>
+          <div class="wise-host-desc">Sebelum mengeksplorasi wanting, kita aktifkan dulu kesadaran yang lebih tinggi - bagian dirimu yang dapat mengamati tanpa terikat.</div>
+
+          <div class="breathing-guide">
+            <div class="breathing-text" id="breathingText">Siap untuk memulai?</div>
+            <div class="breathing-circle" id="breathingCircle"></div>
+            <button class="btn btn-primary" id="startBreathing" onclick="startBreathingExercise()">🌬️ Mulai Latihan Napas</button>
+          </div>
+
+          <div class="affirmation" id="affirmation" style="display: none;">
+            "Aku adalah kesadaran yang mengamati keinginan ini. Keinginan datang dan pergi, tapi aku yang mengamati tetap ada - tenang, utuh, dan bebas."
+          </div>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-primary btn-block" id="activateBtn" onclick="activateWiseHost()" disabled>✨ Wise Host Aktif - Lanjutkan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 2: Select Core Wanting -->
+    <div class="card phase-content hidden" id="phase2">
+      <div class="card-header">🎯 Fase 2: Pilih Core Wanting</div>
+      <div class="card-body">
+        <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem; text-align: center;">
+          Keinginan dasar mana yang paling kuat terasa saat ini?
+        </p>
+        <div class="wanting-grid" id="wantingGrid">
+          <!-- Wanting items will be rendered here -->
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="prevPhase()">← Kembali</button>
+          <button class="btn btn-primary" id="selectWantingBtn" onclick="nextPhase()" disabled>Pilih & Lanjutkan →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 3: Recognize the Wanting -->
+    <div class="card phase-content hidden" id="phase3">
+      <div class="card-header">🔍 Fase 3: Kenali Wanting</div>
+      <div class="card-body">
+        <div class="exploration-room fade-in">
+          <div class="step-title" id="wantingTitle"><!-- Dynamic --></div>
+          <div class="step-subtitle">Mari kita kenali lebih dalam keinginan ini</div>
+
+          <div class="step-content">
+            <div class="question-box">
+              <div class="question-text">💭 Dalam situasi apa keinginan ini paling sering muncul?</div>
+              <div class="form-group">
+                <textarea id="situationInput" placeholder="Contoh: Saat presentasi di depan atasan, saat menunggu balasan chat..."></textarea>
+              </div>
+            </div>
+
+            <div class="question-box">
+              <div class="question-text">🎭 Bagaimana keinginan ini mempengaruhi perilakumu?</div>
+              <div class="form-group">
+                <textarea id="behaviorInput" placeholder="Contoh: Saya jadi overthinking, menghindari konflik, mencari validasi..."></textarea>
+              </div>
+            </div>
+
+            <div class="question-box">
+              <div class="question-text">📍 Di bagian tubuh mana kamu merasakan keinginan ini?</div>
+              <div class="form-group">
+                <select id="bodyLocationInput">
+                  <option value="">-- Pilih lokasi --</option>
+                  <option value="dada">Dada - terasa sesak/berat</option>
+                  <option value="perut">Perut - terasa kencang/mual</option>
+                  <option value="tenggorokan">Tenggorokan - terasa tercekik</option>
+                  <option value="kepala">Kepala - terasa pusing/penuh</option>
+                  <option value="pundak">Pundak - terasa tegang</option>
+                  <option value="seluruh">Seluruh tubuh</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="intensity-container">
+              <div class="intensity-label">Seberapa kuat keinginan ini sekarang?</div>
+              <div class="intensity-value" id="intensityBefore">5</div>
+              <input type="range" class="intensity-slider" id="intensitySlider" min="0" max="10" value="5" oninput="updateIntensity()">
+              <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-light);">
+                <span>0 - Tidak ada</span>
+                <span>10 - Sangat kuat</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="prevPhase()">← Kembali</button>
+          <button class="btn btn-primary" onclick="nextPhase()">Lanjut Eksplorasi →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 4: Explore the Root -->
+    <div class="card phase-content hidden" id="phase4">
+      <div class="card-header">🌳 Fase 4: Gali Sampai Akar</div>
+      <div class="card-body">
+        <div class="exploration-room fade-in">
+          <div class="step-title">Menemukan Akar Keinginan</div>
+          <div class="step-subtitle">Keinginan permukaan sering menyembunyikan kebutuhan yang lebih dalam</div>
+
+          <div class="step-content">
+            <div class="question-box">
+              <div class="question-text">🔮 <strong>Jika keinginan ini terpenuhi sepenuhnya, apa yang akan kamu rasakan?</strong></div>
+              <div class="form-group">
+                <textarea id="fulfilledInput" placeholder="Contoh: Saya akan merasa aman, dihargai, bebas..."></textarea>
+              </div>
+              <div class="question-hint">Jawaban ini sering menunjukkan keinginan yang lebih dalam</div>
+            </div>
+
+            <div class="question-box">
+              <div class="question-text">⚡ <strong>Apa yang kamu takutkan jika keinginan ini TIDAK terpenuhi?</strong></div>
+              <div class="form-group">
+                <textarea id="fearInput" placeholder="Contoh: Saya takut ditolak, gagal, tidak berguna..."></textarea>
+              </div>
+            </div>
+
+            <div class="root-section">
+              <div class="root-title">🎯 Pertanyaan Penggali Akar:</div>
+              <ul class="root-questions" id="rootQuestions">
+                <!-- Dynamic based on wanting type -->
+              </ul>
+            </div>
+
+            <div class="question-box">
+              <div class="question-text">💎 <strong>Apa keyakinan/belief yang mendasari keinginan ini?</strong></div>
+              <div class="form-group">
+                <textarea id="beliefInput" placeholder="Contoh: 'Saya harus sempurna untuk dicintai', 'Dunia tidak aman'..."></textarea>
+              </div>
+              <div class="question-hint">Ini adalah "akar" yang akan kita lepaskan</div>
+            </div>
+          </div>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="prevPhase()">← Kembali</button>
+          <button class="btn btn-primary" onclick="nextPhase()">Siap Melepaskan →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 5: Welcome & Accept -->
+    <div class="card phase-content hidden" id="phase5">
+      <div class="card-header">🤗 Fase 5: Sambut & Terima</div>
+      <div class="card-body">
+        <div class="exploration-room fade-in">
+          <div class="step-title">Menyambut Keinginan dengan Penuh Kasih</div>
+          <div class="step-subtitle">Sebelum melepaskan, kita perlu menerima sepenuhnya</div>
+
+          <div class="step-content">
+            <div class="question-box" style="background: linear-gradient(135deg, #fef9e7, #fcf3cf); border-left-color: #f39c12;">
+              <div class="question-text">
+                🌊 <strong>Biarkan keinginan ini hadir sepenuhnya...</strong><br><br>
+                <span id="welcomeText"><!-- Dynamic --></span>
+              </div>
+            </div>
+
+            <div class="question-box">
+              <div class="question-text">❤️ <strong>Bisakah kamu menerima keinginan ini apa adanya, tanpa menghakimi?</strong></div>
+              <div class="release-options">
+                <div class="release-option" onclick="selectAcceptance(this, 'ya')">
+                  <div class="release-option-emoji">✅</div>
+                  <div class="release-option-text">Ya, saya menerimanya</div>
+                </div>
+                <div class="release-option" onclick="selectAcceptance(this, 'sebagian')">
+                  <div class="release-option-emoji">🤔</div>
+                  <div class="release-option-text">Sebagian, masih ada resistensi</div>
+                </div>
+                <div class="release-option" onclick="selectAcceptance(this, 'sulit')">
+                  <div class="release-option-emoji">😔</div>
+                  <div class="release-option-text">Sulit menerimanya</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="question-box" id="resistanceBox" style="display: none; background: linear-gradient(135deg, #fdedec, #f5b7b1); border-left-color: var(--danger);">
+              <div class="question-text">⚠️ <strong>Apa yang membuat sulit menerima keinginan ini?</strong></div>
+              <div class="form-group">
+                <textarea id="resistanceInput" placeholder="Tulis resistensi atau penolakan yang kamu rasakan..."></textarea>
+              </div>
+              <div class="question-hint">Resistensi juga adalah sesuatu yang bisa dilepaskan</div>
+            </div>
+          </div>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="prevPhase()">← Kembali</button>
+          <button class="btn btn-primary" id="acceptBtn" onclick="nextPhase()" disabled>Lanjut ke Pelepasan →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 6: Release Questions -->
+    <div class="card phase-content hidden" id="phase6">
+      <div class="card-header">🕊️ Fase 6: Pertanyaan Pelepasan</div>
+      <div class="card-body">
+        <div class="exploration-room fade-in">
+          <div class="step-title">Melepaskan Keinginan & Akarnya</div>
+          <div class="step-subtitle">Jawab dengan jujur dari hati, bukan dari pikiran</div>
+
+          <div class="step-content">
+            <!-- Release Question 1 -->
+            <div class="question-box">
+              <div class="question-text">1️⃣ <strong>Bisakah kamu melepaskan keinginan akan <span id="wantingNameQ1"><!-- Dynamic --></span> ini?</strong></div>
+              <div class="release-options" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="release-option" onclick="selectRelease(this, 'q1', 'ya')">
+                  <div class="release-option-text">Ya Bisa</div>
+                </div>
+                <div class="release-option" onclick="selectRelease(this, 'q1', 'mungkin')">
+                  <div class="release-option-text">Mungkin</div>
+                </div>
+                <div class="release-option" onclick="selectRelease(this, 'q1', 'tidak')">
+                  <div class="release-option-text">Tidak</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Release Question 2 -->
+            <div class="question-box">
+              <div class="question-text">2️⃣ <strong>Maukah kamu melepaskan keinginan ini?</strong></div>
+              <div class="release-options" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="release-option" onclick="selectRelease(this, 'q2', 'ya')">
+                  <div class="release-option-text">Ya Mau</div>
+                </div>
+                <div class="release-option" onclick="selectRelease(this, 'q2', 'mungkin')">
+                  <div class="release-option-text">Mungkin</div>
+                </div>
+                <div class="release-option" onclick="selectRelease(this, 'q2', 'tidak')">
+                  <div class="release-option-text">Tidak</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Release Question 3 -->
+            <div class="question-box">
+              <div class="question-text">3️⃣ <strong>Kapan kamu mau melepaskannya?</strong></div>
+              <div class="release-options" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="release-option" onclick="selectRelease(this, 'q3', 'sekarang')">
+                  <div class="release-option-text">Sekarang</div>
+                </div>
+                <div class="release-option" onclick="selectRelease(this, 'q3', 'nanti')">
+                  <div class="release-option-text">Nanti</div>
+                </div>
+                <div class="release-option" onclick="selectRelease(this, 'q3', 'belum')">
+                  <div class="release-option-text">Belum Tahu</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Deep Release Question -->
+            <div class="question-box" style="background: linear-gradient(135deg, #d5f5e3, #a9dfbf); border-left-color: var(--success);">
+              <div class="question-text">🌟 <strong>Pertanyaan Pelepasan Mendalam:</strong><br><br>
+                "Apakah keinginan ini adalah dirimu yang sebenarnya, atau kamu adalah kesadaran yang MENGAMATI keinginan ini?"
+              </div>
+              <div class="release-options">
+                <div class="release-option" onclick="selectDeepRelease(this, 'wanting')">
+                  <div class="release-option-emoji">🎭</div>
+                  <div class="release-option-text">Ini adalah bagian dari diriku</div>
+                </div>
+                <div class="release-option" onclick="selectDeepRelease(this, 'awareness')">
+                  <div class="release-option-emoji">👁️</div>
+                  <div class="release-option-text">Aku adalah yang mengamati</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="prevPhase()">← Kembali</button>
+          <button class="btn btn-primary" id="releaseBtn" onclick="nextPhase()" disabled>Lanjut ke Pelepasan Final →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 7: Final Release with Timer -->
+    <div class="card phase-content hidden" id="phase7">
+      <div class="card-header">✨ Fase 7: Pelepasan & Integrasi</div>
+      <div class="card-body">
+        <div class="exploration-room fade-in">
+          <div class="step-title">Momen Pelepasan</div>
+          <div class="step-subtitle">Biarkan keinginan ini pergi dengan lembut</div>
+
+          <div class="step-content">
+            <div class="question-box" style="text-align: center; background: linear-gradient(135deg, #f5eef8, #ebdef0);">
+              <div class="question-text" style="font-size: 1rem;">
+                🕊️ <strong>Visualisasi Pelepasan</strong><br><br>
+                Bayangkan keinginan akan <strong id="wantingNameVis"><!-- Dynamic --></strong> ini seperti balon yang kamu pegang...<br><br>
+                Saat timer berjalan, perlahan buka genggamanmu...<br>
+                Biarkan balon itu terbang bebas ke langit...<br>
+                Rasakan keringanan di tubuhmu...
+              </div>
+            </div>
+
+            <div class="timer-section">
+              <div class="timer-display" id="timerDisplay">00:30</div>
+              <div class="timer-controls">
+                <button class="btn btn-outline btn-sm" onclick="setTimer(30)">30 detik</button>
+                <button class="btn btn-outline btn-sm" onclick="setTimer(60)">1 menit</button>
+                <button class="btn btn-outline btn-sm" onclick="setTimer(120)">2 menit</button>
+              </div>
+              <div class="btn-group" style="margin-top: 1rem;">
+                <button class="btn btn-primary" id="timerBtn" onclick="toggleTimer()">▶️ Mulai Pelepasan</button>
+              </div>
+            </div>
+
+            <div class="intensity-container" style="margin-top: 1.5rem;">
+              <div class="intensity-label">Seberapa kuat keinginan ini SEKARANG setelah proses pelepasan?</div>
+              <div class="intensity-value" id="intensityAfter">5</div>
+              <input type="range" class="intensity-slider" id="intensitySliderAfter" min="0" max="10" value="5" oninput="updateIntensityAfter()">
+              <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-light);">
+                <span>0 - Tidak ada</span>
+                <span>10 - Sangat kuat</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="prevPhase()">← Kembali</button>
+          <button class="btn btn-success" onclick="completeRelease()">✅ Selesai →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 8: Completion -->
+    <div class="card phase-content hidden" id="phase8">
+      <div class="card-body" style="padding: 0;">
+        <div class="completion-card fade-in">
+          <div class="completion-icon">🎉</div>
+          <div class="completion-title">Proses Pelepasan Selesai!</div>
+          <p style="font-size: 0.9rem; color: var(--text-dark);" id="completionText"><!-- Dynamic --></p>
+
+          <div class="completion-stats">
+            <div class="stat-box">
+              <div class="stat-value" id="statBefore">--</div>
+              <div class="stat-label">Intensitas Awal</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-value" id="statAfter">--</div>
+              <div class="stat-label">Intensitas Akhir</div>
+            </div>
+          </div>
+
+          <div class="insight-box" id="insightBox">
+            <div class="insight-title">💡 Insight dari Proses Ini:</div>
+            <div class="insight-text" id="insightText"><!-- Dynamic --></div>
+          </div>
+
+          <div class="btn-group" style="margin-top: 1.5rem;">
+            <button class="btn btn-primary" onclick="releaseAnother()">🔄 Lepaskan Wanting Lain</button>
+            <button class="btn btn-outline" onclick="finishSession()">✅ Selesai Hari Ini</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Daily Log -->
+    <div class="card log-section" id="logSection">
+      <div class="card-header">📊 Log Pelepasan Hari Ini</div>
+      <div class="card-body">
+        <div id="logContainer">
+          <div class="empty-log">Belum ada pelepasan hari ini. Mulai proses pertamamu!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==================== DATA ====================
+    const CORE_WANTINGS = {
+      control: {
+        name: 'CONTROL',
+        emoji: '🎮',
+        desc: 'Ingin mengontrol situasi, orang, atau hasil',
+        shadow: 'Frustrasi, micromanaging, anxiety',
+        rootQuestions: [
+          'Apa yang akan terjadi jika kamu tidak bisa mengontrol situasi ini?',
+          'Kapan pertama kali kamu merasa perlu mengontrol segalanya?',
+          'Siapa yang mengajarkanmu bahwa dunia tidak aman tanpa kontrol?',
+          'Apa yang kamu hindari dengan mencoba mengontrol?',
+          'Bagaimana jika hasilnya justru lebih baik tanpa kontrolmu?'
+        ],
+        welcomeText: 'Keinginan untuk mengontrol adalah upaya untuk merasa aman. Biarkan keinginan ini hadir... Rasakan bagaimana tubuhmu bereaksi terhadap ketidakpastian... Terima bahwa mencoba mengontrol adalah cara kamu melindungi diri...'
+      },
+      approval: {
+        name: 'APPROVAL',
+        emoji: '❤️',
+        desc: 'Ingin dicintai, diterima, divalidasi',
+        shadow: 'People-pleasing, takut penolakan',
+        rootQuestions: [
+          'Siapa yang persetujuannya paling kamu cari?',
+          'Apa yang akan terjadi jika orang itu tidak menyetujuimu?',
+          'Kapan pertama kali kamu merasa perlu persetujuan orang lain?',
+          'Apakah kamu bisa menyetujui dirimu sendiri?',
+          'Apa yang membuatmu berharga tanpa persetujuan siapapun?'
+        ],
+        welcomeText: 'Keinginan untuk disetujui adalah kerinduan untuk dicintai. Biarkan keinginan ini hadir... Rasakan bagaimana rasanya ingin diterima... Terima bahwa mencari persetujuan adalah cara kamu mencari koneksi...'
+      },
+      security: {
+        name: 'SECURITY',
+        emoji: '🛡️',
+        desc: 'Ingin aman, terlindungi, stabil',
+        shadow: 'Worry, risk-averse, over-planning',
+        rootQuestions: [
+          'Apa ancaman terbesar yang kamu rasakan saat ini?',
+          'Kapan pertama kali kamu merasa tidak aman?',
+          'Apakah ada keamanan yang benar-benar permanen di dunia ini?',
+          'Bagaimana kamu bisa merasa aman di dalam dirimu sendiri?',
+          'Apa yang tetap stabil meski situasi berubah?'
+        ],
+        welcomeText: 'Keinginan untuk aman adalah respons alami terhadap ketidakpastian hidup. Biarkan keinginan ini hadir... Rasakan di mana rasa tidak aman itu berada... Terima bahwa mencari keamanan adalah cara kamu merawat diri...'
+      },
+      worth: {
+        name: 'WORTH',
+        emoji: '💎',
+        desc: 'Ingin merasa cukup, berharga, layak',
+        shadow: 'Perfectionism, impostor syndrome',
+        rootQuestions: [
+          'Apa yang harus kamu capai untuk merasa berharga?',
+          'Siapa yang pertama kali membuat kamu merasa tidak cukup?',
+          'Apakah nilai dirimu tergantung pada pencapaian?',
+          'Bagaimana jika kamu sudah cukup apa adanya?',
+          'Apa yang membuatmu berharga tanpa melakukan apapun?'
+        ],
+        welcomeText: 'Keinginan untuk merasa berharga adalah kerinduan untuk diakui keberadaanmu. Biarkan keinginan ini hadir... Rasakan bagaimana rasanya merasa tidak cukup... Terima bahwa mencari nilai diri adalah bagian dari perjalanan...'
+      },
+      freedom: {
+        name: 'FREEDOM',
+        emoji: '🦅',
+        desc: 'Ingin bebas dari beban, kewajiban, batasan',
+        shadow: 'Avoidance, commitment issues',
+        rootQuestions: [
+          'Apa yang membuatmu merasa terkurung?',
+          'Kebebasan seperti apa yang sebenarnya kamu cari?',
+          'Apa yang kamu hindari dengan ingin bebas?',
+          'Apakah ada kebebasan di dalam batasan?',
+          'Bagaimana jika kamu sudah bebas, hanya tidak menyadarinya?'
+        ],
+        welcomeText: 'Keinginan untuk bebas adalah kerinduan untuk menjadi diri sendiri. Biarkan keinginan ini hadir... Rasakan di mana kamu merasa terikat... Terima bahwa mencari kebebasan adalah cara kamu menghormati diri...'
+      },
+      separation: {
+        name: 'SEPARATION',
+        emoji: '🏝️',
+        desc: 'Ingin berbeda, terpisah, unik',
+        shadow: 'Isolasi, kesepian, merasa berbeda',
+        rootQuestions: [
+          'Dari siapa atau apa kamu ingin terpisah?',
+          'Apa yang membuatmu merasa perlu berbeda dari orang lain?',
+          'Kapan pertama kali kamu merasa tidak termasuk?',
+          'Apakah keunikan membutuhkan pemisahan?',
+          'Bagaimana jika kamu bisa unik dan tetap terhubung?'
+        ],
+        welcomeText: 'Keinginan untuk terpisah adalah cara melindungi identitasmu. Biarkan keinginan ini hadir... Rasakan bagaimana rasanya ingin berbeda... Terima bahwa mencari keunikan adalah cara kamu mengekspresikan diri...'
+      },
+      oneness: {
+        name: 'ONENESS',
+        emoji: '🤝',
+        desc: 'Ingin menyatu, terhubung, menjadi bagian',
+        shadow: 'Codependency, kehilangan identitas',
+        rootQuestions: [
+          'Dengan siapa atau apa kamu ingin menyatu?',
+          'Apa yang kamu takutkan dari sendirian?',
+          'Apakah kamu bisa terhubung tanpa kehilangan dirimu?',
+          'Di mana batas antara koneksi dan ketergantungan?',
+          'Bagaimana jika kamu sudah utuh tanpa perlu siapapun?'
+        ],
+        welcomeText: 'Keinginan untuk menyatu adalah kerinduan untuk koneksi mendalam. Biarkan keinginan ini hadir... Rasakan bagaimana rasanya ingin terhubung... Terima bahwa mencari koneksi adalah sifat alami manusia...'
+      }
+    };
+
+    // ==================== STATE ====================
+    let currentPhase = 1;
+    let selectedWanting = null;
+    let releaseData = {
+      wanting: '',
+      wantingName: '',
+      situation: '',
+      behavior: '',
+      bodyLocation: '',
+      intensityBefore: 5,
+      intensityAfter: 5,
+      fulfilled: '',
+      fear: '',
+      belief: '',
+      acceptance: '',
+      resistance: '',
+      q1: '',
+      q2: '',
+      q3: '',
+      deepRelease: '',
+      timestamp: null
+    };
+    let dailyLog = [];
+    let timerInterval = null;
+    let timerSeconds = 30;
+    let isTimerRunning = false;
+    let breathingInterval = null;
+
+    // ==================== INITIALIZATION ====================
+    document.addEventListener('DOMContentLoaded', () => {
+      renderWantingGrid();
+      loadDailyLog();
+      renderDailyLog();
+    });
+
+    function renderWantingGrid() {
+      const grid = document.getElementById('wantingGrid');
+      grid.innerHTML = Object.entries(CORE_WANTINGS).map(([key, wanting]) => `
+        <div class="wanting-item" data-wanting="${key}" onclick="selectWanting('${key}')">
+          <div class="wanting-header">
+            <div class="wanting-emoji">${wanting.emoji}</div>
+            <div class="wanting-name">${wanting.name}</div>
+          </div>
+          <div class="wanting-desc">${wanting.desc}</div>
+          <div class="wanting-shadow">${wanting.shadow}</div>
+        </div>
+      `).join('');
+    }
+
+    // ==================== WISE HOST ====================
+    function startBreathingExercise() {
+      const btn = document.getElementById('startBreathing');
+      btn.disabled = true;
+      btn.textContent = 'Sedang berjalan...';
+
+      const breathingText = document.getElementById('breathingText');
+      const circle = document.getElementById('breathingCircle');
+      let count = 0;
+      const phases = [
+        { text: 'Tarik napas dalam... 1... 2... 3... 4...', expand: true },
+        { text: 'Tahan... 1... 2... 3... 4... 5... 6... 7...', expand: true },
+        { text: 'Hembuskan perlahan... 1... 2... 3... 4... 5... 6... 7... 8...', expand: false }
+      ];
+
+      breathingInterval = setInterval(() => {
+        const phase = phases[count % 3];
+        breathingText.textContent = phase.text;
+
+        if (phase.expand) {
+          circle.classList.add('expand');
+        } else {
+          circle.classList.remove('expand');
+        }
+
+        count++;
+        if (count >= 9) { // 3 complete cycles
+          clearInterval(breathingInterval);
+          breathingText.textContent = '✨ Napasmu sudah tenang...';
+          document.getElementById('affirmation').style.display = 'block';
+          document.getElementById('activateBtn').disabled = false;
+          btn.style.display = 'none';
+        }
+      }, 3000);
+    }
+
+    function activateWiseHost() {
+      nextPhase();
+    }
+
+    // ==================== WANTING SELECTION ====================
+    function selectWanting(wantingKey) {
+      selectedWanting = wantingKey;
+      releaseData.wanting = wantingKey;
+      releaseData.wantingName = CORE_WANTINGS[wantingKey].name;
+
+      // Update UI
+      document.querySelectorAll('.wanting-item').forEach(el => {
+        el.classList.remove('selected');
+      });
+      document.querySelector(`[data-wanting="${wantingKey}"]`).classList.add('selected');
+      document.getElementById('selectWantingBtn').disabled = false;
+    }
+
+    // ==================== PHASE NAVIGATION ====================
+    function updatePhaseIndicator() {
+      document.querySelectorAll('.phase-dot').forEach((dot, index) => {
+        const phase = index + 1;
+        dot.classList.remove('active', 'done');
+        if (phase < currentPhase) {
+          dot.classList.add('done');
+        } else if (phase === currentPhase) {
+          dot.classList.add('active');
+        }
+      });
+    }
+
+    function showPhase(phase) {
+      document.querySelectorAll('.phase-content').forEach(el => {
+        el.classList.add('hidden');
+      });
+      document.getElementById(`phase${phase}`).classList.remove('hidden');
+      updatePhaseIndicator();
+
+      // Phase-specific setup
+      if (phase === 3 && selectedWanting) {
+        setupPhase3();
+      } else if (phase === 4 && selectedWanting) {
+        setupPhase4();
+      } else if (phase === 5 && selectedWanting) {
+        setupPhase5();
+      } else if (phase === 6 && selectedWanting) {
+        setupPhase6();
+      } else if (phase === 7 && selectedWanting) {
+        setupPhase7();
+      }
+    }
+
+    function nextPhase() {
+      // Save current phase data
+      savePhaseData();
+
+      if (currentPhase < 8) {
+        currentPhase++;
+        showPhase(currentPhase);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function prevPhase() {
+      if (currentPhase > 1) {
+        currentPhase--;
+        showPhase(currentPhase);
+      }
+    }
+
+    function savePhaseData() {
+      if (currentPhase === 3) {
+        releaseData.situation = document.getElementById('situationInput').value;
+        releaseData.behavior = document.getElementById('behaviorInput').value;
+        releaseData.bodyLocation = document.getElementById('bodyLocationInput').value;
+        releaseData.intensityBefore = parseInt(document.getElementById('intensitySlider').value);
+      } else if (currentPhase === 4) {
+        releaseData.fulfilled = document.getElementById('fulfilledInput').value;
+        releaseData.fear = document.getElementById('fearInput').value;
+        releaseData.belief = document.getElementById('beliefInput').value;
+      } else if (currentPhase === 5) {
+        releaseData.resistance = document.getElementById('resistanceInput').value;
+      }
+    }
+
+    // ==================== PHASE SETUPS ====================
+    function setupPhase3() {
+      const wanting = CORE_WANTINGS[selectedWanting];
+      document.getElementById('wantingTitle').innerHTML = `${wanting.emoji} Keinginan akan ${wanting.name}`;
+    }
+
+    function setupPhase4() {
+      const wanting = CORE_WANTINGS[selectedWanting];
+      const rootQuestionsEl = document.getElementById('rootQuestions');
+      rootQuestionsEl.innerHTML = wanting.rootQuestions.map(q => `<li>💭 ${q}</li>`).join('');
+    }
+
+    function setupPhase5() {
+      const wanting = CORE_WANTINGS[selectedWanting];
+      document.getElementById('welcomeText').textContent = wanting.welcomeText;
+      document.getElementById('acceptBtn').disabled = true;
+      document.getElementById('resistanceBox').style.display = 'none';
+    }
+
+    function setupPhase6() {
+      const wanting = CORE_WANTINGS[selectedWanting];
+      document.getElementById('wantingNameQ1').textContent = wanting.name;
+      document.getElementById('releaseBtn').disabled = true;
+    }
+
+    function setupPhase7() {
+      const wanting = CORE_WANTINGS[selectedWanting];
+      document.getElementById('wantingNameVis').textContent = wanting.name;
+      document.getElementById('intensitySliderAfter').value = releaseData.intensityBefore;
+      document.getElementById('intensityAfter').textContent = releaseData.intensityBefore;
+      resetTimer();
+    }
+
+    // ==================== INTENSITY ====================
+    function updateIntensity() {
+      const value = document.getElementById('intensitySlider').value;
+      document.getElementById('intensityBefore').textContent = value;
+    }
+
+    function updateIntensityAfter() {
+      const value = document.getElementById('intensitySliderAfter').value;
+      document.getElementById('intensityAfter').textContent = value;
+    }
+
+    // ==================== ACCEPTANCE ====================
+    function selectAcceptance(el, value) {
+      document.querySelectorAll('#phase5 .release-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      el.classList.add('selected');
+      releaseData.acceptance = value;
+      document.getElementById('acceptBtn').disabled = false;
+
+      if (value === 'sebagian' || value === 'sulit') {
+        document.getElementById('resistanceBox').style.display = 'block';
+      } else {
+        document.getElementById('resistanceBox').style.display = 'none';
+      }
+    }
+
+    // ==================== RELEASE QUESTIONS ====================
+    function selectRelease(el, question, value) {
+      const parent = el.parentElement;
+      parent.querySelectorAll('.release-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      el.classList.add('selected');
+      releaseData[question] = value;
+      checkReleaseComplete();
+    }
+
+    function selectDeepRelease(el, value) {
+      el.parentElement.querySelectorAll('.release-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      el.classList.add('selected');
+      releaseData.deepRelease = value;
+      checkReleaseComplete();
+    }
+
+    function checkReleaseComplete() {
+      const canProceed = releaseData.q1 && releaseData.q2 && releaseData.q3 && releaseData.deepRelease;
+      document.getElementById('releaseBtn').disabled = !canProceed;
+    }
+
+    // ==================== TIMER ====================
+    function setTimer(seconds) {
+      timerSeconds = seconds;
+      updateTimerDisplay();
+    }
+
+    function updateTimerDisplay() {
+      const mins = Math.floor(timerSeconds / 60);
+      const secs = timerSeconds % 60;
+      document.getElementById('timerDisplay').textContent =
+        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function toggleTimer() {
+      if (isTimerRunning) {
+        pauseTimer();
+      } else {
+        startTimer();
+      }
+    }
+
+    function startTimer() {
+      isTimerRunning = true;
+      document.getElementById('timerBtn').textContent = '⏸️ Pause';
+
+      timerInterval = setInterval(() => {
+        timerSeconds--;
+        updateTimerDisplay();
+
+        if (timerSeconds <= 0) {
+          clearInterval(timerInterval);
+          isTimerRunning = false;
+          document.getElementById('timerBtn').textContent = '✅ Selesai';
+          document.getElementById('timerBtn').disabled = true;
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(timerInterval);
+      isTimerRunning = false;
+      document.getElementById('timerBtn').textContent = '▶️ Lanjutkan';
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      isTimerRunning = false;
+      timerSeconds = 30;
+      updateTimerDisplay();
+      document.getElementById('timerBtn').textContent = '▶️ Mulai Pelepasan';
+      document.getElementById('timerBtn').disabled = false;
+    }
+
+    // ==================== COMPLETION ====================
+    function completeRelease() {
+      releaseData.intensityAfter = parseInt(document.getElementById('intensitySliderAfter').value);
+      releaseData.timestamp = new Date().toISOString();
+
+      // Calculate reduction
+      const reduction = releaseData.intensityBefore - releaseData.intensityAfter;
+      const reductionPct = releaseData.intensityBefore > 0
+        ? Math.round((reduction / releaseData.intensityBefore) * 100)
+        : 0;
+
+      // Update completion UI
+      const wanting = CORE_WANTINGS[selectedWanting];
+      document.getElementById('completionText').innerHTML = `
+        Kamu telah melepaskan keinginan akan <strong>${wanting.name}</strong>
+      `;
+      document.getElementById('statBefore').textContent = releaseData.intensityBefore;
+      document.getElementById('statAfter').textContent = releaseData.intensityAfter;
+
+      // Generate insight
+      let insight = '';
+      if (releaseData.belief) {
+        insight += `<strong>Keyakinan yang dilepaskan:</strong> "${releaseData.belief}"<br><br>`;
+      }
+      if (releaseData.deepRelease === 'awareness') {
+        insight += '✨ Kamu menyadari bahwa kamu adalah kesadaran yang mengamati, bukan keinginan itu sendiri. Ini adalah insight yang sangat berharga!';
+      } else {
+        insight += '💡 Terus latih untuk memisahkan identitasmu dari keinginan-keinginan ini. Kamu lebih dari sekadar keinginanmu.';
+      }
+      document.getElementById('insightText').innerHTML = insight;
+
+      // Save to log
+      dailyLog.push({
+        ...releaseData,
+        reduction,
+        reductionPct
+      });
+      saveDailyLog();
+      renderDailyLog();
+
+      // Show completion phase
+      currentPhase = 8;
+      showPhase(8);
+    }
+
+    function releaseAnother() {
+      // Reset state
+      currentPhase = 2;
+      selectedWanting = null;
+      releaseData = {
+        wanting: '',
+        wantingName: '',
+        situation: '',
+        behavior: '',
+        bodyLocation: '',
+        intensityBefore: 5,
+        intensityAfter: 5,
+        fulfilled: '',
+        fear: '',
+        belief: '',
+        acceptance: '',
+        resistance: '',
+        q1: '',
+        q2: '',
+        q3: '',
+        deepRelease: '',
+        timestamp: null
+      };
+
+      // Reset UI
+      document.querySelectorAll('.wanting-item').forEach(el => {
+        el.classList.remove('selected');
+      });
+      document.getElementById('selectWantingBtn').disabled = true;
+      document.querySelectorAll('.release-option').forEach(el => {
+        el.classList.remove('selected');
+      });
+      document.querySelectorAll('textarea').forEach(el => {
+        el.value = '';
+      });
+      document.querySelectorAll('select').forEach(el => {
+        el.selectedIndex = 0;
+      });
+      document.getElementById('intensitySlider').value = 5;
+      document.getElementById('intensityBefore').textContent = '5';
+
+      showPhase(2);
+    }
+
+    function finishSession() {
+      alert('🎉 Selamat! Sesi pelepasan hari ini selesai.\n\nTerus praktikkan untuk hasil yang lebih baik!');
+      window.location.href = 'index.html';
+    }
+
+    // ==================== DAILY LOG ====================
+    function saveDailyLog() {
+      const today = new Date().toISOString().split('T')[0];
+      localStorage.setItem(`wanting_log_${today}`, JSON.stringify(dailyLog));
+    }
+
+    function loadDailyLog() {
+      const today = new Date().toISOString().split('T')[0];
+      const saved = localStorage.getItem(`wanting_log_${today}`);
+      if (saved) {
+        dailyLog = JSON.parse(saved);
+      }
+    }
+
+    function renderDailyLog() {
+      const container = document.getElementById('logContainer');
+
+      if (dailyLog.length === 0) {
+        container.innerHTML = '<div class="empty-log">Belum ada pelepasan hari ini. Mulai proses pertamamu!</div>';
+        return;
+      }
+
+      container.innerHTML = dailyLog.map((log, index) => {
+        const wanting = CORE_WANTINGS[log.wanting];
+        const time = new Date(log.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        return `
+          <div class="log-item">
+            <div>
+              <div class="log-wanting">${wanting.emoji} ${wanting.name}</div>
+              <div class="log-detail">${time} • ${log.bodyLocation || 'Tidak spesifik'}</div>
+            </div>
+            <div class="log-reduction">
+              ${log.intensityBefore} → ${log.intensityAfter}
+              ${log.reduction > 0 ? `<br><small style="color: var(--success);">-${log.reductionPct}%</small>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  </script>
+</body>
+</html>
