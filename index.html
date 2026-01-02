@@ -162,9 +162,20 @@
     .resistance-panel .form-group{margin-bottom:0.4rem}
     .resistance-panel .form-group label{font-size:0.7rem}
     .resistance-panel .form-group select,.resistance-panel .form-group input{padding:0.4rem;font-size:0.8rem}
-    .resistance-panel .btn-retry{margin-top:0.5rem;background:#f39c12;color:var(--white);width:100%;font-size:0.75rem;padding:0.5rem}
+    .resistance-panel .btn-retry{margin-top:0.75rem;background:#f39c12;color:var(--white);width:100%;font-size:0.75rem;padding:0.5rem}
     .resistance-panel .btn-retry:disabled{opacity:0.5;cursor:not-allowed}
     .resistance-released{color:var(--success);font-size:0.7rem;margin-left:0.3rem}
+
+    /* Resistance Name Input */
+    .resistance-name{margin-bottom:0.75rem!important;padding-bottom:0.5rem;border-bottom:1px dashed #f9e79f}
+    .resistance-name input{background:var(--white)!important;border:1px solid #f39c12!important}
+
+    /* Ego Release Section */
+    .ego-release-section{background:linear-gradient(135deg,#f5eef8,#ebdef0);border:1px solid #d7bde2;border-radius:8px;padding:0.75rem;margin-top:0.75rem}
+    .ego-release-section h6{color:#6c3483;font-size:0.75rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.3rem}
+    .ego-release-section .resistance-q{color:#5b2c6f}
+    .awareness-final{background:var(--white);border-radius:6px;padding:0.5rem;margin-top:0.5rem;border-left:3px solid #8e44ad}
+    .awareness-final .resistance-q{color:#8e44ad;font-weight:500}
 
     /* Triple Welcoming Panel */
     .triple-welcoming{display:none;background:#f5eef8;border:1px solid #d7bde2;border-radius:8px;padding:0.75rem;margin-bottom:0.6rem;animation:slideDown 0.3s ease}
@@ -281,8 +292,12 @@
     .summary-question-panel{display:none;background:linear-gradient(135deg,#fef9e7,#fcf3cf);border:2px solid #f7dc6f;border-radius:10px;padding:1rem;margin-top:0.75rem;animation:slideDown 0.3s ease}
     .summary-question-panel.show{display:block}
     .summary-question-panel h5{color:#9a7b0a;font-size:0.85rem;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.3rem}
-    .summary-question-panel .summary-text{font-size:0.9rem;color:var(--text-dark);font-style:italic;text-align:center;background:var(--white);padding:0.75rem 1rem;border-radius:8px;border-left:4px solid #f39c12;line-height:1.6}
+    .summary-question-panel .summary-text{font-size:0.9rem;color:var(--text-dark);background:var(--white);padding:0.75rem 1rem;border-radius:8px;line-height:1.6}
     .summary-question-panel .summary-hint{font-size:0.75rem;color:var(--text-light);margin-top:0.5rem;text-align:center}
+    .summary-question-panel .summary-intro{font-size:0.85rem;margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px dashed #f7dc6f}
+    .summary-question-panel .summary-guidance{margin:0.75rem 0}
+    .summary-question-panel .summary-guidance p{font-size:0.8rem;margin-bottom:0.4rem;padding-left:0.5rem}
+    .summary-question-panel .summary-final-q{font-size:0.95rem;font-style:italic;text-align:center;padding:0.75rem;background:linear-gradient(135deg,#f5eef8,#ebdef0);border-radius:8px;border-left:4px solid #8e44ad;color:#5b2c6f;margin-top:0.75rem}
 
     /* Wanting Distribution */
     .wanting-chart{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
@@ -706,18 +721,31 @@
             <select id="l1Bisakah" onchange="handleResistance('l1', 'Bisakah')"><option value="">--</option><option value="Ya">Ya Bisa</option><option value="Tidak">Tidak Bisa</option><option value="Mungkin">Mungkin Bisa</option></select>
             <div class="resistance-panel" id="l1BisakahResist">
               <h5>⚠️ RELEASE RESISTENSI</h5>
-              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir?"</div>
+              <div class="form-group resistance-name">
+                <label>Apa nama resistensi/emosi yang muncul?</label>
+                <input type="text" id="l1BisakahRName" placeholder="Contoh: takut gagal, malu, tidak layak...">
+              </div>
+              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir sepenuhnya?"</div>
               <div class="form-group"><select id="l1BisakahR1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini?"</div>
+              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini dengan terbuka?"</div>
               <div class="form-group"><select id="l1BisakahR2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
               <div class="resistance-q">"Bisakah kamu melepaskan resistensi ini?"</div>
               <div class="form-group"><select id="l1BisakahR3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="form-row-int">
-                <label>Int After:</label>
-                <input type="number" id="l1BisakahRInt" min="0" max="10" placeholder="0" oninput="checkResistanceComplete('l1', 'Bisakah')">
-                <span class="intensity-status" id="l1BisakahRStatus"></span>
+
+              <div class="ego-release-section">
+                <h6>🪞 PELEPASAN EGO - Emosi ini ada pada dirimu sendiri</h6>
+                <div class="resistance-q">"Bisakah kamu mengakui bahwa resistensi ini adalah bagian dari dirimu?"</div>
+                <div class="form-group"><select id="l1BisakahE1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu menyambut ego yang menciptakan resistensi ini?"</div>
+                <div class="form-group"><select id="l1BisakahE2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu melepaskan kebutuhan ego untuk mempertahankan resistensi ini?"</div>
+                <div class="form-group"><select id="l1BisakahE3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="awareness-final">
+                  <div class="resistance-q">"Apakah resistensi ini adalah dirimu, ataukah kamu yang SADAR bahwa resistensi ini ada?"</div>
+                  <div class="form-group"><select id="l1BisakahEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
+                </div>
               </div>
-              <button class="btn btn-retry" id="l1BisakahRetry" onclick="retryQuestion('l1', 'Bisakah')" disabled>🔄 Coba Lagi Pertanyaan Utama</button>
+              <button class="btn btn-retry" id="l1BisakahRetry" onclick="retryQuestion('l1', 'Bisakah')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
 
@@ -727,18 +755,31 @@
             <select id="l1Mau" onchange="handleResistance('l1', 'Mau')"><option value="">--</option><option value="Ya">Ya Mau</option><option value="Tidak">Tidak Mau</option><option value="Mungkin">Mungkin Mau</option></select>
             <div class="resistance-panel" id="l1MauResist">
               <h5>⚠️ RELEASE RESISTENSI</h5>
-              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir?"</div>
+              <div class="form-group resistance-name">
+                <label>Apa nama resistensi/emosi yang muncul?</label>
+                <input type="text" id="l1MauRName" placeholder="Contoh: takut gagal, malu, tidak layak...">
+              </div>
+              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir sepenuhnya?"</div>
               <div class="form-group"><select id="l1MauR1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini?"</div>
+              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini dengan terbuka?"</div>
               <div class="form-group"><select id="l1MauR2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
               <div class="resistance-q">"Bisakah kamu melepaskan resistensi ini?"</div>
               <div class="form-group"><select id="l1MauR3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="form-row-int">
-                <label>Int After:</label>
-                <input type="number" id="l1MauRInt" min="0" max="10" placeholder="0" oninput="checkResistanceComplete('l1', 'Mau')">
-                <span class="intensity-status" id="l1MauRStatus"></span>
+
+              <div class="ego-release-section">
+                <h6>🪞 PELEPASAN EGO - Emosi ini ada pada dirimu sendiri</h6>
+                <div class="resistance-q">"Bisakah kamu mengakui bahwa resistensi ini adalah bagian dari dirimu?"</div>
+                <div class="form-group"><select id="l1MauE1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu menyambut ego yang menciptakan resistensi ini?"</div>
+                <div class="form-group"><select id="l1MauE2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu melepaskan kebutuhan ego untuk mempertahankan resistensi ini?"</div>
+                <div class="form-group"><select id="l1MauE3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="awareness-final">
+                  <div class="resistance-q">"Apakah resistensi ini adalah dirimu, ataukah kamu yang SADAR bahwa resistensi ini ada?"</div>
+                  <div class="form-group"><select id="l1MauEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
+                </div>
               </div>
-              <button class="btn btn-retry" id="l1MauRetry" onclick="retryQuestion('l1', 'Mau')" disabled>🔄 Coba Lagi Pertanyaan Utama</button>
+              <button class="btn btn-retry" id="l1MauRetry" onclick="retryQuestion('l1', 'Mau')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
 
@@ -748,18 +789,31 @@
             <select id="l1Kapan" onchange="handleResistance('l1', 'Kapan')"><option value="">--</option><option>Sekarang</option><option>Nanti</option><option>Tidak Tahu</option></select>
             <div class="resistance-panel" id="l1KapanResist">
               <h5>⚠️ RELEASE RESISTENSI</h5>
-              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir?"</div>
+              <div class="form-group resistance-name">
+                <label>Apa nama resistensi/emosi yang muncul?</label>
+                <input type="text" id="l1KapanRName" placeholder="Contoh: takut gagal, malu, tidak layak...">
+              </div>
+              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir sepenuhnya?"</div>
               <div class="form-group"><select id="l1KapanR1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini?"</div>
+              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini dengan terbuka?"</div>
               <div class="form-group"><select id="l1KapanR2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
               <div class="resistance-q">"Bisakah kamu melepaskan resistensi ini?"</div>
               <div class="form-group"><select id="l1KapanR3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="form-row-int">
-                <label>Int After:</label>
-                <input type="number" id="l1KapanRInt" min="0" max="10" placeholder="0" oninput="checkResistanceComplete('l1', 'Kapan')">
-                <span class="intensity-status" id="l1KapanRStatus"></span>
+
+              <div class="ego-release-section">
+                <h6>🪞 PELEPASAN EGO - Emosi ini ada pada dirimu sendiri</h6>
+                <div class="resistance-q">"Bisakah kamu mengakui bahwa resistensi ini adalah bagian dari dirimu?"</div>
+                <div class="form-group"><select id="l1KapanE1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu menyambut ego yang menciptakan resistensi ini?"</div>
+                <div class="form-group"><select id="l1KapanE2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu melepaskan kebutuhan ego untuk mempertahankan resistensi ini?"</div>
+                <div class="form-group"><select id="l1KapanE3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="awareness-final">
+                  <div class="resistance-q">"Apakah resistensi ini adalah dirimu, ataukah kamu yang SADAR bahwa resistensi ini ada?"</div>
+                  <div class="form-group"><select id="l1KapanEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
+                </div>
               </div>
-              <button class="btn btn-retry" id="l1KapanRetry" onclick="retryQuestion('l1', 'Kapan')" disabled>🔄 Coba Lagi Pertanyaan Utama</button>
+              <button class="btn btn-retry" id="l1KapanRetry" onclick="retryQuestion('l1', 'Kapan')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
 
@@ -860,18 +914,31 @@
             <select id="l2Bisakah" onchange="handleResistance('l2', 'Bisakah')"><option value="">--</option><option value="Ya">Ya Bisa</option><option value="Tidak">Tidak Bisa</option><option value="Mungkin">Mungkin Bisa</option></select>
             <div class="resistance-panel" id="l2BisakahResist">
               <h5>⚠️ RELEASE RESISTENSI</h5>
-              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir?"</div>
+              <div class="form-group resistance-name">
+                <label>Apa nama resistensi/emosi yang muncul?</label>
+                <input type="text" id="l2BisakahRName" placeholder="Contoh: takut gagal, malu, tidak layak...">
+              </div>
+              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir sepenuhnya?"</div>
               <div class="form-group"><select id="l2BisakahR1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini?"</div>
+              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini dengan terbuka?"</div>
               <div class="form-group"><select id="l2BisakahR2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
               <div class="resistance-q">"Bisakah kamu melepaskan resistensi ini?"</div>
               <div class="form-group"><select id="l2BisakahR3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="form-row-int">
-                <label>Int After:</label>
-                <input type="number" id="l2BisakahRInt" min="0" max="10" placeholder="0" oninput="checkResistanceComplete('l2', 'Bisakah')">
-                <span class="intensity-status" id="l2BisakahRStatus"></span>
+
+              <div class="ego-release-section">
+                <h6>🪞 PELEPASAN EGO - Emosi ini ada pada dirimu sendiri</h6>
+                <div class="resistance-q">"Bisakah kamu mengakui bahwa resistensi ini adalah bagian dari dirimu?"</div>
+                <div class="form-group"><select id="l2BisakahE1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu menyambut ego yang menciptakan resistensi ini?"</div>
+                <div class="form-group"><select id="l2BisakahE2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu melepaskan kebutuhan ego untuk mempertahankan resistensi ini?"</div>
+                <div class="form-group"><select id="l2BisakahE3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="awareness-final">
+                  <div class="resistance-q">"Apakah resistensi ini adalah dirimu, ataukah kamu yang SADAR bahwa resistensi ini ada?"</div>
+                  <div class="form-group"><select id="l2BisakahEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
+                </div>
               </div>
-              <button class="btn btn-retry" id="l2BisakahRetry" onclick="retryQuestion('l2', 'Bisakah')" disabled>🔄 Coba Lagi Pertanyaan Utama</button>
+              <button class="btn btn-retry" id="l2BisakahRetry" onclick="retryQuestion('l2', 'Bisakah')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
 
@@ -881,18 +948,31 @@
             <select id="l2Mau" onchange="handleResistance('l2', 'Mau')"><option value="">--</option><option value="Ya">Ya Mau</option><option value="Tidak">Tidak Mau</option><option value="Mungkin">Mungkin Mau</option></select>
             <div class="resistance-panel" id="l2MauResist">
               <h5>⚠️ RELEASE RESISTENSI</h5>
-              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir?"</div>
+              <div class="form-group resistance-name">
+                <label>Apa nama resistensi/emosi yang muncul?</label>
+                <input type="text" id="l2MauRName" placeholder="Contoh: takut gagal, malu, tidak layak...">
+              </div>
+              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir sepenuhnya?"</div>
               <div class="form-group"><select id="l2MauR1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini?"</div>
+              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini dengan terbuka?"</div>
               <div class="form-group"><select id="l2MauR2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
               <div class="resistance-q">"Bisakah kamu melepaskan resistensi ini?"</div>
               <div class="form-group"><select id="l2MauR3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="form-row-int">
-                <label>Int After:</label>
-                <input type="number" id="l2MauRInt" min="0" max="10" placeholder="0" oninput="checkResistanceComplete('l2', 'Mau')">
-                <span class="intensity-status" id="l2MauRStatus"></span>
+
+              <div class="ego-release-section">
+                <h6>🪞 PELEPASAN EGO - Emosi ini ada pada dirimu sendiri</h6>
+                <div class="resistance-q">"Bisakah kamu mengakui bahwa resistensi ini adalah bagian dari dirimu?"</div>
+                <div class="form-group"><select id="l2MauE1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu menyambut ego yang menciptakan resistensi ini?"</div>
+                <div class="form-group"><select id="l2MauE2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu melepaskan kebutuhan ego untuk mempertahankan resistensi ini?"</div>
+                <div class="form-group"><select id="l2MauE3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="awareness-final">
+                  <div class="resistance-q">"Apakah resistensi ini adalah dirimu, ataukah kamu yang SADAR bahwa resistensi ini ada?"</div>
+                  <div class="form-group"><select id="l2MauEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
+                </div>
               </div>
-              <button class="btn btn-retry" id="l2MauRetry" onclick="retryQuestion('l2', 'Mau')" disabled>🔄 Coba Lagi Pertanyaan Utama</button>
+              <button class="btn btn-retry" id="l2MauRetry" onclick="retryQuestion('l2', 'Mau')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
 
@@ -902,18 +982,31 @@
             <select id="l2Kapan" onchange="handleResistance('l2', 'Kapan')"><option value="">--</option><option>Sekarang</option><option>Nanti</option><option>Tidak Tahu</option></select>
             <div class="resistance-panel" id="l2KapanResist">
               <h5>⚠️ RELEASE RESISTENSI</h5>
-              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir?"</div>
+              <div class="form-group resistance-name">
+                <label>Apa nama resistensi/emosi yang muncul?</label>
+                <input type="text" id="l2KapanRName" placeholder="Contoh: takut gagal, malu, tidak layak...">
+              </div>
+              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir sepenuhnya?"</div>
               <div class="form-group"><select id="l2KapanR1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini?"</div>
+              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini dengan terbuka?"</div>
               <div class="form-group"><select id="l2KapanR2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
               <div class="resistance-q">"Bisakah kamu melepaskan resistensi ini?"</div>
               <div class="form-group"><select id="l2KapanR3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="form-row-int">
-                <label>Int After:</label>
-                <input type="number" id="l2KapanRInt" min="0" max="10" placeholder="0" oninput="checkResistanceComplete('l2', 'Kapan')">
-                <span class="intensity-status" id="l2KapanRStatus"></span>
+
+              <div class="ego-release-section">
+                <h6>🪞 PELEPASAN EGO - Emosi ini ada pada dirimu sendiri</h6>
+                <div class="resistance-q">"Bisakah kamu mengakui bahwa resistensi ini adalah bagian dari dirimu?"</div>
+                <div class="form-group"><select id="l2KapanE1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu menyambut ego yang menciptakan resistensi ini?"</div>
+                <div class="form-group"><select id="l2KapanE2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu melepaskan kebutuhan ego untuk mempertahankan resistensi ini?"</div>
+                <div class="form-group"><select id="l2KapanE3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="awareness-final">
+                  <div class="resistance-q">"Apakah resistensi ini adalah dirimu, ataukah kamu yang SADAR bahwa resistensi ini ada?"</div>
+                  <div class="form-group"><select id="l2KapanEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
+                </div>
               </div>
-              <button class="btn btn-retry" id="l2KapanRetry" onclick="retryQuestion('l2', 'Kapan')" disabled>🔄 Coba Lagi Pertanyaan Utama</button>
+              <button class="btn btn-retry" id="l2KapanRetry" onclick="retryQuestion('l2', 'Kapan')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
 
@@ -1014,18 +1107,31 @@
             <select id="l3Bisakah" onchange="handleResistance('l3', 'Bisakah')"><option value="">--</option><option value="Ya">Ya Bisa</option><option value="Tidak">Tidak Bisa</option><option value="Mungkin">Mungkin Bisa</option></select>
             <div class="resistance-panel" id="l3BisakahResist">
               <h5>⚠️ RELEASE RESISTENSI</h5>
-              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir?"</div>
+              <div class="form-group resistance-name">
+                <label>Apa nama resistensi/emosi yang muncul?</label>
+                <input type="text" id="l3BisakahRName" placeholder="Contoh: takut gagal, malu, tidak layak...">
+              </div>
+              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir sepenuhnya?"</div>
               <div class="form-group"><select id="l3BisakahR1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini?"</div>
+              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini dengan terbuka?"</div>
               <div class="form-group"><select id="l3BisakahR2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
               <div class="resistance-q">"Bisakah kamu melepaskan resistensi ini?"</div>
               <div class="form-group"><select id="l3BisakahR3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="form-row-int">
-                <label>Int After:</label>
-                <input type="number" id="l3BisakahRInt" min="0" max="10" placeholder="0" oninput="checkResistanceComplete('l3', 'Bisakah')">
-                <span class="intensity-status" id="l3BisakahRStatus"></span>
+
+              <div class="ego-release-section">
+                <h6>🪞 PELEPASAN EGO - Emosi ini ada pada dirimu sendiri</h6>
+                <div class="resistance-q">"Bisakah kamu mengakui bahwa resistensi ini adalah bagian dari dirimu?"</div>
+                <div class="form-group"><select id="l3BisakahE1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu menyambut ego yang menciptakan resistensi ini?"</div>
+                <div class="form-group"><select id="l3BisakahE2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu melepaskan kebutuhan ego untuk mempertahankan resistensi ini?"</div>
+                <div class="form-group"><select id="l3BisakahE3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="awareness-final">
+                  <div class="resistance-q">"Apakah resistensi ini adalah dirimu, ataukah kamu yang SADAR bahwa resistensi ini ada?"</div>
+                  <div class="form-group"><select id="l3BisakahEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
+                </div>
               </div>
-              <button class="btn btn-retry" id="l3BisakahRetry" onclick="retryQuestion('l3', 'Bisakah')" disabled>🔄 Coba Lagi Pertanyaan Utama</button>
+              <button class="btn btn-retry" id="l3BisakahRetry" onclick="retryQuestion('l3', 'Bisakah')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
 
@@ -1035,18 +1141,31 @@
             <select id="l3Mau" onchange="handleResistance('l3', 'Mau')"><option value="">--</option><option value="Ya">Ya Mau</option><option value="Tidak">Tidak Mau</option><option value="Mungkin">Mungkin Mau</option></select>
             <div class="resistance-panel" id="l3MauResist">
               <h5>⚠️ RELEASE RESISTENSI</h5>
-              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir?"</div>
+              <div class="form-group resistance-name">
+                <label>Apa nama resistensi/emosi yang muncul?</label>
+                <input type="text" id="l3MauRName" placeholder="Contoh: takut gagal, malu, tidak layak...">
+              </div>
+              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir sepenuhnya?"</div>
               <div class="form-group"><select id="l3MauR1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini?"</div>
+              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini dengan terbuka?"</div>
               <div class="form-group"><select id="l3MauR2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
               <div class="resistance-q">"Bisakah kamu melepaskan resistensi ini?"</div>
               <div class="form-group"><select id="l3MauR3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="form-row-int">
-                <label>Int After:</label>
-                <input type="number" id="l3MauRInt" min="0" max="10" placeholder="0" oninput="checkResistanceComplete('l3', 'Mau')">
-                <span class="intensity-status" id="l3MauRStatus"></span>
+
+              <div class="ego-release-section">
+                <h6>🪞 PELEPASAN EGO - Emosi ini ada pada dirimu sendiri</h6>
+                <div class="resistance-q">"Bisakah kamu mengakui bahwa resistensi ini adalah bagian dari dirimu?"</div>
+                <div class="form-group"><select id="l3MauE1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu menyambut ego yang menciptakan resistensi ini?"</div>
+                <div class="form-group"><select id="l3MauE2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu melepaskan kebutuhan ego untuk mempertahankan resistensi ini?"</div>
+                <div class="form-group"><select id="l3MauE3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="awareness-final">
+                  <div class="resistance-q">"Apakah resistensi ini adalah dirimu, ataukah kamu yang SADAR bahwa resistensi ini ada?"</div>
+                  <div class="form-group"><select id="l3MauEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
+                </div>
               </div>
-              <button class="btn btn-retry" id="l3MauRetry" onclick="retryQuestion('l3', 'Mau')" disabled>🔄 Coba Lagi Pertanyaan Utama</button>
+              <button class="btn btn-retry" id="l3MauRetry" onclick="retryQuestion('l3', 'Mau')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
 
@@ -1056,18 +1175,31 @@
             <select id="l3Kapan" onchange="handleResistance('l3', 'Kapan')"><option value="">--</option><option>Sekarang</option><option>Nanti</option><option>Tidak Tahu</option></select>
             <div class="resistance-panel" id="l3KapanResist">
               <h5>⚠️ RELEASE RESISTENSI</h5>
-              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir?"</div>
+              <div class="form-group resistance-name">
+                <label>Apa nama resistensi/emosi yang muncul?</label>
+                <input type="text" id="l3KapanRName" placeholder="Contoh: takut gagal, malu, tidak layak...">
+              </div>
+              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir sepenuhnya?"</div>
               <div class="form-group"><select id="l3KapanR1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini?"</div>
+              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini dengan terbuka?"</div>
               <div class="form-group"><select id="l3KapanR2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
               <div class="resistance-q">"Bisakah kamu melepaskan resistensi ini?"</div>
               <div class="form-group"><select id="l3KapanR3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="form-row-int">
-                <label>Int After:</label>
-                <input type="number" id="l3KapanRInt" min="0" max="10" placeholder="0" oninput="checkResistanceComplete('l3', 'Kapan')">
-                <span class="intensity-status" id="l3KapanRStatus"></span>
+
+              <div class="ego-release-section">
+                <h6>🪞 PELEPASAN EGO - Emosi ini ada pada dirimu sendiri</h6>
+                <div class="resistance-q">"Bisakah kamu mengakui bahwa resistensi ini adalah bagian dari dirimu?"</div>
+                <div class="form-group"><select id="l3KapanE1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu menyambut ego yang menciptakan resistensi ini?"</div>
+                <div class="form-group"><select id="l3KapanE2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu melepaskan kebutuhan ego untuk mempertahankan resistensi ini?"</div>
+                <div class="form-group"><select id="l3KapanE3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="awareness-final">
+                  <div class="resistance-q">"Apakah resistensi ini adalah dirimu, ataukah kamu yang SADAR bahwa resistensi ini ada?"</div>
+                  <div class="form-group"><select id="l3KapanEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
+                </div>
               </div>
-              <button class="btn btn-retry" id="l3KapanRetry" onclick="retryQuestion('l3', 'Kapan')" disabled>🔄 Coba Lagi Pertanyaan Utama</button>
+              <button class="btn btn-retry" id="l3KapanRetry" onclick="retryQuestion('l3', 'Kapan')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
 
@@ -1150,18 +1282,31 @@
             <select id="rootBisakah" onchange="handleResistance('root', 'Bisakah')"><option value="">--</option><option value="Ya">Ya Bisa</option><option value="Tidak">Tidak Bisa</option><option value="Mungkin">Mungkin Bisa</option></select>
             <div class="resistance-panel" id="rootBisakahResist">
               <h5>⚠️ RELEASE RESISTENSI</h5>
-              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir?"</div>
+              <div class="form-group resistance-name">
+                <label>Apa nama resistensi/emosi yang muncul?</label>
+                <input type="text" id="rootBisakahRName" placeholder="Contoh: takut gagal, malu, tidak layak...">
+              </div>
+              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir sepenuhnya?"</div>
               <div class="form-group"><select id="rootBisakahR1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini?"</div>
+              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini dengan terbuka?"</div>
               <div class="form-group"><select id="rootBisakahR2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
               <div class="resistance-q">"Bisakah kamu melepaskan resistensi ini?"</div>
               <div class="form-group"><select id="rootBisakahR3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="form-row-int">
-                <label>Int After:</label>
-                <input type="number" id="rootBisakahRInt" min="0" max="10" placeholder="0" oninput="checkResistanceComplete('root', 'Bisakah')">
-                <span class="intensity-status" id="rootBisakahRStatus"></span>
+
+              <div class="ego-release-section">
+                <h6>🪞 PELEPASAN EGO - Emosi ini ada pada dirimu sendiri</h6>
+                <div class="resistance-q">"Bisakah kamu mengakui bahwa resistensi ini adalah bagian dari dirimu?"</div>
+                <div class="form-group"><select id="rootBisakahE1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu menyambut ego yang menciptakan resistensi ini?"</div>
+                <div class="form-group"><select id="rootBisakahE2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu melepaskan kebutuhan ego untuk mempertahankan resistensi ini?"</div>
+                <div class="form-group"><select id="rootBisakahE3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="awareness-final">
+                  <div class="resistance-q">"Apakah resistensi ini adalah dirimu, ataukah kamu yang SADAR bahwa resistensi ini ada?"</div>
+                  <div class="form-group"><select id="rootBisakahEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
+                </div>
               </div>
-              <button class="btn btn-retry" id="rootBisakahRetry" onclick="retryQuestion('root', 'Bisakah')" disabled>🔄 Coba Lagi Pertanyaan Utama</button>
+              <button class="btn btn-retry" id="rootBisakahRetry" onclick="retryQuestion('root', 'Bisakah')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
 
@@ -1171,18 +1316,31 @@
             <select id="rootMau" onchange="handleResistance('root', 'Mau')"><option value="">--</option><option value="Ya">Ya Mau</option><option value="Tidak">Tidak Mau</option><option value="Mungkin">Mungkin Mau</option></select>
             <div class="resistance-panel" id="rootMauResist">
               <h5>⚠️ RELEASE RESISTENSI</h5>
-              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir?"</div>
+              <div class="form-group resistance-name">
+                <label>Apa nama resistensi/emosi yang muncul?</label>
+                <input type="text" id="rootMauRName" placeholder="Contoh: takut gagal, malu, tidak layak...">
+              </div>
+              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir sepenuhnya?"</div>
               <div class="form-group"><select id="rootMauR1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini?"</div>
+              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini dengan terbuka?"</div>
               <div class="form-group"><select id="rootMauR2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
               <div class="resistance-q">"Bisakah kamu melepaskan resistensi ini?"</div>
               <div class="form-group"><select id="rootMauR3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="form-row-int">
-                <label>Int After:</label>
-                <input type="number" id="rootMauRInt" min="0" max="10" placeholder="0" oninput="checkResistanceComplete('root', 'Mau')">
-                <span class="intensity-status" id="rootMauRStatus"></span>
+
+              <div class="ego-release-section">
+                <h6>🪞 PELEPASAN EGO - Emosi ini ada pada dirimu sendiri</h6>
+                <div class="resistance-q">"Bisakah kamu mengakui bahwa resistensi ini adalah bagian dari dirimu?"</div>
+                <div class="form-group"><select id="rootMauE1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu menyambut ego yang menciptakan resistensi ini?"</div>
+                <div class="form-group"><select id="rootMauE2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu melepaskan kebutuhan ego untuk mempertahankan resistensi ini?"</div>
+                <div class="form-group"><select id="rootMauE3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="awareness-final">
+                  <div class="resistance-q">"Apakah resistensi ini adalah dirimu, ataukah kamu yang SADAR bahwa resistensi ini ada?"</div>
+                  <div class="form-group"><select id="rootMauEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
+                </div>
               </div>
-              <button class="btn btn-retry" id="rootMauRetry" onclick="retryQuestion('root', 'Mau')" disabled>🔄 Coba Lagi Pertanyaan Utama</button>
+              <button class="btn btn-retry" id="rootMauRetry" onclick="retryQuestion('root', 'Mau')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
 
@@ -1192,18 +1350,31 @@
             <select id="rootKapan" onchange="handleResistance('root', 'Kapan')"><option value="">--</option><option>Sekarang</option><option>Nanti</option><option>Tidak Tahu</option></select>
             <div class="resistance-panel" id="rootKapanResist">
               <h5>⚠️ RELEASE RESISTENSI</h5>
-              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir?"</div>
+              <div class="form-group resistance-name">
+                <label>Apa nama resistensi/emosi yang muncul?</label>
+                <input type="text" id="rootKapanRName" placeholder="Contoh: takut gagal, malu, tidak layak...">
+              </div>
+              <div class="resistance-q">"Bisakah kamu mengijinkan resistensi ini untuk hadir sepenuhnya?"</div>
               <div class="form-group"><select id="rootKapanR1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini?"</div>
+              <div class="resistance-q">"Bisakah kamu menyambut resistensi ini dengan terbuka?"</div>
               <div class="form-group"><select id="rootKapanR2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
               <div class="resistance-q">"Bisakah kamu melepaskan resistensi ini?"</div>
               <div class="form-group"><select id="rootKapanR3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
-              <div class="form-row-int">
-                <label>Int After:</label>
-                <input type="number" id="rootKapanRInt" min="0" max="10" placeholder="0" oninput="checkResistanceComplete('root', 'Kapan')">
-                <span class="intensity-status" id="rootKapanRStatus"></span>
+
+              <div class="ego-release-section">
+                <h6>🪞 PELEPASAN EGO - Emosi ini ada pada dirimu sendiri</h6>
+                <div class="resistance-q">"Bisakah kamu mengakui bahwa resistensi ini adalah bagian dari dirimu?"</div>
+                <div class="form-group"><select id="rootKapanE1"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu menyambut ego yang menciptakan resistensi ini?"</div>
+                <div class="form-group"><select id="rootKapanE2"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="resistance-q">"Bisakah kamu melepaskan kebutuhan ego untuk mempertahankan resistensi ini?"</div>
+                <div class="form-group"><select id="rootKapanE3"><option value="">--</option><option>Ya</option><option>Tidak</option><option>Mungkin</option></select></div>
+                <div class="awareness-final">
+                  <div class="resistance-q">"Apakah resistensi ini adalah dirimu, ataukah kamu yang SADAR bahwa resistensi ini ada?"</div>
+                  <div class="form-group"><select id="rootKapanEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
+                </div>
               </div>
-              <button class="btn btn-retry" id="rootKapanRetry" onclick="retryQuestion('root', 'Kapan')" disabled>🔄 Coba Lagi Pertanyaan Utama</button>
+              <button class="btn btn-retry" id="rootKapanRetry" onclick="retryQuestion('root', 'Kapan')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
 

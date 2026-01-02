@@ -456,7 +456,20 @@ function generateSummaryText(jawaban, emosi) {
     jawabanClean = jawabanClean.replace(/[.!?]+$/, '');
   }
 
-  return `"Apakah <strong>${emosi}</strong> yang membuat kamu <em>${jawabanClean}</em> itu adalah dirimu, ataukah kamu yang <strong>SADAR</strong> bahwa ${emosi} itu ada?"`;
+  // Create multi-part guidance question
+  return `
+    <div class="summary-intro">
+      Kamu merasakan <strong>${emosi}</strong> yang muncul karena <em>${jawabanClean}</em>.
+    </div>
+    <div class="summary-guidance">
+      <p>🌊 Ijinkan ${emosi} ini mengalir... rasakan sepenuhnya tanpa melawan.</p>
+      <p>🤲 Sambut ${emosi} ini seperti menyambut tamu lama yang perlu didengar.</p>
+      <p>🕊️ Biarkan ${emosi} ini pergi dengan sendirinya ketika sudah siap.</p>
+    </div>
+    <div class="summary-final-q">
+      "Apakah <strong>${emosi}</strong> ini adalah dirimu,<br>ataukah kamu yang <strong>SADAR</strong> bahwa ${emosi} itu ada?"
+    </div>
+  `;
 }
 
 function hideRemainingSessions(prefix, fromNum, count) {
