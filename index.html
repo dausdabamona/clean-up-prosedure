@@ -177,6 +177,30 @@
     .awareness-final{background:var(--white);border-radius:6px;padding:0.5rem;margin-top:0.5rem;border-left:3px solid #8e44ad}
     .awareness-final .resistance-q{color:#8e44ad;font-weight:500}
 
+    /* Merge Release Section */
+    .merge-release-section{background:linear-gradient(135deg,#d5f5e3,#a9dfbf);border:1px solid #27ae60;border-radius:8px;padding:0.75rem;margin-top:0.75rem;text-align:center}
+    .merge-release-section h6{color:#1e8449;font-size:0.75rem;margin-bottom:0.5rem}
+    .mini-merge-circles{display:flex;justify-content:center;gap:0.3rem;margin:0.5rem 0}
+    .mini-merge-circles.merged{gap:-8px}
+    .mini-merge-circles.releasing .mini-circle{animation:miniDissolve 1.5s forwards}
+    .mini-circle{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;transition:all 0.5s;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+    .mini-circle.emo{background:linear-gradient(135deg,#e74c3c,#c0392b)}
+    .mini-circle.res{background:linear-gradient(135deg,#f39c12,#e67e22)}
+    .mini-circle.ego{background:linear-gradient(135deg,#9b59b6,#8e44ad)}
+    .mini-merge-circles.merged .mini-circle{transform:scale(0.85);margin:0 -10px}
+    @keyframes miniDissolve{0%{transform:scale(0.85);opacity:1}50%{transform:scale(1.1);opacity:0.5}100%{transform:scale(0);opacity:0}}
+    .merge-status-mini{font-size:0.7rem;color:#1e8449;font-weight:600;min-height:18px;margin:0.3rem 0}
+    .btn-merge{background:linear-gradient(135deg,#27ae60,#2ecc71);color:var(--white);border:none;padding:0.5rem 1rem;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.3s}
+    .btn-merge:hover{transform:scale(1.02);box-shadow:0 3px 10px rgba(39,174,96,0.3)}
+    .btn-merge:disabled{opacity:0.5;cursor:not-allowed}
+    .kapan-release{margin-top:0.75rem;padding:0.75rem;background:var(--white);border-radius:6px;border:2px solid #27ae60}
+    .kapan-release p{font-size:0.8rem;font-weight:600;color:#1e8449;margin-bottom:0.5rem}
+    .kapan-btns{display:flex;gap:0.4rem;justify-content:center}
+    .kapan-btns button{padding:0.5rem 1rem;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.3s}
+    .kapan-btns .btn-sekarang{background:#27ae60;color:white;border:none}
+    .kapan-btns .btn-sekarang:hover{background:#229954}
+    .kapan-btns .btn-nanti{background:var(--bg-light);color:var(--text-dark);border:1px solid var(--border)}
+
     /* Triple Welcoming Panel */
     .triple-welcoming{display:none;background:#f5eef8;border:1px solid #d7bde2;border-radius:8px;padding:0.75rem;margin-bottom:0.6rem;animation:slideDown 0.3s ease}
     .triple-welcoming.show{display:block}
@@ -753,6 +777,23 @@
                   <div class="form-group"><select id="l1BisakahEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
                 </div>
               </div>
+              <div class="merge-release-section" id="l1BisakahMerge">
+                <h6>🔄 PELEBURAN 3 ELEMEN</h6>
+                <div class="mini-merge-circles" id="l1BisakahMergeCircles">
+                  <div class="mini-circle emo">😤</div>
+                  <div class="mini-circle res">🛡️</div>
+                  <div class="mini-circle ego">🪞</div>
+                </div>
+                <div class="merge-status-mini" id="l1BisakahMergeStatus">Klik untuk meleburkan</div>
+                <button class="btn-merge" onclick="startMerge('l1', 'Bisakah')">🌀 Melebur & Lepaskan</button>
+                <div class="kapan-release" id="l1BisakahKapanR" style="display:none">
+                  <p>"Kapan kamu mau melepaskan ketiganya?"</p>
+                  <div class="kapan-btns">
+                    <button class="btn-sekarang" onclick="releaseNowCleanup('l1', 'Bisakah')">✨ Sekarang</button>
+                    <button class="btn-nanti" onclick="releaseLaterCleanup('l1', 'Bisakah')">⏳ Nanti</button>
+                  </div>
+                </div>
+              </div>
               <button class="btn btn-retry" id="l1BisakahRetry" onclick="retryQuestion('l1', 'Bisakah')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
@@ -787,6 +828,23 @@
                   <div class="form-group"><select id="l1MauEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
                 </div>
               </div>
+              <div class="merge-release-section" id="l1MauMerge">
+                <h6>🔄 PELEBURAN 3 ELEMEN</h6>
+                <div class="mini-merge-circles" id="l1MauMergeCircles">
+                  <div class="mini-circle emo">😤</div>
+                  <div class="mini-circle res">🛡️</div>
+                  <div class="mini-circle ego">🪞</div>
+                </div>
+                <div class="merge-status-mini" id="l1MauMergeStatus">Klik untuk meleburkan</div>
+                <button class="btn-merge" onclick="startMerge('l1', 'Mau')">🌀 Melebur & Lepaskan</button>
+                <div class="kapan-release" id="l1MauKapanR" style="display:none">
+                  <p>"Kapan kamu mau melepaskan ketiganya?"</p>
+                  <div class="kapan-btns">
+                    <button class="btn-sekarang" onclick="releaseNowCleanup('l1', 'Mau')">✨ Sekarang</button>
+                    <button class="btn-nanti" onclick="releaseLaterCleanup('l1', 'Mau')">⏳ Nanti</button>
+                  </div>
+                </div>
+              </div>
               <button class="btn btn-retry" id="l1MauRetry" onclick="retryQuestion('l1', 'Mau')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
@@ -819,6 +877,23 @@
                 <div class="awareness-final">
                   <div class="resistance-q">"Apakah resistensi ini adalah dirimu, ataukah kamu yang SADAR bahwa resistensi ini ada?"</div>
                   <div class="form-group"><select id="l1KapanEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
+                </div>
+              </div>
+              <div class="merge-release-section" id="l1KapanMerge">
+                <h6>🔄 PELEBURAN 3 ELEMEN</h6>
+                <div class="mini-merge-circles" id="l1KapanMergeCircles">
+                  <div class="mini-circle emo">😤</div>
+                  <div class="mini-circle res">🛡️</div>
+                  <div class="mini-circle ego">🪞</div>
+                </div>
+                <div class="merge-status-mini" id="l1KapanMergeStatus">Klik untuk meleburkan</div>
+                <button class="btn-merge" onclick="startMerge('l1', 'Kapan')">🌀 Melebur & Lepaskan</button>
+                <div class="kapan-release" id="l1KapanKapanR" style="display:none">
+                  <p>"Kapan kamu mau melepaskan ketiganya?"</p>
+                  <div class="kapan-btns">
+                    <button class="btn-sekarang" onclick="releaseNowCleanup('l1', 'Kapan')">✨ Sekarang</button>
+                    <button class="btn-nanti" onclick="releaseLaterCleanup('l1', 'Kapan')">⏳ Nanti</button>
+                  </div>
                 </div>
               </div>
               <button class="btn btn-retry" id="l1KapanRetry" onclick="retryQuestion('l1', 'Kapan')">🔄 Coba Lagi Pertanyaan Utama</button>
@@ -946,6 +1021,23 @@
                   <div class="form-group"><select id="l2BisakahEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
                 </div>
               </div>
+              <div class="merge-release-section" id="l2BisakahMerge">
+                <h6>🔄 PELEBURAN 3 ELEMEN</h6>
+                <div class="mini-merge-circles" id="l2BisakahMergeCircles">
+                  <div class="mini-circle emo">😤</div>
+                  <div class="mini-circle res">🛡️</div>
+                  <div class="mini-circle ego">🪞</div>
+                </div>
+                <div class="merge-status-mini" id="l2BisakahMergeStatus">Klik untuk meleburkan</div>
+                <button class="btn-merge" onclick="startMerge('l2', 'Bisakah')">🌀 Melebur & Lepaskan</button>
+                <div class="kapan-release" id="l2BisakahKapanR" style="display:none">
+                  <p>"Kapan kamu mau melepaskan ketiganya?"</p>
+                  <div class="kapan-btns">
+                    <button class="btn-sekarang" onclick="releaseNowCleanup('l2', 'Bisakah')">✨ Sekarang</button>
+                    <button class="btn-nanti" onclick="releaseLaterCleanup('l2', 'Bisakah')">⏳ Nanti</button>
+                  </div>
+                </div>
+              </div>
               <button class="btn btn-retry" id="l2BisakahRetry" onclick="retryQuestion('l2', 'Bisakah')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
@@ -980,6 +1072,23 @@
                   <div class="form-group"><select id="l2MauEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
                 </div>
               </div>
+              <div class="merge-release-section" id="l2MauMerge">
+                <h6>🔄 PELEBURAN 3 ELEMEN</h6>
+                <div class="mini-merge-circles" id="l2MauMergeCircles">
+                  <div class="mini-circle emo">😤</div>
+                  <div class="mini-circle res">🛡️</div>
+                  <div class="mini-circle ego">🪞</div>
+                </div>
+                <div class="merge-status-mini" id="l2MauMergeStatus">Klik untuk meleburkan</div>
+                <button class="btn-merge" onclick="startMerge('l2', 'Mau')">🌀 Melebur & Lepaskan</button>
+                <div class="kapan-release" id="l2MauKapanR" style="display:none">
+                  <p>"Kapan kamu mau melepaskan ketiganya?"</p>
+                  <div class="kapan-btns">
+                    <button class="btn-sekarang" onclick="releaseNowCleanup('l2', 'Mau')">✨ Sekarang</button>
+                    <button class="btn-nanti" onclick="releaseLaterCleanup('l2', 'Mau')">⏳ Nanti</button>
+                  </div>
+                </div>
+              </div>
               <button class="btn btn-retry" id="l2MauRetry" onclick="retryQuestion('l2', 'Mau')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
@@ -1012,6 +1121,23 @@
                 <div class="awareness-final">
                   <div class="resistance-q">"Apakah resistensi ini adalah dirimu, ataukah kamu yang SADAR bahwa resistensi ini ada?"</div>
                   <div class="form-group"><select id="l2KapanEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
+                </div>
+              </div>
+              <div class="merge-release-section" id="l2KapanMerge">
+                <h6>🔄 PELEBURAN 3 ELEMEN</h6>
+                <div class="mini-merge-circles" id="l2KapanMergeCircles">
+                  <div class="mini-circle emo">😤</div>
+                  <div class="mini-circle res">🛡️</div>
+                  <div class="mini-circle ego">🪞</div>
+                </div>
+                <div class="merge-status-mini" id="l2KapanMergeStatus">Klik untuk meleburkan</div>
+                <button class="btn-merge" onclick="startMerge('l2', 'Kapan')">🌀 Melebur & Lepaskan</button>
+                <div class="kapan-release" id="l2KapanKapanR" style="display:none">
+                  <p>"Kapan kamu mau melepaskan ketiganya?"</p>
+                  <div class="kapan-btns">
+                    <button class="btn-sekarang" onclick="releaseNowCleanup('l2', 'Kapan')">✨ Sekarang</button>
+                    <button class="btn-nanti" onclick="releaseLaterCleanup('l2', 'Kapan')">⏳ Nanti</button>
+                  </div>
                 </div>
               </div>
               <button class="btn btn-retry" id="l2KapanRetry" onclick="retryQuestion('l2', 'Kapan')">🔄 Coba Lagi Pertanyaan Utama</button>
@@ -1139,6 +1265,23 @@
                   <div class="form-group"><select id="l3BisakahEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
                 </div>
               </div>
+              <div class="merge-release-section" id="l3BisakahMerge">
+                <h6>🔄 PELEBURAN 3 ELEMEN</h6>
+                <div class="mini-merge-circles" id="l3BisakahMergeCircles">
+                  <div class="mini-circle emo">😤</div>
+                  <div class="mini-circle res">🛡️</div>
+                  <div class="mini-circle ego">🪞</div>
+                </div>
+                <div class="merge-status-mini" id="l3BisakahMergeStatus">Klik untuk meleburkan</div>
+                <button class="btn-merge" onclick="startMerge('l3', 'Bisakah')">🌀 Melebur & Lepaskan</button>
+                <div class="kapan-release" id="l3BisakahKapanR" style="display:none">
+                  <p>"Kapan kamu mau melepaskan ketiganya?"</p>
+                  <div class="kapan-btns">
+                    <button class="btn-sekarang" onclick="releaseNowCleanup('l3', 'Bisakah')">✨ Sekarang</button>
+                    <button class="btn-nanti" onclick="releaseLaterCleanup('l3', 'Bisakah')">⏳ Nanti</button>
+                  </div>
+                </div>
+              </div>
               <button class="btn btn-retry" id="l3BisakahRetry" onclick="retryQuestion('l3', 'Bisakah')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
@@ -1173,6 +1316,23 @@
                   <div class="form-group"><select id="l3MauEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
                 </div>
               </div>
+              <div class="merge-release-section" id="l3MauMerge">
+                <h6>🔄 PELEBURAN 3 ELEMEN</h6>
+                <div class="mini-merge-circles" id="l3MauMergeCircles">
+                  <div class="mini-circle emo">😤</div>
+                  <div class="mini-circle res">🛡️</div>
+                  <div class="mini-circle ego">🪞</div>
+                </div>
+                <div class="merge-status-mini" id="l3MauMergeStatus">Klik untuk meleburkan</div>
+                <button class="btn-merge" onclick="startMerge('l3', 'Mau')">🌀 Melebur & Lepaskan</button>
+                <div class="kapan-release" id="l3MauKapanR" style="display:none">
+                  <p>"Kapan kamu mau melepaskan ketiganya?"</p>
+                  <div class="kapan-btns">
+                    <button class="btn-sekarang" onclick="releaseNowCleanup('l3', 'Mau')">✨ Sekarang</button>
+                    <button class="btn-nanti" onclick="releaseLaterCleanup('l3', 'Mau')">⏳ Nanti</button>
+                  </div>
+                </div>
+              </div>
               <button class="btn btn-retry" id="l3MauRetry" onclick="retryQuestion('l3', 'Mau')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
@@ -1205,6 +1365,23 @@
                 <div class="awareness-final">
                   <div class="resistance-q">"Apakah resistensi ini adalah dirimu, ataukah kamu yang SADAR bahwa resistensi ini ada?"</div>
                   <div class="form-group"><select id="l3KapanEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
+                </div>
+              </div>
+              <div class="merge-release-section" id="l3KapanMerge">
+                <h6>🔄 PELEBURAN 3 ELEMEN</h6>
+                <div class="mini-merge-circles" id="l3KapanMergeCircles">
+                  <div class="mini-circle emo">😤</div>
+                  <div class="mini-circle res">🛡️</div>
+                  <div class="mini-circle ego">🪞</div>
+                </div>
+                <div class="merge-status-mini" id="l3KapanMergeStatus">Klik untuk meleburkan</div>
+                <button class="btn-merge" onclick="startMerge('l3', 'Kapan')">🌀 Melebur & Lepaskan</button>
+                <div class="kapan-release" id="l3KapanKapanR" style="display:none">
+                  <p>"Kapan kamu mau melepaskan ketiganya?"</p>
+                  <div class="kapan-btns">
+                    <button class="btn-sekarang" onclick="releaseNowCleanup('l3', 'Kapan')">✨ Sekarang</button>
+                    <button class="btn-nanti" onclick="releaseLaterCleanup('l3', 'Kapan')">⏳ Nanti</button>
+                  </div>
                 </div>
               </div>
               <button class="btn btn-retry" id="l3KapanRetry" onclick="retryQuestion('l3', 'Kapan')">🔄 Coba Lagi Pertanyaan Utama</button>
@@ -1314,6 +1491,23 @@
                   <div class="form-group"><select id="rootBisakahEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
                 </div>
               </div>
+              <div class="merge-release-section" id="rootBisakahMerge">
+                <h6>🔄 PELEBURAN 3 ELEMEN</h6>
+                <div class="mini-merge-circles" id="rootBisakahMergeCircles">
+                  <div class="mini-circle emo">😤</div>
+                  <div class="mini-circle res">🛡️</div>
+                  <div class="mini-circle ego">🪞</div>
+                </div>
+                <div class="merge-status-mini" id="rootBisakahMergeStatus">Klik untuk meleburkan</div>
+                <button class="btn-merge" onclick="startMerge('root', 'Bisakah')">🌀 Melebur & Lepaskan</button>
+                <div class="kapan-release" id="rootBisakahKapanR" style="display:none">
+                  <p>"Kapan kamu mau melepaskan ketiganya?"</p>
+                  <div class="kapan-btns">
+                    <button class="btn-sekarang" onclick="releaseNowCleanup('root', 'Bisakah')">✨ Sekarang</button>
+                    <button class="btn-nanti" onclick="releaseLaterCleanup('root', 'Bisakah')">⏳ Nanti</button>
+                  </div>
+                </div>
+              </div>
               <button class="btn btn-retry" id="rootBisakahRetry" onclick="retryQuestion('root', 'Bisakah')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
@@ -1348,6 +1542,23 @@
                   <div class="form-group"><select id="rootMauEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
                 </div>
               </div>
+              <div class="merge-release-section" id="rootMauMerge">
+                <h6>🔄 PELEBURAN 3 ELEMEN</h6>
+                <div class="mini-merge-circles" id="rootMauMergeCircles">
+                  <div class="mini-circle emo">😤</div>
+                  <div class="mini-circle res">🛡️</div>
+                  <div class="mini-circle ego">🪞</div>
+                </div>
+                <div class="merge-status-mini" id="rootMauMergeStatus">Klik untuk meleburkan</div>
+                <button class="btn-merge" onclick="startMerge('root', 'Mau')">🌀 Melebur & Lepaskan</button>
+                <div class="kapan-release" id="rootMauKapanR" style="display:none">
+                  <p>"Kapan kamu mau melepaskan ketiganya?"</p>
+                  <div class="kapan-btns">
+                    <button class="btn-sekarang" onclick="releaseNowCleanup('root', 'Mau')">✨ Sekarang</button>
+                    <button class="btn-nanti" onclick="releaseLaterCleanup('root', 'Mau')">⏳ Nanti</button>
+                  </div>
+                </div>
+              </div>
               <button class="btn btn-retry" id="rootMauRetry" onclick="retryQuestion('root', 'Mau')">🔄 Coba Lagi Pertanyaan Utama</button>
             </div>
           </div>
@@ -1380,6 +1591,23 @@
                 <div class="awareness-final">
                   <div class="resistance-q">"Apakah resistensi ini adalah dirimu, ataukah kamu yang SADAR bahwa resistensi ini ada?"</div>
                   <div class="form-group"><select id="rootKapanEAware"><option value="">--</option><option value="sadar">Saya yang sadar</option><option value="resistensi">Saya adalah resistensi itu</option></select></div>
+                </div>
+              </div>
+              <div class="merge-release-section" id="rootKapanMerge">
+                <h6>🔄 PELEBURAN 3 ELEMEN</h6>
+                <div class="mini-merge-circles" id="rootKapanMergeCircles">
+                  <div class="mini-circle emo">😤</div>
+                  <div class="mini-circle res">🛡️</div>
+                  <div class="mini-circle ego">🪞</div>
+                </div>
+                <div class="merge-status-mini" id="rootKapanMergeStatus">Klik untuk meleburkan</div>
+                <button class="btn-merge" onclick="startMerge('root', 'Kapan')">🌀 Melebur & Lepaskan</button>
+                <div class="kapan-release" id="rootKapanKapanR" style="display:none">
+                  <p>"Kapan kamu mau melepaskan ketiganya?"</p>
+                  <div class="kapan-btns">
+                    <button class="btn-sekarang" onclick="releaseNowCleanup('root', 'Kapan')">✨ Sekarang</button>
+                    <button class="btn-nanti" onclick="releaseLaterCleanup('root', 'Kapan')">⏳ Nanti</button>
+                  </div>
                 </div>
               </div>
               <button class="btn btn-retry" id="rootKapanRetry" onclick="retryQuestion('root', 'Kapan')">🔄 Coba Lagi Pertanyaan Utama</button>

@@ -154,6 +154,28 @@
     .log-reduction{text-align:right;font-weight:600;color:var(--success)}
     .log-reduction.positive{color:var(--danger)}
 
+    /* ==================== MERGING VISUALIZATION ==================== */
+    .merge-container{display:flex;flex-direction:column;align-items:center;padding:1rem;margin:1rem 0;background:#f5eef8;border-radius:10px}
+    .merge-circles{display:flex;justify-content:center;gap:0.5rem;margin-bottom:0.75rem;transition:all 1s ease}
+    .merge-circles.merging{gap:0}
+    .merge-circles.merged{gap:-15px}
+    .merge-circles.releasing .m-circle{animation:dissolve 2s forwards}
+    .m-circle{width:60px;height:60px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:0.6rem;font-weight:600;text-align:center;transition:all 1s ease;box-shadow:0 3px 10px rgba(0,0,0,0.2)}
+    .m-circle.emotion{background:linear-gradient(135deg,#e74c3c,#c0392b);color:white}
+    .m-circle.resistance{background:linear-gradient(135deg,#f39c12,#e67e22);color:white}
+    .m-circle.ego{background:linear-gradient(135deg,#9b59b6,#8e44ad);color:white}
+    .m-circle .m-emoji{font-size:1.2rem}
+    .merge-circles.merging .m-circle{transform:scale(0.9);margin:0 -8px}
+    .merge-circles.merged .m-circle{transform:scale(0.85);margin:0 -15px;opacity:0.95}
+    @keyframes dissolve{0%{transform:scale(0.85);opacity:0.95}50%{transform:scale(1.1);opacity:0.5}100%{transform:scale(0);opacity:0}}
+    .merge-status{font-size:0.85rem;color:#8e44ad;font-weight:600;text-align:center;min-height:20px}
+    .kapan-box{background:#d5f5e3;padding:1rem;border-radius:8px;text-align:center;margin-top:1rem}
+    .kapan-buttons{display:flex;gap:0.5rem;justify-content:center;margin-top:0.75rem}
+    .kapan-btn{padding:0.75rem 1.25rem;border:none;border-radius:8px;font-size:0.9rem;font-weight:700;cursor:pointer;transition:all 0.3s}
+    .kapan-btn.sekarang{background:linear-gradient(135deg,#27ae60,#2ecc71);color:white}
+    .kapan-btn.sekarang:hover{transform:scale(1.05);box-shadow:0 4px 15px rgba(39,174,96,0.4)}
+    .kapan-btn.nanti{background:#f8f9fa;color:#2c3e50;border:2px solid #bdc3c7}
+
     /* ==================== TOAST ==================== */
     .toast-container{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:1000;display:flex;flex-direction:column;gap:0.5rem;width:90%;max-width:350px}
     .toast{padding:0.75rem 1rem;border-radius:8px;background:var(--text-dark);color:var(--white);font-size:0.85rem;text-align:center;animation:toastIn 0.3s ease,toastOut 0.3s ease 2.7s}
@@ -638,45 +660,105 @@
         `,
         6: `
           <div class="step-instruction">
-            <h4>🚪 OFFER RELEASE - Tawarkan Kepergian</h4>
-            <p class="instruction-main">Tanyakan dengan lembut (BUKAN memaksa):</p>
-            <blockquote class="script">
-              "${emo.name} - sekarang kamu sudah deliver message..."<br>
-              "Kamu sudah feel heard and understood..."<br>
-              "Apakah kamu mau STAY longer - atau kamu siap untuk PERGI dengan damai?"
-            </blockquote>
-            <div class="form-item" style="margin-top:1rem;">
-              <label>Response dari ${emo.name}:</label>
-              <div class="radio-group">
-                <label><input type="radio" name="ready" value="yes"> Siap pergi dengan damai 🕊️</label>
-                <label><input type="radio" name="ready" value="stay"> Masih mau stay (ada yang belum selesai)</label>
+            <h4>🔮 PELEBURAN - Hadirkan 3 Elemen</h4>
+            <p class="instruction-main">Sebelum melepaskan, hadirkan ketiganya:</p>
+
+            <div class="merge-container">
+              <div class="merge-circles" id="mergeCircles">
+                <div class="m-circle emotion">
+                  <span class="m-emoji">${emo.emoji}</span>
+                  <span>${emo.name}</span>
+                </div>
+                <div class="m-circle resistance">
+                  <span class="m-emoji">⚡</span>
+                  <span>Resistensi</span>
+                </div>
+                <div class="m-circle ego">
+                  <span class="m-emoji">👤</span>
+                  <span>Ego</span>
+                </div>
               </div>
+              <div class="merge-status" id="mergeStatus">Hadirkan ketiganya...</div>
             </div>
+
+            <blockquote class="script">
+              1️⃣ <strong>EMOSI:</strong> "${emo.name}, kamu sudah hadir."<br><br>
+              2️⃣ <strong>RESISTENSI:</strong> "Bagian diriku yang menolak, kamu juga hadir."<br><br>
+              3️⃣ <strong>EGO:</strong> "Ini terjadi pada SAYA - saya akui."
+            </blockquote>
+
+            <p class="instruction-action" style="margin-top:1rem;">
+              <strong>Mundur 3 langkah...</strong><br>
+              Amati ketiganya dari kejauhan, biarkan mereka saling mendekat dan melebur...
+            </p>
+
+            <button class="btn btn-primary btn-block" style="margin-top:1rem;" onclick="startDailyMerging()">
+              🌀 Mulai Peleburan
+            </button>
           </div>
         `,
         7: `
           <div class="step-instruction">
-            <h4>🕊️ RELEASE - Lepaskan dengan Damai</h4>
-            <p class="instruction-main">Ucapkan perpisahan:</p>
-            <blockquote class="script">
-              "${emo.name} - terima kasih sekali lagi."<br>
-              "Silakan pergi dengan damai."<br>
-              "Kamu always welcome to visit kalau ada message lagi."<br>
-              "Go in peace, ${emo.name}."
-            </blockquote>
-            <p class="instruction-action">
-              Bayangkan ${emo.name} berdiri, tersenyum, berjalan ke pintu, keluar, dan pintu tertutup.
-            </p>
-            <div class="breathing-release">
-              <p><strong>Ambil napas DALAM...</strong></p>
-              <p style="font-size:1.3rem;margin:0.5rem 0;">"Haaaaaa..."</p>
-              <p>Hembuskan PELAN sambil lepaskan semuanya.</p>
-              <button class="btn btn-outline btn-sm" onclick="breatheAnimation()">🫁 Panduan Napas (3x)</button>
+            <h4>🕊️ RELEASE - Lepaskan Bersamaan</h4>
+
+            <div class="merge-container">
+              <div class="merge-circles merged" id="releaseCircles">
+                <div class="m-circle emotion">
+                  <span class="m-emoji">${emo.emoji}</span>
+                  <span>${emo.name}</span>
+                </div>
+                <div class="m-circle resistance">
+                  <span class="m-emoji">⚡</span>
+                  <span>Resistensi</span>
+                </div>
+                <div class="m-circle ego">
+                  <span class="m-emoji">👤</span>
+                  <span>Ego</span>
+                </div>
+              </div>
+              <div class="merge-status" id="releaseStatus">Ketiganya sudah melebur menjadi satu...</div>
             </div>
-            <div class="form-item" style="margin-top:1rem;">
-              <label>Intensity SEKARANG (0-10):</label>
-              <input type="number" id="intensityAfter" min="0" max="10" placeholder="0"
-                     oninput="releaseData.intensityAfter=parseInt(this.value)||0">
+
+            <div id="bmkQuestions">
+              <div class="form-item">
+                <label>1️⃣ <strong>Bisakah</strong> kamu melepaskan ketiganya?</label>
+                <div class="radio-group">
+                  <label><input type="radio" name="q1" value="ya" onchange="showQ2Daily()"> Ya Bisa</label>
+                  <label><input type="radio" name="q1" value="mungkin" onchange="showQ2Daily()"> Mungkin Bisa</label>
+                  <label><input type="radio" name="q1" value="tidak" onchange="showQ2Daily()"> Tidak Bisa</label>
+                </div>
+              </div>
+
+              <div class="form-item" id="q2Section" style="display:none;">
+                <label>2️⃣ <strong>Maukah</strong> kamu melepaskannya?</label>
+                <div class="radio-group">
+                  <label><input type="radio" name="q2" value="ya" onchange="showKapanDaily()"> Ya Mau</label>
+                  <label><input type="radio" name="q2" value="mungkin" onchange="showKapanDaily()"> Mungkin Mau</label>
+                  <label><input type="radio" name="q2" value="tidak" onchange="showKapanDaily()"> Tidak Mau</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="kapan-box" id="kapanBox" style="display:none;">
+              <p><strong>3️⃣ KAPAN kamu mau melepaskannya?</strong></p>
+              <p style="font-size:0.8rem;color:var(--text-light);">Klik "SEKARANG" untuk melepaskan ketiganya bersamaan</p>
+              <div class="kapan-buttons">
+                <button class="kapan-btn sekarang" onclick="releaseNowDaily()">🕊️ SEKARANG</button>
+                <button class="kapan-btn nanti" onclick="showIntensityDaily()">Nanti</button>
+              </div>
+            </div>
+
+            <div id="releaseComplete" style="display:none;">
+              <div class="breathing-release">
+                <p><strong>✨ DILEPASKAN! ✨</strong></p>
+                <p style="font-size:1.3rem;margin:0.5rem 0;">🕊️</p>
+                <p>Emosi, Resistensi, dan Ego telah pergi bersama...</p>
+              </div>
+              <div class="form-item" style="margin-top:1rem;">
+                <label>Intensity SEKARANG (0-10):</label>
+                <input type="number" id="intensityAfter" min="0" max="10" placeholder="0"
+                       oninput="releaseData.intensityAfter=parseInt(this.value)||0">
+              </div>
             </div>
           </div>
         `
@@ -800,6 +882,61 @@
     }
 
     // ==================== COMPLETE RELEASE ====================
+    // ==================== DAILY MERGING TECHNIQUE ====================
+    function startDailyMerging() {
+      const circles = document.getElementById('mergeCircles');
+      const status = document.getElementById('mergeStatus');
+
+      status.textContent = 'Mundur 3 langkah... mengamati dari kejauhan...';
+
+      setTimeout(() => {
+        circles.classList.add('merging');
+        status.textContent = 'Ketiganya mulai mendekat...';
+
+        setTimeout(() => {
+          circles.classList.remove('merging');
+          circles.classList.add('merged');
+          status.textContent = '✨ Melebur menjadi satu!';
+
+          setTimeout(() => {
+            showToast('Peleburan selesai! Lanjut ke pelepasan.', 'success');
+          }, 500);
+        }, 1500);
+      }, 1500);
+    }
+
+    function showQ2Daily() {
+      document.getElementById('q2Section').style.display = 'block';
+    }
+
+    function showKapanDaily() {
+      document.getElementById('kapanBox').style.display = 'block';
+    }
+
+    function releaseNowDaily() {
+      const circles = document.getElementById('releaseCircles');
+      const status = document.getElementById('releaseStatus');
+
+      // Hide BMK and Kapan
+      document.getElementById('bmkQuestions').style.display = 'none';
+      document.getElementById('kapanBox').style.display = 'none';
+
+      // Animate release
+      circles.classList.add('releasing');
+      status.textContent = 'Melepaskan...';
+
+      setTimeout(() => {
+        status.textContent = '🕊️ Dilepaskan!';
+        document.getElementById('releaseComplete').style.display = 'block';
+      }, 2000);
+    }
+
+    function showIntensityDaily() {
+      document.getElementById('bmkQuestions').style.display = 'none';
+      document.getElementById('kapanBox').style.display = 'none';
+      document.getElementById('releaseComplete').style.display = 'block';
+    }
+
     function completeRelease() {
       releaseData.timestamp = new Date().toISOString();
 

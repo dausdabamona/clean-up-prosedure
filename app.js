@@ -1816,5 +1816,142 @@ function updateStorageInfo() {
 }
 
 // ==========================================================================
+// MERGE RELEASE FUNCTIONS - 3-in-1 Merging Technique
+// ==========================================================================
+
+// Start merge animation for resistance panel
+function startMerge(layer, type) {
+  const circles = document.getElementById(`${layer}${type}MergeCircles`);
+  const status = document.getElementById(`${layer}${type}MergeStatus`);
+  const kapanSection = document.getElementById(`${layer}${type}KapanR`);
+  const btn = event.target;
+
+  if (!circles || !status) return;
+
+  // Disable button
+  btn.disabled = true;
+
+  // Step 1: Step back
+  status.textContent = 'Mundur 3 langkah...';
+  circles.style.transform = 'scale(0.7)';
+  circles.style.opacity = '0.8';
+
+  setTimeout(() => {
+    // Step 2: Merge circles
+    status.textContent = 'Melebur menjadi satu...';
+    circles.classList.add('merged');
+
+    setTimeout(() => {
+      // Step 3: Show Kapan release
+      status.textContent = 'Siap untuk dilepaskan!';
+      if (kapanSection) {
+        kapanSection.style.display = 'block';
+      }
+    }, 1000);
+  }, 1500);
+}
+
+// Release now - when user clicks "Sekarang"
+function releaseNowCleanup(layer, type) {
+  const circles = document.getElementById(`${layer}${type}MergeCircles`);
+  const status = document.getElementById(`${layer}${type}MergeStatus`);
+  const mergeSection = document.getElementById(`${layer}${type}Merge`);
+  const panel = document.getElementById(`${layer}${type}Resist`);
+  const badge = document.getElementById(`${layer}${type}Badge`);
+  const selectEl = document.getElementById(`${layer}${type}`);
+
+  if (circles) {
+    // Add releasing animation
+    circles.classList.add('releasing');
+  }
+
+  if (status) {
+    status.textContent = '✨ Dilepaskan! ✨';
+    status.style.color = '#27ae60';
+    status.style.fontWeight = 'bold';
+  }
+
+  // Mark resistance as released
+  resistanceState[layer][type] = true;
+
+  setTimeout(() => {
+    // Hide merge section after release
+    if (mergeSection) {
+      mergeSection.style.display = 'none';
+    }
+
+    // Hide resistance panel
+    if (panel) {
+      panel.classList.remove('show');
+    }
+
+    // Show badge
+    if (badge) {
+      badge.style.display = 'inline';
+    }
+
+    // Reset main question
+    if (selectEl) {
+      selectEl.value = '';
+      selectEl.focus();
+    }
+
+    showToast('Resistensi + Ego released! Coba jawab lagi...', 'success');
+
+    // Scroll to question
+    if (selectEl) {
+      selectEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Reset merge section for next time
+    resetMergeSection(layer, type);
+  }, 1500);
+}
+
+// Release later - when user clicks "Nanti"
+function releaseLaterCleanup(layer, type) {
+  const kapanSection = document.getElementById(`${layer}${type}KapanR`);
+
+  if (kapanSection) {
+    kapanSection.style.display = 'none';
+  }
+
+  showToast('Lanjutkan ketika siap...', 'info');
+}
+
+// Reset merge section to initial state
+function resetMergeSection(layer, type) {
+  const circles = document.getElementById(`${layer}${type}MergeCircles`);
+  const status = document.getElementById(`${layer}${type}MergeStatus`);
+  const kapanSection = document.getElementById(`${layer}${type}KapanR`);
+  const mergeSection = document.getElementById(`${layer}${type}Merge`);
+  const btn = mergeSection?.querySelector('.btn-merge');
+
+  if (circles) {
+    circles.classList.remove('merged', 'releasing');
+    circles.style.transform = '';
+    circles.style.opacity = '';
+  }
+
+  if (status) {
+    status.textContent = 'Klik untuk meleburkan';
+    status.style.color = '';
+    status.style.fontWeight = '';
+  }
+
+  if (kapanSection) {
+    kapanSection.style.display = 'none';
+  }
+
+  if (mergeSection) {
+    mergeSection.style.display = 'block';
+  }
+
+  if (btn) {
+    btn.disabled = false;
+  }
+}
+
+// ==========================================================================
 // END OF APP.JS
 // ==========================================================================
