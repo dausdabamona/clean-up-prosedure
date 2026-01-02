@@ -147,6 +147,30 @@
     .log-reduction { font-weight: 700; color: var(--success); }
     .empty-log { text-align: center; color: var(--text-light); padding: 2rem; font-size: 0.9rem; }
 
+    /* Unfinished Releases */
+    .unfinished-section { margin-bottom: 1rem; }
+    .unfinished-header { background: linear-gradient(135deg, var(--warning), #e67e22); }
+    .unfinished-item { background: var(--white); border-radius: 10px; padding: 1rem; margin-bottom: 0.75rem; border-left: 4px solid var(--warning); box-shadow: var(--shadow); }
+    .unfinished-item:hover { transform: translateY(-2px); }
+    .unfinished-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
+    .unfinished-wanting { display: flex; align-items: center; gap: 0.5rem; }
+    .unfinished-wanting .emoji { font-size: 1.5rem; }
+    .unfinished-wanting .name { font-weight: 700; color: var(--primary); font-size: 1rem; }
+    .unfinished-intensity { text-align: right; }
+    .unfinished-intensity .value { font-size: 1.5rem; font-weight: 700; color: var(--warning); }
+    .unfinished-intensity .label { font-size: 0.7rem; color: var(--text-light); }
+    .unfinished-meta { font-size: 0.75rem; color: var(--text-light); margin-bottom: 0.5rem; }
+    .unfinished-belief { font-size: 0.8rem; color: var(--text-dark); font-style: italic; background: #fef9e7; padding: 0.5rem; border-radius: 6px; margin-bottom: 0.75rem; }
+    .unfinished-progress { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .unfinished-progress-bar { flex: 1; height: 6px; background: var(--bg-light); border-radius: 3px; overflow: hidden; }
+    .unfinished-progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-light)); border-radius: 3px; transition: width 0.3s; }
+    .unfinished-progress-text { font-size: 0.7rem; color: var(--text-light); }
+    .unfinished-actions { display: flex; gap: 0.5rem; }
+    .unfinished-actions .btn { flex: 1; padding: 0.5rem; font-size: 0.8rem; }
+    .btn-warning { background: linear-gradient(135deg, var(--warning), #e67e22); color: var(--white); }
+    .btn-danger { background: var(--danger); color: var(--white); }
+    .btn-danger:hover { background: #a93226; }
+
     /* Hidden */
     .hidden { display: none !important; }
 
@@ -180,6 +204,22 @@
       <div class="phase-dot" data-phase="6">6</div>
       <div class="phase-dot" data-phase="7">7</div>
       <div class="phase-dot" data-phase="8">8</div>
+    </div>
+
+    <!-- Unfinished Releases Section -->
+    <div class="card unfinished-section hidden" id="unfinishedSection">
+      <div class="card-header unfinished-header">⏳ Proses Belum Tuntas</div>
+      <div class="card-body">
+        <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem; text-align: center;">
+          Kamu memiliki proses pelepasan yang belum selesai. Lanjutkan atau mulai yang baru.
+        </p>
+        <div id="unfinishedContainer">
+          <!-- Unfinished items rendered here -->
+        </div>
+        <div class="btn-group" style="margin-top: 1rem;">
+          <button class="btn btn-outline btn-block" onclick="startNewRelease()">➕ Mulai Pelepasan Baru</button>
+        </div>
+      </div>
     </div>
 
     <!-- Phase 1: Wise Host Activation -->
@@ -677,6 +717,8 @@
       timestamp: null
     };
     let dailyLog = [];
+    let unfinishedReleases = [];
+    let currentUnfinishedId = null;
     let timerInterval = null;
     let timerSeconds = 30;
     let isTimerRunning = false;
@@ -686,7 +728,13 @@
     document.addEventListener('DOMContentLoaded', () => {
       renderWantingGrid();
       loadDailyLog();
+      loadUnfinished();
       renderDailyLog();
+
+      // Check if there are unfinished releases
+      if (unfinishedReleases.length > 0) {
+        showUnfinishedSection();
+      }
     });
 
     function renderWantingGrid() {
@@ -799,6 +847,14 @@
         currentPhase++;
         showPhase(currentPhase);
         window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Auto-save to unfinished when past phase 2 (wanting selected)
+        if (currentPhase >= 3 && selectedWanting) {
+          if (!releaseData.timestamp) {
+            releaseData.timestamp = new Date().toISOString();
+          }
+          addToUnfinished();
+        }
       }
     }
 
@@ -975,9 +1031,25 @@
 
       // Update completion UI
       const wanting = CORE_WANTINGS[selectedWanting];
-      document.getElementById('completionText').innerHTML = `
-        Kamu telah melepaskan keinginan akan <strong>${wanting.name}</strong>
-      `;
+
+      // Check if fully released (intensity = 0) or still has intensity
+      const isFullyReleased = releaseData.intensityAfter === 0;
+
+      if (isFullyReleased) {
+        // Fully released - remove from unfinished
+        removeFromUnfinished();
+        document.getElementById('completionText').innerHTML = `
+          🎉 <strong>Selamat!</strong> Keinginan akan <strong>${wanting.name}</strong> telah sepenuhnya dilepaskan!
+        `;
+      } else {
+        // Still has intensity - keep in unfinished for next session
+        addToUnfinished();
+        document.getElementById('completionText').innerHTML = `
+          Kamu telah melepaskan sebagian keinginan akan <strong>${wanting.name}</strong><br>
+          <small style="color: var(--warning);">💡 Intensitas masih ${releaseData.intensityAfter}. Proses ini tersimpan untuk dilanjutkan nanti.</small>
+        `;
+      }
+
       document.getElementById('statBefore').textContent = releaseData.intensityBefore;
       document.getElementById('statAfter').textContent = releaseData.intensityAfter;
 
@@ -991,13 +1063,19 @@
       } else {
         insight += '💡 Terus latih untuk memisahkan identitasmu dari keinginan-keinginan ini. Kamu lebih dari sekadar keinginanmu.';
       }
+
+      if (!isFullyReleased) {
+        insight += '<br><br>🔄 <strong>Proses ini akan muncul di halaman depan untuk dilanjutkan lain kali.</strong>';
+      }
+
       document.getElementById('insightText').innerHTML = insight;
 
       // Save to log
       dailyLog.push({
         ...releaseData,
         reduction,
-        reductionPct
+        reductionPct,
+        completed: isFullyReleased
       });
       saveDailyLog();
       renderDailyLog();
@@ -1011,6 +1089,7 @@
       // Reset state
       currentPhase = 2;
       selectedWanting = null;
+      currentUnfinishedId = null;
       releaseData = {
         wanting: '',
         wantingName: '',
@@ -1094,6 +1173,265 @@
           </div>
         `;
       }).join('');
+    }
+
+    // ==================== UNFINISHED RELEASES ====================
+    function saveUnfinished() {
+      localStorage.setItem('wanting_unfinished', JSON.stringify(unfinishedReleases));
+    }
+
+    function loadUnfinished() {
+      const saved = localStorage.getItem('wanting_unfinished');
+      if (saved) {
+        unfinishedReleases = JSON.parse(saved);
+      }
+    }
+
+    function showUnfinishedSection() {
+      document.getElementById('unfinishedSection').classList.remove('hidden');
+      document.getElementById('phase1').classList.add('hidden');
+      document.getElementById('phaseIndicator').classList.add('hidden');
+      renderUnfinished();
+    }
+
+    function hideUnfinishedSection() {
+      document.getElementById('unfinishedSection').classList.add('hidden');
+      document.getElementById('phaseIndicator').classList.remove('hidden');
+    }
+
+    function renderUnfinished() {
+      const container = document.getElementById('unfinishedContainer');
+
+      if (unfinishedReleases.length === 0) {
+        container.innerHTML = '<div class="empty-log">Tidak ada proses yang tertunda.</div>';
+        return;
+      }
+
+      container.innerHTML = unfinishedReleases.map((item, index) => {
+        const wanting = CORE_WANTINGS[item.wanting];
+        const date = new Date(item.lastUpdated || item.timestamp);
+        const dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        const timeStr = date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        const progressPct = Math.round((item.currentPhase / 8) * 100);
+        const lastIntensity = item.intensityAfter || item.intensityBefore || 5;
+
+        return `
+          <div class="unfinished-item fade-in">
+            <div class="unfinished-top">
+              <div class="unfinished-wanting">
+                <span class="emoji">${wanting.emoji}</span>
+                <span class="name">${wanting.name}</span>
+              </div>
+              <div class="unfinished-intensity">
+                <div class="value">${lastIntensity}</div>
+                <div class="label">Intensitas</div>
+              </div>
+            </div>
+            <div class="unfinished-meta">
+              📅 ${dateStr} • 🕐 ${timeStr} • Fase ${item.currentPhase}/8
+            </div>
+            ${item.belief ? `<div class="unfinished-belief">"${item.belief}"</div>` : ''}
+            <div class="unfinished-progress">
+              <div class="unfinished-progress-bar">
+                <div class="unfinished-progress-fill" style="width: ${progressPct}%"></div>
+              </div>
+              <span class="unfinished-progress-text">${progressPct}%</span>
+            </div>
+            <div class="unfinished-actions">
+              <button class="btn btn-warning" onclick="resumeRelease(${index})">▶️ Lanjutkan</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteUnfinished(${index})">🗑️</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addToUnfinished() {
+      // Generate unique ID if not exists
+      if (!currentUnfinishedId) {
+        currentUnfinishedId = Date.now().toString();
+      }
+
+      // Find existing or create new
+      const existingIndex = unfinishedReleases.findIndex(item => item.id === currentUnfinishedId);
+
+      const unfinishedData = {
+        id: currentUnfinishedId,
+        ...releaseData,
+        currentPhase: currentPhase,
+        lastUpdated: new Date().toISOString()
+      };
+
+      if (existingIndex >= 0) {
+        unfinishedReleases[existingIndex] = unfinishedData;
+      } else {
+        unfinishedReleases.push(unfinishedData);
+      }
+
+      saveUnfinished();
+    }
+
+    function removeFromUnfinished() {
+      if (currentUnfinishedId) {
+        unfinishedReleases = unfinishedReleases.filter(item => item.id !== currentUnfinishedId);
+        saveUnfinished();
+        currentUnfinishedId = null;
+      }
+    }
+
+    function resumeRelease(index) {
+      const item = unfinishedReleases[index];
+      if (!item) return;
+
+      // Restore state
+      currentUnfinishedId = item.id;
+      selectedWanting = item.wanting;
+      releaseData = {
+        wanting: item.wanting,
+        wantingName: item.wantingName,
+        situation: item.situation || '',
+        behavior: item.behavior || '',
+        bodyLocation: item.bodyLocation || '',
+        intensityBefore: item.intensityBefore || 5,
+        intensityAfter: item.intensityAfter || 5,
+        fulfilled: item.fulfilled || '',
+        fear: item.fear || '',
+        belief: item.belief || '',
+        acceptance: item.acceptance || '',
+        resistance: item.resistance || '',
+        q1: item.q1 || '',
+        q2: item.q2 || '',
+        q3: item.q3 || '',
+        deepRelease: item.deepRelease || '',
+        timestamp: item.timestamp
+      };
+
+      // Hide unfinished section
+      hideUnfinishedSection();
+
+      // Restore UI state based on phase
+      currentPhase = item.currentPhase || 3;
+
+      // Pre-fill form fields
+      restoreFormFields();
+
+      // Show the phase
+      showPhase(currentPhase);
+    }
+
+    function restoreFormFields() {
+      // Phase 3 fields
+      if (document.getElementById('situationInput')) {
+        document.getElementById('situationInput').value = releaseData.situation;
+      }
+      if (document.getElementById('behaviorInput')) {
+        document.getElementById('behaviorInput').value = releaseData.behavior;
+      }
+      if (document.getElementById('bodyLocationInput')) {
+        document.getElementById('bodyLocationInput').value = releaseData.bodyLocation;
+      }
+      if (document.getElementById('intensitySlider')) {
+        document.getElementById('intensitySlider').value = releaseData.intensityBefore;
+        document.getElementById('intensityBefore').textContent = releaseData.intensityBefore;
+      }
+
+      // Phase 4 fields
+      if (document.getElementById('fulfilledInput')) {
+        document.getElementById('fulfilledInput').value = releaseData.fulfilled;
+      }
+      if (document.getElementById('fearInput')) {
+        document.getElementById('fearInput').value = releaseData.fear;
+      }
+      if (document.getElementById('beliefInput')) {
+        document.getElementById('beliefInput').value = releaseData.belief;
+      }
+
+      // Phase 5 fields
+      if (document.getElementById('resistanceInput')) {
+        document.getElementById('resistanceInput').value = releaseData.resistance;
+      }
+
+      // Update wanting selection in grid
+      if (selectedWanting) {
+        document.querySelectorAll('.wanting-item').forEach(el => {
+          el.classList.remove('selected');
+        });
+        const wantingEl = document.querySelector(`[data-wanting="${selectedWanting}"]`);
+        if (wantingEl) {
+          wantingEl.classList.add('selected');
+        }
+        document.getElementById('selectWantingBtn').disabled = false;
+      }
+    }
+
+    function deleteUnfinished(index) {
+      if (confirm('Hapus proses pelepasan ini?')) {
+        unfinishedReleases.splice(index, 1);
+        saveUnfinished();
+        renderUnfinished();
+
+        // If no more unfinished, hide section
+        if (unfinishedReleases.length === 0) {
+          hideUnfinishedSection();
+          showPhase(1);
+        }
+      }
+    }
+
+    function startNewRelease() {
+      // Reset state
+      currentPhase = 1;
+      selectedWanting = null;
+      currentUnfinishedId = null;
+      releaseData = {
+        wanting: '',
+        wantingName: '',
+        situation: '',
+        behavior: '',
+        bodyLocation: '',
+        intensityBefore: 5,
+        intensityAfter: 5,
+        fulfilled: '',
+        fear: '',
+        belief: '',
+        acceptance: '',
+        resistance: '',
+        q1: '',
+        q2: '',
+        q3: '',
+        deepRelease: '',
+        timestamp: null
+      };
+
+      // Reset UI
+      document.querySelectorAll('.wanting-item').forEach(el => {
+        el.classList.remove('selected');
+      });
+      document.getElementById('selectWantingBtn').disabled = true;
+      document.querySelectorAll('.release-option').forEach(el => {
+        el.classList.remove('selected');
+      });
+      document.querySelectorAll('textarea').forEach(el => {
+        el.value = '';
+      });
+      document.querySelectorAll('select').forEach(el => {
+        el.selectedIndex = 0;
+      });
+      document.getElementById('intensitySlider').value = 5;
+      document.getElementById('intensityBefore').textContent = '5';
+
+      // Reset breathing
+      document.getElementById('startBreathing').disabled = false;
+      document.getElementById('startBreathing').textContent = '🌬️ Mulai Latihan Napas';
+      document.getElementById('startBreathing').style.display = 'inline-flex';
+      document.getElementById('affirmation').style.display = 'none';
+      document.getElementById('activateBtn').disabled = true;
+      document.getElementById('breathingText').textContent = 'Siap untuk memulai?';
+      document.getElementById('breathingCircle').classList.remove('expand');
+
+      // Hide unfinished section and show phase 1
+      hideUnfinishedSection();
+      showPhase(1);
     }
   </script>
 </body>
