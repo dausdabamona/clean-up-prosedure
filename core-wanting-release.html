@@ -171,6 +171,16 @@
     .btn-danger { background: var(--danger); color: var(--white); }
     .btn-danger:hover { background: #a93226; }
 
+    /* Resume Summary Panel */
+    .resume-summary { display: none; background: linear-gradient(135deg, #ebf5fb, #d4e6f1); border: 2px solid var(--primary); border-radius: 12px; padding: 1rem; margin-bottom: 1rem; }
+    .resume-summary.show { display: block; animation: slideDown 0.3s ease; }
+    .resume-summary-header { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem; font-size: 0.9rem; }
+    .resume-summary-content { font-size: 0.85rem; color: var(--text-dark); }
+    .resume-summary-item { background: var(--white); padding: 0.5rem 0.75rem; border-radius: 8px; margin-bottom: 0.5rem; }
+    .resume-summary-item label { font-weight: 600; color: var(--primary); font-size: 0.75rem; display: block; margin-bottom: 0.2rem; }
+    .resume-summary-item span { color: var(--text-dark); }
+    .resume-summary-note { font-size: 0.75rem; color: var(--warning); font-style: italic; margin-top: 0.5rem; display: flex; align-items: center; gap: 0.3rem; }
+
     /* Merging Visualization */
     .merging-container { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; }
     .merging-circles { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem; transition: all 1s ease; }
@@ -452,6 +462,26 @@
         <div class="exploration-room fade-in">
           <div class="step-title">Menghadirkan & Melebur</div>
           <div class="step-subtitle">Hadirkan ketiganya, mundur, dan biarkan melebur</div>
+
+          <!-- Resume Summary (shown when continuing unfinished release) -->
+          <div class="resume-summary" id="resumeSummary">
+            <div class="resume-summary-header">🔄 Melanjutkan Proses Sebelumnya</div>
+            <div class="resume-summary-content">
+              <div class="resume-summary-item">
+                <label>Wanting:</label>
+                <span id="resumeWanting">-</span>
+              </div>
+              <div class="resume-summary-item" id="resumeBeliefItem" style="display:none;">
+                <label>Belief/Keyakinan:</label>
+                <span id="resumeBelief">-</span>
+              </div>
+              <div class="resume-summary-item">
+                <label>Intensitas Terakhir:</label>
+                <span id="resumeIntensity">-</span>
+              </div>
+            </div>
+            <div class="resume-summary-note">⚠️ Hadirkan kembali emosi, resistensi, dan ego untuk melanjutkan pelepasan</div>
+          </div>
 
           <div class="step-content">
             <!-- 3 Circles Visualization -->
@@ -1002,16 +1032,25 @@
       document.getElementById('mergingStatus').textContent = 'Siap untuk memulai peleburan?';
       document.querySelectorAll('.step-dot').forEach(d => d.classList.remove('active'));
 
-      // Reset steps visibility
+      // Reset steps visibility - ALWAYS reset merge steps so questions repeat
       document.getElementById('mergeStep1').classList.remove('hidden');
       ['mergeStep2', 'mergeStep3', 'mergeStep4', 'mergeStep5'].forEach(id => {
         document.getElementById(id).classList.add('hidden');
       });
       document.getElementById('mergeCompleteBtn').classList.add('hidden');
 
+      // Reset merge step counter
+      mergeStep = 0;
+
       // Pre-fill resistance if exists
       if (releaseData.resistance) {
         document.getElementById('mergeResistanceInput').value = releaseData.resistance;
+      }
+
+      // Hide resume summary if this is a normal flow (not resume)
+      // Resume summary is shown by resumeRelease() when resuming
+      if (!currentUnfinishedId) {
+        hideResumeSummary();
       }
     }
 
@@ -1561,14 +1600,48 @@
       // Hide unfinished section
       hideUnfinishedSection();
 
-      // Restore UI state based on phase
-      currentPhase = item.currentPhase || 3;
-
-      // Pre-fill form fields
+      // Pre-fill form fields (for when user navigates back)
       restoreFormFields();
 
-      // Show the phase
-      showPhase(currentPhase);
+      // Show resume summary in Phase 6
+      showResumeSummary(item);
+
+      // ALWAYS go to Phase 6 to repeat emosi, resistensi, ego questions
+      currentPhase = 6;
+      showPhase(6);
+    }
+
+    function showResumeSummary(item) {
+      const summary = document.getElementById('resumeSummary');
+      if (!summary) return;
+
+      // Fill in summary data
+      const wanting = CORE_WANTINGS[item.wanting];
+      document.getElementById('resumeWanting').textContent =
+        wanting ? `${wanting.emoji} ${wanting.name}` : item.wantingName;
+
+      // Show belief if exists
+      const beliefItem = document.getElementById('resumeBeliefItem');
+      if (item.belief) {
+        beliefItem.style.display = 'block';
+        document.getElementById('resumeBelief').textContent = `"${item.belief}"`;
+      } else {
+        beliefItem.style.display = 'none';
+      }
+
+      // Show last intensity
+      document.getElementById('resumeIntensity').textContent =
+        `${item.intensityAfter || item.intensityBefore}/10`;
+
+      // Show the summary
+      summary.classList.add('show');
+    }
+
+    function hideResumeSummary() {
+      const summary = document.getElementById('resumeSummary');
+      if (summary) {
+        summary.classList.remove('show');
+      }
     }
 
     function restoreFormFields() {
@@ -1631,6 +1704,9 @@
     }
 
     function startNewRelease() {
+      // Hide resume summary if visible
+      hideResumeSummary();
+
       // Reset state
       currentPhase = 1;
       selectedWanting = null;
