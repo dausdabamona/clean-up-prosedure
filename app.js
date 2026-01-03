@@ -3,11 +3,32 @@
 // ==========================================================================
 
 // ==========================================================================
-// CONFIGURATION - GANTI URL INI DENGAN URL WEB APP KAMU!
+// CONFIGURATION - Stored in localStorage
 // ==========================================================================
-const API_URL = 'YOUR_WEBAPP_URL_HERE';
-// Setelah deploy Apps Script, ganti dengan URL seperti:
-// const API_URL = 'https://script.google.com/macros/s/AKfycbzmfaTBqIO51RH5Yk7Az3b_Dviprw_5z0u-oPI-EaUpbRJjLvrR-I9hJ1EhrgPJQ6eTNg/exec';
+const FALLBACK_API_URL = 'https://script.google.com/macros/s/AKfycbwC-zuAzqjFki7Gy1zyt0sq6ohWGzADKvCeN4rCr49Pl_0IznTdxzIOyfHkLOxsjteg1A/exec';
+const FALLBACK_DEFAULT_NAME = 'Firdaus Dabamona';
+
+// Get API URL from localStorage or fallback
+function getApiUrl() {
+  return localStorage.getItem('cleanupApiUrl') || FALLBACK_API_URL;
+}
+
+// Get Default Name from localStorage or fallback
+function getDefaultName() {
+  return localStorage.getItem('cleanupDefaultName') || FALLBACK_DEFAULT_NAME;
+}
+
+// Check if debug mode is enabled
+function isDebugMode() {
+  return localStorage.getItem('cleanupDebugMode') === 'true';
+}
+
+// Debug log
+function debugLog(...args) {
+  if (isDebugMode()) {
+    console.log('[CleanUp Debug]', ...args);
+  }
+}
 
 // ==========================================================================
 // GLOBAL STATE
@@ -25,13 +46,22 @@ document.addEventListener('DOMContentLoaded', function() {
   generateSesiId();
   loadSavedName();
   setupIntensityListeners();
-  
-  if (API_URL !== 'YOUR_WEBAPP_URL_HERE') {
+  initReleaseTrackers();
+  setupFormListeners();
+  loadSettings();
+  loadSessionSettings();
+  setupGroundingTrigger();
+  setupWelcomingTriggers();
+  loadUnfinishedCleanups();
+
+  const apiUrl = getApiUrl();
+  if (apiUrl && apiUrl !== 'YOUR_WEBAPP_URL_HERE') {
     loadDrafts();
     loadTracker();
     loadStats();
   } else {
-    console.log('API belum dikonfigurasi. Set API_URL di app.js');
+    console.log('API belum dikonfigurasi. Buka Settings untuk konfigurasi.');
+    showApiWarning(true);
   }
 });
 
@@ -80,8 +110,8 @@ function generateSesiId() {
 }
 
 function loadSavedName() {
-  const savedName = localStorage.getItem('cleanupUserName');
-  if (savedName) document.getElementById('nama').value = savedName;
+  const savedName = localStorage.getItem('cleanupUserName') || getDefaultName();
+  document.getElementById('nama').value = savedName;
 }
 
 function saveName() {
@@ -90,23 +120,13 @@ function saveName() {
 }
 
 function setupIntensityListeners() {
-  const fields = [
-    { input: 'surfaceIntensity', status: 'surfaceStatus' },
-    { input: 'l1IntensityAfter', status: 'l1Status' },
-    { input: 'l2IntensityAfter', status: 'l2Status' },
-    { input: 'l3IntensityAfter', status: 'l3Status' },
-    { input: 'rootIntensityAfter', status: 'rootStatus' }
-  ];
-  
-  fields.forEach(f => {
-    const input = document.getElementById(f.input);
-    const status = document.getElementById(f.status);
-    if (input && status) {
-      input.addEventListener('input', function() {
-        status.textContent = getIntensityStatus(parseInt(this.value) || 0);
-      });
-    }
-  });
+  const input = document.getElementById('surfaceIntensity');
+  const status = document.getElementById('surfaceStatus');
+  if (input && status) {
+    input.addEventListener('input', function() {
+      status.textContent = getIntensityStatus(parseInt(this.value) || 0);
+    });
+  }
 }
 
 function getIntensityStatus(val) {
@@ -114,6 +134,472 @@ function getIntensityStatus(val) {
   if (val <= 3) return '⚠️';
   if (val <= 6) return '🔶';
   return '❌';
+}
+
+function setupFormListeners() {
+  // Listen for changes in form fields to update layer progress
+  const formFields = document.querySelectorAll('#tab-worksheet input, #tab-worksheet select, #tab-worksheet textarea');
+  formFields.forEach(field => {
+    field.addEventListener('change', updateLayerProgress);
+    field.addEventListener('input', updateLayerProgress);
+  });
+}
+
+function updateLayerProgress() {
+  // Surface
+  const surfaceComplete = !!document.getElementById('surfaceKeyakinan')?.value &&
+                          !!document.getElementById('surfaceIntensity')?.value;
+  updateProgressItem('progSurface', 'Surface', surfaceComplete, isLayerComplete('surface', 0));
+
+  // Layer 1
+  const l1Started = !!document.getElementById('l1Jawaban')?.value;
+  const l1Done = isLayerComplete('l1', 10);
+  updateProgressItem('progL1', 'L1', l1Started || l1Done, l1Done);
+
+  // Layer 2
+  const l2Started = !!document.getElementById('l2Jawaban')?.value;
+  const l2Done = isLayerComplete('l2', 10);
+  updateProgressItem('progL2', 'L2', l2Started || l2Done, l2Done);
+
+  // Layer 3
+  const l3Started = !!document.getElementById('l3Jawaban')?.value;
+  const l3Done = isLayerComplete('l3', 10);
+  updateProgressItem('progL3', 'L3', l3Started || l3Done, l3Done);
+
+  // ROOT
+  const rootStarted = !!document.getElementById('rootWanting')?.value;
+  const rootDone = isLayerComplete('root', 20);
+  updateProgressItem('progRoot', 'ROOT', rootStarted || rootDone, rootDone);
+}
+
+function updateProgressItem(id, label, started, done) {
+  const item = document.getElementById(id);
+  if (!item) return;
+
+  item.classList.remove('pending', 'active', 'done');
+
+  if (done) {
+    item.classList.add('done');
+    item.innerHTML = `<span>✅</span> ${label}`;
+  } else if (started) {
+    item.classList.add('active');
+    item.innerHTML = `<span>🔄</span> ${label}`;
+  } else {
+    item.classList.add('pending');
+    item.innerHTML = `<span>⬜</span> ${label}`;
+  }
+}
+
+// ==========================================================================
+// RELEASE TRACKER WITH AUTO-HIDE
+// ==========================================================================
+const LAYER_ORDER = ['l1', 'l2', 'l3', 'root'];
+const LAYER_CARD_IDS = {
+  'l1': 'layer1Card',
+  'l2': 'layer2Card',
+  'l3': 'layer3Card',
+  'root': 'rootCard'
+};
+
+function initReleaseTrackers() {
+  createReleaseTracker('l1ReleaseTracker', 'l1', 10);
+  createReleaseTracker('l2ReleaseTracker', 'l2', 10);
+  createReleaseTracker('l3ReleaseTracker', 'l3', 10);
+  createReleaseTracker('rootReleaseTracker', 'root', 20);
+
+  // Initialize visibility - only show first session of each tracker
+  updateTrackerVisibility('l1', 10);
+  updateTrackerVisibility('l2', 10);
+  updateTrackerVisibility('l3', 10);
+  updateTrackerVisibility('root', 20);
+}
+
+function createReleaseTracker(containerId, prefix, count) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  let html = '';
+  for (let i = 1; i <= count; i++) {
+    // First item is visible, others start locked
+    const lockedClass = i > 1 ? 'locked' : '';
+    html += `
+      <div class="release-item ${lockedClass}" id="${prefix}R${i}">
+        <span class="r-num">${i}</span>
+        <input type="number" id="${prefix}Int${i}" min="0" max="10" placeholder="-"
+               onchange="handleReleaseInput('${prefix}', ${i}, ${count})"
+               oninput="handleReleaseInput('${prefix}', ${i}, ${count})"
+               onfocus="setActiveRelease('${prefix}', ${i})">
+        <span class="r-delta" id="${prefix}Delta${i}"></span>
+      </div>
+    `;
+  }
+  container.innerHTML = html;
+}
+
+function setActiveRelease(prefix, num) {
+  const container = document.getElementById(`${prefix}ReleaseTracker`);
+  if (container) {
+    container.querySelectorAll('.release-item').forEach(item => item.classList.remove('active'));
+    const current = document.getElementById(`${prefix}R${num}`);
+    if (current && !current.classList.contains('locked') && !current.classList.contains('hidden')) {
+      current.classList.add('active');
+    }
+  }
+}
+
+function handleReleaseInput(prefix, num, count) {
+  const currentInput = document.getElementById(`${prefix}Int${num}`);
+  const currentVal = parseInt(currentInput.value);
+  const item = document.getElementById(`${prefix}R${num}`);
+  const deltaSpan = document.getElementById(`${prefix}Delta${num}`);
+
+  // Mark as filled if has value
+  if (!isNaN(currentVal) && currentVal >= 0) {
+    item.classList.add('filled');
+
+    // Check if intensity reached 0-1 (done state)
+    if (currentVal <= 1) {
+      item.classList.add('done');
+      // Hide remaining sessions and mark layer as complete
+      hideRemainingSessions(prefix, num, count);
+      markLayerComplete(prefix);
+      updateLayerProgress();
+      // Auto-scroll to next layer after short delay
+      setTimeout(() => scrollToNextLayer(prefix), 500);
+    } else {
+      item.classList.remove('done');
+      // Show next session if not done
+      unlockNextSession(prefix, num, count);
+      // Remove layer complete status if re-editing
+      removeLayerComplete(prefix);
+      updateLayerProgress();
+    }
+  } else {
+    item.classList.remove('filled', 'done');
+  }
+
+  // Calculate delta from previous
+  updateDelta(prefix, num, currentVal);
+
+  // Update visibility for all items
+  updateTrackerVisibility(prefix, count);
+
+  // Update summary question panel
+  updateSummaryQuestion(prefix, count);
+}
+
+function updateDelta(prefix, num, currentVal) {
+  const deltaSpan = document.getElementById(`${prefix}Delta${num}`);
+
+  if (num > 1) {
+    const prevInput = document.getElementById(`${prefix}Int${num - 1}`);
+    const prevVal = parseInt(prevInput.value);
+
+    if (!isNaN(currentVal) && !isNaN(prevVal)) {
+      const delta = currentVal - prevVal;
+      if (delta < 0) {
+        deltaSpan.textContent = `↓${Math.abs(delta)}`;
+        deltaSpan.className = 'r-delta down';
+      } else if (delta > 0) {
+        deltaSpan.textContent = `↑${delta}`;
+        deltaSpan.className = 'r-delta up';
+      } else {
+        deltaSpan.textContent = '=';
+        deltaSpan.className = 'r-delta same';
+      }
+    } else {
+      deltaSpan.textContent = '';
+      deltaSpan.className = 'r-delta';
+    }
+  }
+}
+
+function updateTrackerVisibility(prefix, count) {
+  let foundDone = false;
+  let lastFilledIndex = 0;
+
+  // First pass: find if any session is "done" (0-1) and last filled
+  for (let i = 1; i <= count; i++) {
+    const input = document.getElementById(`${prefix}Int${i}`);
+    const val = parseInt(input?.value);
+
+    if (!isNaN(val)) {
+      lastFilledIndex = i;
+      if (val <= 1) {
+        foundDone = true;
+        break;
+      }
+    }
+  }
+
+  // Second pass: update visibility
+  for (let i = 1; i <= count; i++) {
+    const item = document.getElementById(`${prefix}R${i}`);
+    if (!item) continue;
+
+    if (foundDone && i > lastFilledIndex) {
+      // Hide sessions after done
+      item.classList.add('hidden');
+      item.classList.remove('locked');
+    } else if (i <= lastFilledIndex + 1) {
+      // Show filled sessions and next one
+      item.classList.remove('hidden', 'locked');
+    } else {
+      // Lock future sessions
+      item.classList.remove('hidden');
+      item.classList.add('locked');
+    }
+  }
+}
+
+function unlockNextSession(prefix, currentNum, count) {
+  const nextNum = currentNum + 1;
+  if (nextNum <= count) {
+    const nextItem = document.getElementById(`${prefix}R${nextNum}`);
+    if (nextItem) {
+      nextItem.classList.remove('locked', 'hidden');
+    }
+  }
+}
+
+// ==========================================================================
+// SUMMARY QUESTION - Shows continuation question when intensity > 1
+// ==========================================================================
+function updateSummaryQuestion(prefix, count) {
+  const panel = document.getElementById(`${prefix}SummaryPanel`);
+  const textEl = document.getElementById(`${prefix}SummaryText`);
+  if (!panel || !textEl) return;
+
+  // Get last filled value
+  let lastValue = null;
+  for (let i = count; i >= 1; i--) {
+    const input = document.getElementById(`${prefix}Int${i}`);
+    const val = parseInt(input?.value);
+    if (!isNaN(val)) {
+      lastValue = val;
+      break;
+    }
+  }
+
+  // Hide if no value or value <= 1
+  if (lastValue === null || lastValue <= 1) {
+    panel.classList.remove('show');
+    return;
+  }
+
+  // Get layer data
+  let jawaban, emosi;
+
+  if (prefix === 'root') {
+    // ROOT uses wanting + deskripsi
+    const wanting = document.getElementById('rootWanting')?.value || '';
+    const deskripsi = document.getElementById('rootDeskripsi')?.value || '';
+    jawaban = deskripsi || wanting;
+    emosi = getWantingIndonesian(wanting);
+  } else {
+    jawaban = document.getElementById(`${prefix}Jawaban`)?.value || '';
+    const emosiRaw = document.getElementById(`${prefix}Emosi`)?.value || '';
+    emosi = getEmosiIndonesian(emosiRaw);
+  }
+
+  // Don't show if no answer
+  if (!jawaban.trim()) {
+    panel.classList.remove('show');
+    return;
+  }
+
+  // Generate summary question
+  const summaryText = generateSummaryText(jawaban, emosi);
+  textEl.innerHTML = summaryText;
+  panel.classList.add('show');
+}
+
+function getEmosiIndonesian(emosiRaw) {
+  const emosiMap = {
+    'Fear': 'rasa takut',
+    'Grief': 'kesedihan',
+    'Anger': 'kemarahan',
+    'Guilt': 'rasa bersalah',
+    'Shame': 'rasa malu',
+    'Apathy': 'keputusasaan',
+    'Pride': 'ego',
+    'Lust': 'nafsu keinginan'
+  };
+
+  // Extract emotion name from format like "Fear (Takut, Cemas, Khawatir)"
+  const match = emosiRaw.match(/^(\w+)/);
+  if (match) {
+    return emosiMap[match[1]] || emosiRaw.toLowerCase();
+  }
+  return emosiRaw.toLowerCase() || 'emosi ini';
+}
+
+function getWantingIndonesian(wanting) {
+  const wantingMap = {
+    'Control': 'keinginan untuk mengontrol',
+    'Approval': 'keinginan untuk diakui',
+    'Security': 'keinginan untuk aman',
+    'Worth': 'keinginan untuk merasa berharga',
+    'Freedom': 'keinginan untuk bebas',
+    'Separation': 'keinginan untuk berbeda',
+    'Oneness': 'keinginan untuk menyatu'
+  };
+
+  return wantingMap[wanting] || 'wanting ini';
+}
+
+function generateSummaryText(jawaban, emosi) {
+  // Clean up jawaban - first letter lowercase if needed
+  let jawabanClean = jawaban.trim();
+  if (jawabanClean.length > 0) {
+    jawabanClean = jawabanClean.charAt(0).toLowerCase() + jawabanClean.slice(1);
+    // Remove trailing punctuation
+    jawabanClean = jawabanClean.replace(/[.!?]+$/, '');
+  }
+
+  // Create multi-part guidance question
+  return `
+    <div class="summary-intro">
+      Kamu merasakan <strong>${emosi}</strong> yang muncul karena <em>${jawabanClean}</em>.
+    </div>
+    <div class="summary-guidance">
+      <p>🌊 Ijinkan ${emosi} ini mengalir... rasakan sepenuhnya tanpa melawan.</p>
+      <p>🤲 Sambut ${emosi} ini seperti menyambut tamu lama yang perlu didengar.</p>
+      <p>🕊️ Biarkan ${emosi} ini pergi dengan sendirinya ketika sudah siap.</p>
+    </div>
+    <div class="summary-final-q">
+      "Apakah <strong>${emosi}</strong> ini adalah dirimu,<br>ataukah kamu yang <strong>SADAR</strong> bahwa ${emosi} itu ada?"
+    </div>
+  `;
+}
+
+function hideRemainingSessions(prefix, fromNum, count) {
+  for (let i = fromNum + 1; i <= count; i++) {
+    const item = document.getElementById(`${prefix}R${i}`);
+    if (item) {
+      item.classList.add('hidden');
+      item.classList.remove('locked');
+      // Clear values in hidden sessions
+      const input = document.getElementById(`${prefix}Int${i}`);
+      if (input) input.value = '';
+    }
+  }
+}
+
+function markLayerComplete(prefix) {
+  const cardId = LAYER_CARD_IDS[prefix];
+  const card = document.getElementById(cardId);
+  if (card) {
+    card.classList.add('layer-complete');
+  }
+}
+
+function removeLayerComplete(prefix) {
+  const cardId = LAYER_CARD_IDS[prefix];
+  const card = document.getElementById(cardId);
+  if (card) {
+    card.classList.remove('layer-complete');
+  }
+}
+
+function scrollToNextLayer(prefix) {
+  const currentIndex = LAYER_ORDER.indexOf(prefix);
+  if (currentIndex < LAYER_ORDER.length - 1) {
+    const nextPrefix = LAYER_ORDER[currentIndex + 1];
+    const nextCardId = LAYER_CARD_IDS[nextPrefix];
+    const nextCard = document.getElementById(nextCardId);
+
+    if (nextCard) {
+      nextCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast(`Layer ${prefix.toUpperCase()} selesai! Lanjut ke ${nextPrefix.toUpperCase()}`, 'success');
+
+      // Focus on first input of next layer
+      setTimeout(() => {
+        const firstInput = document.getElementById(`${nextPrefix}Int1`);
+        if (firstInput) firstInput.focus();
+      }, 600);
+    }
+  } else {
+    // All layers done, scroll to hasil
+    const hasilCard = document.querySelector('.card-header.hasil')?.parentElement;
+    if (hasilCard) {
+      hasilCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast('Semua layer selesai! Isi Hasil Akhir', 'success');
+    }
+  }
+}
+
+function isLayerComplete(prefix, count) {
+  // Surface is "complete" when it has keyakinan and intensity filled
+  if (prefix === 'surface') {
+    const keyakinan = document.getElementById('surfaceKeyakinan')?.value;
+    const intensity = document.getElementById('surfaceIntensity')?.value;
+    return !!keyakinan && !!intensity;
+  }
+
+  // For other layers, check if any release session reached 0-1
+  for (let i = 1; i <= count; i++) {
+    const input = document.getElementById(`${prefix}Int${i}`);
+    const val = parseInt(input?.value);
+    if (!isNaN(val) && val <= 1) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function getReleaseTrackerData(prefix, count) {
+  const data = [];
+  for (let i = 1; i <= count; i++) {
+    const input = document.getElementById(`${prefix}Int${i}`);
+    data.push(input ? input.value : '');
+  }
+  return data;
+}
+
+function setReleaseTrackerData(prefix, count, data) {
+  if (!data || !Array.isArray(data)) return;
+  for (let i = 1; i <= count; i++) {
+    const input = document.getElementById(`${prefix}Int${i}`);
+    if (input && data[i - 1] !== undefined && data[i - 1] !== '') {
+      input.value = data[i - 1];
+    }
+  }
+  // Update visibility after loading data
+  updateTrackerVisibility(prefix, count);
+  // Check if layer is complete
+  if (isLayerComplete(prefix, count)) {
+    markLayerComplete(prefix);
+  }
+}
+
+function getLastIntensity(prefix, count) {
+  for (let i = count; i >= 1; i--) {
+    const input = document.getElementById(`${prefix}Int${i}`);
+    const val = parseInt(input?.value);
+    if (!isNaN(val)) return val;
+  }
+  return null;
+}
+
+function resetReleaseTracker(prefix, count) {
+  for (let i = 1; i <= count; i++) {
+    const input = document.getElementById(`${prefix}Int${i}`);
+    const item = document.getElementById(`${prefix}R${i}`);
+    const delta = document.getElementById(`${prefix}Delta${i}`);
+    if (input) input.value = '';
+    if (item) {
+      item.classList.remove('filled', 'done', 'active', 'hidden');
+      // Lock all except first
+      if (i > 1) {
+        item.classList.add('locked');
+      } else {
+        item.classList.remove('locked');
+      }
+    }
+    if (delta) { delta.textContent = ''; delta.className = 'r-delta'; }
+  }
+  removeLayerComplete(prefix);
 }
 
 // ==========================================================================
@@ -134,18 +620,18 @@ function showToast(message, type = 'info') {
 // ==========================================================================
 function collectFormData() {
   saveName();
-  
+
   return {
     sesiId: document.getElementById('sesiId').value,
     tanggalMulai: new Date().toISOString(),
     nama: document.getElementById('nama').value,
     issue: document.getElementById('issue').value,
     kategori: document.getElementById('kategori').value,
-    
+
     surfaceKeyakinan: document.getElementById('surfaceKeyakinan').value,
     surfaceLokasi: document.getElementById('surfaceLokasi').value,
     surfaceIntensity: document.getElementById('surfaceIntensity').value,
-    
+
     l1Pertanyaan: document.getElementById('l1Pertanyaan').value,
     l1Jawaban: document.getElementById('l1Jawaban').value,
     l1Emosi: document.getElementById('l1Emosi').value,
@@ -153,9 +639,11 @@ function collectFormData() {
     l1Bisakah: document.getElementById('l1Bisakah').value,
     l1Mau: document.getElementById('l1Mau').value,
     l1Kapan: document.getElementById('l1Kapan').value,
-    l1Release: document.getElementById('l1Release').value,
-    l1IntensityAfter: document.getElementById('l1IntensityAfter').value,
-    
+    l1ReleaseData: getReleaseTrackerData('l1', 10),
+    l1IntensityAfter: getLastIntensity('l1', 10),
+    l1Resistance: getResistanceData('l1'),
+    l1TripleWelcoming: getTripleWelcomingData('l1'),
+
     l2Pertanyaan: document.getElementById('l2Pertanyaan').value,
     l2Jawaban: document.getElementById('l2Jawaban').value,
     l2Emosi: document.getElementById('l2Emosi').value,
@@ -163,9 +651,11 @@ function collectFormData() {
     l2Bisakah: document.getElementById('l2Bisakah').value,
     l2Mau: document.getElementById('l2Mau').value,
     l2Kapan: document.getElementById('l2Kapan').value,
-    l2Release: document.getElementById('l2Release').value,
-    l2IntensityAfter: document.getElementById('l2IntensityAfter').value,
-    
+    l2ReleaseData: getReleaseTrackerData('l2', 10),
+    l2IntensityAfter: getLastIntensity('l2', 10),
+    l2Resistance: getResistanceData('l2'),
+    l2TripleWelcoming: getTripleWelcomingData('l2'),
+
     l3Pertanyaan: document.getElementById('l3Pertanyaan').value,
     l3Jawaban: document.getElementById('l3Jawaban').value,
     l3Emosi: document.getElementById('l3Emosi').value,
@@ -173,9 +663,11 @@ function collectFormData() {
     l3Bisakah: document.getElementById('l3Bisakah').value,
     l3Mau: document.getElementById('l3Mau').value,
     l3Kapan: document.getElementById('l3Kapan').value,
-    l3Release: document.getElementById('l3Release').value,
-    l3IntensityAfter: document.getElementById('l3IntensityAfter').value,
-    
+    l3ReleaseData: getReleaseTrackerData('l3', 10),
+    l3IntensityAfter: getLastIntensity('l3', 10),
+    l3Resistance: getResistanceData('l3'),
+    l3TripleWelcoming: getTripleWelcomingData('l3'),
+
     rootPertanyaan: document.getElementById('rootPertanyaan').value,
     rootWanting: document.getElementById('rootWanting').value,
     rootIntensityAwal: document.getElementById('rootIntensityAwal').value,
@@ -183,9 +675,10 @@ function collectFormData() {
     rootBisakah: document.getElementById('rootBisakah').value,
     rootMau: document.getElementById('rootMau').value,
     rootKapan: document.getElementById('rootKapan').value,
-    rootRelease: document.getElementById('rootRelease').value,
-    rootIntensityAfter: document.getElementById('rootIntensityAfter').value,
-    
+    rootReleaseData: getReleaseTrackerData('root', 20),
+    rootIntensityAfter: getLastIntensity('root', 20),
+    rootResistance: getResistanceData('root'),
+
     hasilStatus: document.getElementById('hasilStatus').value,
     emotionalState: document.getElementById('emotionalState').value,
     hasilInsight: document.getElementById('hasilInsight').value,
@@ -197,56 +690,113 @@ function loadFormData(data) {
   const fields = [
     'sesiId', 'nama', 'issue', 'kategori',
     'surfaceKeyakinan', 'surfaceLokasi', 'surfaceIntensity',
-    'l1Pertanyaan', 'l1Jawaban', 'l1Emosi', 'l1IntensityAwal', 'l1Bisakah', 'l1Mau', 'l1Kapan', 'l1Release', 'l1IntensityAfter',
-    'l2Pertanyaan', 'l2Jawaban', 'l2Emosi', 'l2IntensityAwal', 'l2Bisakah', 'l2Mau', 'l2Kapan', 'l2Release', 'l2IntensityAfter',
-    'l3Pertanyaan', 'l3Jawaban', 'l3Emosi', 'l3IntensityAwal', 'l3Bisakah', 'l3Mau', 'l3Kapan', 'l3Release', 'l3IntensityAfter',
-    'rootPertanyaan', 'rootWanting', 'rootIntensityAwal', 'rootDeskripsi', 'rootBisakah', 'rootMau', 'rootKapan', 'rootRelease', 'rootIntensityAfter',
+    'l1Pertanyaan', 'l1Jawaban', 'l1Emosi', 'l1IntensityAwal', 'l1Bisakah', 'l1Mau', 'l1Kapan',
+    'l2Pertanyaan', 'l2Jawaban', 'l2Emosi', 'l2IntensityAwal', 'l2Bisakah', 'l2Mau', 'l2Kapan',
+    'l3Pertanyaan', 'l3Jawaban', 'l3Emosi', 'l3IntensityAwal', 'l3Bisakah', 'l3Mau', 'l3Kapan',
+    'rootPertanyaan', 'rootWanting', 'rootIntensityAwal', 'rootDeskripsi', 'rootBisakah', 'rootMau', 'rootKapan',
     'hasilStatus', 'emotionalState', 'hasilInsight', 'hasilNextStep'
   ];
-  
+
   fields.forEach(f => {
     const el = document.getElementById(f);
     if (el) el.value = data[f] || '';
   });
-  
-  // Update status indicators
-  ['surfaceIntensity', 'l1IntensityAfter', 'l2IntensityAfter', 'l3IntensityAfter', 'rootIntensityAfter'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.dispatchEvent(new Event('input'));
-  });
+
+  // Load release tracker data
+  if (data.l1ReleaseData) setReleaseTrackerData('l1', 10, data.l1ReleaseData);
+  if (data.l2ReleaseData) setReleaseTrackerData('l2', 10, data.l2ReleaseData);
+  if (data.l3ReleaseData) setReleaseTrackerData('l3', 10, data.l3ReleaseData);
+  if (data.rootReleaseData) setReleaseTrackerData('root', 20, data.rootReleaseData);
+
+  // Update summary question panels
+  updateSummaryQuestion('l1', 10);
+  updateSummaryQuestion('l2', 10);
+  updateSummaryQuestion('l3', 10);
+  updateSummaryQuestion('root', 20);
+
+  // Update surface intensity status
+  const surfaceEl = document.getElementById('surfaceIntensity');
+  if (surfaceEl) surfaceEl.dispatchEvent(new Event('input'));
 }
 
 function resetForm() {
   if (!confirm('Reset semua field?')) return;
-  
+
   document.querySelectorAll('#tab-worksheet input, #tab-worksheet select, #tab-worksheet textarea').forEach(el => {
     if (el.id !== 'nama' && el.id !== 'sesiId') {
       el.tagName === 'SELECT' ? el.selectedIndex = 0 : el.value = '';
     }
   });
-  
+
+  // Reset release trackers
+  resetReleaseTracker('l1', 10);
+  resetReleaseTracker('l2', 10);
+  resetReleaseTracker('l3', 10);
+  resetReleaseTracker('root', 20);
+
+  // Reset resistance panels
+  resetResistancePanels('l1');
+  resetResistancePanels('l2');
+  resetResistancePanels('l3');
+  resetResistancePanels('root');
+
+  // Reset welcoming panels
+  ['surface', 'l1', 'l2', 'l3', 'root'].forEach(layer => {
+    const panel = document.getElementById(`${layer}Welcoming`);
+    if (panel) panel.classList.remove('show');
+    welcomingCompleted[layer] = false;
+  });
+
+  // Reset grounding panel
+  const groundingPanel = document.getElementById('groundingPanel');
+  if (groundingPanel) groundingPanel.style.display = 'none';
+
+  // Reset summary question panels
+  ['l1', 'l2', 'l3', 'root'].forEach(prefix => {
+    const summaryPanel = document.getElementById(`${prefix}SummaryPanel`);
+    if (summaryPanel) summaryPanel.classList.remove('show');
+  });
+
+  // Show Mulai Sesi button again
+  const btnMulai = document.getElementById('btnMulaiSesi');
+  if (btnMulai) btnMulai.style.display = 'block';
+
+  // Reset session state
+  sessionStarted = false;
+
   generateSesiId();
   showToast('Form di-reset', 'success');
+
+  // Scroll to top
+  document.getElementById('infoSesiCard')?.scrollIntoView({ behavior: 'smooth' });
 }
 
 // ==========================================================================
 // API CALLS
 // ==========================================================================
 async function apiCall(action, data = null, extraParams = '') {
-  if (API_URL === 'YOUR_WEBAPP_URL_HERE') {
-    showToast('API belum dikonfigurasi! Edit API_URL di app.js', 'error');
+  const apiUrl = getApiUrl();
+
+  if (!apiUrl || apiUrl === 'YOUR_WEBAPP_URL_HERE') {
+    showToast('API belum dikonfigurasi! Buka Settings untuk konfigurasi.', 'error');
+    showApiWarning(true);
     return null;
   }
-  
-  let url = `${API_URL}?action=${action}`;
+
+  let url = `${apiUrl}?action=${action}`;
   if (data) url += `&data=${encodeURIComponent(JSON.stringify(data))}`;
   if (extraParams) url += extraParams;
-  
+
+  debugLog('API Call:', action, data);
+
   try {
     const response = await fetch(url);
-    return await response.json();
+    const result = await response.json();
+    debugLog('API Response:', result);
+    return result;
   } catch (error) {
     console.error('API Error:', error);
+    debugLog('API Error:', error);
     showToast('Gagal koneksi ke server', 'error');
     return null;
   }
@@ -257,18 +807,21 @@ async function apiCall(action, data = null, extraParams = '') {
 // ==========================================================================
 async function saveDraft() {
   const data = collectFormData();
-  
+
   if (!data.issue) {
     showToast('Issue/Target harus diisi!', 'error');
     return;
   }
-  
+
   data.layerStuck = determineLayerStuck(data);
   data.currentIntensity = data.rootIntensityAfter || data.l3IntensityAfter || data.l2IntensityAfter || data.l1IntensityAfter || data.surfaceIntensity;
   data.status = data.layerStuck === 'DONE' ? 'READY' : 'IN PROGRESS';
-  
+
+  // Also save to local unfinished cleanups
+  addToUnfinishedCleanup();
+
   const result = await apiCall('saveDraft', data);
-  
+
   if (result && result.success) {
     showToast('💾 Draft tersimpan!', 'success');
     loadDrafts();
@@ -277,16 +830,20 @@ async function saveDraft() {
 
 async function saveComplete() {
   const data = collectFormData();
-  
+
   if (!data.issue) { showToast('Issue/Target harus diisi!', 'error'); return; }
   if (!data.hasilStatus) { showToast('Status Hasil Akhir harus diisi!', 'error'); return; }
   if (!data.emotionalState) { showToast('Emotional State harus diisi!', 'error'); return; }
-  
+
   if (!confirm('Tuntaskan sesi ini?')) return;
-  
+
   const result = await apiCall('saveComplete', data);
-  
+
   if (result && result.success) {
+    // Remove from unfinished cleanups when completed
+    removeFromUnfinishedCleanup();
+    isResumingCleanup = false;
+
     showToast('✅ Sesi tuntas! Alhamdulillah!', 'success');
     resetForm();
     loadTracker();
@@ -412,11 +969,171 @@ async function loadStats() {
 }
 
 function renderStats() {
+  // Main stats
   document.getElementById('statTotal').textContent = stats.totalSesi || 0;
   document.getElementById('statSukses').textContent = stats.totalSukses || 0;
   document.getElementById('statRate').textContent = (stats.successRate || 0) + '%';
   document.getElementById('statPending').textContent = stats.pendingDrafts || 0;
   document.getElementById('primaryWanting').textContent = stats.primaryWanting || '-';
+
+  // Intensity stats
+  const statAvgIntAwal = document.getElementById('statAvgIntAwal');
+  const statAvgIntAkhir = document.getElementById('statAvgIntAkhir');
+  const statAvgReduction = document.getElementById('statAvgReduction');
+
+  if (statAvgIntAwal) statAvgIntAwal.textContent = stats.avgIntAwal?.toFixed(1) || '0';
+  if (statAvgIntAkhir) statAvgIntAkhir.textContent = stats.avgIntAkhir?.toFixed(1) || '0';
+  if (statAvgReduction) {
+    const reduction = stats.avgReduction || 0;
+    statAvgReduction.textContent = reduction > 0 ? `-${reduction.toFixed(1)}` : '0';
+  }
+
+  // Emotion breakdown
+  const ec = stats.emotionCount || {};
+  const positive = (ec[9] || 0) + (ec[8] || 0) + (ec[7] || 0);
+  const neutral = (ec[6] || 0) + (ec[5] || 0) + (ec[4] || 0);
+  const negative = (ec[3] || 0) + (ec[2] || 0) + (ec[1] || 0);
+
+  const statPositive = document.getElementById('statPositive');
+  const statNeutral = document.getElementById('statNeutral');
+  const statNegative = document.getElementById('statNegative');
+  if (statPositive) statPositive.textContent = positive;
+  if (statNeutral) statNeutral.textContent = neutral;
+  if (statNegative) statNegative.textContent = negative;
+
+  // Render sub-components
+  renderEfficiency();
+  renderResistensiStats();
+  renderTripleWelcomingStats();
+  renderWantingChart();
+  renderRecentSessions();
+}
+
+function renderEfficiency() {
+  const avgL1 = stats.avgL1Sesi || 0;
+  const avgL2 = stats.avgL2Sesi || 0;
+  const avgL3 = stats.avgL3Sesi || 0;
+  const avgRoot = stats.avgRootSesi || 0;
+  const maxBar = 10; // Max for layers, 20 for root
+
+  // L1
+  const effL1 = document.getElementById('effL1');
+  const effL1Bar = document.getElementById('effL1Bar');
+  if (effL1) effL1.textContent = avgL1.toFixed(1);
+  if (effL1Bar) effL1Bar.style.width = `${Math.min((avgL1 / maxBar) * 100, 100)}%`;
+
+  // L2
+  const effL2 = document.getElementById('effL2');
+  const effL2Bar = document.getElementById('effL2Bar');
+  if (effL2) effL2.textContent = avgL2.toFixed(1);
+  if (effL2Bar) effL2Bar.style.width = `${Math.min((avgL2 / maxBar) * 100, 100)}%`;
+
+  // L3
+  const effL3 = document.getElementById('effL3');
+  const effL3Bar = document.getElementById('effL3Bar');
+  if (effL3) effL3.textContent = avgL3.toFixed(1);
+  if (effL3Bar) effL3Bar.style.width = `${Math.min((avgL3 / maxBar) * 100, 100)}%`;
+
+  // Root (max 20)
+  const effRoot = document.getElementById('effRoot');
+  const effRootBar = document.getElementById('effRootBar');
+  if (effRoot) effRoot.textContent = avgRoot.toFixed(1);
+  if (effRootBar) effRootBar.style.width = `${Math.min((avgRoot / 20) * 100, 100)}%`;
+}
+
+function renderResistensiStats() {
+  const totalRes = stats.totalResistensi || 0;
+  const avgRes = stats.avgResistensiPerSesi || 0;
+
+  const statTotalResistensi = document.getElementById('statTotalResistensi');
+  const statAvgResistensi = document.getElementById('statAvgResistensi');
+  if (statTotalResistensi) statTotalResistensi.textContent = totalRes;
+  if (statAvgResistensi) statAvgResistensi.textContent = avgRes.toFixed(1);
+
+  // Breakdown per layer
+  const res = stats.resistensiByLayer || {};
+  const resL1 = document.getElementById('resL1');
+  const resL2 = document.getElementById('resL2');
+  const resL3 = document.getElementById('resL3');
+  const resRoot = document.getElementById('resRoot');
+  if (resL1) resL1.textContent = res.l1 || 0;
+  if (resL2) resL2.textContent = res.l2 || 0;
+  if (resL3) resL3.textContent = res.l3 || 0;
+  if (resRoot) resRoot.textContent = res.root || 0;
+}
+
+function renderTripleWelcomingStats() {
+  const tripleCount = stats.tripleWelcomingCount || 0;
+  const total = stats.totalSesi || 1;
+  const percent = ((tripleCount / total) * 100).toFixed(0);
+
+  const statTripleCount = document.getElementById('statTripleCount');
+  const statTriplePercent = document.getElementById('statTriplePercent');
+  if (statTripleCount) statTripleCount.textContent = tripleCount;
+  if (statTriplePercent) statTriplePercent.textContent = `${percent}%`;
+}
+
+function renderWantingChart() {
+  const container = document.getElementById('wantingChart');
+  if (!container) return;
+
+  const wantingData = stats.wantingDistribution || {};
+  const wantings = ['Control', 'Approval', 'Security', 'Worth', 'Freedom', 'Separation', 'Oneness'];
+  const total = Object.values(wantingData).reduce((a, b) => a + b, 0) || 1;
+
+  container.innerHTML = wantings.map(w => {
+    const count = wantingData[w] || 0;
+    const pct = (count / total) * 100;
+    return `
+      <div class="wanting-row">
+        <span>${w}</span>
+        <div class="wanting-bar-wrap"><div class="wanting-bar" style="width:${pct}%"></div></div>
+        <span class="wanting-count">${count}</span>
+      </div>
+    `;
+  }).join('');
+
+  // Update primary wanting description
+  const primaryWantingDesc = document.getElementById('primaryWantingDesc');
+  if (primaryWantingDesc && stats.primaryWanting) {
+    const descriptions = {
+      'Control': 'Kecenderungan untuk mengontrol situasi',
+      'Approval': 'Kebutuhan untuk diakui dan diterima',
+      'Security': 'Pencarian rasa aman dan stabil',
+      'Worth': 'Kebutuhan merasa berharga',
+      'Freedom': 'Keinginan untuk bebas',
+      'Separation': 'Kebutuhan untuk berbeda',
+      'Oneness': 'Keinginan untuk menyatu'
+    };
+    primaryWantingDesc.textContent = descriptions[stats.primaryWanting] || '';
+  }
+}
+
+function renderRecentSessions() {
+  const container = document.getElementById('recentSessions');
+  if (!container) return;
+
+  const recent = sessions.slice(0, 5);
+  if (!recent.length) {
+    container.innerHTML = '<p style="padding:1rem;text-align:center;color:var(--text-light)">Belum ada sesi</p>';
+    return;
+  }
+
+  container.innerHTML = recent.map(s => `
+    <div class="recent-item">
+      <div>
+        <div class="recent-issue">${s.issue || 'Untitled'}</div>
+        <div class="recent-meta">${s.rootWanting || '-'} • ${s.timestamp ? new Date(s.timestamp).toLocaleDateString('id-ID') : '-'}</div>
+      </div>
+      <span class="recent-status ${s.status === 'SUKSES' ? '' : 'pending'}">${s.emotionLevel || '-'}</span>
+    </div>
+  `).join('');
+}
+
+function refreshDashboard() {
+  showToast('🔄 Memuat data...', 'info');
+  loadStats();
+  loadTracker();
 }
 
 function renderEmotionScale() {
@@ -458,6 +1175,1178 @@ function renderEmotionScale() {
       </div>
     `;
   }).join('');
+}
+
+// ==========================================================================
+// RESISTANCE HANDLING
+// ==========================================================================
+
+// Track resistance state
+const resistanceState = {
+  l1: { Bisakah: false, Mau: false, Kapan: false },
+  l2: { Bisakah: false, Mau: false, Kapan: false },
+  l3: { Bisakah: false, Mau: false, Kapan: false },
+  root: { Bisakah: false, Mau: false, Kapan: false }
+};
+
+// Handle emotion change - show Triple Welcoming for Pride
+function handleEmosiChange(layer) {
+  const emosiEl = document.getElementById(`${layer}Emosi`);
+  const twPanel = document.getElementById(`${layer}TripleWelcoming`);
+
+  if (!emosiEl || !twPanel) return;
+
+  const isPride = emosiEl.value.toLowerCase().includes('pride');
+
+  if (isPride) {
+    twPanel.classList.add('show');
+    showToast('Ego terdeteksi! Gunakan Triple Welcoming', 'warning');
+  } else {
+    twPanel.classList.remove('show');
+  }
+}
+
+// Handle resistance - show panel when answer is Tidak/Mungkin
+function handleResistance(layer, type) {
+  const selectEl = document.getElementById(`${layer}${type}`);
+  const panel = document.getElementById(`${layer}${type}Resist`);
+  const badge = document.getElementById(`${layer}${type}Badge`);
+
+  if (!selectEl || !panel) return;
+
+  const val = selectEl.value;
+
+  // Check if resistance is needed
+  let needsResistance = false;
+  if (type === 'Bisakah' || type === 'Mau') {
+    needsResistance = (val === 'Tidak' || val === 'Mungkin');
+  } else if (type === 'Kapan') {
+    needsResistance = (val === 'Nanti' || val === 'Tidak Tahu');
+  }
+
+  if (needsResistance) {
+    panel.classList.add('show');
+    // Hide badge when resistance panel opens
+    if (badge) badge.style.display = 'none';
+    showToast('Resistensi terdeteksi! Release dulu...', 'warning');
+  } else {
+    panel.classList.remove('show');
+    // If answered Ya/Sekarang after releasing resistance, show badge
+    if (resistanceState[layer][type] && badge) {
+      badge.style.display = 'inline';
+    }
+  }
+}
+
+// Check if resistance release is complete
+function checkResistanceComplete(layer, type) {
+  const r1 = document.getElementById(`${layer}${type}R1`)?.value;
+  const r2 = document.getElementById(`${layer}${type}R2`)?.value;
+  const r3 = document.getElementById(`${layer}${type}R3`)?.value;
+  const intAfter = parseInt(document.getElementById(`${layer}${type}RInt`)?.value);
+  const statusEl = document.getElementById(`${layer}${type}RStatus`);
+  const retryBtn = document.getElementById(`${layer}${type}Retry`);
+
+  // Update status
+  if (statusEl && !isNaN(intAfter)) {
+    statusEl.textContent = getIntensityStatus(intAfter);
+  }
+
+  // Enable retry button if all answered and int is low enough
+  const allAnswered = r1 && r2 && r3;
+  const intensityLow = !isNaN(intAfter) && intAfter <= 3;
+
+  if (retryBtn) {
+    retryBtn.disabled = !(allAnswered && intensityLow);
+  }
+}
+
+// Retry main question after resistance release
+function retryQuestion(layer, type) {
+  const panel = document.getElementById(`${layer}${type}Resist`);
+  const selectEl = document.getElementById(`${layer}${type}`);
+  const badge = document.getElementById(`${layer}${type}Badge`);
+
+  // Mark that this question had resistance released
+  resistanceState[layer][type] = true;
+
+  // Hide panel
+  if (panel) panel.classList.remove('show');
+
+  // Show badge
+  if (badge) badge.style.display = 'inline';
+
+  // Reset main question to empty
+  if (selectEl) {
+    selectEl.value = '';
+    selectEl.focus();
+  }
+
+  showToast('Resistensi released! Coba jawab lagi...', 'success');
+
+  // Scroll to question
+  if (selectEl) {
+    selectEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+// Get resistance data for a layer
+function getResistanceData(layer) {
+  const types = ['Bisakah', 'Mau', 'Kapan'];
+  const data = {};
+
+  types.forEach(type => {
+    const r1 = document.getElementById(`${layer}${type}R1`)?.value;
+    const r2 = document.getElementById(`${layer}${type}R2`)?.value;
+    const r3 = document.getElementById(`${layer}${type}R3`)?.value;
+    const intAfter = document.getElementById(`${layer}${type}RInt`)?.value;
+
+    if (r1 || r2 || r3 || intAfter) {
+      data[type] = {
+        r1: r1 || '',
+        r2: r2 || '',
+        r3: r3 || '',
+        intAfter: intAfter || '',
+        released: resistanceState[layer][type]
+      };
+    }
+  });
+
+  return Object.keys(data).length > 0 ? data : null;
+}
+
+// Get Triple Welcoming data for a layer
+function getTripleWelcomingData(layer) {
+  const tw1 = document.getElementById(`${layer}TW1`)?.value;
+  const tw2 = document.getElementById(`${layer}TW2`)?.value;
+  const tw3 = document.getElementById(`${layer}TW3`)?.value;
+  const twInt = document.getElementById(`${layer}TWInt`)?.value;
+
+  if (tw1 || tw2 || tw3 || twInt) {
+    return {
+      tw1: tw1 || '',
+      tw2: tw2 || '',
+      tw3: tw3 || '',
+      intAfter: twInt || ''
+    };
+  }
+  return null;
+}
+
+// Reset resistance panels for a layer
+function resetResistancePanels(layer) {
+  const types = ['Bisakah', 'Mau', 'Kapan'];
+
+  types.forEach(type => {
+    // Reset dropdowns
+    const r1 = document.getElementById(`${layer}${type}R1`);
+    const r2 = document.getElementById(`${layer}${type}R2`);
+    const r3 = document.getElementById(`${layer}${type}R3`);
+    const rInt = document.getElementById(`${layer}${type}RInt`);
+    const status = document.getElementById(`${layer}${type}RStatus`);
+    const panel = document.getElementById(`${layer}${type}Resist`);
+    const badge = document.getElementById(`${layer}${type}Badge`);
+    const retry = document.getElementById(`${layer}${type}Retry`);
+
+    if (r1) r1.value = '';
+    if (r2) r2.value = '';
+    if (r3) r3.value = '';
+    if (rInt) rInt.value = '';
+    if (status) status.textContent = '';
+    if (panel) panel.classList.remove('show');
+    if (badge) badge.style.display = 'none';
+    if (retry) retry.disabled = true;
+
+    // Reset state
+    resistanceState[layer][type] = false;
+  });
+
+  // Reset Triple Welcoming
+  const tw1 = document.getElementById(`${layer}TW1`);
+  const tw2 = document.getElementById(`${layer}TW2`);
+  const tw3 = document.getElementById(`${layer}TW3`);
+  const twInt = document.getElementById(`${layer}TWInt`);
+  const twPanel = document.getElementById(`${layer}TripleWelcoming`);
+
+  if (tw1) tw1.value = '';
+  if (tw2) tw2.value = '';
+  if (tw3) tw3.value = '';
+  if (twInt) twInt.value = '';
+  if (twPanel) twPanel.classList.remove('show');
+}
+
+// ==========================================================================
+// GROUNDING & WELCOMING
+// ==========================================================================
+
+// Session settings getters
+function isShowGrounding() {
+  const quickMode = localStorage.getItem('cleanupQuickMode') === 'true';
+  if (quickMode) return false;
+  return localStorage.getItem('cleanupShowGrounding') !== 'false';
+}
+
+function isShowWelcoming() {
+  const quickMode = localStorage.getItem('cleanupQuickMode') === 'true';
+  if (quickMode) return false;
+  return localStorage.getItem('cleanupShowWelcoming') !== 'false';
+}
+
+// Track if session has started (grounding completed)
+let sessionStarted = false;
+let welcomingCompleted = {
+  surface: false,
+  l1: false,
+  l2: false,
+  l3: false,
+  root: false
+};
+
+// ==================== MULAI SESI ====================
+function mulaiSesi() {
+  debugLog('=== MULAI SESI ===');
+
+  // Validate issue
+  const issue = document.getElementById('issue')?.value?.trim();
+  debugLog('Issue:', issue);
+
+  if (!issue) {
+    showToast('Issue/Target harus diisi!', 'error');
+    document.getElementById('issue')?.focus();
+    return;
+  }
+
+  // Save name
+  saveName();
+
+  // Generate sesi ID if needed
+  if (!document.getElementById('sesiId')?.value) {
+    generateSesiId();
+  }
+
+  // Hide the mulai button
+  const btn = document.getElementById('btnMulaiSesi');
+  if (btn) btn.style.display = 'none';
+
+  // Check if grounding should be shown
+  debugLog('isShowGrounding:', isShowGrounding());
+
+  if (isShowGrounding() && !sessionStarted) {
+    showGroundingPanel();
+  } else {
+    // Skip grounding, go to surface
+    sessionStarted = true;
+    checkShowSurfaceWelcoming();
+  }
+}
+
+// Show grounding panel (inline version)
+function showGroundingPanel() {
+  debugLog('showGroundingPanel called');
+
+  const panel = document.getElementById('groundingPanel');
+  debugLog('Grounding panel element:', panel);
+
+  if (panel) {
+    panel.style.display = 'block';
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    debugLog('Grounding panel shown');
+  } else {
+    console.error('ERROR: groundingPanel element not found!');
+    // Fallback: skip to surface
+    sessionStarted = true;
+    checkShowSurfaceWelcoming();
+  }
+}
+
+// Show grounding overlay (legacy - for backward compatibility)
+function showGrounding() {
+  debugLog('showGrounding called (legacy), delegating to mulaiSesi');
+  // For backward compatibility, just call mulaiSesi
+  if (!sessionStarted) {
+    mulaiSesi();
+  }
+}
+
+// Skip grounding
+function skipGrounding() {
+  debugLog('skipGrounding called');
+  completeGrounding();
+}
+
+// Complete grounding
+function completeGrounding() {
+  debugLog('completeGrounding called');
+
+  // Hide inline grounding panel
+  const panel = document.getElementById('groundingPanel');
+  if (panel) {
+    panel.style.display = 'none';
+  }
+
+  // Also hide overlay if it was used
+  const overlay = document.getElementById('groundingOverlay');
+  if (overlay) {
+    overlay.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  sessionStarted = true;
+  showToast('🧘 Siap melanjutkan...', 'success');
+  checkShowSurfaceWelcoming();
+}
+
+// Check if surface welcoming should show
+function checkShowSurfaceWelcoming() {
+  if (!sessionStarted) return;
+  if (welcomingCompleted.surface) return;
+
+  if (isShowWelcoming()) {
+    showWelcoming('surface');
+  }
+}
+
+// Show welcoming for a layer
+function showWelcoming(layer) {
+  if (!isShowWelcoming()) {
+    welcomingCompleted[layer] = true;
+    return;
+  }
+
+  const panel = document.getElementById(`${layer}Welcoming`);
+  if (panel) {
+    panel.classList.add('show');
+
+    // Update the issue in the question for surface
+    if (layer === 'surface') {
+      const issue = document.getElementById('issue')?.value || '[Issue]';
+      const questionEl = document.getElementById('surfaceWelcomeQ');
+      if (questionEl) {
+        questionEl.textContent = `"Apa yang sedang saya rasakan tentang ${issue}?"`;
+      }
+    }
+
+    // Scroll to panel
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+// Skip welcoming
+function skipWelcoming(layer) {
+  completeWelcoming(layer);
+}
+
+// Complete welcoming
+function completeWelcoming(layer) {
+  const panel = document.getElementById(`${layer}Welcoming`);
+  if (panel) {
+    panel.classList.remove('show');
+  }
+  welcomingCompleted[layer] = true;
+}
+
+// Setup grounding trigger (now using Mulai Sesi button)
+function setupGroundingTrigger() {
+  // The grounding is now triggered by the "Mulai Sesi" button
+  // This function is kept for backward compatibility
+  debugLog('Grounding trigger setup - using Mulai Sesi button approach');
+}
+
+// Setup welcoming triggers for each layer
+function setupWelcomingTriggers() {
+  // L1 welcoming triggered when surface is filled
+  const surfaceIntensity = document.getElementById('surfaceIntensity');
+  if (surfaceIntensity) {
+    surfaceIntensity.addEventListener('change', () => {
+      if (!welcomingCompleted.l1 && surfaceIntensity.value) {
+        setTimeout(() => showWelcoming('l1'), 500);
+      }
+    });
+  }
+
+  // L2 welcoming triggered when L1 is complete
+  // L3 welcoming triggered when L2 is complete
+  // ROOT welcoming triggered when L3 is complete
+  // These are triggered by the layer complete logic
+}
+
+// Override scrollToNextLayer to show welcoming
+const originalScrollToNextLayer = scrollToNextLayer;
+scrollToNextLayer = function(prefix) {
+  const currentIndex = LAYER_ORDER.indexOf(prefix);
+  if (currentIndex < LAYER_ORDER.length - 1) {
+    const nextPrefix = LAYER_ORDER[currentIndex + 1];
+
+    // Show welcoming for next layer first
+    if (!welcomingCompleted[nextPrefix] && isShowWelcoming()) {
+      showWelcoming(nextPrefix);
+    }
+  }
+
+  // Call original function
+  originalScrollToNextLayer(prefix);
+};
+
+// Save session settings
+function saveSessionSettings() {
+  const showGroundingEl = document.getElementById('settingsShowGrounding');
+  const showWelcomingEl = document.getElementById('settingsShowWelcoming');
+  const quickModeEl = document.getElementById('settingsQuickMode');
+
+  if (showGroundingEl) {
+    localStorage.setItem('cleanupShowGrounding', showGroundingEl.checked ? 'true' : 'false');
+  }
+
+  if (showWelcomingEl) {
+    localStorage.setItem('cleanupShowWelcoming', showWelcomingEl.checked ? 'true' : 'false');
+  }
+
+  if (quickModeEl) {
+    localStorage.setItem('cleanupQuickMode', quickModeEl.checked ? 'true' : 'false');
+
+    // If quick mode enabled, uncheck and disable others
+    if (quickModeEl.checked) {
+      if (showGroundingEl) showGroundingEl.checked = false;
+      if (showWelcomingEl) showWelcomingEl.checked = false;
+    }
+  }
+
+  showToast('Pengaturan sesi tersimpan!', 'success');
+}
+
+// Load session settings
+function loadSessionSettings() {
+  const showGroundingEl = document.getElementById('settingsShowGrounding');
+  const showWelcomingEl = document.getElementById('settingsShowWelcoming');
+  const quickModeEl = document.getElementById('settingsQuickMode');
+
+  if (showGroundingEl) {
+    showGroundingEl.checked = localStorage.getItem('cleanupShowGrounding') !== 'false';
+  }
+
+  if (showWelcomingEl) {
+    showWelcomingEl.checked = localStorage.getItem('cleanupShowWelcoming') !== 'false';
+  }
+
+  if (quickModeEl) {
+    quickModeEl.checked = localStorage.getItem('cleanupQuickMode') === 'true';
+  }
+}
+
+// ==========================================================================
+// SETTINGS FUNCTIONS
+// ==========================================================================
+
+// Show/hide API warning banner
+function showApiWarning(show) {
+  const banner = document.getElementById('apiWarning');
+  if (banner) {
+    banner.style.display = show ? 'block' : 'none';
+  }
+}
+
+// Load settings into Settings panel
+function loadSettings() {
+  // Load API URL
+  const apiUrlInput = document.getElementById('settingsApiUrl');
+  if (apiUrlInput) {
+    apiUrlInput.value = localStorage.getItem('cleanupApiUrl') || FALLBACK_API_URL;
+  }
+
+  // Load Default Name
+  const defaultNameInput = document.getElementById('settingsDefaultName');
+  if (defaultNameInput) {
+    defaultNameInput.value = localStorage.getItem('cleanupDefaultName') || FALLBACK_DEFAULT_NAME;
+  }
+
+  // Load Debug Mode
+  const debugModeInput = document.getElementById('settingsDebugMode');
+  if (debugModeInput) {
+    debugModeInput.checked = localStorage.getItem('cleanupDebugMode') === 'true';
+  }
+
+  // Update storage info
+  updateStorageInfo();
+
+  // Check if API is configured
+  const apiUrl = getApiUrl();
+  if (!apiUrl || apiUrl === 'YOUR_WEBAPP_URL_HERE') {
+    showApiWarning(true);
+  }
+}
+
+// Save API URL
+function saveApiUrl() {
+  const apiUrlInput = document.getElementById('settingsApiUrl');
+  if (!apiUrlInput) return;
+
+  const url = apiUrlInput.value.trim();
+
+  if (!url) {
+    showToast('URL tidak boleh kosong!', 'error');
+    return;
+  }
+
+  if (!url.startsWith('https://script.google.com/')) {
+    showToast('URL harus berupa Google Apps Script URL', 'warning');
+  }
+
+  localStorage.setItem('cleanupApiUrl', url);
+  showToast('API URL tersimpan!', 'success');
+  showApiWarning(false);
+
+  // Reload data with new URL
+  loadDrafts();
+  loadTracker();
+  loadStats();
+}
+
+// Test connection to API
+async function testConnection() {
+  const statusEl = document.getElementById('connectionStatus');
+  if (!statusEl) return;
+
+  statusEl.innerHTML = '<span style="color:var(--text-light)">🔄 Testing...</span>';
+
+  const apiUrl = getApiUrl();
+
+  if (!apiUrl || apiUrl === 'YOUR_WEBAPP_URL_HERE') {
+    statusEl.innerHTML = '<span style="color:var(--danger)">❌ API URL belum dikonfigurasi</span>';
+    return;
+  }
+
+  try {
+    const startTime = Date.now();
+    const response = await fetch(`${apiUrl}?action=getStats`);
+    const result = await response.json();
+    const latency = Date.now() - startTime;
+
+    if (result && result.success) {
+      statusEl.innerHTML = `<span style="color:var(--success)">✅ Terkoneksi! (${latency}ms)</span>`;
+      showToast('Koneksi berhasil!', 'success');
+    } else {
+      statusEl.innerHTML = `<span style="color:var(--warning)">⚠️ Response tidak valid</span>`;
+      showToast('Response tidak valid', 'warning');
+    }
+  } catch (error) {
+    console.error('Connection test failed:', error);
+    statusEl.innerHTML = `<span style="color:var(--danger)">❌ Gagal koneksi: ${error.message}</span>`;
+    showToast('Gagal koneksi ke server', 'error');
+  }
+}
+
+// Save user settings (default name, debug mode)
+function saveUserSettings() {
+  const defaultNameInput = document.getElementById('settingsDefaultName');
+  const debugModeInput = document.getElementById('settingsDebugMode');
+
+  if (defaultNameInput && defaultNameInput.value.trim()) {
+    localStorage.setItem('cleanupDefaultName', defaultNameInput.value.trim());
+  }
+
+  if (debugModeInput) {
+    localStorage.setItem('cleanupDebugMode', debugModeInput.checked ? 'true' : 'false');
+  }
+
+  showToast('Settings tersimpan!', 'success');
+  updateStorageInfo();
+}
+
+// Clear local storage (except API URL)
+function clearLocalStorage() {
+  if (!confirm('Hapus semua data lokal (kecuali API URL)?\n\nData yang akan dihapus:\n- Nama tersimpan\n- Debug mode\n\nAPI URL akan tetap tersimpan.')) {
+    return;
+  }
+
+  const apiUrl = localStorage.getItem('cleanupApiUrl');
+  const defaultName = localStorage.getItem('cleanupDefaultName');
+
+  // Clear user-specific data
+  localStorage.removeItem('cleanupUserName');
+  localStorage.removeItem('cleanupDebugMode');
+
+  showToast('Local storage dibersihkan', 'success');
+  updateStorageInfo();
+
+  // Reload settings
+  loadSettings();
+}
+
+// Reset all settings to default
+function resetAllSettings() {
+  if (!confirm('Reset SEMUA settings ke default?\n\nIni akan menghapus:\n- API URL (akan kembali ke default)\n- Default Name\n- Debug Mode\n- Nama tersimpan')) {
+    return;
+  }
+
+  // Clear all cleanup-related items
+  const keysToRemove = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith('cleanup')) {
+      keysToRemove.push(key);
+    }
+  }
+
+  keysToRemove.forEach(key => localStorage.removeItem(key));
+
+  showToast('Semua settings direset!', 'success');
+  updateStorageInfo();
+
+  // Reload settings and page data
+  loadSettings();
+  loadSavedName();
+  showApiWarning(false);
+
+  // Reload data
+  loadDrafts();
+  loadTracker();
+  loadStats();
+}
+
+// Update storage info display
+function updateStorageInfo() {
+  const storageInfoEl = document.getElementById('storageInfo');
+  if (!storageInfoEl) return;
+
+  let itemCount = 0;
+  let totalSize = 0;
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith('cleanup')) {
+      itemCount++;
+      totalSize += (localStorage.getItem(key) || '').length;
+    }
+  }
+
+  const sizeKB = (totalSize / 1024).toFixed(2);
+  storageInfoEl.textContent = `${itemCount} items (${sizeKB} KB)`;
+}
+
+// ==========================================================================
+// UNFINISHED CLEANUP RELEASES
+// ==========================================================================
+let unfinishedCleanups = [];
+let currentUnfinishedCleanupId = null;
+let isResumingCleanup = false;
+
+function saveUnfinishedCleanup() {
+  localStorage.setItem('cleanup_unfinished', JSON.stringify(unfinishedCleanups));
+}
+
+function loadUnfinishedCleanups() {
+  const saved = localStorage.getItem('cleanup_unfinished');
+  if (saved) {
+    try {
+      unfinishedCleanups = JSON.parse(saved);
+    } catch (e) {
+      unfinishedCleanups = [];
+    }
+  }
+  renderUnfinishedCleanups();
+}
+
+function renderUnfinishedCleanups() {
+  const container = document.getElementById('unfinishedCleanupContainer');
+  const section = document.getElementById('unfinishedCleanupSection');
+
+  if (!container || !section) return;
+
+  if (unfinishedCleanups.length === 0) {
+    section.classList.remove('show');
+    return;
+  }
+
+  section.classList.add('show');
+
+  container.innerHTML = unfinishedCleanups.map((item, index) => {
+    const time = new Date(item.timestamp).toLocaleString('id-ID', {
+      day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+    });
+
+    return `
+      <div class="unfinished-cleanup-item">
+        <div class="unfinished-cleanup-top">
+          <span class="unfinished-cleanup-issue">${item.issue || 'Untitled'}</span>
+          <span class="unfinished-cleanup-layer">${item.stuckLayer || 'L1'}</span>
+        </div>
+        <div class="unfinished-cleanup-meta">📅 ${time}</div>
+        ${item.rootWanting ? `<div class="unfinished-cleanup-wanting">Root: ${item.rootWanting}</div>` : ''}
+        <div class="unfinished-cleanup-actions">
+          <button class="btn btn-warning" onclick="resumeCleanup(${index})">▶️ Lanjutkan</button>
+          <button class="btn btn-danger" onclick="deleteUnfinishedCleanup(${index})">🗑️</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function addToUnfinishedCleanup() {
+  const data = collectFormData();
+
+  // Only save if has issue and intensity > 0
+  if (!data.issue) return;
+
+  const currentIntensity = parseInt(data.rootIntensityAfter) || parseInt(data.l3IntensityAfter) ||
+    parseInt(data.l2IntensityAfter) || parseInt(data.l1IntensityAfter) || parseInt(data.surfaceIntensity) || 0;
+
+  if (currentIntensity === 0) {
+    // Fully released - remove from unfinished
+    removeFromUnfinishedCleanup();
+    return;
+  }
+
+  const stuckLayer = determineLayerStuck(data);
+
+  const existingIndex = unfinishedCleanups.findIndex(item => item.id === currentUnfinishedCleanupId);
+
+  const unfinishedData = {
+    id: currentUnfinishedCleanupId || Date.now(),
+    issue: data.issue,
+    kategori: data.kategori,
+    surfaceIntensity: data.surfaceIntensity,
+    l1Bisakah: data.l1Bisakah,
+    l1Mau: data.l1Mau,
+    l1Kapan: data.l1Kapan,
+    l1IntensityAfter: data.l1IntensityAfter,
+    l2Bisakah: data.l2Bisakah,
+    l2Mau: data.l2Mau,
+    l2Kapan: data.l2Kapan,
+    l2IntensityAfter: data.l2IntensityAfter,
+    l3Bisakah: data.l3Bisakah,
+    l3Mau: data.l3Mau,
+    l3Kapan: data.l3Kapan,
+    l3IntensityAfter: data.l3IntensityAfter,
+    rootBisakah: data.rootBisakah,
+    rootMau: data.rootMau,
+    rootKapan: data.rootKapan,
+    rootIntensityAfter: data.rootIntensityAfter,
+    rootWanting: data.rootWanting,
+    stuckLayer: stuckLayer,
+    timestamp: new Date().toISOString()
+  };
+
+  if (existingIndex !== -1) {
+    unfinishedCleanups[existingIndex] = unfinishedData;
+  } else {
+    unfinishedCleanups.push(unfinishedData);
+  }
+
+  saveUnfinishedCleanup();
+}
+
+function removeFromUnfinishedCleanup() {
+  if (currentUnfinishedCleanupId) {
+    unfinishedCleanups = unfinishedCleanups.filter(item => item.id !== currentUnfinishedCleanupId);
+    saveUnfinishedCleanup();
+    currentUnfinishedCleanupId = null;
+  }
+}
+
+function resumeCleanup(index) {
+  const item = unfinishedCleanups[index];
+  if (!item) return;
+
+  // Restore state
+  currentUnfinishedCleanupId = item.id;
+  isResumingCleanup = true;
+
+  // Hide unfinished section
+  document.getElementById('unfinishedCleanupSection').classList.remove('show');
+
+  // Restore form data
+  document.getElementById('issue').value = item.issue || '';
+  document.getElementById('kategori').value = item.kategori || '';
+  document.getElementById('surfaceIntensity').value = item.surfaceIntensity || '';
+
+  // Restore layer answers
+  const layers = ['l1', 'l2', 'l3', 'root'];
+  const types = ['Bisakah', 'Mau', 'Kapan'];
+
+  layers.forEach(layer => {
+    types.forEach(type => {
+      const el = document.getElementById(`${layer}${type}`);
+      if (el && item[`${layer}${type}`]) {
+        el.value = item[`${layer}${type}`];
+      }
+    });
+
+    const intensityEl = document.getElementById(`${layer}IntensityAfter`);
+    if (intensityEl && item[`${layer}IntensityAfter`]) {
+      intensityEl.value = item[`${layer}IntensityAfter`];
+    }
+  });
+
+  if (item.rootWanting) {
+    document.getElementById('rootWanting').value = item.rootWanting;
+  }
+
+  // Show the resume merge modal with step-by-step process
+  showResumeMergeModal(item);
+}
+
+function deleteUnfinishedCleanup(index) {
+  if (confirm('Hapus cleanup yang belum tuntas ini?')) {
+    unfinishedCleanups.splice(index, 1);
+    saveUnfinishedCleanup();
+    renderUnfinishedCleanups();
+  }
+}
+
+function startFreshCleanup() {
+  // Hide unfinished section and reset
+  document.getElementById('unfinishedCleanupSection').classList.remove('show');
+  isResumingCleanup = false;
+  currentUnfinishedCleanupId = null;
+  resetForm();
+}
+
+// ==========================================================================
+// MERGE RELEASE FUNCTIONS - 3-in-1 Merging Technique
+// ==========================================================================
+
+// Start merge animation for resistance panel
+function startMerge(layer, type) {
+  const circles = document.getElementById(`${layer}${type}MergeCircles`);
+  const status = document.getElementById(`${layer}${type}MergeStatus`);
+  const kapanSection = document.getElementById(`${layer}${type}KapanR`);
+  const btn = event.target;
+
+  if (!circles || !status) return;
+
+  // Disable button
+  btn.disabled = true;
+
+  // Step 1: Step back
+  status.textContent = 'Mundur 3 langkah...';
+  circles.style.transform = 'scale(0.7)';
+  circles.style.opacity = '0.8';
+
+  setTimeout(() => {
+    // Step 2: Merge circles
+    status.textContent = 'Melebur menjadi satu...';
+    circles.classList.add('merged');
+
+    setTimeout(() => {
+      // Step 3: Show Kapan release
+      status.textContent = 'Siap untuk dilepaskan!';
+      if (kapanSection) {
+        kapanSection.style.display = 'block';
+      }
+    }, 1000);
+  }, 1500);
+}
+
+// Release now - when user clicks "Sekarang"
+function releaseNowCleanup(layer, type) {
+  const circles = document.getElementById(`${layer}${type}MergeCircles`);
+  const status = document.getElementById(`${layer}${type}MergeStatus`);
+  const mergeSection = document.getElementById(`${layer}${type}Merge`);
+  const panel = document.getElementById(`${layer}${type}Resist`);
+  const badge = document.getElementById(`${layer}${type}Badge`);
+  const selectEl = document.getElementById(`${layer}${type}`);
+
+  if (circles) {
+    // Add releasing animation
+    circles.classList.add('releasing');
+  }
+
+  if (status) {
+    status.textContent = '✨ Dilepaskan! ✨';
+    status.style.color = '#27ae60';
+    status.style.fontWeight = 'bold';
+  }
+
+  // Mark resistance as released
+  resistanceState[layer][type] = true;
+
+  setTimeout(() => {
+    // Hide merge section after release
+    if (mergeSection) {
+      mergeSection.style.display = 'none';
+    }
+
+    // Hide resistance panel
+    if (panel) {
+      panel.classList.remove('show');
+    }
+
+    // Show badge
+    if (badge) {
+      badge.style.display = 'inline';
+    }
+
+    // Reset main question
+    if (selectEl) {
+      selectEl.value = '';
+      selectEl.focus();
+    }
+
+    showToast('Resistensi + Ego released! Coba jawab lagi...', 'success');
+
+    // Scroll to question
+    if (selectEl) {
+      selectEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Reset merge section for next time
+    resetMergeSection(layer, type);
+  }, 1500);
+}
+
+// Release later - when user clicks "Nanti"
+function releaseLaterCleanup(layer, type) {
+  const kapanSection = document.getElementById(`${layer}${type}KapanR`);
+
+  if (kapanSection) {
+    kapanSection.style.display = 'none';
+  }
+
+  showToast('Lanjutkan ketika siap...', 'info');
+}
+
+// Reset merge section to initial state
+function resetMergeSection(layer, type) {
+  const circles = document.getElementById(`${layer}${type}MergeCircles`);
+  const status = document.getElementById(`${layer}${type}MergeStatus`);
+  const kapanSection = document.getElementById(`${layer}${type}KapanR`);
+  const mergeSection = document.getElementById(`${layer}${type}Merge`);
+  const btn = mergeSection?.querySelector('.btn-merge');
+
+  if (circles) {
+    circles.classList.remove('merged', 'releasing');
+    circles.style.transform = '';
+    circles.style.opacity = '';
+  }
+
+  if (status) {
+    status.textContent = 'Klik untuk meleburkan';
+    status.style.color = '';
+    status.style.fontWeight = '';
+  }
+
+  if (kapanSection) {
+    kapanSection.style.display = 'none';
+  }
+
+  if (mergeSection) {
+    mergeSection.style.display = 'block';
+  }
+
+  if (btn) {
+    btn.disabled = false;
+  }
+}
+
+// ==========================================================================
+// RESUME MERGE MODAL FUNCTIONS
+// ==========================================================================
+
+let resumeMergeStep = 0;
+let currentResumeItem = null;
+
+function showResumeMergeModal(item) {
+  currentResumeItem = item;
+  resumeMergeStep = 0;
+
+  // Fill in summary
+  document.getElementById('rmIssue').textContent = item.issue || '-';
+  document.getElementById('rmKategori').textContent = item.kategori || '-';
+  document.getElementById('rmLayer').textContent = item.stuckLayer || 'L1';
+  document.getElementById('rmWanting').textContent = item.rootWanting || '-';
+
+  // Find the last intensity
+  const layers = ['root', 'l3', 'l2', 'l1'];
+  let lastIntensity = item.surfaceIntensity || '-';
+  for (const layer of layers) {
+    if (item[`${layer}IntensityAfter`]) {
+      lastIntensity = item[`${layer}IntensityAfter`];
+      break;
+    }
+  }
+  document.getElementById('rmIntensity').textContent = lastIntensity + '/10';
+
+  // Reset all steps
+  for (let i = 1; i <= 5; i++) {
+    const step = document.getElementById(`rmStep${i}`);
+    if (step) {
+      step.classList.remove('active', 'done');
+      const btn = step.querySelector('.merge-step-btn');
+      if (btn) {
+        btn.disabled = i !== 1;
+        btn.classList.remove('done');
+      }
+    }
+  }
+  document.getElementById('rmStep1').classList.add('active');
+
+  // Reset circles
+  const circles = document.getElementById('rmMergeCircles');
+  circles.classList.remove('merging', 'merged', 'releasing');
+  circles.style.transform = '';
+  circles.style.opacity = '';
+
+  // Reset status
+  document.getElementById('rmMergeStatus').textContent = 'Hadirkan ketiganya satu per satu...';
+
+  // Hide final release
+  document.getElementById('rmFinalRelease').classList.remove('show');
+
+  // Show modal
+  document.getElementById('resumeMergeOverlay').classList.add('show');
+}
+
+function completeResumeStep(step) {
+  const currentStep = document.getElementById(`rmStep${step}`);
+  const nextStep = document.getElementById(`rmStep${step + 1}`);
+  const status = document.getElementById('rmMergeStatus');
+
+  // Mark current as done
+  currentStep.classList.remove('active');
+  currentStep.classList.add('done');
+  const btn = currentStep.querySelector('.merge-step-btn');
+  if (btn) {
+    btn.classList.add('done');
+    btn.textContent = '✓ Selesai';
+  }
+
+  // Update status
+  const statusMessages = {
+    1: 'Emosi sudah hadir... lanjutkan ke resistensi...',
+    2: 'Resistensi sudah hadir... lanjutkan ke ego...',
+    3: 'Ketiganya sudah hadir... saatnya mundur...'
+  };
+  if (statusMessages[step]) {
+    status.textContent = statusMessages[step];
+  }
+
+  // Activate next step
+  if (nextStep) {
+    nextStep.classList.add('active');
+    const nextBtn = nextStep.querySelector('.merge-step-btn');
+    if (nextBtn) nextBtn.disabled = false;
+  }
+
+  resumeMergeStep = step;
+}
+
+function startResumeMergeStepBack() {
+  const step4 = document.getElementById('rmStep4');
+  const step5 = document.getElementById('rmStep5');
+  const circles = document.getElementById('rmMergeCircles');
+  const status = document.getElementById('rmMergeStatus');
+  const btn = step4.querySelector('.merge-step-btn');
+
+  btn.disabled = true;
+
+  // Animate step back
+  status.textContent = 'Mundur... satu langkah...';
+  circles.style.transition = 'all 0.8s ease';
+  circles.style.transform = 'scale(0.85)';
+
+  setTimeout(() => {
+    status.textContent = 'Mundur... dua langkah...';
+    circles.style.transform = 'scale(0.75)';
+  }, 800);
+
+  setTimeout(() => {
+    status.textContent = 'Mundur... tiga langkah...';
+    circles.style.transform = 'scale(0.65)';
+    circles.style.opacity = '0.8';
+  }, 1600);
+
+  setTimeout(() => {
+    status.textContent = 'Kamu sekarang mengamati dari kejauhan...';
+
+    // Mark step 4 as done
+    step4.classList.remove('active');
+    step4.classList.add('done');
+    btn.classList.add('done');
+    btn.textContent = '✓ Selesai';
+
+    // Activate step 5
+    step5.classList.add('active');
+    step5.querySelector('.merge-step-btn').disabled = false;
+
+    resumeMergeStep = 4;
+  }, 2400);
+}
+
+function startResumeMerging() {
+  const step5 = document.getElementById('rmStep5');
+  const circles = document.getElementById('rmMergeCircles');
+  const status = document.getElementById('rmMergeStatus');
+  const finalRelease = document.getElementById('rmFinalRelease');
+  const btn = step5.querySelector('.merge-step-btn');
+
+  btn.disabled = true;
+
+  // Animate merge
+  status.textContent = 'Ketiganya mulai mendekat...';
+  circles.classList.add('merging');
+
+  setTimeout(() => {
+    status.textContent = 'Ketiganya saling melarutkan...';
+  }, 1000);
+
+  setTimeout(() => {
+    status.textContent = 'Ketiganya melebur menjadi satu...';
+    circles.classList.remove('merging');
+    circles.classList.add('merged');
+  }, 2000);
+
+  setTimeout(() => {
+    status.textContent = '✨ Peleburan selesai!';
+    status.style.color = '#27ae60';
+    status.style.fontWeight = '700';
+
+    // Mark step 5 as done
+    step5.classList.remove('active');
+    step5.classList.add('done');
+    btn.classList.add('done');
+    btn.textContent = '✓ Selesai';
+
+    // Show final release section
+    finalRelease.classList.add('show');
+
+    resumeMergeStep = 5;
+  }, 3000);
+}
+
+function resumeReleaseNow() {
+  const circles = document.getElementById('rmMergeCircles');
+  const status = document.getElementById('rmMergeStatus');
+
+  status.textContent = '✨ MELEPASKAN...';
+  circles.classList.add('releasing');
+
+  setTimeout(() => {
+    // Close modal
+    document.getElementById('resumeMergeOverlay').classList.remove('show');
+
+    // Continue with the cleanup - go to the stuck layer
+    if (currentResumeItem) {
+      // Start session
+      mulaiSesi();
+
+      // Show toast
+      showToast('🎉 Pelepasan berhasil! Lanjutkan ke pertanyaan berikutnya.', 'success');
+
+      // Remove from unfinished since we released
+      removeFromUnfinishedCleanup();
+    }
+  }, 2000);
+}
+
+function resumeReleaseLater() {
+  // Close modal
+  document.getElementById('resumeMergeOverlay').classList.remove('show');
+
+  // Continue with the cleanup at the stuck layer
+  if (currentResumeItem) {
+    mulaiSesi();
+    showToast('🔄 Proses dilanjutkan. Ambil waktu kamu untuk melepaskan.', 'info');
+  }
 }
 
 // ==========================================================================

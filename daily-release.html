@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Emotional Release - Sedona Method</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧘</text></svg>">
+  <style>
+    /* ==================== BASE STYLES ==================== */
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--primary:#1a5276;--primary-light:#2874a6;--secondary:#3498db;--success:#27ae60;--warning:#f39c12;--danger:#c0392b;--purple:#8e44ad;--purple-light:#9b59b6;--bg-light:#f8f9fa;--bg-input:#ebf5fb;--text-dark:#2c3e50;--text-light:#7f8c8d;--border:#bdc3c7;--white:#fff;--shadow:0 2px 10px rgba(0,0,0,0.1)}
+    body{font-family:'Segoe UI',Tahoma,sans-serif;background:var(--bg-light);color:var(--text-dark);line-height:1.6}
+
+    /* Header */
+    .header{background:linear-gradient(135deg,#8e44ad,#9b59b6);color:var(--white);padding:1rem;text-align:center;position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
+    .header h1{font-size:1.4rem;margin-bottom:0.25rem}
+    .header p{font-size:0.8rem;opacity:0.9}
+
+    /* Navigation Link */
+    .nav-link{background:var(--white);padding:0.5rem 1rem;border-bottom:1px solid var(--border)}
+    .nav-link a{color:var(--primary);text-decoration:none;font-size:0.85rem;display:inline-flex;align-items:center;gap:0.3rem}
+    .nav-link a:hover{text-decoration:underline}
+
+    /* Main Content */
+    .main-content{max-width:600px;margin:0 auto;padding:0.75rem;padding-bottom:2rem}
+
+    /* Cards */
+    .card{background:var(--white);border-radius:10px;box-shadow:var(--shadow);margin-bottom:0.75rem;overflow:hidden}
+    .card-header{background:var(--primary);color:var(--white);padding:0.6rem 0.75rem;font-weight:600;font-size:0.85rem}
+    .card-body{padding:0.75rem}
+
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:0.4rem;padding:0.6rem 1rem;border:none;border-radius:6px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.3s}
+    .btn-primary{background:var(--purple);color:var(--white)}
+    .btn-primary:hover{background:var(--purple-light)}
+    .btn-success{background:var(--success);color:var(--white)}
+    .btn-success:hover{background:#229954}
+    .btn-outline{background:transparent;border:2px solid var(--purple);color:var(--purple)}
+    .btn-outline:hover{background:var(--purple);color:var(--white)}
+    .btn-block{width:100%}
+    .btn-sm{padding:0.4rem 0.75rem;font-size:0.75rem}
+    .btn:disabled{opacity:0.5;cursor:not-allowed}
+    .btn-group{display:flex;gap:0.5rem;flex-wrap:wrap}
+    .btn-group .btn{flex:1;min-width:120px}
+
+    /* Form Elements */
+    .form-item{margin-bottom:0.75rem}
+    .form-item label{display:block;font-size:0.8rem;font-weight:600;margin-bottom:0.3rem;color:var(--text-dark)}
+    .form-item select,.form-item input,.form-item textarea{width:100%;padding:0.5rem;border:1px solid var(--border);border-radius:6px;font-size:0.85rem;background:var(--bg-input)}
+    .form-item select:focus,.form-item input:focus,.form-item textarea:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 2px rgba(142,68,173,0.1)}
+    .form-item textarea{resize:vertical;min-height:60px}
+
+    /* ==================== WISE HOST STYLES ==================== */
+    .wise-host-qualities{display:flex;flex-wrap:wrap;justify-content:center;gap:0.5rem;margin:1rem 0}
+    .quality{background:#f5eef8;color:#8e44ad;padding:0.4rem 0.75rem;border-radius:20px;font-size:0.8rem;font-weight:600}
+
+    .breathing-guide{text-align:center;margin:1.5rem 0}
+    .breathing-guide p{font-size:0.85rem;color:var(--text-light)}
+
+    .breath-circle{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#8e44ad,#9b59b6);margin:1rem auto;animation:breathe 4s ease-in-out infinite}
+    @keyframes breathe{0%,100%{transform:scale(1);opacity:0.7}50%{transform:scale(1.3);opacity:1}}
+
+    .affirmation{background:#f5eef8;padding:1rem;border-radius:8px;text-align:center;margin:1rem 0}
+    .affirmation p{margin:0.3rem 0;font-size:0.9rem;font-style:italic}
+
+    /* ==================== EMOTION GRID STYLES ==================== */
+    .emotion-section{margin-bottom:1rem}
+    .emotion-section h4{margin-bottom:0.5rem}
+
+    .emotion-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.4rem}
+
+    .emotion-btn{display:flex;flex-direction:column;align-items:center;padding:0.6rem 0.4rem;border:2px solid var(--border);border-radius:8px;background:var(--white);cursor:pointer;transition:all 0.3s}
+    .emotion-btn:hover{border-color:var(--primary);transform:translateY(-2px)}
+    .emotion-btn.selected{border-color:var(--danger);background:#fadbd8}
+    .emotion-btn.positive{border-color:var(--success);background:#d5f5e3}
+    .emotion-btn.positive:hover{border-color:#1e8449}
+    .emotion-btn.positive.selected{background:#27ae60;color:white}
+    .emotion-btn .level{font-size:1.2rem;font-weight:700}
+    .emotion-btn .name{font-size:0.7rem;font-weight:600}
+    .emotion-btn .indo{font-size:0.6rem;color:var(--text-light)}
+    .emotion-btn.positive .indo{color:#1e8449}
+    .emotion-btn.positive.selected .indo{color:rgba(255,255,255,0.8)}
+
+    .courage-line{text-align:center;color:var(--success);font-weight:600;font-size:0.8rem;margin:1rem 0;padding:0.5rem;background:#d5f5e3;border-radius:4px}
+
+    /* ==================== INNER ROOM STYLES ==================== */
+    .inner-room{background:linear-gradient(180deg,#f8f9fa 0%,#ebf5fb 100%);border-radius:12px;padding:1.5rem;margin-bottom:1rem;border:1px solid var(--border)}
+
+    .room-visual{display:flex;justify-content:space-around;align-items:center;min-height:100px}
+    .host-chair,.guest-chair{text-align:center;font-size:2rem}
+    .host-chair small,.guest-chair small{display:block;font-size:0.7rem;color:var(--text-light)}
+    .guest-chair{transition:all 0.5s ease}
+    .guest-chair.entering{animation:guestEnter 0.5s ease}
+    @keyframes guestEnter{0%{opacity:0;transform:translateX(50px)}100%{opacity:1;transform:translateX(0)}}
+
+    .door{font-size:2rem;opacity:0.5;transition:all 0.3s}
+    .door.open{opacity:1;transform:rotateY(-30deg)}
+
+    /* Step Indicator */
+    .step-indicator{display:flex;justify-content:center;gap:0.4rem;margin-bottom:1rem}
+    .step-indicator .step{width:28px;height:28px;border-radius:50%;background:var(--bg-light);color:var(--text-light);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;transition:all 0.3s}
+    .step-indicator .step.active{background:var(--purple);color:white}
+    .step-indicator .step.done{background:var(--success);color:white}
+
+    /* Step Content */
+    .step-content{min-height:200px}
+    .step-instruction{padding:0.5rem}
+    .step-instruction h4{font-size:0.95rem;color:var(--purple);margin-bottom:0.75rem;display:flex;align-items:center;gap:0.3rem}
+    .instruction-main{font-size:1rem;margin-bottom:1rem}
+    .instruction-script{font-size:0.85rem;color:var(--text-light);margin-bottom:0.5rem}
+    .instruction-action{font-size:0.85rem;color:var(--text-light);margin-top:1rem}
+
+    .script{background:#f5eef8;border-left:4px solid #8e44ad;padding:0.75rem 1rem;margin:0.5rem 0;font-style:italic;font-size:0.9rem;line-height:1.6;border-radius:0 6px 6px 0}
+
+    /* Timer */
+    .timer-box{text-align:center;margin:1rem 0}
+    .timer-display{font-size:2rem;font-weight:700;color:var(--purple);margin-top:0.5rem}
+    .timer-display.running{animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
+
+    /* Radio Group */
+    .radio-group{display:flex;flex-direction:column;gap:0.5rem}
+    .radio-group label{display:flex;align-items:center;gap:0.5rem;padding:0.5rem;background:var(--bg-light);border-radius:6px;cursor:pointer;transition:all 0.2s}
+    .radio-group label:hover{background:#ebdef0}
+    .radio-group input[type="radio"]{width:18px;height:18px}
+
+    /* Shift Indicator */
+    .shift-indicator{background:#f5eef8;padding:0.75rem;border-radius:6px;margin-top:1rem}
+    .shift-indicator p{font-size:0.8rem;margin-bottom:0.3rem}
+    .shift-indicator ul{font-size:0.75rem;margin:0.5rem 0 0 1.2rem}
+    .shift-indicator li{margin-bottom:0.2rem}
+
+    /* Breathing Release */
+    .breathing-release{text-align:center;margin:1rem 0;padding:1rem;background:#f5eef8;border-radius:8px}
+    .breathing-release p{margin-bottom:0.5rem}
+
+    /* Step Navigation */
+    .step-nav{display:flex;justify-content:space-between;gap:0.5rem;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+
+    /* ==================== COMPLETION STYLES ==================== */
+    .completion-summary{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem}
+    .summary-item{background:var(--bg-light);padding:0.5rem;border-radius:6px}
+    .summary-item .label{display:block;font-size:0.7rem;color:var(--text-light)}
+    .summary-item .value{font-size:1rem;font-weight:600}
+
+    .gratitude-box{background:#d5f5e3;padding:1rem;border-radius:8px;text-align:center;margin-bottom:1rem;border-left:4px solid var(--success)}
+    .gratitude-box p{font-size:0.9rem;font-style:italic}
+
+    /* ==================== DAILY LOG STYLES ==================== */
+    .log-item{display:grid;grid-template-columns:60px 1fr 50px;gap:0.5rem;padding:0.5rem;border-bottom:1px solid var(--bg-light);align-items:center}
+    .log-item:last-child{border-bottom:none}
+    .log-time{font-size:0.75rem;color:var(--text-light)}
+    .log-emotion{font-weight:600;font-size:0.85rem}
+    .log-reduction{text-align:right;font-weight:600;color:var(--success)}
+    .log-reduction.positive{color:var(--danger)}
+
+    /* ==================== MERGING VISUALIZATION ==================== */
+    .merge-container{display:flex;flex-direction:column;align-items:center;padding:1rem;margin:1rem 0;background:#f5eef8;border-radius:10px}
+    .merge-circles{display:flex;justify-content:center;gap:0.5rem;margin-bottom:0.75rem;transition:all 1s ease}
+    .merge-circles.merging{gap:0}
+    .merge-circles.merged{gap:-15px}
+    .merge-circles.releasing .m-circle{animation:dissolve 2s forwards}
+    .m-circle{width:60px;height:60px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:0.6rem;font-weight:600;text-align:center;transition:all 1s ease;box-shadow:0 3px 10px rgba(0,0,0,0.2)}
+    .m-circle.emotion{background:linear-gradient(135deg,#e74c3c,#c0392b);color:white}
+    .m-circle.resistance{background:linear-gradient(135deg,#f39c12,#e67e22);color:white}
+    .m-circle.ego{background:linear-gradient(135deg,#9b59b6,#8e44ad);color:white}
+    .m-circle .m-emoji{font-size:1.2rem}
+    .merge-circles.merging .m-circle{transform:scale(0.9);margin:0 -8px}
+    .merge-circles.merged .m-circle{transform:scale(0.85);margin:0 -15px;opacity:0.95}
+    @keyframes dissolve{0%{transform:scale(0.85);opacity:0.95}50%{transform:scale(1.1);opacity:0.5}100%{transform:scale(0);opacity:0}}
+    .merge-status{font-size:0.85rem;color:#8e44ad;font-weight:600;text-align:center;min-height:20px}
+    .kapan-box{background:#d5f5e3;padding:1rem;border-radius:8px;text-align:center;margin-top:1rem}
+    .kapan-buttons{display:flex;gap:0.5rem;justify-content:center;margin-top:0.75rem}
+    .kapan-btn{padding:0.75rem 1.25rem;border:none;border-radius:8px;font-size:0.9rem;font-weight:700;cursor:pointer;transition:all 0.3s}
+    .kapan-btn.sekarang{background:linear-gradient(135deg,#27ae60,#2ecc71);color:white}
+    .kapan-btn.sekarang:hover{transform:scale(1.05);box-shadow:0 4px 15px rgba(39,174,96,0.4)}
+    .kapan-btn.nanti{background:#f8f9fa;color:#2c3e50;border:2px solid #bdc3c7}
+
+    /* ==================== TOAST ==================== */
+    .toast-container{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:1000;display:flex;flex-direction:column;gap:0.5rem;width:90%;max-width:350px}
+    .toast{padding:0.75rem 1rem;border-radius:8px;background:var(--text-dark);color:var(--white);font-size:0.85rem;text-align:center;animation:toastIn 0.3s ease,toastOut 0.3s ease 2.7s}
+    .toast.success{background:var(--success)}
+    .toast.error{background:var(--danger)}
+    .toast.info{background:var(--purple)}
+    @keyframes toastIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes toastOut{from{opacity:1}to{opacity:0}}
+
+    /* ==================== MOBILE RESPONSIVE ==================== */
+    @media(max-width:480px){
+      .header h1{font-size:1.2rem}
+      .header p{font-size:0.75rem}
+
+      .emotion-grid{grid-template-columns:repeat(3,1fr);gap:0.3rem}
+      .emotion-btn{padding:0.4rem 0.25rem}
+      .emotion-btn .level{font-size:1rem}
+      .emotion-btn .name{font-size:0.6rem}
+      .emotion-btn .indo{font-size:0.5rem}
+
+      .room-visual{min-height:80px}
+      .host-chair,.guest-chair,.door{font-size:1.5rem}
+
+      .step-indicator .step{width:24px;height:24px;font-size:0.7rem}
+
+      .wise-host-qualities{gap:0.3rem}
+      .quality{padding:0.3rem 0.5rem;font-size:0.7rem}
+
+      .breath-circle{width:60px;height:60px}
+
+      .script{padding:0.5rem 0.75rem;font-size:0.8rem}
+
+      .completion-summary{grid-template-columns:1fr}
+
+      .btn-group{flex-direction:column}
+      .btn-group .btn{min-width:100%}
+    }
+
+    /* ==================== UNFINISHED RELEASES ==================== */
+    .unfinished-section{margin-bottom:0.75rem}
+    .unfinished-header{background:linear-gradient(135deg,var(--warning),#e67e22)}
+    .unfinished-item{background:var(--white);border-radius:10px;padding:1rem;margin-bottom:0.75rem;border-left:4px solid var(--warning);box-shadow:var(--shadow)}
+    .unfinished-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem}
+    .unfinished-emotion{display:flex;align-items:center;gap:0.5rem}
+    .unfinished-emotion .emoji{font-size:1.5rem}
+    .unfinished-emotion .name{font-weight:700;color:var(--purple);font-size:1rem}
+    .unfinished-intensity{text-align:right}
+    .unfinished-intensity .value{font-size:1.5rem;font-weight:700;color:var(--warning)}
+    .unfinished-intensity .label{font-size:0.7rem;color:var(--text-light)}
+    .unfinished-meta{font-size:0.75rem;color:var(--text-light);margin-bottom:0.5rem}
+    .unfinished-message{font-size:0.8rem;color:var(--text-dark);font-style:italic;background:#fef9e7;padding:0.5rem;border-radius:6px;margin-bottom:0.75rem}
+    .unfinished-actions{display:flex;gap:0.5rem}
+    .unfinished-actions .btn{flex:1;padding:0.5rem;font-size:0.8rem}
+    .btn-warning{background:linear-gradient(135deg,var(--warning),#e67e22);color:var(--white)}
+    .btn-danger{background:var(--danger);color:var(--white)}
+    .btn-danger:hover{background:#a93226}
+
+    /* Resume Summary */
+    .resume-summary{display:none;background:linear-gradient(135deg,#ebf5fb,#d4e6f1);border:2px solid var(--purple);border-radius:12px;padding:1rem;margin-bottom:1rem;max-height:50vh;overflow-y:auto}
+    .resume-summary.show{display:block;animation:slideIn 0.3s ease}
+    @keyframes slideIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+    .resume-summary-header{display:flex;align-items:center;gap:0.5rem;font-weight:700;color:var(--purple);margin-bottom:0.75rem;font-size:1rem;position:sticky;top:0;background:linear-gradient(135deg,#ebf5fb,#d4e6f1);padding:0.5rem 0}
+    .resume-summary-content{font-size:0.85rem;color:var(--text-dark)}
+    .resume-section{margin:0.75rem 0;padding:0.75rem;background:rgba(255,255,255,0.5);border-radius:10px;border-left:3px solid var(--purple)}
+    .resume-section-title{font-weight:700;color:var(--purple);font-size:0.8rem;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px}
+    .resume-summary-item{background:var(--white);padding:0.5rem 0.75rem;border-radius:8px;margin-bottom:0.5rem}
+    .resume-summary-item label{font-weight:600;color:var(--purple);font-size:0.75rem;display:block;margin-bottom:0.2rem}
+    .resume-summary-item span{color:var(--text-dark);display:block;font-style:italic}
+    .resume-intensity-highlight{background:linear-gradient(135deg,#fef9e7,#fcf3cf)!important;border:1px solid var(--warning)}
+    .resume-intensity-highlight span{font-weight:700;font-size:1.1rem;color:var(--warning)!important;font-style:normal!important}
+    .resume-summary-note{font-size:0.8rem;color:var(--warning);font-style:italic;margin-top:0.75rem;padding:0.5rem;background:rgba(243,156,18,0.1);border-radius:8px;text-align:center}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <h1>🧘 Daily Emotional Release</h1>
+    <p>Letting IN → Letting GO</p>
+  </header>
+
+  <!-- Navigation -->
+  <div class="nav-link">
+    <a href="index.html">← Kembali ke Clean Up Tracker</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+
+    <!-- Unfinished Releases Section -->
+    <div class="card unfinished-section" id="unfinishedSection" style="display:none;">
+      <div class="card-header unfinished-header">⏳ Release Belum Tuntas</div>
+      <div class="card-body">
+        <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:0.75rem;">
+          Ada emosi yang belum sepenuhnya di-release. Lanjutkan untuk menyelesaikan.
+        </p>
+        <div id="unfinishedContainer">
+          <!-- Dynamic content -->
+        </div>
+        <button class="btn btn-outline btn-block" style="margin-top:0.5rem;" onclick="startFreshRelease()">
+          🆕 Mulai Release Baru
+        </button>
+      </div>
+    </div>
+
+    <!-- SECTION 1: Wise Host Activation -->
+    <div class="card" id="wiseHostCard">
+      <div class="card-header" style="background:#8e44ad;">
+        🤴 AKTIVASI WISE HOST
+      </div>
+      <div class="card-body">
+        <p style="text-align:center;font-size:1rem;margin-bottom:1rem;">
+          Sebelum menerima tamu (emosi), aktifkan dulu identitas <strong>Wise Host</strong>
+        </p>
+
+        <div class="wise-host-qualities">
+          <div class="quality">🤗 Welcoming</div>
+          <div class="quality">🕰️ Patient</div>
+          <div class="quality">💚 Compassionate</div>
+          <div class="quality">🧠 Wise</div>
+          <div class="quality">🧘 Calm</div>
+        </div>
+
+        <div class="breathing-guide">
+          <p>Tarik napas dalam... tahan... buang perlahan...</p>
+          <div class="breath-circle"></div>
+        </div>
+
+        <div class="affirmation">
+          <p>"Saya adalah Wise Host."</p>
+          <p>"Saya welcome semua tamu dengan hati terbuka."</p>
+          <p>"Saya mendengar dengan patience dan compassion."</p>
+        </div>
+
+        <button class="btn btn-primary btn-block" id="btnActivate" onclick="activateWiseHost()">
+          🤴 Aktivasi Wise Host
+        </button>
+      </div>
+    </div>
+
+    <!-- SECTION 2: Emotion Scale -->
+    <div class="card" id="emotionScaleCard" style="display:none;">
+      <div class="card-header" style="background:var(--secondary);">
+        🎯 Pilih Emosi yang Muncul Hari Ini
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:1rem;">
+          Pilih emosi yang paling <strong>KUAT</strong> saat ini. Kita akan proses SATU PER SATU.
+        </p>
+
+        <!-- Negative Emotions -->
+        <div class="emotion-section negative">
+          <h4 style="color:var(--danger);font-size:0.8rem;">⚠️ EMOSI NEGATIF (Perlu Release)</h4>
+          <div class="emotion-grid">
+            <button class="emotion-btn" data-level="1" data-emotion="Apathy" onclick="selectEmotion(this)">
+              <span class="level">1</span>
+              <span class="name">APATHY</span>
+              <span class="indo">Putus Asa, Mati Rasa</span>
+            </button>
+            <button class="emotion-btn" data-level="2" data-emotion="Grief" onclick="selectEmotion(this)">
+              <span class="level">2</span>
+              <span class="name">GRIEF</span>
+              <span class="indo">Sedih, Kehilangan</span>
+            </button>
+            <button class="emotion-btn" data-level="3" data-emotion="Fear" onclick="selectEmotion(this)">
+              <span class="level">3</span>
+              <span class="name">FEAR</span>
+              <span class="indo">Takut, Cemas</span>
+            </button>
+            <button class="emotion-btn" data-level="4" data-emotion="Lust" onclick="selectEmotion(this)">
+              <span class="level">4</span>
+              <span class="name">LUST</span>
+              <span class="indo">Nafsu, Keinginan</span>
+            </button>
+            <button class="emotion-btn" data-level="5" data-emotion="Anger" onclick="selectEmotion(this)">
+              <span class="level">5</span>
+              <span class="name">ANGER</span>
+              <span class="indo">Marah, Kesal</span>
+            </button>
+            <button class="emotion-btn" data-level="6" data-emotion="Pride" onclick="selectEmotion(this)">
+              <span class="level">6</span>
+              <span class="name">PRIDE</span>
+              <span class="indo">Ego, Sombong</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Courage Line -->
+        <div class="courage-line">
+          ─── BATAS COURAGE (Target) ───
+        </div>
+
+        <!-- Positive Emotions -->
+        <div class="emotion-section positive">
+          <h4 style="color:var(--success);font-size:0.8rem;">✅ EMOSI POSITIF (Target)</h4>
+          <div class="emotion-grid">
+            <button class="emotion-btn positive" data-level="7" data-emotion="Courage" onclick="selectEmotion(this)">
+              <span class="level">7</span>
+              <span class="name">COURAGE</span>
+              <span class="indo">Berani, Yakin ✓</span>
+            </button>
+            <button class="emotion-btn positive" data-level="8" data-emotion="Acceptance" onclick="selectEmotion(this)">
+              <span class="level">8</span>
+              <span class="name">ACCEPTANCE</span>
+              <span class="indo">Menerima, Ikhlas</span>
+            </button>
+            <button class="emotion-btn positive" data-level="9" data-emotion="Peace" onclick="selectEmotion(this)">
+              <span class="level">9</span>
+              <span class="name">PEACE</span>
+              <span class="indo">Damai, Tenang ★</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: Welcoming Room -->
+    <div class="card" id="welcomingRoom" style="display:none;">
+      <div class="card-header" id="roomHeader" style="background:var(--purple);">
+        🏠 Ruang Penerimaan Tamu
+      </div>
+      <div class="card-body">
+
+        <!-- Visual Inner Room -->
+        <div class="inner-room">
+          <div class="room-visual">
+            <div class="host-chair">🤴<br><small>Kamu</small></div>
+            <div class="guest-chair" id="guestChair">
+              <span class="guest-emoji" id="guestEmoji">❓</span><br>
+              <small id="guestName">Tamu</small>
+            </div>
+            <div class="door" id="door">🚪</div>
+          </div>
+        </div>
+
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+          <span class="step active" data-step="1">1</span>
+          <span class="step" data-step="2">2</span>
+          <span class="step" data-step="3">3</span>
+          <span class="step" data-step="4">4</span>
+          <span class="step" data-step="5">5</span>
+          <span class="step" data-step="6">6</span>
+          <span class="step" data-step="7">7</span>
+        </div>
+
+        <!-- Step Content -->
+        <div class="step-content" id="stepContent">
+          <!-- Dynamic content -->
+        </div>
+
+        <!-- Navigation -->
+        <div class="step-nav">
+          <button class="btn btn-outline" id="btnPrev" onclick="prevStep()" style="display:none;">← Kembali</button>
+          <button class="btn btn-primary" id="btnNext" onclick="nextStep()">Lanjut →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: Completion Card -->
+    <div class="card" id="completionCard" style="display:none;">
+      <div class="card-header" style="background:var(--success);">
+        ✅ Release Selesai
+      </div>
+      <div class="card-body">
+        <div class="completion-summary">
+          <div class="summary-item">
+            <span class="label">Emosi:</span>
+            <span class="value" id="summaryEmotion">-</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Intensity Awal:</span>
+            <span class="value" id="summaryIntBefore">-</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Intensity Akhir:</span>
+            <span class="value" id="summaryIntAfter">-</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Pengurangan:</span>
+            <span class="value" id="summaryReduction">-</span>
+          </div>
+        </div>
+
+        <div class="summary-item" style="margin-bottom:1rem;">
+          <span class="label">Message dari Emosi:</span>
+          <span class="value" id="summaryMessage" style="font-size:0.85rem;font-weight:normal;font-style:italic;">-</span>
+        </div>
+
+        <div class="gratitude-box">
+          <p>🤲 "Alhamdulillah - terima kasih <strong id="emotionName">emosi</strong> sudah datang, sudah berbagi, sudah pergi dengan damai."</p>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="releaseAnother()">🔄 Release Emosi Lain</button>
+          <button class="btn btn-success" onclick="finishDaily()">✅ Selesai Hari Ini</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: Daily Log -->
+    <div class="card" id="dailyLogCard">
+      <div class="card-header">
+        📅 Log Hari Ini
+      </div>
+      <div class="card-body">
+        <div id="dailyLog">
+          <p style="text-align:center;color:var(--text-light);">Belum ada release hari ini</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script>
+    // ==================== DAILY RELEASE APP ====================
+
+    // State
+    let currentStep = 1;
+    let selectedEmotion = null;
+    let releaseData = {
+      emotion: '',
+      level: 0,
+      bodyLocation: '',
+      intensityBefore: 0,
+      intensityAfter: 0,
+      message: '',
+      timestamp: null
+    };
+    let dailyLog = [];
+    let timerInterval = null;
+    let unfinishedReleases = [];
+    let currentUnfinishedId = null;
+    let isResuming = false;
+
+    // Emotion data
+    const EMOTIONS = {
+      1: { name: 'Apathy', emoji: '😶', indo: 'Putus Asa' },
+      2: { name: 'Grief', emoji: '😢', indo: 'Sedih' },
+      3: { name: 'Fear', emoji: '😰', indo: 'Takut' },
+      4: { name: 'Lust', emoji: '😤', indo: 'Nafsu' },
+      5: { name: 'Anger', emoji: '😠', indo: 'Marah' },
+      6: { name: 'Pride', emoji: '😏', indo: 'Ego' },
+      7: { name: 'Courage', emoji: '💪', indo: 'Berani' },
+      8: { name: 'Acceptance', emoji: '😌', indo: 'Ikhlas' },
+      9: { name: 'Peace', emoji: '🕊️', indo: 'Damai' }
+    };
+
+    // ==================== WISE HOST ====================
+    function activateWiseHost() {
+      const btn = document.getElementById('btnActivate');
+      btn.innerHTML = '🤴 Wise Host Aktif ✓';
+      btn.classList.remove('btn-primary');
+      btn.classList.add('btn-success');
+      btn.disabled = true;
+
+      showToast('🤴 Wise Host telah aktif!', 'success');
+
+      setTimeout(() => {
+        document.getElementById('emotionScaleCard').style.display = 'block';
+        document.getElementById('emotionScaleCard').scrollIntoView({ behavior: 'smooth' });
+      }, 500);
+    }
+
+    // ==================== EMOTION SELECTION ====================
+    function selectEmotion(btn) {
+      // Remove previous selection
+      document.querySelectorAll('.emotion-btn').forEach(b => b.classList.remove('selected'));
+
+      // Select this one
+      btn.classList.add('selected');
+
+      selectedEmotion = {
+        level: parseInt(btn.dataset.level),
+        name: btn.dataset.emotion
+      };
+
+      releaseData.emotion = selectedEmotion.name;
+      releaseData.level = selectedEmotion.level;
+
+      // If positive emotion selected
+      if (selectedEmotion.level >= 7) {
+        showToast(`🎉 Kamu sudah di ${selectedEmotion.name}! Alhamdulillah - pertahankan state ini.`, 'success');
+        return;
+      }
+
+      // Show welcoming room
+      setTimeout(() => {
+        document.getElementById('welcomingRoom').style.display = 'block';
+        document.getElementById('welcomingRoom').scrollIntoView({ behavior: 'smooth' });
+
+        // Update guest visual
+        const emo = EMOTIONS[selectedEmotion.level];
+        document.getElementById('guestEmoji').textContent = emo.emoji;
+        document.getElementById('guestName').textContent = emo.name;
+        document.getElementById('guestChair').classList.add('entering');
+        document.getElementById('door').classList.add('open');
+
+        // Render first step
+        currentStep = 1;
+        renderStep(1);
+      }, 300);
+    }
+
+    // ==================== STEP RENDERING ====================
+    function renderStep(step) {
+      currentStep = step;
+      const content = document.getElementById('stepContent');
+      const emo = EMOTIONS[releaseData.level];
+
+      // Update step indicators
+      document.querySelectorAll('.step-indicator .step').forEach((s, i) => {
+        s.classList.remove('active', 'done');
+        if (i + 1 < step) s.classList.add('done');
+        if (i + 1 === step) s.classList.add('active');
+      });
+
+      // Step content
+      const steps = {
+        1: `
+          <div class="step-instruction">
+            <h4>🚪 INVITE - Undang Tamu Masuk</h4>
+            <p class="instruction-main">
+              <strong>${emo.emoji} ${emo.name}</strong> sedang mengetuk pintu...
+            </p>
+            <p class="instruction-script">Ucapkan dalam hati:</p>
+            <blockquote class="script">
+              "Hai ${emo.name} - come in - I welcome you."
+            </blockquote>
+            <p class="instruction-action">
+              Bayangkan pintu terbuka, ${emo.name} masuk dan duduk di hadapanmu.
+            </p>
+          </div>
+        `,
+        2: `
+          <div class="step-instruction">
+            <h4>👁️ ACKNOWLEDGE - Akui Kehadiran</h4>
+            <p class="instruction-main">
+              <strong>${emo.emoji} ${emo.name}</strong> sudah duduk di hadapanmu.
+            </p>
+            <blockquote class="script">
+              "${emo.name} - saya lihat kamu."<br>
+              "Saya notice kamu ada di sini."<br>
+              "Terima kasih sudah datang."
+            </blockquote>
+            <div class="form-item" style="margin-top:1rem;">
+              <label>Di mana kamu rasakan ${emo.name} di tubuh?</label>
+              <select id="bodyLocation" onchange="releaseData.bodyLocation=this.value">
+                <option value="">-- Pilih --</option>
+                <option value="Dada">Dada</option>
+                <option value="Perut">Perut</option>
+                <option value="Tenggorokan">Tenggorokan</option>
+                <option value="Kepala">Kepala</option>
+                <option value="Punggung">Punggung</option>
+                <option value="Seluruh Tubuh">Seluruh Tubuh</option>
+              </select>
+            </div>
+            <div class="form-item">
+              <label>Intensity sekarang (1-10):</label>
+              <input type="number" id="intensityBefore" min="1" max="10" placeholder="0"
+                     oninput="releaseData.intensityBefore=parseInt(this.value)||0">
+            </div>
+          </div>
+        `,
+        3: `
+          <div class="step-instruction">
+            <h4>🤔 ASK - Tanya Message</h4>
+            <p class="instruction-main">Tanyakan dengan genuine curiosity:</p>
+            <blockquote class="script">
+              "${emo.name} - apa yang bawa kamu ke sini hari ini?"<br>
+              "Apa yang kamu mau sampaikan ke saya?"
+            </blockquote>
+            <p class="instruction-action">
+              <strong>JEDA 30-60 detik</strong> - Dengarkan dengan HATI, bukan telinga.<br>
+              Biarkan jawaban muncul spontan.
+            </p>
+            <div class="timer-box">
+              <button class="btn btn-outline btn-sm" onclick="startTimer(60)">⏱️ Mulai Timer 60 detik</button>
+              <div class="timer-display" id="timerDisplay">01:00</div>
+            </div>
+            <div class="form-item" style="margin-top:1rem;">
+              <label>Apa message yang muncul?</label>
+              <textarea id="emotionMessage" rows="3" placeholder="Tulis message yang kamu terima dari emosi ini..."
+                        oninput="releaseData.message=this.value"></textarea>
+            </div>
+          </div>
+        `,
+        4: `
+          <div class="step-instruction">
+            <h4>🪞 REFLECT - Tunjukkan Pemahaman</h4>
+            <p class="instruction-main">Refleksikan kembali apa yang kamu dengar:</p>
+            <blockquote class="script">
+              "${emo.name} - saya dengar kamu."<br>
+              "Kamu bilang: <em>${releaseData.message || '(message yang kamu terima)'}</em>"<br>
+              "Apakah saya understand dengan benar?"
+            </blockquote>
+            <p class="instruction-action">
+              Rasakan apakah ${emo.name} merasa dipahami.<br>
+              Biasanya akan ada shift - dari tense ke relaxed.
+            </p>
+            <div class="form-item" style="margin-top:1rem;">
+              <label>Apakah emosi merasa dipahami?</label>
+              <div class="radio-group">
+                <label><input type="radio" name="understood" value="yes"> Ya, ada shift/perasaan lega</label>
+                <label><input type="radio" name="understood" value="more"> Belum, masih ada yang mau ditambahkan</label>
+              </div>
+            </div>
+          </div>
+        `,
+        5: `
+          <div class="step-instruction">
+            <h4>🙏 VALIDATE - Beri Apresiasi</h4>
+            <p class="instruction-main">Berikan genuine appreciation:</p>
+            <blockquote class="script">
+              "${emo.name} - terima kasih."<br>
+              "Terima kasih sudah datang."<br>
+              "Terima kasih sudah peduli tentang saya."<br>
+              "Saya appreciate kamu."
+            </blockquote>
+            <p class="instruction-action">
+              Biarkan ${emo.name} MENERIMA apresiasi ini.
+            </p>
+            <div class="shift-indicator">
+              <p><strong>Perubahan yang mungkin terjadi:</strong></p>
+              <ul>
+                <li>💆 Bahu turun (dari tegang → relaxed)</li>
+                <li>🫁 Napas lebih dalam dan lambat</li>
+                <li>😌 Ekspresi wajah lebih soft</li>
+                <li>🙂 Mungkin ada perasaan lega atau hangat</li>
+              </ul>
+            </div>
+          </div>
+        `,
+        6: `
+          <div class="step-instruction">
+            <h4>🔮 PELEBURAN - Hadirkan 3 Elemen</h4>
+
+            <!-- Resume Summary (shown when continuing unfinished release) -->
+            <div class="resume-summary ${isResuming ? 'show' : ''}" id="resumeSummary">
+              <div class="resume-summary-header">🔄 Melanjutkan Proses Sebelumnya</div>
+              <div class="resume-summary-content">
+                <!-- Emosi yang dipilih -->
+                <div class="resume-summary-item">
+                  <label>🎭 Emosi:</label>
+                  <span>${emo.emoji} ${emo.name} (${emo.indo})</span>
+                </div>
+
+                <!-- Detail dari step sebelumnya -->
+                <div class="resume-section">
+                  <div class="resume-section-title">📍 Detail Emosi</div>
+                  <div class="resume-summary-item">
+                    <label>Lokasi di tubuh:</label>
+                    <span>${releaseData.bodyLocation || '-'}</span>
+                  </div>
+                  <div class="resume-summary-item">
+                    <label>Intensitas awal:</label>
+                    <span>${releaseData.intensityBefore}/10</span>
+                  </div>
+                </div>
+
+                <!-- Message/Pesan -->
+                ${releaseData.message ? `
+                <div class="resume-section">
+                  <div class="resume-section-title">💬 Pesan dari Emosi</div>
+                  <div class="resume-summary-item">
+                    <label>Message:</label>
+                    <span>"${releaseData.message}"</span>
+                  </div>
+                </div>
+                ` : ''}
+
+                <!-- Current Intensity -->
+                <div class="resume-summary-item resume-intensity-highlight">
+                  <label>📊 Intensitas Terakhir:</label>
+                  <span>${releaseData.intensityAfter || releaseData.intensityBefore}/10</span>
+                </div>
+              </div>
+              <div class="resume-summary-note">⚠️ Baca kembali detail di atas, hadirkan kembali emosi, resistensi, dan ego untuk melanjutkan pelepasan</div>
+            </div>
+
+            <p class="instruction-main">Sebelum melepaskan, hadirkan ketiganya:</p>
+
+            <div class="merge-container">
+              <div class="merge-circles" id="mergeCircles">
+                <div class="m-circle emotion">
+                  <span class="m-emoji">${emo.emoji}</span>
+                  <span>${emo.name}</span>
+                </div>
+                <div class="m-circle resistance">
+                  <span class="m-emoji">⚡</span>
+                  <span>Resistensi</span>
+                </div>
+                <div class="m-circle ego">
+                  <span class="m-emoji">👤</span>
+                  <span>Ego</span>
+                </div>
+              </div>
+              <div class="merge-status" id="mergeStatus">Hadirkan ketiganya...</div>
+            </div>
+
+            <blockquote class="script">
+              1️⃣ <strong>EMOSI:</strong> "${emo.name}, kamu sudah hadir."<br><br>
+              2️⃣ <strong>RESISTENSI:</strong> "Bagian diriku yang menolak, kamu juga hadir."<br><br>
+              3️⃣ <strong>EGO:</strong> "Ini terjadi pada SAYA - saya akui."
+            </blockquote>
+
+            <p class="instruction-action" style="margin-top:1rem;">
+              <strong>Mundur 3 langkah...</strong><br>
+              Amati ketiganya dari kejauhan, biarkan mereka saling mendekat dan melebur...
+            </p>
+
+            <button class="btn btn-primary btn-block" style="margin-top:1rem;" onclick="startDailyMerging()">
+              🌀 Mulai Peleburan
+            </button>
+          </div>
+        `,
+        7: `
+          <div class="step-instruction">
+            <h4>🕊️ RELEASE - Lepaskan Bersamaan</h4>
+
+            <div class="merge-container">
+              <div class="merge-circles merged" id="releaseCircles">
+                <div class="m-circle emotion">
+                  <span class="m-emoji">${emo.emoji}</span>
+                  <span>${emo.name}</span>
+                </div>
+                <div class="m-circle resistance">
+                  <span class="m-emoji">⚡</span>
+                  <span>Resistensi</span>
+                </div>
+                <div class="m-circle ego">
+                  <span class="m-emoji">👤</span>
+                  <span>Ego</span>
+                </div>
+              </div>
+              <div class="merge-status" id="releaseStatus">Ketiganya sudah melebur menjadi satu...</div>
+            </div>
+
+            <div id="bmkQuestions">
+              <div class="form-item">
+                <label>1️⃣ <strong>Bisakah</strong> kamu melepaskan ketiganya?</label>
+                <div class="radio-group">
+                  <label><input type="radio" name="q1" value="ya" onchange="showQ2Daily()"> Ya Bisa</label>
+                  <label><input type="radio" name="q1" value="mungkin" onchange="showQ2Daily()"> Mungkin Bisa</label>
+                  <label><input type="radio" name="q1" value="tidak" onchange="showQ2Daily()"> Tidak Bisa</label>
+                </div>
+              </div>
+
+              <div class="form-item" id="q2Section" style="display:none;">
+                <label>2️⃣ <strong>Maukah</strong> kamu melepaskannya?</label>
+                <div class="radio-group">
+                  <label><input type="radio" name="q2" value="ya" onchange="showKapanDaily()"> Ya Mau</label>
+                  <label><input type="radio" name="q2" value="mungkin" onchange="showKapanDaily()"> Mungkin Mau</label>
+                  <label><input type="radio" name="q2" value="tidak" onchange="showKapanDaily()"> Tidak Mau</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="kapan-box" id="kapanBox" style="display:none;">
+              <p><strong>3️⃣ KAPAN kamu mau melepaskannya?</strong></p>
+              <p style="font-size:0.8rem;color:var(--text-light);">Klik "SEKARANG" untuk melepaskan ketiganya bersamaan</p>
+              <div class="kapan-buttons">
+                <button class="kapan-btn sekarang" onclick="releaseNowDaily()">🕊️ SEKARANG</button>
+                <button class="kapan-btn nanti" onclick="showIntensityDaily()">Nanti</button>
+              </div>
+            </div>
+
+            <div id="releaseComplete" style="display:none;">
+              <div class="breathing-release">
+                <p><strong>✨ DILEPASKAN! ✨</strong></p>
+                <p style="font-size:1.3rem;margin:0.5rem 0;">🕊️</p>
+                <p>Emosi, Resistensi, dan Ego telah pergi bersama...</p>
+              </div>
+              <div class="form-item" style="margin-top:1rem;">
+                <label>Intensity SEKARANG (0-10):</label>
+                <input type="number" id="intensityAfter" min="0" max="10" placeholder="0"
+                       oninput="releaseData.intensityAfter=parseInt(this.value)||0">
+              </div>
+            </div>
+          </div>
+        `
+      };
+
+      content.innerHTML = steps[step];
+
+      // Update nav buttons
+      document.getElementById('btnPrev').style.display = step > 1 ? 'inline-flex' : 'none';
+      document.getElementById('btnNext').textContent = step === 7 ? '✅ Selesai' : 'Lanjut →';
+
+      // Restore values if going back
+      if (step === 2 && releaseData.bodyLocation) {
+        const sel = document.getElementById('bodyLocation');
+        if (sel) sel.value = releaseData.bodyLocation;
+        const intB = document.getElementById('intensityBefore');
+        if (intB && releaseData.intensityBefore) intB.value = releaseData.intensityBefore;
+      }
+      if (step === 3 && releaseData.message) {
+        const msg = document.getElementById('emotionMessage');
+        if (msg) msg.value = releaseData.message;
+      }
+      if (step === 7 && releaseData.intensityAfter) {
+        const intA = document.getElementById('intensityAfter');
+        if (intA) intA.value = releaseData.intensityAfter;
+      }
+    }
+
+    // ==================== NAVIGATION ====================
+    function nextStep() {
+      // Validate step 2 (intensity before)
+      if (currentStep === 2) {
+        const intBefore = parseInt(document.getElementById('intensityBefore')?.value);
+        if (!intBefore || intBefore < 1) {
+          showToast('Isi intensity dulu (1-10)', 'error');
+          return;
+        }
+        releaseData.intensityBefore = intBefore;
+      }
+
+      // Validate step 3 (message)
+      if (currentStep === 3) {
+        const message = document.getElementById('emotionMessage')?.value?.trim();
+        if (!message) {
+          showToast('Tulis message dari emosi dulu', 'error');
+          return;
+        }
+        releaseData.message = message;
+      }
+
+      if (currentStep < 7) {
+        renderStep(currentStep + 1);
+        document.getElementById('welcomingRoom').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        // Complete
+        const intAfter = parseInt(document.getElementById('intensityAfter')?.value);
+        if (intAfter === undefined || intAfter === null || isNaN(intAfter)) {
+          showToast('Isi intensity akhir dulu (0-10)', 'error');
+          return;
+        }
+        releaseData.intensityAfter = intAfter;
+        completeRelease();
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        renderStep(currentStep - 1);
+      }
+    }
+
+    // ==================== TIMER ====================
+    function startTimer(seconds) {
+      clearInterval(timerInterval);
+      let remaining = seconds;
+      const display = document.getElementById('timerDisplay');
+      display.classList.add('running');
+
+      const updateDisplay = () => {
+        const mins = Math.floor(remaining / 60);
+        const secs = remaining % 60;
+        display.textContent = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+      };
+
+      updateDisplay();
+
+      timerInterval = setInterval(() => {
+        remaining--;
+        updateDisplay();
+
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          display.textContent = '✅ Waktu habis';
+          display.classList.remove('running');
+          showToast('⏱️ 60 detik selesai - apa yang kamu dengar?', 'info');
+        }
+      }, 1000);
+    }
+
+    // ==================== BREATHING ====================
+    function breatheAnimation() {
+      const btn = event.target;
+      btn.disabled = true;
+      let count = 0;
+
+      const breathe = () => {
+        count++;
+        showToast(`🫁 Napas ${count}/3... tarik dalam... "Haaaaaa..."`, 'info');
+
+        if (count < 3) {
+          setTimeout(breathe, 4000);
+        } else {
+          setTimeout(() => {
+            btn.disabled = false;
+            showToast('✅ Napas selesai - rasakan tubuhmu lebih ringan', 'success');
+          }, 3000);
+        }
+      };
+
+      breathe();
+    }
+
+    // ==================== COMPLETE RELEASE ====================
+    // ==================== DAILY MERGING TECHNIQUE ====================
+    function startDailyMerging() {
+      const circles = document.getElementById('mergeCircles');
+      const status = document.getElementById('mergeStatus');
+
+      status.textContent = 'Mundur 3 langkah... mengamati dari kejauhan...';
+
+      setTimeout(() => {
+        circles.classList.add('merging');
+        status.textContent = 'Ketiganya mulai mendekat...';
+
+        setTimeout(() => {
+          circles.classList.remove('merging');
+          circles.classList.add('merged');
+          status.textContent = '✨ Melebur menjadi satu!';
+
+          setTimeout(() => {
+            showToast('Peleburan selesai! Lanjut ke pelepasan.', 'success');
+          }, 500);
+        }, 1500);
+      }, 1500);
+    }
+
+    function showQ2Daily() {
+      document.getElementById('q2Section').style.display = 'block';
+    }
+
+    function showKapanDaily() {
+      document.getElementById('kapanBox').style.display = 'block';
+    }
+
+    function releaseNowDaily() {
+      const circles = document.getElementById('releaseCircles');
+      const status = document.getElementById('releaseStatus');
+
+      // Hide BMK and Kapan
+      document.getElementById('bmkQuestions').style.display = 'none';
+      document.getElementById('kapanBox').style.display = 'none';
+
+      // Animate release
+      circles.classList.add('releasing');
+      status.textContent = 'Melepaskan...';
+
+      setTimeout(() => {
+        status.textContent = '🕊️ Dilepaskan!';
+        document.getElementById('releaseComplete').style.display = 'block';
+      }, 2000);
+    }
+
+    function showIntensityDaily() {
+      document.getElementById('bmkQuestions').style.display = 'none';
+      document.getElementById('kapanBox').style.display = 'none';
+      document.getElementById('releaseComplete').style.display = 'block';
+    }
+
+    function completeRelease() {
+      releaseData.timestamp = new Date().toISOString();
+
+      // Add to daily log
+      dailyLog.push({...releaseData});
+      saveDailyLog();
+
+      // Handle unfinished releases
+      if (releaseData.intensityAfter === 0) {
+        // Fully released - remove from unfinished
+        removeFromUnfinished();
+      } else {
+        // Still has intensity - save to unfinished for next session
+        addToUnfinished();
+      }
+
+      // Reset resume flag
+      isResuming = false;
+
+      // Hide welcoming room, show completion
+      document.getElementById('welcomingRoom').style.display = 'none';
+      document.getElementById('completionCard').style.display = 'block';
+
+      // Update summary
+      const emo = EMOTIONS[releaseData.level];
+      document.getElementById('summaryEmotion').textContent = `${emo.emoji} ${emo.name}`;
+      document.getElementById('summaryIntBefore').textContent = releaseData.intensityBefore || '-';
+      document.getElementById('summaryIntAfter').textContent = releaseData.intensityAfter !== undefined ? releaseData.intensityAfter : '-';
+
+      const reduction = (releaseData.intensityBefore || 0) - (releaseData.intensityAfter || 0);
+      document.getElementById('summaryReduction').textContent = reduction >= 0 ? `-${reduction}` : `+${Math.abs(reduction)}`;
+      document.getElementById('summaryReduction').style.color = reduction >= 0 ? 'var(--success)' : 'var(--danger)';
+
+      document.getElementById('summaryMessage').textContent = releaseData.message || '-';
+      document.getElementById('emotionName').textContent = emo.name;
+
+      // Update daily log display
+      renderDailyLog();
+
+      document.getElementById('completionCard').scrollIntoView({ behavior: 'smooth' });
+
+      const toastMsg = releaseData.intensityAfter > 0
+        ? `🔄 ${emo.name} disimpan untuk dilanjutkan (${releaseData.intensityAfter}/10)`
+        : `🕊️ ${emo.name} sudah release dengan damai!`;
+      showToast(toastMsg, releaseData.intensityAfter > 0 ? 'info' : 'success');
+    }
+
+    // ==================== RELEASE ANOTHER ====================
+    function releaseAnother() {
+      // Reset data
+      releaseData = {
+        emotion: '',
+        level: 0,
+        bodyLocation: '',
+        intensityBefore: 0,
+        intensityAfter: 0,
+        message: '',
+        timestamp: null
+      };
+      currentStep = 1;
+      selectedEmotion = null;
+      isResuming = false;
+      currentUnfinishedId = null;
+
+      // Clear timer
+      clearInterval(timerInterval);
+
+      // Reset UI
+      document.getElementById('completionCard').style.display = 'none';
+      document.getElementById('welcomingRoom').style.display = 'none';
+      document.getElementById('emotionScaleCard').style.display = 'block';
+      document.getElementById('guestChair').classList.remove('entering');
+      document.getElementById('door').classList.remove('open');
+      document.querySelectorAll('.emotion-btn').forEach(b => b.classList.remove('selected'));
+
+      // Scroll to emotion scale
+      document.getElementById('emotionScaleCard').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ==================== FINISH DAILY ====================
+    function finishDaily() {
+      const totalReleases = dailyLog.length;
+      const totalReduction = dailyLog.reduce((sum, log) => {
+        return sum + ((log.intensityBefore || 0) - (log.intensityAfter || 0));
+      }, 0);
+
+      showToast(`🎉 Alhamdulillah! ${totalReleases} emosi di-release, total pengurangan: ${totalReduction} points`, 'success');
+
+      // Scroll to daily log
+      document.getElementById('dailyLogCard').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ==================== DAILY LOG ====================
+    function saveDailyLog() {
+      const today = new Date().toISOString().split('T')[0];
+      localStorage.setItem(`dailyRelease_${today}`, JSON.stringify(dailyLog));
+    }
+
+    function loadDailyLog() {
+      const today = new Date().toISOString().split('T')[0];
+      const saved = localStorage.getItem(`dailyRelease_${today}`);
+      if (saved) {
+        try {
+          dailyLog = JSON.parse(saved);
+          renderDailyLog();
+        } catch (e) {
+          dailyLog = [];
+        }
+      }
+    }
+
+    function renderDailyLog() {
+      const container = document.getElementById('dailyLog');
+
+      if (dailyLog.length === 0) {
+        container.innerHTML = '<p style="text-align:center;color:var(--text-light);">Belum ada release hari ini</p>';
+        return;
+      }
+
+      container.innerHTML = dailyLog.map((log, index) => {
+        const emo = EMOTIONS[log.level];
+        const time = new Date(log.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        const reduction = (log.intensityBefore || 0) - (log.intensityAfter || 0);
+        const isPositive = reduction >= 0;
+
+        return `
+          <div class="log-item">
+            <div class="log-time">${time}</div>
+            <div class="log-emotion">${emo.emoji} ${emo.name}</div>
+            <div class="log-reduction ${isPositive ? '' : 'positive'}">${isPositive ? '-' : '+'}${Math.abs(reduction)}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ==================== UNFINISHED RELEASES ====================
+    function saveUnfinished() {
+      localStorage.setItem('dailyRelease_unfinished', JSON.stringify(unfinishedReleases));
+    }
+
+    function loadUnfinished() {
+      const saved = localStorage.getItem('dailyRelease_unfinished');
+      if (saved) {
+        try {
+          unfinishedReleases = JSON.parse(saved);
+        } catch (e) {
+          unfinishedReleases = [];
+        }
+      }
+    }
+
+    function renderUnfinished() {
+      const container = document.getElementById('unfinishedContainer');
+      const section = document.getElementById('unfinishedSection');
+
+      if (unfinishedReleases.length === 0) {
+        section.style.display = 'none';
+        return;
+      }
+
+      section.style.display = 'block';
+
+      container.innerHTML = unfinishedReleases.map((item, index) => {
+        const emo = EMOTIONS[item.level];
+        const time = new Date(item.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+        return `
+          <div class="unfinished-item">
+            <div class="unfinished-top">
+              <div class="unfinished-emotion">
+                <span class="emoji">${emo.emoji}</span>
+                <span class="name">${emo.name}</span>
+              </div>
+              <div class="unfinished-intensity">
+                <span class="value">${item.intensityAfter || item.intensityBefore}/10</span>
+                <span class="label">Intensitas</span>
+              </div>
+            </div>
+            <div class="unfinished-meta">📅 ${time}</div>
+            ${item.message ? `<div class="unfinished-message">"${item.message}"</div>` : ''}
+            <div class="unfinished-actions">
+              <button class="btn btn-warning" onclick="resumeRelease(${index})">▶️ Lanjutkan</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteUnfinished(${index})">🗑️</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addToUnfinished() {
+      // Only save if has some data and intensity > 0
+      if (!releaseData.level || releaseData.intensityAfter === 0) return;
+
+      const existingIndex = unfinishedReleases.findIndex(item => item.id === currentUnfinishedId);
+
+      const unfinishedData = {
+        id: currentUnfinishedId || Date.now(),
+        level: releaseData.level,
+        emotion: releaseData.emotion,
+        bodyLocation: releaseData.bodyLocation,
+        intensityBefore: releaseData.intensityBefore,
+        intensityAfter: releaseData.intensityAfter,
+        message: releaseData.message,
+        currentStep: currentStep,
+        timestamp: releaseData.timestamp || new Date().toISOString()
+      };
+
+      if (existingIndex !== -1) {
+        unfinishedReleases[existingIndex] = unfinishedData;
+      } else {
+        unfinishedReleases.push(unfinishedData);
+      }
+
+      saveUnfinished();
+    }
+
+    function removeFromUnfinished() {
+      if (currentUnfinishedId) {
+        unfinishedReleases = unfinishedReleases.filter(item => item.id !== currentUnfinishedId);
+        saveUnfinished();
+        currentUnfinishedId = null;
+      }
+    }
+
+    function resumeRelease(index) {
+      const item = unfinishedReleases[index];
+      if (!item) return;
+
+      // Restore state
+      currentUnfinishedId = item.id;
+      isResuming = true;
+      selectedEmotion = item.level;
+      releaseData = {
+        emotion: item.emotion,
+        level: item.level,
+        bodyLocation: item.bodyLocation || '',
+        intensityBefore: item.intensityBefore || 5,
+        intensityAfter: item.intensityAfter || item.intensityBefore || 5,
+        message: item.message || '',
+        timestamp: item.timestamp
+      };
+
+      // Hide unfinished section
+      document.getElementById('unfinishedSection').style.display = 'none';
+
+      // Show welcoming room card
+      document.getElementById('wiseHostCard').style.display = 'none';
+      document.getElementById('emotionScaleCard').style.display = 'none';
+      document.getElementById('welcomingRoom').style.display = 'block';
+
+      // Update guest chair
+      const emo = EMOTIONS[item.level];
+      document.getElementById('guestEmoji').textContent = emo.emoji;
+      document.getElementById('guestName').textContent = emo.name;
+      document.getElementById('guestChair').classList.add('entering');
+      document.getElementById('door').classList.add('open');
+
+      // ALWAYS go to step 6 to repeat emosi/resistensi/ego questions
+      currentStep = 6;
+      renderStep(6);
+
+      showToast(`🔄 Melanjutkan release ${emo.name}...`, 'info');
+    }
+
+    function deleteUnfinished(index) {
+      if (confirm('Hapus release yang belum tuntas ini?')) {
+        unfinishedReleases.splice(index, 1);
+        saveUnfinished();
+        renderUnfinished();
+
+        if (unfinishedReleases.length === 0) {
+          document.getElementById('unfinishedSection').style.display = 'none';
+        }
+      }
+    }
+
+    function startFreshRelease() {
+      // Hide unfinished section and start fresh
+      document.getElementById('unfinishedSection').style.display = 'none';
+      isResuming = false;
+      currentUnfinishedId = null;
+
+      // Reset state
+      releaseData = {
+        emotion: '',
+        level: 0,
+        bodyLocation: '',
+        intensityBefore: 0,
+        intensityAfter: 0,
+        message: '',
+        timestamp: null
+      };
+      currentStep = 1;
+      selectedEmotion = null;
+
+      // Show wise host card
+      document.getElementById('wiseHostCard').style.display = 'block';
+      document.getElementById('wiseHostCard').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ==================== TOAST ====================
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+
+    // ==================== INIT ====================
+    document.addEventListener('DOMContentLoaded', function() {
+      loadDailyLog();
+      loadUnfinished();
+      renderUnfinished();
+    });
+  </script>
+</body>
+</html>
