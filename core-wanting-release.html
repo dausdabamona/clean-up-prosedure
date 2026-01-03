@@ -172,14 +172,19 @@
     .btn-danger:hover { background: #a93226; }
 
     /* Resume Summary Panel */
-    .resume-summary { display: none; background: linear-gradient(135deg, #ebf5fb, #d4e6f1); border: 2px solid var(--primary); border-radius: 12px; padding: 1rem; margin-bottom: 1rem; }
+    .resume-summary { display: none; background: linear-gradient(135deg, #ebf5fb, #d4e6f1); border: 2px solid var(--primary); border-radius: 12px; padding: 1rem; margin-bottom: 1rem; max-height: 60vh; overflow-y: auto; }
     .resume-summary.show { display: block; animation: slideDown 0.3s ease; }
-    .resume-summary-header { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem; font-size: 0.9rem; }
+    .resume-summary-header { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem; font-size: 1rem; position: sticky; top: 0; background: linear-gradient(135deg, #ebf5fb, #d4e6f1); padding: 0.5rem 0; }
     .resume-summary-content { font-size: 0.85rem; color: var(--text-dark); }
+    .resume-section { margin: 0.75rem 0; padding: 0.75rem; background: rgba(255,255,255,0.5); border-radius: 10px; border-left: 3px solid var(--primary); }
+    .resume-section-title { font-weight: 700; color: var(--primary); font-size: 0.8rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
     .resume-summary-item { background: var(--white); padding: 0.5rem 0.75rem; border-radius: 8px; margin-bottom: 0.5rem; }
     .resume-summary-item label { font-weight: 600; color: var(--primary); font-size: 0.75rem; display: block; margin-bottom: 0.2rem; }
-    .resume-summary-item span { color: var(--text-dark); }
-    .resume-summary-note { font-size: 0.75rem; color: var(--warning); font-style: italic; margin-top: 0.5rem; display: flex; align-items: center; gap: 0.3rem; }
+    .resume-summary-item span { color: var(--text-dark); display: block; font-style: italic; }
+    .resume-summary-item span:empty::before { content: '-'; color: var(--text-light); }
+    .resume-intensity-highlight { background: linear-gradient(135deg, #fef9e7, #fcf3cf) !important; border: 1px solid var(--warning); }
+    .resume-intensity-highlight span { font-weight: 700; font-size: 1.1rem; color: var(--warning) !important; font-style: normal !important; }
+    .resume-summary-note { font-size: 0.8rem; color: var(--warning); font-style: italic; margin-top: 0.75rem; padding: 0.5rem; background: rgba(243, 156, 18, 0.1); border-radius: 8px; text-align: center; }
 
     /* Merging Visualization */
     .merging-container { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; }
@@ -467,20 +472,66 @@
           <div class="resume-summary" id="resumeSummary">
             <div class="resume-summary-header">🔄 Melanjutkan Proses Sebelumnya</div>
             <div class="resume-summary-content">
+              <!-- Wanting -->
               <div class="resume-summary-item">
-                <label>Wanting:</label>
+                <label>🎯 Wanting:</label>
                 <span id="resumeWanting">-</span>
               </div>
-              <div class="resume-summary-item" id="resumeBeliefItem" style="display:none;">
-                <label>Belief/Keyakinan:</label>
-                <span id="resumeBelief">-</span>
+
+              <!-- Phase 3: Eksplorasi -->
+              <div class="resume-section" id="resumePhase3Section">
+                <div class="resume-section-title">📍 Situasi & Sensasi</div>
+                <div class="resume-summary-item" id="resumeSituationItem">
+                  <label>Situasi/Pemicu:</label>
+                  <span id="resumeSituation">-</span>
+                </div>
+                <div class="resume-summary-item" id="resumeBehaviorItem">
+                  <label>Perilaku yang muncul:</label>
+                  <span id="resumeBehavior">-</span>
+                </div>
+                <div class="resume-summary-item" id="resumeBodyItem">
+                  <label>Lokasi di tubuh:</label>
+                  <span id="resumeBody">-</span>
+                </div>
+                <div class="resume-summary-item">
+                  <label>Intensitas awal:</label>
+                  <span id="resumeIntensityBefore">-</span>
+                </div>
               </div>
-              <div class="resume-summary-item">
-                <label>Intensitas Terakhir:</label>
+
+              <!-- Phase 4: Root Questions -->
+              <div class="resume-section" id="resumePhase4Section">
+                <div class="resume-section-title">🌱 Akar Keinginan</div>
+                <div class="resume-summary-item" id="resumeFulfilledItem">
+                  <label>Jika terpenuhi, apa yang terjadi?</label>
+                  <span id="resumeFulfilled">-</span>
+                </div>
+                <div class="resume-summary-item" id="resumeFearItem">
+                  <label>Ketakutan di baliknya:</label>
+                  <span id="resumeFear">-</span>
+                </div>
+                <div class="resume-summary-item" id="resumeBeliefItem">
+                  <label>Keyakinan yang mendasari:</label>
+                  <span id="resumeBelief">-</span>
+                </div>
+              </div>
+
+              <!-- Phase 5: Welcoming -->
+              <div class="resume-section" id="resumePhase5Section">
+                <div class="resume-section-title">🤗 Penyambutan</div>
+                <div class="resume-summary-item" id="resumeResistanceItem">
+                  <label>Resistensi yang dirasakan:</label>
+                  <span id="resumeResistance">-</span>
+                </div>
+              </div>
+
+              <!-- Current Intensity -->
+              <div class="resume-summary-item resume-intensity-highlight">
+                <label>📊 Intensitas Terakhir:</label>
                 <span id="resumeIntensity">-</span>
               </div>
             </div>
-            <div class="resume-summary-note">⚠️ Hadirkan kembali emosi, resistensi, dan ego untuk melanjutkan pelepasan</div>
+            <div class="resume-summary-note">⚠️ Baca kembali jawaban di atas, hadirkan kembali emosi, resistensi, dan ego untuk melanjutkan pelepasan</div>
           </div>
 
           <div class="step-content">
@@ -1665,21 +1716,46 @@
       const summary = document.getElementById('resumeSummary');
       if (!summary) return;
 
-      // Fill in summary data
+      // Fill in wanting
       const wanting = CORE_WANTINGS[item.wanting];
       document.getElementById('resumeWanting').textContent =
         wanting ? `${wanting.emoji} ${wanting.name}` : item.wantingName;
 
-      // Show belief if exists
-      const beliefItem = document.getElementById('resumeBeliefItem');
-      if (item.belief) {
-        beliefItem.style.display = 'block';
-        document.getElementById('resumeBelief').textContent = `"${item.belief}"`;
+      // Phase 3: Situasi & Sensasi
+      const phase3Section = document.getElementById('resumePhase3Section');
+      const hasSituation = item.situation || item.behavior || item.bodyLocation;
+      if (hasSituation) {
+        phase3Section.style.display = 'block';
+        document.getElementById('resumeSituation').textContent = item.situation || '-';
+        document.getElementById('resumeBehavior').textContent = item.behavior || '-';
+        document.getElementById('resumeBody').textContent = item.bodyLocation || '-';
+        document.getElementById('resumeIntensityBefore').textContent = `${item.intensityBefore}/10`;
       } else {
-        beliefItem.style.display = 'none';
+        phase3Section.style.display = 'none';
       }
 
-      // Show last intensity
+      // Phase 4: Root Questions
+      const phase4Section = document.getElementById('resumePhase4Section');
+      const hasRootAnswers = item.fulfilled || item.fear || item.belief;
+      if (hasRootAnswers) {
+        phase4Section.style.display = 'block';
+        document.getElementById('resumeFulfilled').textContent = item.fulfilled || '-';
+        document.getElementById('resumeFear').textContent = item.fear || '-';
+        document.getElementById('resumeBelief').textContent = item.belief || '-';
+      } else {
+        phase4Section.style.display = 'none';
+      }
+
+      // Phase 5: Welcoming/Resistance
+      const phase5Section = document.getElementById('resumePhase5Section');
+      if (item.resistance) {
+        phase5Section.style.display = 'block';
+        document.getElementById('resumeResistance').textContent = item.resistance;
+      } else {
+        phase5Section.style.display = 'none';
+      }
+
+      // Show last intensity (highlight)
       document.getElementById('resumeIntensity').textContent =
         `${item.intensityAfter || item.intensityBefore}/10`;
 

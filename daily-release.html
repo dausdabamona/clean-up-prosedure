@@ -234,15 +234,19 @@
     .btn-danger:hover{background:#a93226}
 
     /* Resume Summary */
-    .resume-summary{display:none;background:linear-gradient(135deg,#ebf5fb,#d4e6f1);border:2px solid var(--purple);border-radius:12px;padding:1rem;margin-bottom:1rem}
+    .resume-summary{display:none;background:linear-gradient(135deg,#ebf5fb,#d4e6f1);border:2px solid var(--purple);border-radius:12px;padding:1rem;margin-bottom:1rem;max-height:50vh;overflow-y:auto}
     .resume-summary.show{display:block;animation:slideIn 0.3s ease}
     @keyframes slideIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-    .resume-summary-header{display:flex;align-items:center;gap:0.5rem;font-weight:700;color:var(--purple);margin-bottom:0.75rem;font-size:0.9rem}
+    .resume-summary-header{display:flex;align-items:center;gap:0.5rem;font-weight:700;color:var(--purple);margin-bottom:0.75rem;font-size:1rem;position:sticky;top:0;background:linear-gradient(135deg,#ebf5fb,#d4e6f1);padding:0.5rem 0}
     .resume-summary-content{font-size:0.85rem;color:var(--text-dark)}
+    .resume-section{margin:0.75rem 0;padding:0.75rem;background:rgba(255,255,255,0.5);border-radius:10px;border-left:3px solid var(--purple)}
+    .resume-section-title{font-weight:700;color:var(--purple);font-size:0.8rem;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px}
     .resume-summary-item{background:var(--white);padding:0.5rem 0.75rem;border-radius:8px;margin-bottom:0.5rem}
     .resume-summary-item label{font-weight:600;color:var(--purple);font-size:0.75rem;display:block;margin-bottom:0.2rem}
-    .resume-summary-item span{color:var(--text-dark)}
-    .resume-summary-note{font-size:0.75rem;color:var(--warning);font-style:italic;margin-top:0.5rem;display:flex;align-items:center;gap:0.3rem}
+    .resume-summary-item span{color:var(--text-dark);display:block;font-style:italic}
+    .resume-intensity-highlight{background:linear-gradient(135deg,#fef9e7,#fcf3cf)!important;border:1px solid var(--warning)}
+    .resume-intensity-highlight span{font-weight:700;font-size:1.1rem;color:var(--warning)!important;font-style:normal!important}
+    .resume-summary-note{font-size:0.8rem;color:var(--warning);font-style:italic;margin-top:0.75rem;padding:0.5rem;background:rgba(243,156,18,0.1);border-radius:8px;text-align:center}
   </style>
 </head>
 <body>
@@ -715,20 +719,43 @@
             <div class="resume-summary ${isResuming ? 'show' : ''}" id="resumeSummary">
               <div class="resume-summary-header">🔄 Melanjutkan Proses Sebelumnya</div>
               <div class="resume-summary-content">
+                <!-- Emosi yang dipilih -->
                 <div class="resume-summary-item">
-                  <label>Emosi:</label>
-                  <span>${emo.emoji} ${emo.name}</span>
+                  <label>🎭 Emosi:</label>
+                  <span>${emo.emoji} ${emo.name} (${emo.indo})</span>
                 </div>
-                <div class="resume-summary-item">
-                  <label>Message:</label>
-                  <span>${releaseData.message || '-'}</span>
+
+                <!-- Detail dari step sebelumnya -->
+                <div class="resume-section">
+                  <div class="resume-section-title">📍 Detail Emosi</div>
+                  <div class="resume-summary-item">
+                    <label>Lokasi di tubuh:</label>
+                    <span>${releaseData.bodyLocation || '-'}</span>
+                  </div>
+                  <div class="resume-summary-item">
+                    <label>Intensitas awal:</label>
+                    <span>${releaseData.intensityBefore}/10</span>
+                  </div>
                 </div>
-                <div class="resume-summary-item">
-                  <label>Intensitas Terakhir:</label>
+
+                <!-- Message/Pesan -->
+                ${releaseData.message ? `
+                <div class="resume-section">
+                  <div class="resume-section-title">💬 Pesan dari Emosi</div>
+                  <div class="resume-summary-item">
+                    <label>Message:</label>
+                    <span>"${releaseData.message}"</span>
+                  </div>
+                </div>
+                ` : ''}
+
+                <!-- Current Intensity -->
+                <div class="resume-summary-item resume-intensity-highlight">
+                  <label>📊 Intensitas Terakhir:</label>
                   <span>${releaseData.intensityAfter || releaseData.intensityBefore}/10</span>
                 </div>
               </div>
-              <div class="resume-summary-note">⚠️ Hadirkan kembali emosi, resistensi, dan ego untuk melanjutkan pelepasan</div>
+              <div class="resume-summary-note">⚠️ Baca kembali detail di atas, hadirkan kembali emosi, resistensi, dan ego untuk melanjutkan pelepasan</div>
             </div>
 
             <p class="instruction-main">Sebelum melepaskan, hadirkan ketiganya:</p>
