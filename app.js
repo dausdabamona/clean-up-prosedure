@@ -1981,31 +1981,8 @@ function resumeCleanup(index) {
     document.getElementById('rootWanting').value = item.rootWanting;
   }
 
-  // Start session and show the appropriate layer's merge panel
-  mulaiSesi();
-
-  // Determine which layer to show the merge panel for
-  const stuckLayer = item.stuckLayer || 'L1';
-  let targetLayer = 'l1';
-  let targetType = 'Bisakah';
-
-  if (stuckLayer.includes('ROOT')) {
-    targetLayer = 'root';
-  } else if (stuckLayer.includes('L3')) {
-    targetLayer = 'l3';
-  } else if (stuckLayer.includes('L2')) {
-    targetLayer = 'l2';
-  }
-
-  // Show the resistance panel with merge section after a short delay
-  setTimeout(() => {
-    const resistPanel = document.getElementById(`${targetLayer}${targetType}Resist`);
-    if (resistPanel) {
-      resistPanel.classList.add('show');
-      resistPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-    showToast(`🔄 Melanjutkan cleanup - hadirkan kembali emosi, resistensi, dan ego`, 'info');
-  }, 500);
+  // Show the resume merge modal with step-by-step process
+  showResumeMergeModal(item);
 }
 
 function deleteUnfinishedCleanup(index) {
@@ -2158,6 +2135,217 @@ function resetMergeSection(layer, type) {
 
   if (btn) {
     btn.disabled = false;
+  }
+}
+
+// ==========================================================================
+// RESUME MERGE MODAL FUNCTIONS
+// ==========================================================================
+
+let resumeMergeStep = 0;
+let currentResumeItem = null;
+
+function showResumeMergeModal(item) {
+  currentResumeItem = item;
+  resumeMergeStep = 0;
+
+  // Fill in summary
+  document.getElementById('rmIssue').textContent = item.issue || '-';
+  document.getElementById('rmKategori').textContent = item.kategori || '-';
+  document.getElementById('rmLayer').textContent = item.stuckLayer || 'L1';
+  document.getElementById('rmWanting').textContent = item.rootWanting || '-';
+
+  // Find the last intensity
+  const layers = ['root', 'l3', 'l2', 'l1'];
+  let lastIntensity = item.surfaceIntensity || '-';
+  for (const layer of layers) {
+    if (item[`${layer}IntensityAfter`]) {
+      lastIntensity = item[`${layer}IntensityAfter`];
+      break;
+    }
+  }
+  document.getElementById('rmIntensity').textContent = lastIntensity + '/10';
+
+  // Reset all steps
+  for (let i = 1; i <= 5; i++) {
+    const step = document.getElementById(`rmStep${i}`);
+    if (step) {
+      step.classList.remove('active', 'done');
+      const btn = step.querySelector('.merge-step-btn');
+      if (btn) {
+        btn.disabled = i !== 1;
+        btn.classList.remove('done');
+      }
+    }
+  }
+  document.getElementById('rmStep1').classList.add('active');
+
+  // Reset circles
+  const circles = document.getElementById('rmMergeCircles');
+  circles.classList.remove('merging', 'merged', 'releasing');
+  circles.style.transform = '';
+  circles.style.opacity = '';
+
+  // Reset status
+  document.getElementById('rmMergeStatus').textContent = 'Hadirkan ketiganya satu per satu...';
+
+  // Hide final release
+  document.getElementById('rmFinalRelease').classList.remove('show');
+
+  // Show modal
+  document.getElementById('resumeMergeOverlay').classList.add('show');
+}
+
+function completeResumeStep(step) {
+  const currentStep = document.getElementById(`rmStep${step}`);
+  const nextStep = document.getElementById(`rmStep${step + 1}`);
+  const status = document.getElementById('rmMergeStatus');
+
+  // Mark current as done
+  currentStep.classList.remove('active');
+  currentStep.classList.add('done');
+  const btn = currentStep.querySelector('.merge-step-btn');
+  if (btn) {
+    btn.classList.add('done');
+    btn.textContent = '✓ Selesai';
+  }
+
+  // Update status
+  const statusMessages = {
+    1: 'Emosi sudah hadir... lanjutkan ke resistensi...',
+    2: 'Resistensi sudah hadir... lanjutkan ke ego...',
+    3: 'Ketiganya sudah hadir... saatnya mundur...'
+  };
+  if (statusMessages[step]) {
+    status.textContent = statusMessages[step];
+  }
+
+  // Activate next step
+  if (nextStep) {
+    nextStep.classList.add('active');
+    const nextBtn = nextStep.querySelector('.merge-step-btn');
+    if (nextBtn) nextBtn.disabled = false;
+  }
+
+  resumeMergeStep = step;
+}
+
+function startResumeMergeStepBack() {
+  const step4 = document.getElementById('rmStep4');
+  const step5 = document.getElementById('rmStep5');
+  const circles = document.getElementById('rmMergeCircles');
+  const status = document.getElementById('rmMergeStatus');
+  const btn = step4.querySelector('.merge-step-btn');
+
+  btn.disabled = true;
+
+  // Animate step back
+  status.textContent = 'Mundur... satu langkah...';
+  circles.style.transition = 'all 0.8s ease';
+  circles.style.transform = 'scale(0.85)';
+
+  setTimeout(() => {
+    status.textContent = 'Mundur... dua langkah...';
+    circles.style.transform = 'scale(0.75)';
+  }, 800);
+
+  setTimeout(() => {
+    status.textContent = 'Mundur... tiga langkah...';
+    circles.style.transform = 'scale(0.65)';
+    circles.style.opacity = '0.8';
+  }, 1600);
+
+  setTimeout(() => {
+    status.textContent = 'Kamu sekarang mengamati dari kejauhan...';
+
+    // Mark step 4 as done
+    step4.classList.remove('active');
+    step4.classList.add('done');
+    btn.classList.add('done');
+    btn.textContent = '✓ Selesai';
+
+    // Activate step 5
+    step5.classList.add('active');
+    step5.querySelector('.merge-step-btn').disabled = false;
+
+    resumeMergeStep = 4;
+  }, 2400);
+}
+
+function startResumeMerging() {
+  const step5 = document.getElementById('rmStep5');
+  const circles = document.getElementById('rmMergeCircles');
+  const status = document.getElementById('rmMergeStatus');
+  const finalRelease = document.getElementById('rmFinalRelease');
+  const btn = step5.querySelector('.merge-step-btn');
+
+  btn.disabled = true;
+
+  // Animate merge
+  status.textContent = 'Ketiganya mulai mendekat...';
+  circles.classList.add('merging');
+
+  setTimeout(() => {
+    status.textContent = 'Ketiganya saling melarutkan...';
+  }, 1000);
+
+  setTimeout(() => {
+    status.textContent = 'Ketiganya melebur menjadi satu...';
+    circles.classList.remove('merging');
+    circles.classList.add('merged');
+  }, 2000);
+
+  setTimeout(() => {
+    status.textContent = '✨ Peleburan selesai!';
+    status.style.color = '#27ae60';
+    status.style.fontWeight = '700';
+
+    // Mark step 5 as done
+    step5.classList.remove('active');
+    step5.classList.add('done');
+    btn.classList.add('done');
+    btn.textContent = '✓ Selesai';
+
+    // Show final release section
+    finalRelease.classList.add('show');
+
+    resumeMergeStep = 5;
+  }, 3000);
+}
+
+function resumeReleaseNow() {
+  const circles = document.getElementById('rmMergeCircles');
+  const status = document.getElementById('rmMergeStatus');
+
+  status.textContent = '✨ MELEPASKAN...';
+  circles.classList.add('releasing');
+
+  setTimeout(() => {
+    // Close modal
+    document.getElementById('resumeMergeOverlay').classList.remove('show');
+
+    // Continue with the cleanup - go to the stuck layer
+    if (currentResumeItem) {
+      // Start session
+      mulaiSesi();
+
+      // Show toast
+      showToast('🎉 Pelepasan berhasil! Lanjutkan ke pertanyaan berikutnya.', 'success');
+
+      // Remove from unfinished since we released
+      removeFromUnfinishedCleanup();
+    }
+  }, 2000);
+}
+
+function resumeReleaseLater() {
+  // Close modal
+  document.getElementById('resumeMergeOverlay').classList.remove('show');
+
+  // Continue with the cleanup at the stuck layer
+  if (currentResumeItem) {
+    mulaiSesi();
+    showToast('🔄 Proses dilanjutkan. Ambil waktu kamu untuk melepaskan.', 'info');
   }
 }
 
