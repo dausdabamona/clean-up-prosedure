@@ -1004,25 +1004,56 @@
 
     // ==================== PHASE SETUPS ====================
     function setupPhase3() {
+      // Ensure selectedWanting is in sync with releaseData.wanting
+      if (releaseData.wanting && releaseData.wanting !== selectedWanting) {
+        selectedWanting = releaseData.wanting;
+      }
+
       const wanting = CORE_WANTINGS[selectedWanting];
+      if (!wanting) return;
+
       document.getElementById('wantingTitle').innerHTML = `${wanting.emoji} Keinginan akan ${wanting.name}`;
     }
 
     function setupPhase4() {
+      // Ensure selectedWanting is in sync with releaseData.wanting
+      if (releaseData.wanting && releaseData.wanting !== selectedWanting) {
+        selectedWanting = releaseData.wanting;
+      }
+
       const wanting = CORE_WANTINGS[selectedWanting];
+      if (!wanting) return;
+
       const rootQuestionsEl = document.getElementById('rootQuestions');
       rootQuestionsEl.innerHTML = wanting.rootQuestions.map(q => `<li>💭 ${q}</li>`).join('');
     }
 
     function setupPhase5() {
+      // Ensure selectedWanting is in sync with releaseData.wanting
+      if (releaseData.wanting && releaseData.wanting !== selectedWanting) {
+        selectedWanting = releaseData.wanting;
+      }
+
       const wanting = CORE_WANTINGS[selectedWanting];
+      if (!wanting) return;
+
       document.getElementById('welcomeText').textContent = wanting.welcomeText;
       document.getElementById('acceptBtn').disabled = true;
       document.getElementById('resistanceBox').style.display = 'none';
     }
 
     function setupPhase6() {
+      // Ensure selectedWanting is in sync with releaseData.wanting
+      if (releaseData.wanting && releaseData.wanting !== selectedWanting) {
+        selectedWanting = releaseData.wanting;
+      }
+
       const wanting = CORE_WANTINGS[selectedWanting];
+      if (!wanting) {
+        console.error('Invalid wanting:', selectedWanting);
+        return;
+      }
+
       document.getElementById('wantingNameMerge').textContent = wanting.name;
       document.getElementById('emotionEmoji').textContent = wanting.emoji;
       document.getElementById('emotionLabel').textContent = wanting.name;
@@ -1055,7 +1086,17 @@
     }
 
     function setupPhase7() {
+      // Ensure selectedWanting is in sync with releaseData.wanting
+      if (releaseData.wanting && releaseData.wanting !== selectedWanting) {
+        selectedWanting = releaseData.wanting;
+      }
+
       const wanting = CORE_WANTINGS[selectedWanting];
+      if (!wanting) {
+        console.error('Invalid wanting:', selectedWanting);
+        return;
+      }
+
       document.getElementById('releaseEmoji').textContent = wanting.emoji;
       document.getElementById('releaseLabel').textContent = wanting.name;
       document.getElementById('intensitySliderAfter').value = releaseData.intensityBefore;
@@ -1314,6 +1355,11 @@
       releaseData.intensityAfter = parseInt(document.getElementById('intensitySliderAfter').value);
       releaseData.timestamp = new Date().toISOString();
 
+      // Ensure selectedWanting is in sync with releaseData.wanting
+      if (releaseData.wanting && releaseData.wanting !== selectedWanting) {
+        selectedWanting = releaseData.wanting;
+      }
+
       // Calculate reduction
       const reduction = releaseData.intensityBefore - releaseData.intensityAfter;
       const reductionPct = releaseData.intensityBefore > 0
@@ -1322,6 +1368,10 @@
 
       // Update completion UI
       const wanting = CORE_WANTINGS[selectedWanting];
+      if (!wanting) {
+        console.error('Invalid wanting:', selectedWanting);
+        return;
+      }
 
       // Check if fully released (intensity = 0) or still has intensity
       const isFullyReleased = releaseData.intensityAfter === 0;
