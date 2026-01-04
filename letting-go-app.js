@@ -68,12 +68,27 @@ document.addEventListener('DOMContentLoaded', function() {
     updateStats();
     showRandomQuote();
 
+    // Initialize tab navigation
+    initTabNavigation();
+
     // Check for quick-release mode from Manifesting
     checkQuickReleaseMode();
 
     // Auto-save setiap 30 detik
     setInterval(saveToLocalStorage, 30000);
 });
+
+// ==================== TAB NAVIGATION ====================
+function initTabNavigation() {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const tabId = this.dataset.tab;
+            if (tabId) {
+                switchTab(tabId);
+            }
+        });
+    });
+}
 
 // ==================== QUICK RELEASE MODE (from Manifesting) ====================
 function checkQuickReleaseMode() {
@@ -293,7 +308,7 @@ function switchTab(tabId) {
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-    const activeBtn = document.querySelector(`[onclick="switchTab('${tabId}')"]`);
+    const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
     if (activeBtn) {
         activeBtn.classList.add('active');
     }
