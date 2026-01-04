@@ -27,6 +27,7 @@ const ReleasingEngine = (function() {
         { type: 'yesno', text: 'Bisakah kamu melepaskannya lagi?', subtext: 'Ulangi sekali lagi.' },
         { type: 'yesno', text: 'Maukah kamu melepaskannya?' },
         { type: 'when', text: 'Kapan?' },
+        { type: 'completion-check', text: 'Apakah kamu merasa sudah lepas?', subtext: 'Cek di dalam diri kamu.' },
         { type: 'completion', text: '🎉 Selamat!', subtext: 'Kamu telah menyelesaikan satu sesi releasing.' },
         { type: 'insight', text: 'Ada insight yang ingin dicatat?', placeholder: 'Tulis insight kamu...' }
       ]
@@ -50,6 +51,7 @@ const ReleasingEngine = (function() {
         { type: 'yesno', text: 'Bisakah kamu membiarkannya pergi?' },
         { type: 'yesno', text: 'Maukah kamu melepaskannya?' },
         { type: 'when', text: 'Kapan?' },
+        { type: 'completion-check', text: 'Apakah kamu merasa sudah lepas?', subtext: 'Cek di dalam diri kamu.' },
         { type: 'completion', text: '🎯 Wanting Control Released!', subtext: 'Semakin lepas kontrol, semakin merasa memegang kendali.' },
         { type: 'insight', text: 'Ada insight?', placeholder: 'Tulis insight...' }
       ]
@@ -71,6 +73,7 @@ const ReleasingEngine = (function() {
         { type: 'when', text: 'Kapan?' },
         { type: 'instruction', text: 'Perhatikan di mana cinta SUDAH kamu miliki...', subtext: 'Untuk diri sendiri dan orang lain...', duration: 5000 },
         { type: 'instruction', text: 'Izinkan semuanya MELUAS...', duration: 4000 },
+        { type: 'completion-check', text: 'Apakah kamu merasa sudah lepas?', subtext: 'Cek di dalam diri kamu.' },
         { type: 'completion', text: '💝 Wanting Approval Released!', subtext: 'Sumber cinta sudah ada di dalam diri kamu.' },
         { type: 'insight', text: 'Ada insight?', placeholder: 'Tulis insight...' }
       ]
@@ -94,6 +97,7 @@ const ReleasingEngine = (function() {
         { type: 'yesno', text: 'Bisakah kamu membiarkannya pergi?' },
         { type: 'yesno', text: 'Maukah kamu melepaskannya?' },
         { type: 'when', text: 'Kapan?' },
+        { type: 'completion-check', text: 'Apakah kamu merasa sudah lepas?', subtext: 'Cek di dalam diri kamu.' },
         { type: 'completion', text: '🛡️ Wanting Security Released!', subtext: 'Keamanan absolut datangnya dari dalam.' },
         { type: 'insight', text: 'Ada insight?', placeholder: 'Tulis insight...' }
       ]
@@ -117,6 +121,7 @@ const ReleasingEngine = (function() {
         { type: 'yesno', text: 'Bisakah kamu membiarkannya pergi?' },
         { type: 'yesno', text: 'Maukah kamu melepaskannya?' },
         { type: 'when', text: 'Kapan?' },
+        { type: 'completion-check', text: 'Apakah kamu merasa sudah lepas?', subtext: 'Cek di dalam diri kamu.' },
         { type: 'completion', text: '🔮 Wanting Separation Released!', subtext: 'Kamu sudah pulang ke rumah yang tidak pernah ditinggalkan.' },
         { type: 'insight', text: 'Ada insight?', placeholder: 'Tulis insight...' }
       ]
@@ -137,6 +142,7 @@ const ReleasingEngine = (function() {
         { type: 'yesno', text: 'Maukah kamu melepaskannya?' },
         { type: 'when', text: 'Kapan?' },
         { type: 'instruction', text: 'Perhatikan bahwa koneksi SUDAH ada...', subtext: 'Tidak perlu dicari di luar.', duration: 5000 },
+        { type: 'completion-check', text: 'Apakah kamu merasa sudah lepas?', subtext: 'Cek di dalam diri kamu.' },
         { type: 'completion', text: '☯️ Wanting Oneness Released!', subtext: 'Kamu sudah terhubung dengan segalanya.' },
         { type: 'insight', text: 'Ada insight?', placeholder: 'Tulis insight...' }
       ]
@@ -160,6 +166,7 @@ const ReleasingEngine = (function() {
         { type: 'yesno', text: 'Bisakah kamu melepaskan wanting separation?' },
         { type: 'when', text: 'Kapan?' },
         { type: 'breathing', text: 'Tarik napas dalam... hembuskan...', duration: 5000 },
+        { type: 'completion-check', text: 'Apakah kamu merasa sudah lepas?', subtext: 'Cek di dalam diri kamu.' },
         { type: 'completion', text: '🌟 Semua Wanting Released!', subtext: 'Semakin lepas keinginan, semakin MEMILIKI.' },
         { type: 'insight', text: 'Ada insight?', placeholder: 'Tulis insight...' }
       ]
@@ -182,6 +189,7 @@ const ReleasingEngine = (function() {
         { type: 'yesno', text: 'Maukah kamu melepaskannya?' },
         { type: 'when', text: 'Kapan?' },
         { type: 'instruction', text: 'Apakah kamu EMOSI itu, atau yang SADAR akan emosi?', duration: 5000 },
+        { type: 'completion-check', text: 'Apakah kamu merasa sudah lepas?', subtext: 'Cek di dalam diri kamu.' },
         { type: 'completion', text: '🎊 Triple Welcoming Selesai!', subtext: 'Kesadaran tidak sama dengan emosi.' },
         { type: 'insight', text: 'Ada insight?', placeholder: 'Tulis insight...' }
       ]
@@ -202,6 +210,7 @@ const ReleasingEngine = (function() {
         { type: 'yesno', text: 'Bisakah kamu melepaskan keinginan untuk MEMBUAT CERITA itu NYATA?' },
         { type: 'when', text: 'Kapan?' },
         { type: 'instruction', text: 'Apakah kamu orang di cerita itu?', subtext: 'Atau hanya ada KEBERADAAN?', duration: 5000 },
+        { type: 'completion-check', text: 'Apakah kamu merasa sudah lepas?', subtext: 'Cek di dalam diri kamu.' },
         { type: 'completion', text: '📖 Cerita Dilepaskan!', subtext: 'Cerita bukan fakta. Cerita tidak terjadi saat ini.' },
         { type: 'insight', text: 'Ada insight?', placeholder: 'Tulis insight...' }
       ]
@@ -222,6 +231,7 @@ const ReleasingEngine = (function() {
         { type: 'when', text: 'Kapan?' },
         { type: 'instruction', text: 'Bisakah kamu terbuka pada KETIDAKTAHUAN?', subtext: 'Kamu tidak perlu tahu.', duration: 5000 },
         { type: 'instruction', text: 'Apakah ada seseorang yang tahu?', subtext: 'Atau hanya ada INI — keberadaan?', duration: 5000 },
+        { type: 'completion-check', text: 'Apakah kamu merasa sudah lepas?', subtext: 'Cek di dalam diri kamu.' },
         { type: 'completion', text: '🧠 "Tahu" Dilepaskan!', subtext: 'Semakin sedikit tahu, semakin natural dan bebas.' },
         { type: 'insight', text: 'Ada insight?', placeholder: 'Tulis insight...' }
       ]
@@ -235,6 +245,7 @@ const ReleasingEngine = (function() {
         { type: 'yesno', text: 'Bisakah kamu melepaskannya?' },
         { type: 'yesno', text: 'Maukah kamu melepaskannya?' },
         { type: 'when', text: 'Kapan?' },
+        { type: 'completion-check', text: 'Apakah kamu merasa sudah lepas?', subtext: 'Cek di dalam diri kamu.' },
         { type: 'completion', text: '✅ Release Selesai!', subtext: 'Sederhana kan?' }
       ]
     },
@@ -253,6 +264,7 @@ const ReleasingEngine = (function() {
         { type: 'yesno', text: 'Maukah kamu melepaskannya?' },
         { type: 'when', text: 'Kapan?' },
         { type: 'instruction', text: 'Kamu bukan emosi itu.', subtext: 'Kamu adalah yang SADAR akan emosi.', duration: 5000 },
+        { type: 'completion-check', text: 'Apakah kamu merasa sudah lepas?', subtext: 'Cek di dalam diri kamu.' },
         { type: 'completion', text: '💪 Kamu berhasil!', subtext: 'Kamu lebih kuat dari yang kamu pikir.' }
       ]
     },
@@ -266,6 +278,7 @@ const ReleasingEngine = (function() {
         { type: 'yesno', text: 'Maukah kamu melepaskannya?', subtext: 'Lebih baik pegangan terus atau bebas?' },
         { type: 'when', text: 'Kapan?' },
         { type: 'breathing', text: 'Tarik napas dalam... hembuskan...', subtext: 'Biarkan semua terurai...', duration: 5000 },
+        { type: 'completion-check', text: 'Apakah kamu merasa sudah lepas?', subtext: 'Cek di dalam diri kamu.' },
         { type: 'completion', text: '🌊 Keinginan Dilepaskan!', subtext: 'Semakin lepas, semakin memiliki.' }
       ]
     },
@@ -280,6 +293,7 @@ const ReleasingEngine = (function() {
         { type: 'when', text: 'Kapan?' },
         { type: 'breathing', text: 'Tarik napas dalam... hembuskan...', subtext: 'Lepaskan...', duration: 5000 },
         { type: 'instruction', text: 'Apakah kamu itu perasaan ini?', subtext: 'Atau kamu yang MENYADARI perasaan ini?', duration: 5000 },
+        { type: 'completion-check', text: 'Apakah kamu merasa sudah lepas?', subtext: 'Cek di dalam diri kamu.' },
         { type: 'completion', text: '🌟 Release Selesai!', subtext: 'Kesadaran bukan perasaan. Perasaan datang dan pergi.' }
       ]
     }
@@ -764,6 +778,17 @@ const ReleasingEngine = (function() {
         document.getElementById('re-btn-next').textContent = 'Lanjut →';
         break;
 
+      case 'completion-check':
+        html = '<p class="releasing-step-text">' + step.text + '</p>';
+        if (step.subtext) html += '<p class="releasing-step-subtext">' + step.subtext + '</p>';
+        html += '<div class="releasing-answer-group">';
+        html += '<button class="releasing-answer-btn highlight" onclick="ReleasingEngine.selectAnswer(\'ya\')">✅ Ya, sudah lepas</button>';
+        html += '<button class="releasing-answer-btn" onclick="ReleasingEngine.selectAnswer(\'tidak\')">🔄 Belum sepenuhnya</button>';
+        html += '</div>';
+        html += '<p class="releasing-step-subtext" style="margin-top:1rem;font-size:0.85rem;">Jika belum sepenuhnya, akan dilakukan Triple Welcoming.</p>';
+        document.getElementById('re-btn-next').textContent = 'Lanjut →';
+        break;
+
       case 'breathing':
         html = '<p class="releasing-step-text">' + step.text + '</p>';
         if (step.subtext) html += '<p class="releasing-step-subtext">' + step.subtext + '</p>';
@@ -825,7 +850,52 @@ const ReleasingEngine = (function() {
 
   function selectAnswer(answer) {
     currentSession.responses.push(answer);
+
+    const step = currentSession.script.steps[currentSession.currentStep];
+
+    // Handle completion-check type - if "tidak", do triple welcoming and repeat
+    if (step.type === 'completion-check' && answer === 'tidak') {
+      // Show triple welcoming steps before repeating
+      doTripleWelcoming(function() {
+        // After triple welcoming, stay on same step (completion-check)
+        renderStep(currentSession.currentStep);
+      });
+      return;
+    }
+
     setTimeout(function() { nextStep(); }, 300);
+  }
+
+  // Triple Welcoming helper
+  function doTripleWelcoming(onComplete) {
+    const tripleSteps = [
+      { text: 'Bisakah kamu menyambut perasaan yang tersisa?', subtext: 'Izinkan hadir sepenuhnya.', duration: 4000 },
+      { text: 'Bisakah kamu menyambut wanting yang ada?', subtext: 'Control, approval, atau security?', duration: 4000 },
+      { text: 'Bisakah kamu menyambut rasa keakuan?', subtext: 'Ini tentang "kamu"?', duration: 4000 },
+      { text: 'Biarkan ketiganya hadir bersamaan...', subtext: 'Emosi, wanting, keakuan. Lalu lepaskan.', duration: 5000 }
+    ];
+
+    let stepIndex = 0;
+    const body = document.getElementById('re-modal-body');
+
+    function showTripleStep() {
+      if (stepIndex >= tripleSteps.length) {
+        // Triple welcoming done, callback
+        setTimeout(onComplete, 500);
+        return;
+      }
+
+      const ts = tripleSteps[stepIndex];
+      body.innerHTML = '<p class="releasing-step-text">🔄 Triple Welcoming</p>' +
+        '<p class="releasing-step-text">' + ts.text + '</p>' +
+        '<p class="releasing-step-subtext">' + ts.subtext + '</p>' +
+        '<div class="releasing-breathing-animation"></div>';
+
+      stepIndex++;
+      setTimeout(showTripleStep, ts.duration);
+    }
+
+    showTripleStep();
   }
 
   function nextStep() {
