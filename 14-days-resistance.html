@@ -5,88 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>14 Days Free From Resistance - Sedona Method</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔓</text></svg>">
+  <link rel="stylesheet" href="styles.css">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
+    /* Page-specific styles for 14 Days Resistance */
     :root {
-      --primary: #1a5276;
-      --primary-light: #2874a6;
-      --primary-dark: #154360;
-      --secondary: #16a085;
-      --secondary-light: #1abc9c;
-      --success: #27ae60;
-      --warning: #f39c12;
-      --danger: #c0392b;
-      --bg-light: #f8f9fa;
-      --bg-dark: #2c3e50;
-      --text-dark: #2c3e50;
-      --text-light: #7f8c8d;
-      --border: #dfe6e9;
-      --white: #fff;
-      --shadow: 0 2px 15px rgba(0,0,0,0.1);
-      --shadow-hover: 0 8px 25px rgba(0,0,0,0.15);
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: var(--bg-light);
-      color: var(--text-dark);
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    /* Header */
-    .header {
-      background: linear-gradient(135deg, var(--primary), var(--primary-light));
-      color: var(--white);
-      padding: 1rem 1.5rem;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: var(--shadow);
-    }
-
-    .header-content {
-      max-width: 900px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .back-link {
-      color: var(--white);
-      text-decoration: none;
-      font-size: 1.5rem;
-      padding: 0.5rem;
-      border-radius: 8px;
-      transition: background 0.3s;
-    }
-
-    .back-link:hover {
-      background: rgba(255,255,255,0.1);
-    }
-
-    .header-text {
-      flex: 1;
-    }
-
-    .header h1 {
-      font-size: 1.3rem;
-      margin-bottom: 0.25rem;
-    }
-
-    .header p {
-      font-size: 0.8rem;
-      opacity: 0.9;
-    }
-
-    /* Main Content */
-    .main-content {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 1rem;
-      padding-bottom: 2rem;
+      --resistance-primary: #1a5276;
+      --resistance-secondary: #16a085;
+      --resistance-secondary-light: #1abc9c;
     }
 
     /* Progress Section */
@@ -119,7 +44,7 @@
     }
 
     .progress-bar {
-      background: linear-gradient(90deg, var(--secondary), var(--secondary-light));
+      background: linear-gradient(90deg, var(--resistance-secondary), var(--resistance-secondary-light));
       height: 100%;
       border-radius: 10px;
       transition: width 0.5s ease;
@@ -131,38 +56,9 @@
       color: var(--text-light);
     }
 
-    /* Stats Grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-    }
-
-    .stat-item {
-      background: var(--white);
-      border-radius: 10px;
-      padding: 1rem;
-      text-align: center;
-      box-shadow: var(--shadow);
-    }
-
-    .stat-value {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--primary);
-    }
-
-    .stat-label {
-      font-size: 0.7rem;
-      color: var(--text-light);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
     /* Quote Section */
     .quote-section {
-      background: linear-gradient(135deg, var(--bg-dark), #34495e);
+      background: linear-gradient(135deg, #2c3e50, #34495e);
       color: var(--white);
       border-radius: 12px;
       padding: 1.25rem;
@@ -277,7 +173,7 @@
 
     .day-card:hover {
       transform: translateY(-3px);
-      box-shadow: var(--shadow-hover);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
     }
 
     .day-card.completed {
@@ -343,85 +239,6 @@
       border-radius: 10px;
     }
 
-    /* Buttons */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-      text-decoration: none;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: var(--white);
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-light);
-      transform: translateY(-1px);
-    }
-
-    .btn-secondary {
-      background: var(--secondary);
-      color: var(--white);
-    }
-
-    .btn-secondary:hover {
-      background: var(--secondary-light);
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 2px solid var(--primary);
-      color: var(--primary);
-    }
-
-    .btn-outline:hover {
-      background: var(--primary);
-      color: var(--white);
-    }
-
-    .btn-block {
-      width: 100%;
-    }
-
-    /* Toast */
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: var(--bg-dark);
-      color: var(--white);
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      z-index: 1000;
-      opacity: 0;
-      transition: all 0.3s ease;
-    }
-
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-
-    .toast-success {
-      background: var(--success);
-    }
-
-    .toast-error {
-      background: var(--danger);
-    }
-
     /* Quick Actions */
     .quick-actions {
       display: flex;
@@ -435,18 +252,50 @@
       min-width: 140px;
     }
 
+    .btn-secondary {
+      background: var(--resistance-secondary);
+      color: var(--white);
+    }
+
+    .btn-secondary:hover {
+      background: var(--resistance-secondary-light);
+    }
+
+    /* Header Content */
+    .header-content {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .back-link {
+      color: var(--white);
+      text-decoration: none;
+      font-size: 1.5rem;
+      padding: 0.5rem;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+
+    .back-link:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .header-text {
+      flex: 1;
+    }
+
+    /* Main Content */
+    .main-content {
+      max-width: 900px;
+    }
+
     /* Responsive */
     @media (max-width: 600px) {
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
       #days-container {
         grid-template-columns: 1fr;
-      }
-
-      .header h1 {
-        font-size: 1.1rem;
       }
 
       .quick-actions {
@@ -483,20 +332,20 @@
     </section>
 
     <!-- Stats Grid -->
-    <section class="stats-grid" id="stats-container">
-      <div class="stat-item">
+    <section class="stats-grid stats-grid-4" id="stats-container">
+      <div class="stat-card">
         <div class="stat-value">0</div>
         <div class="stat-label">Hari Selesai</div>
       </div>
-      <div class="stat-item">
+      <div class="stat-card">
         <div class="stat-value">0</div>
         <div class="stat-label">Total Sesi</div>
       </div>
-      <div class="stat-item">
+      <div class="stat-card">
         <div class="stat-value">0</div>
         <div class="stat-label">Streak Hari</div>
       </div>
-      <div class="stat-item">
+      <div class="stat-card">
         <div class="stat-value">0</div>
         <div class="stat-label">Best Streak</div>
       </div>
@@ -571,6 +420,11 @@
     </section>
   </main>
 
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Common JS -->
+  <script src="common.js"></script>
   <script src="resistance-app.js"></script>
   <script>
     // Toggle principles accordion

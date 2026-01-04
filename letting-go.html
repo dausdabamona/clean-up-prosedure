@@ -5,41 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Letting Go - Sedona Method</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕊️</text></svg>">
+  <link rel="stylesheet" href="styles.css">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* Page-specific styles for Letting Go */
     :root {
-      --primary: #2D2A26;
-      --accent: #9C8E7C;
-      --accent-light: #BCA99C;
-      --bg-light: #F5F3EF;
-      --text-dark: #2D2A26;
-      --text-light: #7A756D;
+      --letting-accent: #9C8E7C;
+      --letting-accent-light: #BCA99C;
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: var(--bg-light);
-      color: var(--text-dark);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
     .header {
-      background: linear-gradient(135deg, var(--accent), var(--accent-light));
-      color: #fff;
-      padding: 1rem;
-      text-align: center;
-    }
-
-    .header h1 {
-      font-size: 1.3rem;
-      margin-bottom: 0.25rem;
-    }
-
-    .header p {
-      font-size: 0.8rem;
-      opacity: 0.9;
+      background: linear-gradient(135deg, var(--letting-accent), var(--letting-accent-light));
     }
 
     .back-link {
@@ -77,7 +58,7 @@
     .content h2 {
       font-size: 1.8rem;
       margin-bottom: 1rem;
-      color: var(--accent);
+      color: var(--letting-accent);
     }
 
     .content p {
@@ -92,7 +73,7 @@
       background: #fff;
       padding: 1.5rem 2rem;
       border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      box-shadow: var(--shadow);
       max-width: 400px;
       width: 100%;
     }
@@ -129,7 +110,7 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      background: var(--primary);
+      background: var(--text-dark);
       color: #fff;
       padding: 0.75rem 1.5rem;
       border-radius: 8px;
@@ -148,10 +129,10 @@
       background: #fff;
       padding: 1.5rem;
       border-radius: 12px;
-      border-left: 4px solid var(--accent);
+      border-left: 4px solid var(--letting-accent);
       max-width: 500px;
       margin-bottom: 2rem;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      box-shadow: var(--shadow);
     }
 
     .quote blockquote {
@@ -199,5 +180,8 @@
 
     <a href="sedona-app.html" class="btn-back">← Back to Home</a>
   </main>
+
+  <!-- Common JS -->
+  <script src="common.js"></script>
 </body>
 </html>

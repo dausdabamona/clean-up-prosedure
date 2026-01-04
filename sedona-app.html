@@ -5,139 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sedona Method</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧘</text></svg>">
+  <link rel="stylesheet" href="styles.css">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --primary: #2D2A26;
-      --primary-light: #4A4540;
-      --accent: #C4A962;
-      --accent-light: #D4C992;
-      --success: #6B8E6B;
-      --warning: #C9A86C;
-      --danger: #8B4D4D;
-      --bg-dark: #1A1816;
-      --bg-light: #F5F3EF;
-      --bg-card: #FFFFFF;
-      --text-dark: #2D2A26;
-      --text-light: #7A756D;
-      --text-muted: #A39E94;
-      --border: #E5E0D8;
-      --shadow: 0 2px 12px rgba(45, 42, 38, 0.08);
-      --sidebar-width: 260px;
-    }
-
+    /* Page-specific styles for Sedona App Hub */
     body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: var(--bg-light);
-      color: var(--text-dark);
-      line-height: 1.6;
       min-height: 100vh;
-    }
-
-    /* Sidebar */
-    .sidebar {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: var(--sidebar-width);
-      height: 100vh;
-      background: var(--primary);
-      color: #fff;
-      z-index: 1000;
-      transition: transform 0.3s ease;
-      overflow-y: auto;
-    }
-
-    .sidebar-header {
-      padding: 1.5rem;
-      text-align: center;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .sidebar-header h1 {
-      font-size: 1.4rem;
-      color: var(--accent);
-      margin-bottom: 0.25rem;
-    }
-
-    .sidebar-header p {
-      font-size: 0.75rem;
-      opacity: 0.7;
-    }
-
-    .sidebar-menu {
-      padding: 1rem 0;
-    }
-
-    .menu-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.9rem 1.5rem;
-      color: rgba(255,255,255,0.8);
-      text-decoration: none;
-      transition: all 0.3s;
-      border-left: 3px solid transparent;
-      font-size: 0.9rem;
-    }
-
-    .menu-item:hover {
-      background: rgba(255,255,255,0.1);
-      color: #fff;
-    }
-
-    .menu-item.active {
-      background: rgba(196, 169, 98, 0.2);
-      border-left-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .menu-item .icon {
-      font-size: 1.2rem;
-      width: 28px;
-      text-align: center;
-    }
-
-    .menu-item .badge {
-      margin-left: auto;
-      background: var(--accent);
-      color: var(--primary);
-      font-size: 0.65rem;
-      padding: 0.15rem 0.4rem;
-      border-radius: 10px;
-      font-weight: 600;
-    }
-
-    .menu-item.disabled {
-      opacity: 0.4;
-      pointer-events: none;
-    }
-
-    .menu-divider {
-      height: 1px;
-      background: rgba(255,255,255,0.1);
-      margin: 0.5rem 1.5rem;
-    }
-
-    .menu-label {
-      padding: 0.5rem 1.5rem;
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: rgba(255,255,255,0.4);
-      margin-top: 0.5rem;
-    }
-
-    /* Main Content */
-    .main-content {
-      margin-left: var(--sidebar-width);
-      min-height: 100vh;
-      padding: 0;
     }
 
     /* Welcome Section */
     .welcome-section {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      background: linear-gradient(135deg, #2D2A26 0%, #4A4540 100%);
       color: #fff;
       padding: 3rem 2rem;
       text-align: center;
@@ -277,32 +154,6 @@
       margin-top: 0.25rem;
     }
 
-    /* Mobile Toggle */
-    .mobile-toggle {
-      display: none;
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
-      z-index: 1001;
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      width: 44px;
-      height: 44px;
-      border-radius: 8px;
-      font-size: 1.5rem;
-      cursor: pointer;
-      box-shadow: var(--shadow);
-    }
-
-    .overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 999;
-    }
-
     /* Quote Section */
     .quote-section {
       background: var(--bg-card);
@@ -326,28 +177,6 @@
 
     /* Responsive */
     @media (max-width: 768px) {
-      .sidebar {
-        transform: translateX(-100%);
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .main-content {
-        margin-left: 0;
-      }
-
-      .mobile-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .overlay.show {
-        display: block;
-      }
-
       .stats-row {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -414,7 +243,7 @@
   </aside>
 
   <!-- Main Content -->
-  <main class="main-content">
+  <main class="main-content-sidebar">
     <section class="welcome-section">
       <h2>Welcome to Sedona Method</h2>
       <p>A powerful technique for releasing unwanted emotions and achieving inner peace. Choose a module below to begin your journey.</p>
@@ -510,27 +339,12 @@
     </div>
   </main>
 
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Common JS -->
+  <script src="common.js"></script>
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxyql2BYExoYNXm-TwYibkw7jDXozNbWqeeoOmw-TNuX8gqMyW7P4Q4qD2iBFpM8odDZQ/exec';
-
-    // Toggle sidebar on mobile
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('open');
-      document.querySelector('.overlay').classList.toggle('show');
-    }
-
-    // Close sidebar when clicking outside
-    document.addEventListener('click', function(e) {
-      const sidebar = document.getElementById('sidebar');
-      const toggle = document.querySelector('.mobile-toggle');
-      if (window.innerWidth <= 768 &&
-          !sidebar.contains(e.target) &&
-          !toggle.contains(e.target) &&
-          sidebar.classList.contains('open')) {
-        toggleSidebar();
-      }
-    });
-
     // Load stats from API
     async function loadStats() {
       try {
