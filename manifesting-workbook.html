@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manifesting Workbook - Sedona Method</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--primary:#8e44ad;--primary-light:#9b59b6;--secondary:#3498db;--success:#27ae60;--warning:#f39c12;--danger:#c0392b;--gold:#C4A962;--bg-light:#f8f9fa;--bg-input:#f5eef8;--text-dark:#2c3e50;--text-light:#7f8c8d;--border:#bdc3c7;--white:#fff;--shadow:0 2px 10px rgba(0,0,0,0.1)}
+    body{font-family:'Segoe UI',Tahoma,sans-serif;background:var(--bg-light);color:var(--text-dark);line-height:1.6}
+
+    /* Header */
+    .header{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:var(--white);padding:1rem;text-align:center;position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
+    .header h1{font-size:1.4rem;margin-bottom:0.25rem}
+    .header p{font-size:0.8rem;opacity:0.9}
+    .header-link{display:inline-block;margin-top:0.5rem;color:rgba(255,255,255,0.8);font-size:0.75rem;text-decoration:none}
+    .header-link:hover{color:var(--white)}
+
+    /* Navigation */
+    .nav-tabs{display:flex;background:var(--white);border-bottom:2px solid var(--border);overflow-x:auto}
+    .nav-tab{flex:1;min-width:60px;padding:0.5rem 0.25rem;text-align:center;cursor:pointer;border:none;background:none;font-size:0.65rem;color:var(--text-light);transition:all 0.3s;border-bottom:3px solid transparent}
+    .nav-tab:hover{background:var(--bg-light);color:var(--primary)}
+    .nav-tab.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
+    .nav-tab .icon{display:block;font-size:1rem;margin-bottom:0.1rem}
+
+    /* Main Content */
+    .main-content{max-width:800px;margin:0 auto;padding:0.75rem;padding-bottom:5rem}
+    .tab-content{display:none}
+    .tab-content.active{display:block}
+
+    /* Cards */
+    .card{background:var(--white);border-radius:10px;box-shadow:var(--shadow);margin-bottom:0.75rem;overflow:hidden}
+    .card-header{background:var(--primary);color:var(--white);padding:0.6rem 0.75rem;font-weight:600;font-size:0.85rem}
+    .card-body{padding:0.75rem}
+
+    /* Forms */
+    .form-group{margin-bottom:0.6rem}
+    .form-group label,.form-label{display:block;font-weight:600;font-size:0.75rem;margin-bottom:0.2rem;color:var(--text-dark)}
+    .form-control{width:100%;padding:0.5rem 0.6rem;border:1px solid var(--border);border-radius:6px;font-size:0.85rem;background:var(--bg-input);transition:border-color 0.3s}
+    .form-control:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 2px rgba(142,68,173,0.1)}
+    textarea.form-control{resize:vertical;min-height:60px}
+
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:0.4rem;padding:0.6rem 1rem;border:none;border-radius:6px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.3s}
+    .btn-primary{background:var(--primary);color:var(--white)}
+    .btn-primary:hover{background:var(--primary-light)}
+    .btn-secondary{background:var(--bg-light);color:var(--text-dark);border:1px solid var(--border)}
+    .btn-secondary:hover{background:var(--border)}
+    .btn-success{background:var(--success);color:var(--white)}
+    .btn-danger{background:var(--danger);color:var(--white)}
+    .btn-release{background:linear-gradient(135deg,#3498db,#2980b9);color:var(--white)}
+    .btn-block{width:100%}
+    .btn-icon{background:none;border:none;cursor:pointer;font-size:1rem;padding:0.25rem}
+    .btn-group{display:flex;gap:0.4rem;flex-wrap:wrap}
+
+    /* Progress Bar */
+    .progress-bar{height:20px;background:var(--bg-light);border-radius:10px;overflow:hidden;margin-bottom:0.5rem}
+    .progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--gold));border-radius:10px;transition:width 0.5s}
+
+    /* Stats Grid */
+    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin-bottom:1rem}
+    .stat-card{background:var(--white);border-radius:10px;padding:0.75rem;text-align:center;box-shadow:var(--shadow)}
+    .stat-value{font-size:1.8rem;font-weight:700;color:var(--primary)}
+    .stat-label{font-size:0.7rem;color:var(--text-light)}
+
+    /* Wanting Tags */
+    .wanting-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin:0.5rem 0}
+    .wanting-tag{padding:0.4rem 0.8rem;border-radius:20px;font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.3s;background:var(--bg-light);color:var(--text-dark);border:2px solid transparent}
+    .wanting-tag:hover{border-color:var(--primary)}
+    .wanting-tag.selected{background:var(--primary);color:var(--white);border-color:var(--primary)}
+    .wanting-tags.small .wanting-tag{padding:0.3rem 0.6rem;font-size:0.7rem}
+
+    /* Collapsible */
+    .collapsible{margin-top:0.5rem}
+    .collapse-toggle{width:100%;text-align:left;padding:0.5rem;background:var(--bg-light);border:none;border-radius:6px;font-size:0.8rem;cursor:pointer;color:var(--text-dark)}
+    .collapse-content{display:none;padding:0.75rem;background:var(--white);border:1px solid var(--border);border-radius:0 0 6px 6px;font-size:0.8rem}
+    .collapse-content.show{display:block}
+    .collapse-content ul{margin-left:1.2rem;line-height:1.8}
+
+    /* Step Card */
+    .step-card{position:relative;padding-left:3rem}
+    .step-number{position:absolute;left:0.75rem;top:0.75rem;width:28px;height:28px;background:var(--primary);color:var(--white);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem}
+    .step-card h4{font-size:0.9rem;color:var(--primary);margin-bottom:0.3rem}
+    .hint{font-size:0.75rem;color:var(--text-light);font-style:italic;margin-bottom:0.5rem}
+
+    /* Intensity Control */
+    .intensity-control{margin:0.5rem 0}
+    .slider{width:100%;height:8px;border-radius:4px;background:var(--bg-light);outline:none;-webkit-appearance:none}
+    .slider::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--primary);cursor:pointer}
+    .intensity-display{display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-light)}
+    .intensity-labels{display:flex;justify-content:space-between;font-size:0.65rem;color:var(--text-light);margin-top:0.25rem}
+
+    /* Release Questions Box */
+    .release-questions-box{background:linear-gradient(135deg,#ebf5fb,#d4e6f1);border-radius:8px;padding:0.75rem;margin:0.75rem 0}
+    .release-questions-box.highlight{border:2px solid var(--secondary)}
+    .release-q{font-size:0.85rem;margin-bottom:0.4rem;padding-left:0.5rem;color:var(--text-dark)}
+    .release-q.main{font-weight:700;color:var(--primary);background:var(--white);padding:0.5rem;border-radius:6px;margin-top:0.5rem}
+
+    /* Guided Steps */
+    .guided-container{margin-top:1rem}
+    .step-indicator{display:flex;justify-content:center;gap:0.5rem;margin-bottom:1rem}
+    .step-indicator .step{width:30px;height:30px;border-radius:50%;background:var(--bg-light);color:var(--text-light);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:600;transition:all 0.3s}
+    .step-indicator .step.active{background:var(--primary);color:var(--white)}
+    .step-indicator .step.completed{background:var(--success);color:var(--white)}
+    .guided-step{display:none;animation:fadeIn 0.3s ease}
+    .guided-step.active{display:block}
+    .step-header{margin-bottom:0.75rem}
+    .step-badge{background:var(--primary);color:var(--white);padding:0.2rem 0.6rem;border-radius:12px;font-size:0.7rem}
+    .step-complete{color:var(--success);font-weight:600}
+    .step-question{font-size:1rem;color:var(--text-dark);margin-bottom:0.75rem;line-height:1.6}
+    .step-nav{display:flex;justify-content:space-between;margin-top:1rem}
+
+    /* Timer */
+    .timer-card{text-align:center;padding:1rem}
+    .timer-display{font-size:3rem;font-weight:700;color:var(--primary);font-family:monospace}
+    .timer-label{font-size:0.8rem;color:var(--text-light);margin-bottom:0.5rem}
+    .timer-controls{display:flex;justify-content:center;gap:0.5rem;margin:0.75rem 0}
+    .timer-btn{width:50px;height:50px;border-radius:50%;border:none;font-size:1.2rem;cursor:pointer;background:var(--bg-light);transition:all 0.3s}
+    .timer-btn:hover{background:var(--primary);color:var(--white)}
+    .timer-duration{display:flex;justify-content:center;gap:1rem;font-size:0.8rem}
+    .timer-duration label{cursor:pointer}
+
+    /* Warning Box */
+    .warning-box{background:#fef9e7;border:1px solid #f9e79f;border-radius:6px;padding:0.5rem;font-size:0.8rem;margin:0.5rem 0}
+
+    /* Radio Group */
+    .radio-group{display:flex;flex-direction:column;gap:0.5rem}
+    .radio-label{display:flex;align-items:center;gap:0.5rem;padding:0.5rem;background:var(--bg-light);border-radius:6px;cursor:pointer;font-size:0.8rem}
+    .radio-label:hover{background:var(--bg-input)}
+    .radio-label input{margin:0}
+
+    /* Goal Item */
+    .goal-item{display:flex;align-items:center;gap:0.5rem;padding:0.6rem;background:var(--bg-light);border-radius:6px;margin-bottom:0.4rem}
+    .goal-category{font-size:1.2rem}
+    .goal-text{flex:1;font-size:0.85rem;color:var(--text-dark)}
+    .goal-actions{display:flex;gap:0.25rem}
+
+    /* Example Goal */
+    .example-goal{padding:0.6rem;background:var(--bg-input);border-radius:6px;margin-bottom:0.4rem;font-size:0.8rem;cursor:pointer;border:1px solid transparent;transition:all 0.3s}
+    .example-goal:hover{border-color:var(--primary);background:var(--white)}
+
+    /* Feedback Box */
+    .feedback-box{padding:0.6rem;border-radius:6px;font-size:0.8rem;margin-top:0.5rem}
+    .feedback-box.success{background:#d5f5e3;color:#1e8449}
+    .feedback-box.warning{background:#fef9e7;color:#9a7d0a}
+
+    /* Filter Card */
+    .filter-card{padding:0.5rem}
+    .filter-row{display:flex;gap:0.5rem;flex-wrap:wrap}
+    .filter-row .form-control{flex:1;min-width:100px}
+
+    /* Journal Entry */
+    .journal-entry{background:var(--white);border-radius:8px;padding:0.75rem;margin-bottom:0.5rem;box-shadow:var(--shadow);border-left:4px solid var(--primary)}
+    .journal-entry[data-type="discover"]{border-left-color:var(--gold)}
+    .journal-entry[data-type="release"]{border-left-color:var(--secondary)}
+    .journal-entry[data-type="action"]{border-left-color:var(--warning)}
+    .journal-entry[data-type="emotion"]{border-left-color:var(--success)}
+    .entry-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem}
+    .entry-type{font-size:0.75rem;font-weight:600;text-transform:uppercase}
+    .entry-date{font-size:0.7rem;color:var(--text-light)}
+    .entry-content{font-size:0.8rem;color:var(--text-dark)}
+    .entry-content p{margin-bottom:0.3rem}
+
+    /* Empty State */
+    .empty-state{text-align:center;padding:2rem;color:var(--text-light);font-size:0.9rem}
+
+    /* Status Indicator */
+    .status-indicator{margin-top:0.5rem;padding:0.5rem;border-radius:6px;font-size:0.8rem}
+    .status-indicator.success{background:#d5f5e3;color:#1e8449}
+    .status-indicator.error{background:#fadbd8;color:#c0392b}
+
+    /* Danger Zone */
+    .danger-zone{border:1px solid var(--danger);border-radius:10px}
+    .danger-zone h4{color:var(--danger)}
+    .danger-zone .btn{margin-top:0.5rem}
+
+    /* Toast */
+    .toast-container{position:fixed;top:0.75rem;right:0.75rem;z-index:300;max-width:300px}
+    .toast{background:var(--primary);color:var(--white);padding:0.6rem 0.75rem;border-radius:6px;margin-bottom:0.4rem;box-shadow:var(--shadow);animation:slideIn 0.3s;font-size:0.8rem}
+    .toast.success{background:var(--success)}
+    .toast.error{background:var(--danger)}
+    .toast.warning{background:var(--warning)}
+    .toast.show{opacity:1}
+    @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+    /* Input Group */
+    .input-group{display:flex;flex-direction:column;gap:0.4rem}
+    .input-group input{width:100%}
+
+    /* Or Divider */
+    .or-divider{text-align:center;color:var(--text-light);font-size:0.75rem;margin:0.5rem 0}
+
+    /* Reference Card */
+    .reference-card{background:linear-gradient(135deg,#fef9e7,#fcf3cf);border:1px solid #f7dc6f;padding:0.75rem;border-radius:8px;margin-top:1rem}
+    .reference-card h5{color:#9a7d0a;font-size:0.8rem;margin-bottom:0.4rem}
+    .reference-card ul{margin-left:1rem;font-size:0.75rem}
+
+    /* Checklist */
+    .checklist{list-style:none;margin:0;padding:0}
+    .checklist li{padding:0.3rem 0;font-size:0.8rem}
+
+    /* Responsive */
+    @media(max-width:480px){
+      .header h1{font-size:1.1rem}
+      .nav-tab{font-size:0.6rem;padding:0.4rem 0.15rem}
+      .nav-tab .icon{font-size:0.9rem}
+      .stats-grid{grid-template-columns:repeat(3,1fr);gap:0.4rem}
+      .stat-value{font-size:1.3rem}
+      .stat-label{font-size:0.6rem}
+      .timer-display{font-size:2.5rem}
+      .step-question{font-size:0.9rem}
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>✨ Manifesting Workbook</h1>
+    <p>Sedona Method - 30 Hari Menuju Manifestasi</p>
+    <a href="index.html" class="header-link">← Kembali ke Clean Up Tracker</a>
+  </header>
+
+  <nav class="nav-tabs">
+    <button class="nav-tab active" data-tab="beranda"><span class="icon">🏠</span>Beranda</button>
+    <button class="nav-tab" data-tab="temukan"><span class="icon">🔍</span>Temukan</button>
+    <button class="nav-tab" data-tab="goal"><span class="icon">🎯</span>Goal</button>
+    <button class="nav-tab" data-tab="release"><span class="icon">🌊</span>Release</button>
+    <button class="nav-tab" data-tab="action"><span class="icon">⚡</span>Action</button>
+    <button class="nav-tab" data-tab="journal"><span class="icon">📔</span>Journal</button>
+    <button class="nav-tab" data-tab="settings"><span class="icon">⚙️</span>Settings</button>
+  </nav>
+
+  <main class="main-content">
+
+    <!-- TAB 1: BERANDA -->
+    <div class="tab-content active" id="beranda">
+
+      <!-- Progress 30 Hari -->
+      <div class="card">
+        <div class="card-body">
+          <h3 style="font-size:0.9rem;margin-bottom:0.5rem">📈 Progress 30 Hari</h3>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+          </div>
+          <p id="progressText" style="text-align:center;font-size:0.8rem;color:var(--text-light)">Hari 0 dari 30</p>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="statTotalReleases">0</div>
+          <div class="stat-label">Total Release</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statActiveGoals">0</div>
+          <div class="stat-label">Goals Aktif</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statStreakDays">0</div>
+          <div class="stat-label">Streak</div>
+        </div>
+      </div>
+
+      <!-- Quick Start -->
+      <div class="card">
+        <div class="card-body">
+          <h3 style="font-size:0.9rem;margin-bottom:0.75rem">🚀 Mulai Sesi Hari Ini</h3>
+          <button onclick="switchTab('temukan')" class="btn btn-primary btn-block" style="margin-bottom:0.5rem">
+            🔍 Temukan Keinginan Sejati
+          </button>
+          <button onclick="switchTab('release')" class="btn btn-secondary btn-block" style="margin-bottom:0.5rem">
+            🌊 Guided Release Session
+          </button>
+          <button onclick="switchTab('goal')" class="btn btn-secondary btn-block">
+            🎯 Review Goal Statement
+          </button>
+        </div>
+      </div>
+
+      <!-- Emotion Check -->
+      <div class="card">
+        <div class="card-body">
+          <h3 style="font-size:0.9rem;margin-bottom:0.5rem">💫 Emosi Saat Ini</h3>
+          <select id="currentEmotion" class="form-control">
+            <option value="">-- Pilih Emosi --</option>
+            <option value="9">9 - Peace (Damai, Tenang)</option>
+            <option value="8">8 - Acceptance (Menerima, Ikhlas)</option>
+            <option value="7">7 - Courage (Berani, Yakin)</option>
+            <option value="6">6 - Pride (Bangga, Defensif)</option>
+            <option value="5">5 - Anger (Marah, Frustrasi)</option>
+            <option value="4">4 - Lust (Nafsu, Keinginan Kuat)</option>
+            <option value="3">3 - Fear (Takut, Cemas)</option>
+            <option value="2">2 - Grief (Sedih, Kehilangan)</option>
+            <option value="1">1 - Apathy (Putus Asa, Mati Rasa)</option>
+          </select>
+          <button onclick="logCurrentEmotion()" class="btn btn-secondary" style="margin-top:0.5rem">
+            💾 Catat Emosi
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TAB 2: TEMUKAN -->
+    <div class="tab-content" id="temukan">
+
+      <div style="text-align:center;margin-bottom:1rem">
+        <h2 style="font-size:1.1rem;color:var(--primary)">✨ Temukan Keinginan Sejati</h2>
+        <p class="hint" style="margin-top:0.25rem">"Kalau tidak ada limitasi, apa yang saya inginkan dalam hidup?"</p>
+      </div>
+
+      <!-- Step 1: Tuliskan Keinginan -->
+      <div class="card step-card">
+        <div class="step-number">1</div>
+        <div class="card-body">
+          <h4>Tuliskan Keinginan</h4>
+          <p class="hint">Jangan disensor. Izinkan apapun yang muncul.</p>
+          <textarea id="discoverDesire" class="form-control" rows="4"
+            placeholder="Kalau tidak ada batasan sama sekali, apa yang saya inginkan?"></textarea>
+        </div>
+      </div>
+
+      <!-- Step 2: Identifikasi Wanting -->
+      <div class="card step-card">
+        <div class="step-number">2</div>
+        <div class="card-body">
+          <h4>Identifikasi Wanting</h4>
+          <p class="hint">Apakah keinginan ini datang dari:</p>
+
+          <div class="wanting-tags" id="discoverWantingTags">
+            <button type="button" class="wanting-tag" data-wanting="approval">w/a Approval</button>
+            <button type="button" class="wanting-tag" data-wanting="control">w/c Control</button>
+            <button type="button" class="wanting-tag" data-wanting="security">w/s Security</button>
+            <button type="button" class="wanting-tag" data-wanting="separation">w/sep Separation</button>
+            <button type="button" class="wanting-tag" data-wanting="oneness">w/o Oneness</button>
+          </div>
+
+          <div class="collapsible">
+            <button type="button" class="collapse-toggle" onclick="toggleCollapse(this)">
+              💡 Penjelasan Wanting ▼
+            </button>
+            <div class="collapse-content">
+              <ul>
+                <li><strong>Approval (w/a):</strong> Ingin diakui, dicintai, diterima orang lain</li>
+                <li><strong>Control (w/c):</strong> Ingin mengontrol situasi, orang, atau hasil</li>
+                <li><strong>Security (w/s):</strong> Ingin merasa aman, terlindungi, stabil</li>
+                <li><strong>Separation (w/sep):</strong> Ingin berbeda, unik, terpisah</li>
+                <li><strong>Oneness (w/o):</strong> Ingin menyatu, terhubung, menjadi satu</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Cek Identifikasi -->
+      <div class="card step-card">
+        <div class="step-number">3</div>
+        <div class="card-body">
+          <h4>Cek Identifikasi Personal</h4>
+          <p class="hint">"Adakah rasa identifikasi dengan goal tersebut?"</p>
+
+          <div class="intensity-control">
+            <input type="range" id="discoverIdentification" min="0" max="10" value="5" class="slider">
+            <div class="intensity-display">
+              <span>0</span>
+              <span id="discoverIdentificationValue">5</span>
+              <span>10</span>
+            </div>
+            <div class="intensity-labels">
+              <span>Tidak Personal</span>
+              <span>Sangat Personal</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Release -->
+      <div class="card step-card">
+        <div class="step-number">4</div>
+        <div class="card-body">
+          <h4>Release</h4>
+          <p class="hint">"Bisakah saya melepaskan keinginan/hasrat ini?"</p>
+
+          <div class="release-questions-box">
+            <p class="release-q">💭 "Bisakah kamu mengizinkan keinginan ini hadir sepenuhnya?"</p>
+            <p class="release-q">💭 "Bisakah kamu melepaskan keinginan ini?"</p>
+            <p class="release-q">💭 "Maukah kamu melepaskannya?"</p>
+            <p class="release-q">💭 "Kapan?"</p>
+          </div>
+
+          <button onclick="markDiscoverReleased()" class="btn btn-release btn-block" style="margin-top:0.75rem">
+            🌊 Sudah Release
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 5: Perspektif Kesadaran -->
+      <div class="card step-card">
+        <div class="step-number">5</div>
+        <div class="card-body">
+          <h4>Perspektif Kesadaran</h4>
+          <p class="hint">"Dari perspektif kesadaran/keutuhan, bagaimana kesadaran melihat goal itu?"</p>
+
+          <textarea id="discoverAwareness" class="form-control" rows="3"
+            placeholder="Apa yang terlihat dari sudut pandang kesadaran?"></textarea>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="btn-group" style="margin-top:1rem">
+        <button onclick="resetDiscoverForm()" class="btn btn-secondary">🔄 Reset Form</button>
+        <button onclick="saveDiscoverEntry()" class="btn btn-primary">💾 Simpan ke Journal</button>
+      </div>
+
+    </div>
+
+    <!-- TAB 3: GOAL -->
+    <div class="tab-content" id="goal">
+
+      <!-- Panduan -->
+      <div class="card">
+        <div class="card-body">
+          <div class="collapsible" style="margin:0">
+            <button type="button" class="collapse-toggle" onclick="toggleCollapse(this)">
+              📝 Panduan Menulis Goal ▼
+            </button>
+            <div class="collapse-content">
+              <ul class="checklist">
+                <li>✓ Tulis dalam waktu <strong>SEKARANG</strong> (bukan masa depan)</li>
+                <li>✓ Ungkapkan secara <strong>POSITIF</strong></li>
+                <li>✓ Seolah-olah <strong>SUDAH TERCAPAI</strong></li>
+                <li>✓ Realistis tapi menantang</li>
+                <li>✓ Spesifik tapi tidak membatasi</li>
+                <li>✓ <strong>SATU</strong> goal per pernyataan</li>
+                <li>✓ Hilangkan kata "ingin/mau/pengin/akan"</li>
+                <li>✓ Tambahkan "dengan mudah dan menyenangkan"</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Format Selector -->
+      <div class="card">
+        <div class="card-body">
+          <h4 style="font-size:0.9rem;margin-bottom:0.5rem">Format Goal</h4>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="goalFormat" value="izinkan" checked>
+              <span>"Saya mengizinkan diri saya untuk..."</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="goalFormat" value="terbuka">
+              <span>"Saya terbuka untuk..."</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="goalFormat" value="orang3">
+              <span>"(Nama) diizinkan untuk..." (orang ketiga)</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="goalFormat" value="pertanyaan">
+              <span>"Apakah (goal) sudah bisa ada saat ini?"</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="goalFormat" value="bebas">
+              <span>Format bebas</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Goal Input -->
+      <div class="card">
+        <div class="card-body">
+          <h4 style="font-size:0.9rem;margin-bottom:0.5rem">Tulis Goal Anda</h4>
+
+          <div class="form-group">
+            <label class="form-label">Kategori:</label>
+            <select id="goalCategory" class="form-control">
+              <option value="">-- Pilih Kategori --</option>
+              <option value="karier">💼 Karier / Finansial</option>
+              <option value="relasi">💕 Relationship / Komunikasi</option>
+              <option value="kesehatan">💚 Kesehatan / Wellbeing</option>
+              <option value="spiritual">🙏 Spiritual / Personal Growth</option>
+              <option value="lainnya">📌 Lainnya</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Goal Statement:</label>
+            <textarea id="goalText" class="form-control" rows="3"
+              placeholder="Saya mengizinkan diri saya untuk..."></textarea>
+          </div>
+
+          <button onclick="checkGoalQuality()" class="btn btn-secondary" style="margin-bottom:0.5rem">
+            ✨ Cek Kualitas Goal
+          </button>
+
+          <div id="goalFeedback" class="feedback-box" style="display:none;"></div>
+
+          <button onclick="saveGoal()" class="btn btn-primary btn-block" style="margin-top:0.5rem">
+            💾 Simpan Goal
+          </button>
+        </div>
+      </div>
+
+      <!-- Contoh Goals -->
+      <div class="card">
+        <div class="card-body">
+          <div class="collapsible" style="margin:0">
+            <button type="button" class="collapse-toggle" onclick="toggleCollapse(this)">
+              📚 Contoh Goal Statement ▼
+            </button>
+            <div class="collapse-content">
+              <h5 style="font-size:0.8rem;color:var(--primary);margin:0.5rem 0">💼 Karier / Finansial</h5>
+              <div class="example-goal" onclick="useGoalExample(this)">
+                "Saya mengizinkan diri saya untuk memiliki pekerjaan yang memberikan imbalan finansial berlimpah dengan mudah dan menyenangkan"
+              </div>
+              <div class="example-goal" onclick="useGoalExample(this)">
+                "Saya terbuka untuk menerima penghasilan dari berbagai sumber dengan gampang"
+              </div>
+
+              <h5 style="font-size:0.8rem;color:var(--primary);margin:0.75rem 0 0.5rem 0">💕 Relationship</h5>
+              <div class="example-goal" onclick="useGoalExample(this)">
+                "Saya mengizinkan hubungan saya dengan pasangan menjadi harmonis dan saling mendukung dengan mudah"
+              </div>
+
+              <h5 style="font-size:0.8rem;color:var(--primary);margin:0.75rem 0 0.5rem 0">💚 Kesehatan</h5>
+              <div class="example-goal" onclick="useGoalExample(this)">
+                "Saya mengizinkan diri saya untuk tidur nyenyak dan bangun segar setiap hari dengan mudah"
+              </div>
+
+              <h5 style="font-size:0.8rem;color:var(--primary);margin:0.75rem 0 0.5rem 0">🙏 Spiritual</h5>
+              <div class="example-goal" onclick="useGoalExample(this)">
+                "Saya terbuka untuk merasakan kedamaian dan kehadiran Allah dalam setiap momen"
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Daftar Goal Aktif -->
+      <div class="card">
+        <div class="card-header">🎯 Goal Aktif Saya</div>
+        <div class="card-body">
+          <div id="activeGoalsList">
+            <p class="empty-state">Memuat...</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TAB 4: RELEASE -->
+    <div class="tab-content" id="release">
+
+      <!-- Goal Selector -->
+      <div class="card">
+        <div class="card-body">
+          <h4 style="font-size:0.9rem;margin-bottom:0.5rem">Pilih Goal untuk Release</h4>
+          <select id="releaseGoalSelect" class="form-control">
+            <option value="">-- Pilih dari goal aktif --</option>
+          </select>
+          <p class="or-divider">atau tulis langsung:</p>
+          <textarea id="releaseGoalCustom" class="form-control" rows="2"
+            placeholder="Goal yang ingin di-release..."></textarea>
+        </div>
+      </div>
+
+      <!-- Timer -->
+      <div class="card timer-card">
+        <div class="timer-display" id="timerDisplay">15:00</div>
+        <p class="timer-label">Sesi Releasing</p>
+
+        <div class="timer-controls">
+          <button onclick="startTimer()" class="timer-btn" id="timerStart">▶️</button>
+          <button onclick="pauseTimer()" class="timer-btn" id="timerPause">⏸️</button>
+          <button onclick="resetTimer()" class="timer-btn" id="timerReset">🔄</button>
+        </div>
+
+        <div class="timer-duration">
+          <label><input type="radio" name="timerDuration" value="5"> 5 menit</label>
+          <label><input type="radio" name="timerDuration" value="15" checked> 15 menit</label>
+          <label><input type="radio" name="timerDuration" value="30"> 30 menit</label>
+        </div>
+      </div>
+
+      <!-- Guided Steps -->
+      <div class="guided-container">
+
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+          <span class="step active" data-step="1">1</span>
+          <span class="step" data-step="2">2</span>
+          <span class="step" data-step="3">3</span>
+          <span class="step" data-step="4">4</span>
+          <span class="step" data-step="5">5</span>
+          <span class="step" data-step="6">6</span>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="guided-step active" id="releaseStep1">
+          <div class="card">
+            <div class="card-body">
+              <div class="step-header">
+                <span class="step-badge">Langkah 1 dari 6</span>
+              </div>
+              <p class="step-question">
+                "Baca goal Anda dalam hati atau keras-keras.
+                Apa pikiran atau perasaan yang muncul?"
+              </p>
+              <textarea id="releaseThoughts" class="form-control" rows="4"
+                placeholder="Tuliskan pikiran/perasaan yang muncul..."></textarea>
+              <button onclick="goToReleaseStep(2)" class="btn btn-primary btn-block" style="margin-top:0.75rem">
+                Selanjutnya →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="guided-step" id="releaseStep2">
+          <div class="card">
+            <div class="card-body">
+              <div class="step-header">
+                <span class="step-badge">Langkah 2 dari 6</span>
+              </div>
+              <p class="step-question">"Identifikasi Wanting dari pikiran/perasaan ini"</p>
+
+              <div class="wanting-tags" id="releaseWantingTags">
+                <button type="button" class="wanting-tag" data-wanting="approval">w/a Approval</button>
+                <button type="button" class="wanting-tag" data-wanting="control">w/c Control</button>
+                <button type="button" class="wanting-tag" data-wanting="security">w/s Security</button>
+                <button type="button" class="wanting-tag" data-wanting="separation">w/sep Separation</button>
+                <button type="button" class="wanting-tag" data-wanting="oneness">w/o Oneness</button>
+              </div>
+
+              <div class="step-nav">
+                <button onclick="goToReleaseStep(1)" class="btn btn-secondary">← Sebelumnya</button>
+                <button onclick="goToReleaseStep(3)" class="btn btn-primary">Selanjutnya →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="guided-step" id="releaseStep3">
+          <div class="card">
+            <div class="card-body">
+              <div class="step-header">
+                <span class="step-badge">Langkah 3 dari 6</span>
+              </div>
+              <p class="step-question">"Seberapa personal perasaan ini?"</p>
+
+              <div class="intensity-control">
+                <input type="range" id="releaseIdentification" min="0" max="10" value="5" class="slider">
+                <div class="intensity-display">
+                  <span>0</span>
+                  <span id="releaseIdentificationValue">5</span>
+                  <span>10</span>
+                </div>
+              </div>
+
+              <div class="step-nav">
+                <button onclick="goToReleaseStep(2)" class="btn btn-secondary">← Sebelumnya</button>
+                <button onclick="goToReleaseStep(4)" class="btn btn-primary">Selanjutnya →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="guided-step" id="releaseStep4">
+          <div class="card">
+            <div class="card-body">
+              <div class="step-header">
+                <span class="step-badge">Langkah 4 dari 6</span>
+              </div>
+              <p class="step-question">"Release dengan Pertanyaan Dasar"</p>
+
+              <div class="release-questions-box highlight">
+                <p class="release-q">💭 "Bisakah kamu mengizinkan perasaan ini hadir sepenuhnya?"</p>
+                <p class="release-q">💭 "Bisakah kamu melepaskannya?"</p>
+                <p class="release-q">💭 "Maukah kamu melepaskannya?"</p>
+                <p class="release-q">💭 "Kapan?"</p>
+                <p class="release-q main">🌟 "Apakah kamu itu perasaan ini, atau kamu yang MENYADARI perasaan ini?"</p>
+              </div>
+
+              <button onclick="goToReleaseStep(5)" class="btn btn-release btn-block" style="margin-top:0.75rem">
+                🌊 Sudah Release - Lanjut
+              </button>
+
+              <div class="step-nav" style="margin-top:0.5rem">
+                <button onclick="goToReleaseStep(3)" class="btn btn-secondary">← Sebelumnya</button>
+                <span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="guided-step" id="releaseStep5">
+          <div class="card">
+            <div class="card-body">
+              <div class="step-header">
+                <span class="step-badge">Langkah 5 dari 6</span>
+              </div>
+              <p class="step-question">"Bagaimana kesadaran melihat goal ini?"</p>
+
+              <textarea id="releaseAwareness" class="form-control" rows="3"
+                placeholder="Insight dari perspektif kesadaran..."></textarea>
+
+              <div class="step-nav">
+                <button onclick="goToReleaseStep(4)" class="btn btn-secondary">← Sebelumnya</button>
+                <button onclick="goToReleaseStep(6)" class="btn btn-primary">Selanjutnya →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="guided-step" id="releaseStep6">
+          <div class="card">
+            <div class="card-body">
+              <div class="step-header">
+                <span class="step-badge">Langkah 6 dari 6</span>
+                <span class="step-complete" style="margin-left:0.5rem">✨ Selesai!</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Emosi Sebelum Release:</label>
+                <select id="emotionBefore" class="form-control">
+                  <option value="">-- Pilih --</option>
+                  <option value="9">9 - Peace</option>
+                  <option value="8">8 - Acceptance</option>
+                  <option value="7">7 - Courage</option>
+                  <option value="6">6 - Pride</option>
+                  <option value="5">5 - Anger</option>
+                  <option value="4">4 - Lust</option>
+                  <option value="3">3 - Fear</option>
+                  <option value="2">2 - Grief</option>
+                  <option value="1">1 - Apathy</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Emosi Sesudah Release:</label>
+                <select id="emotionAfter" class="form-control">
+                  <option value="">-- Pilih --</option>
+                  <option value="9">9 - Peace</option>
+                  <option value="8">8 - Acceptance</option>
+                  <option value="7">7 - Courage</option>
+                  <option value="6">6 - Pride</option>
+                  <option value="5">5 - Anger</option>
+                  <option value="4">4 - Lust</option>
+                  <option value="3">3 - Fear</option>
+                  <option value="2">2 - Grief</option>
+                  <option value="1">1 - Apathy</option>
+                </select>
+              </div>
+
+              <button onclick="saveReleaseSession()" class="btn btn-primary btn-block">
+                💾 Simpan Release Session
+              </button>
+
+              <div class="step-nav" style="margin-top:0.5rem">
+                <button onclick="goToReleaseStep(5)" class="btn btn-secondary">← Sebelumnya</button>
+                <span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Reference Card -->
+      <div class="reference-card">
+        <h5>🔑 Pertanyaan Release</h5>
+        <ul>
+          <li>"Bisakah dilepaskan?"</li>
+          <li>"Maukah dilepaskan?"</li>
+          <li>"Kapan?"</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- TAB 5: ACTION -->
+    <div class="tab-content" id="action">
+
+      <!-- Goal Selector -->
+      <div class="card">
+        <div class="card-body">
+          <h4 style="font-size:0.9rem;margin-bottom:0.5rem">Pilih Goal</h4>
+          <select id="actionGoalSelect" class="form-control">
+            <option value="">-- Pilih dari goal aktif --</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Action Brainstorm -->
+      <div class="card">
+        <div class="card-body">
+          <h4 style="font-size:0.9rem;margin-bottom:0.3rem">💡 Action Step Brainstorm</h4>
+          <p class="hint">
+            "Apa hal <strong>PALING SEDERHANA</strong> atau <strong>PALING EKSTREM</strong>
+            yang bisa saya lakukan <strong>HARI INI</strong>?"
+          </p>
+
+          <div class="input-group" style="margin-top:0.5rem">
+            <input type="text" id="action1" class="form-control" placeholder="Action 1:">
+            <input type="text" id="action2" class="form-control" placeholder="Action 2:">
+            <input type="text" id="action3" class="form-control" placeholder="Action 3:">
+          </div>
+
+          <p class="hint" style="margin-top:0.5rem">Wanting dari actions ini:</p>
+          <div class="wanting-tags small" id="actionWantingTags">
+            <button type="button" class="wanting-tag" data-wanting="approval">w/a</button>
+            <button type="button" class="wanting-tag" data-wanting="control">w/c</button>
+            <button type="button" class="wanting-tag" data-wanting="security">w/s</button>
+            <button type="button" class="wanting-tag" data-wanting="separation">w/sep</button>
+            <button type="button" class="wanting-tag" data-wanting="oneness">w/o</button>
+          </div>
+
+          <button onclick="releaseActionWanting()" class="btn btn-secondary" style="margin-top:0.5rem">
+            🌊 Release Wanting dari Actions
+          </button>
+        </div>
+      </div>
+
+      <!-- Limiting Beliefs -->
+      <div class="card">
+        <div class="card-body">
+          <h4 style="font-size:0.9rem;margin-bottom:0.3rem">🚫 Limiting Beliefs</h4>
+          <p class="hint">"Belief apa yang membuat/bisa membuat saya <strong>GAGAL</strong>?"</p>
+
+          <div class="input-group" style="margin-top:0.5rem">
+            <input type="text" id="limiting1" class="form-control" placeholder="Limiting belief 1:">
+            <input type="text" id="limiting2" class="form-control" placeholder="Limiting belief 2:">
+            <input type="text" id="limiting3" class="form-control" placeholder="Limiting belief 3:">
+          </div>
+
+          <div class="wanting-tags small" id="limitingWantingTags" style="margin-top:0.5rem">
+            <button type="button" class="wanting-tag" data-wanting="approval">w/a</button>
+            <button type="button" class="wanting-tag" data-wanting="control">w/c</button>
+            <button type="button" class="wanting-tag" data-wanting="security">w/s</button>
+            <button type="button" class="wanting-tag" data-wanting="separation">w/sep</button>
+            <button type="button" class="wanting-tag" data-wanting="oneness">w/o</button>
+          </div>
+
+          <button onclick="releaseLimitingBeliefs()" class="btn btn-release" style="margin-top:0.5rem">
+            🌊 Release Limiting Beliefs
+          </button>
+        </div>
+      </div>
+
+      <!-- Empowering Beliefs -->
+      <div class="card">
+        <div class="card-body">
+          <h4 style="font-size:0.9rem;margin-bottom:0.3rem">✨ Empowering Beliefs</h4>
+          <p class="hint">"Belief apa yang membuat/bisa membuat saya <strong>SUKSES</strong>?"</p>
+
+          <div class="warning-box">
+            ⚠️ <strong>PENTING:</strong> Release juga belief positif agar tidak menjadi attachment!
+          </div>
+
+          <div class="input-group" style="margin-top:0.5rem">
+            <input type="text" id="empowering1" class="form-control" placeholder="Empowering belief 1:">
+            <input type="text" id="empowering2" class="form-control" placeholder="Empowering belief 2:">
+            <input type="text" id="empowering3" class="form-control" placeholder="Empowering belief 3:">
+          </div>
+
+          <button onclick="releaseEmpoweringBeliefs()" class="btn btn-secondary" style="margin-top:0.5rem">
+            🌊 Release Empowering Beliefs
+          </button>
+        </div>
+      </div>
+
+      <button onclick="saveActionEntry()" class="btn btn-primary btn-block">
+        💾 Simpan ke Journal
+      </button>
+
+    </div>
+
+    <!-- TAB 6: JOURNAL -->
+    <div class="tab-content" id="journal">
+
+      <!-- Filter -->
+      <div class="card filter-card">
+        <div class="filter-row">
+          <select id="filterType" class="form-control" onchange="filterJournal()">
+            <option value="all">Semua Tipe</option>
+            <option value="discover">🔍 Discover</option>
+            <option value="release">🌊 Release</option>
+            <option value="action">⚡ Action</option>
+            <option value="emotion">💫 Emotion</option>
+          </select>
+
+          <select id="filterGoal" class="form-control" onchange="filterJournal()">
+            <option value="all">Semua Goal</option>
+          </select>
+
+          <input type="date" id="filterDate" class="form-control" onchange="filterJournal()">
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid" style="margin-top:0.75rem">
+        <div class="stat-card">
+          <div class="stat-value" id="journalReleases">0</div>
+          <div class="stat-label">Release</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="journalActiveDays">0</div>
+          <div class="stat-label">Hari Aktif</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="journalInsights">0</div>
+          <div class="stat-label">Insight</div>
+        </div>
+      </div>
+
+      <!-- Entries -->
+      <div id="journalEntries">
+        <p class="empty-state">Memuat...</p>
+      </div>
+
+      <!-- Actions -->
+      <div class="btn-group" style="margin-top:1rem">
+        <button onclick="exportJournalToPDF()" class="btn btn-secondary">
+          📥 Export PDF
+        </button>
+        <button onclick="confirmClearJournal()" class="btn btn-danger">
+          🗑️ Hapus Semua
+        </button>
+      </div>
+
+    </div>
+
+    <!-- TAB 7: SETTINGS -->
+    <div class="tab-content" id="settings">
+
+      <!-- API Config -->
+      <div class="card">
+        <div class="card-body">
+          <h4 style="font-size:0.9rem;margin-bottom:0.5rem">🔗 API Configuration</h4>
+          <p class="hint">Gunakan API URL yang sama dengan Clean Up Tracker</p>
+
+          <div class="form-group">
+            <label class="form-label">Google Apps Script URL:</label>
+            <input type="text" id="apiUrl" class="form-control"
+              placeholder="https://script.google.com/macros/s/.../exec">
+          </div>
+
+          <div class="btn-group">
+            <button onclick="saveApiUrl()" class="btn btn-primary">💾 Simpan</button>
+            <button onclick="testApiConnection()" class="btn btn-secondary">🔌 Test</button>
+          </div>
+
+          <div id="apiStatus" class="status-indicator" style="display:none"></div>
+        </div>
+      </div>
+
+      <!-- User Settings -->
+      <div class="card">
+        <div class="card-body">
+          <h4 style="font-size:0.9rem;margin-bottom:0.5rem">👤 User Settings</h4>
+
+          <div class="form-group">
+            <label class="form-label">Nama Default:</label>
+            <input type="text" id="defaultName" class="form-control" placeholder="Nama Anda">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tanggal Mulai Program:</label>
+            <input type="date" id="programStartDate" class="form-control">
+          </div>
+
+          <button onclick="saveUserSettings()" class="btn btn-primary">💾 Simpan</button>
+        </div>
+      </div>
+
+      <!-- Danger Zone -->
+      <div class="card danger-zone">
+        <div class="card-body">
+          <h4 style="font-size:0.9rem;margin-bottom:0.5rem">⚠️ Danger Zone</h4>
+          <button onclick="clearLocalStorage()" class="btn btn-danger">
+            🗑️ Clear Local Storage
+          </button>
+          <button onclick="resetAllSettings()" class="btn btn-danger" style="margin-left:0.5rem">
+            🔄 Reset All Settings
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="app.js"></script>
+  <script src="manifesting-app.js"></script>
+</body>
+</html>
