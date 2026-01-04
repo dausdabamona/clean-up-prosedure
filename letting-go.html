@@ -35,7 +35,6 @@
       min-height: 100vh;
     }
 
-    /* Header */
     .header {
       background: linear-gradient(135deg, var(--primary), var(--primary-light));
       color: #fff;
@@ -64,12 +63,10 @@
     }
 
     .back-link:hover { background: rgba(255,255,255,0.1); }
-
     .header-text { flex: 1; }
     .header h1 { font-size: 1.3rem; margin-bottom: 0.25rem; }
     .header p { font-size: 0.8rem; opacity: 0.9; }
 
-    /* Main Content */
     .main-content {
       max-width: 900px;
       margin: 0 auto;
@@ -77,96 +74,29 @@
       padding-bottom: 3rem;
     }
 
-    /* Quote Section */
-    .quote-section {
-      background: linear-gradient(135deg, var(--primary), var(--primary-light));
-      color: #fff;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      text-align: center;
-    }
-
-    .quote-text {
-      font-style: italic;
-      font-size: 1rem;
-      line-height: 1.6;
-      margin-bottom: 0.5rem;
-    }
-
-    .quote-author {
-      font-size: 0.85rem;
-      opacity: 0.8;
-    }
-
-    /* Progress Section */
-    .progress-section {
+    .stats-bar {
       background: var(--bg-card);
       border-radius: 12px;
-      padding: 1.25rem;
-      margin-bottom: 1.5rem;
-      box-shadow: var(--shadow);
-    }
-
-    .progress-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.75rem;
-    }
-
-    .progress-title { font-weight: 600; font-size: 0.9rem; }
-
-    .progress-container {
-      background: #e0e0e0;
-      border-radius: 10px;
-      height: 10px;
-      overflow: hidden;
-    }
-
-    .progress-bar {
-      background: linear-gradient(90deg, var(--primary), var(--primary-light));
-      height: 100%;
-      border-radius: 10px;
-      transition: width 0.5s ease;
-      width: 0%;
-    }
-
-    /* Stats Grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .stat-item {
-      background: var(--bg-card);
-      border-radius: 10px;
       padding: 1rem;
-      text-align: center;
+      margin-bottom: 1rem;
       box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
 
-    .stat-value {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--primary);
-    }
+    .stat-item { text-align: center; padding: 0.5rem 1rem; }
+    .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+    .stat-label { font-size: 0.7rem; color: var(--text-light); text-transform: uppercase; }
 
-    .stat-label {
-      font-size: 0.7rem;
-      color: var(--text-light);
-      text-transform: uppercase;
-    }
-
-    /* Tab Navigation */
     .tab-nav {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.4rem;
       margin-bottom: 1rem;
       overflow-x: auto;
       padding-bottom: 0.5rem;
+      -webkit-overflow-scrolling: touch;
     }
 
     .tab-btn {
@@ -181,17 +111,12 @@
       cursor: pointer;
       transition: all 0.3s;
       box-shadow: var(--shadow);
+      white-space: nowrap;
     }
 
     .tab-btn:hover { background: var(--accent); }
-    .tab-btn.active {
-      background: var(--primary);
-      color: #fff;
-    }
+    .tab-btn.active { background: var(--primary); color: #fff; }
 
-    .tab-btn .check { margin-left: 0.25rem; }
-
-    /* Session Content */
     .tab-content { display: none; }
     .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
 
@@ -200,8 +125,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Session Card */
-    .session-card {
+    .card {
       background: var(--bg-card);
       border-radius: 12px;
       box-shadow: var(--shadow);
@@ -209,7 +133,7 @@
       overflow: hidden;
     }
 
-    .session-header {
+    .card-header {
       background: var(--primary);
       color: #fff;
       padding: 1rem 1.25rem;
@@ -218,17 +142,12 @@
       gap: 0.75rem;
     }
 
-    .session-icon { font-size: 1.5rem; }
-    .session-title { font-size: 1.1rem; font-weight: 600; }
+    .card-header .icon { font-size: 1.5rem; }
+    .card-header h2 { font-size: 1.1rem; font-weight: 600; }
+    .card-body { padding: 1.25rem; }
 
-    .session-body { padding: 1.25rem; }
-
-    /* Content Sections */
-    .content-section {
-      margin-bottom: 1.5rem;
-    }
-
-    .content-section h3 {
+    .section { margin-bottom: 1.5rem; }
+    .section h3 {
       font-size: 1rem;
       color: var(--primary);
       margin-bottom: 0.75rem;
@@ -236,13 +155,9 @@
       align-items: center;
       gap: 0.5rem;
     }
+    .section p { margin-bottom: 0.75rem; }
 
-    .content-section p {
-      margin-bottom: 0.75rem;
-      color: var(--text-dark);
-    }
-
-    .highlight-box {
+    .highlight {
       background: linear-gradient(135deg, var(--accent), #f5f0e8);
       border-left: 4px solid var(--primary);
       padding: 1rem;
@@ -250,49 +165,85 @@
       margin: 1rem 0;
     }
 
-    .highlight-box p {
+    .highlight blockquote {
       font-style: italic;
-      margin: 0;
+      color: var(--primary);
+      font-weight: 500;
     }
 
-    /* Lists */
-    .numbered-list, .bullet-list {
-      margin: 0.75rem 0;
-      padding-left: 1.25rem;
-    }
-
-    .numbered-list li, .bullet-list li {
-      margin-bottom: 0.5rem;
-      line-height: 1.6;
-    }
-
-    /* Mistake Cards */
     .mistake-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 0.75rem;
       margin: 1rem 0;
     }
 
     .mistake-card {
-      background: var(--bg-light);
+      background: #fdf5f5;
       border-radius: 8px;
       padding: 1rem;
       border-left: 3px solid var(--danger);
     }
 
-    .mistake-card h4 {
-      font-size: 0.9rem;
-      color: var(--danger);
-      margin-bottom: 0.5rem;
+    .mistake-card h4 { font-size: 0.9rem; color: var(--danger); margin-bottom: 0.5rem; }
+    .mistake-card p { font-size: 0.85rem; margin: 0; }
+
+    .analogy {
+      background: #f0f8f0;
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+      border: 1px solid #d4e8d4;
     }
 
-    .mistake-card p {
-      font-size: 0.85rem;
-      margin: 0;
+    .analogy h4 { color: var(--success); margin-bottom: 0.5rem; }
+
+    .analogy-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
     }
 
-    /* Comparison Table */
+    .analogy-step {
+      text-align: center;
+      padding: 1rem;
+      background: white;
+      border-radius: 8px;
+      min-width: 90px;
+    }
+
+    .analogy-step .emoji { font-size: 2rem; display: block; margin-bottom: 0.5rem; }
+    .analogy-arrow { font-size: 1.5rem; color: var(--text-light); }
+
+    .questions-list { margin: 1rem 0; }
+
+    .question-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--bg-light);
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+    }
+
+    .question-item .number {
+      width: 32px;
+      height: 32px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .question-item strong { color: var(--primary); }
+
     .comparison-table {
       width: 100%;
       border-collapse: collapse;
@@ -306,15 +257,10 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .comparison-table th {
-      background: var(--bg-light);
-      font-weight: 600;
-    }
-
+    .comparison-table th { background: var(--bg-light); font-weight: 600; }
     .comparison-table .dont { color: var(--danger); }
     .comparison-table .do { color: var(--success); }
 
-    /* Wanting Cards */
     .wanting-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -337,204 +283,226 @@
       border-color: var(--primary);
     }
 
-    .wanting-card.active {
-      border-color: var(--primary);
-      background: linear-gradient(135deg, #f8f5ff, var(--bg-light));
-    }
+    .wanting-card.control { border-left: 4px solid #E74C3C; }
+    .wanting-card.approval { border-left: 4px solid #E91E63; }
+    .wanting-card.security { border-left: 4px solid #3498DB; }
+    .wanting-card.separation { border-left: 4px solid #9B59B6; }
 
     .wanting-icon { font-size: 2rem; margin-bottom: 0.5rem; }
     .wanting-name { font-weight: 600; margin-bottom: 0.25rem; }
     .wanting-desc { font-size: 0.8rem; color: var(--text-light); }
 
-    /* Triple Welcoming Diagram */
-    .diagram-box {
-      background: var(--bg-light);
-      border-radius: 10px;
-      padding: 1.25rem;
-      margin: 1rem 0;
-      font-family: monospace;
-      font-size: 0.85rem;
-      line-height: 1.8;
-    }
+    .triple-diagram { margin: 1.5rem 0; }
 
-    .diagram-layer {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.75rem;
-      margin: 0.5rem 0;
-    }
-
-    .diagram-layer strong { color: var(--primary); }
-
-    /* Interactive Tools */
-    .tool-section {
-      background: linear-gradient(135deg, #f8f5ff, var(--bg-card));
-      border: 2px solid var(--primary-light);
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-    }
-
-    .tool-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--primary);
-      margin-bottom: 1rem;
+    .layer {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-    }
-
-    /* Form Elements */
-    .form-group { margin-bottom: 1rem; }
-
-    .form-group label {
-      display: block;
-      font-weight: 600;
-      font-size: 0.85rem;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
       margin-bottom: 0.5rem;
-      color: var(--text-dark);
     }
 
-    textarea, input[type="text"] {
+    .layer-1 { border-left: 4px solid #E74C3C; }
+    .layer-2 { border-left: 4px solid #F39C12; }
+    .layer-3 { border-left: 4px solid #9B59B6; }
+
+    .layer-icon { font-size: 2rem; }
+    .layer h4 { color: var(--primary); margin-bottom: 0.25rem; }
+    .layer p { font-size: 0.85rem; margin: 0; }
+    .layer small { color: var(--text-light); }
+
+    .practice-btn {
+      display: block;
       width: 100%;
+      padding: 1rem 1.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 1.5rem;
+    }
+
+    .practice-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .quick-btn {
+      padding: 1.25rem;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+    }
+
+    .quick-btn:hover { border-color: var(--primary); background: var(--bg-light); }
+    .quick-btn .emoji { font-size: 2rem; display: block; margin-bottom: 0.5rem; }
+    .quick-btn .label { font-weight: 600; color: var(--text-dark); display: block; }
+    .quick-btn .time { font-size: 0.75rem; color: var(--text-light); }
+
+    .checklist { margin: 1rem 0; }
+
+    .checklist label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
       padding: 0.75rem;
+      background: var(--bg-light);
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+    }
+
+    .checklist label:hover { background: var(--accent); }
+    .checklist input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal.active { display: flex; }
+
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      background: var(--primary);
+      color: white;
+      padding: 1rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 { font-size: 1.1rem; }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.25rem;
+      line-height: 1;
+    }
+
+    .modal-progress {
+      padding: 0.75rem 1.25rem;
+      background: var(--bg-light);
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: #e0e0e0;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      transition: width 0.5s ease;
+      border-radius: 3px;
+    }
+
+    .progress-text {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+
+    .modal-body {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      text-align: center;
+    }
+
+    .step-text {
+      font-size: 1.15rem;
+      color: var(--text-dark);
+      margin-bottom: 0.75rem;
+      line-height: 1.5;
+    }
+
+    .step-subtext {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .step-input textarea {
+      width: 100%;
+      padding: 1rem;
       border: 2px solid var(--border);
       border-radius: 8px;
-      font-size: 0.9rem;
+      font-size: 1rem;
       font-family: inherit;
       resize: vertical;
-      transition: border-color 0.3s;
+      min-height: 100px;
     }
 
-    textarea:focus, input[type="text"]:focus {
-      outline: none;
-      border-color: var(--primary);
-    }
+    .step-input textarea:focus { outline: none; border-color: var(--primary); }
 
-    /* Option Buttons */
     .option-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
       gap: 0.5rem;
-      margin: 0.75rem 0;
+      margin: 1rem 0;
     }
 
     .option-btn {
-      padding: 0.75rem;
+      padding: 0.75rem 0.5rem;
       border: 2px solid var(--border);
       border-radius: 8px;
-      background: var(--bg-card);
+      background: white;
       cursor: pointer;
-      text-align: center;
       transition: all 0.3s;
-      font-size: 0.85rem;
+      text-align: center;
+      font-size: 0.8rem;
     }
 
     .option-btn:hover { border-color: var(--primary-light); }
-    .option-btn.selected {
-      border-color: var(--primary);
-      background: linear-gradient(135deg, #f8f5ff, var(--bg-card));
-    }
+    .option-btn.selected { border-color: var(--primary); background: linear-gradient(135deg, #f8f5ff, white); }
+    .option-btn .emoji { font-size: 1.3rem; display: block; margin-bottom: 0.25rem; }
 
-    .option-btn .emoji { font-size: 1.5rem; display: block; margin-bottom: 0.25rem; }
-
-    /* Buttons */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: #fff;
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-light);
-      transform: translateY(-1px);
-    }
-
-    .btn-secondary {
-      background: var(--secondary);
-      color: #fff;
-    }
-
-    .btn-success {
-      background: var(--success);
-      color: #fff;
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 2px solid var(--primary);
-      color: var(--primary);
-    }
-
-    .btn-outline:hover {
-      background: var(--primary);
-      color: #fff;
-    }
-
-    .btn-block { width: 100%; }
-
-    .btn-group {
-      display: flex;
-      gap: 0.75rem;
-      margin-top: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .btn-group .btn { flex: 1; min-width: 120px; }
-
-    /* Wizard Steps */
-    .wizard-step { display: none; }
-    .wizard-step.active { display: block; animation: fadeIn 0.3s ease; }
-
-    .step-indicator {
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .step-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--border);
-      transition: all 0.3s;
-    }
-
-    .step-dot.active { background: var(--primary); transform: scale(1.2); }
-    .step-dot.completed { background: var(--success); }
-
-    .question-card {
-      background: var(--accent);
-      border-radius: 10px;
-      padding: 1.5rem;
-      text-align: center;
-      margin: 1rem 0;
-    }
-
-    .question-card p {
-      font-size: 1.1rem;
-      font-weight: 500;
-      color: var(--primary);
-      margin: 0;
-    }
-
-    /* Answer Buttons */
     .answer-group {
       display: flex;
       gap: 1rem;
@@ -546,7 +514,7 @@
       padding: 1rem 2rem;
       border: 2px solid var(--primary);
       border-radius: 10px;
-      background: var(--bg-card);
+      background: white;
       font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
@@ -554,68 +522,48 @@
       min-width: 100px;
     }
 
-    .answer-btn:hover, .answer-btn.selected {
-      background: var(--primary);
-      color: #fff;
+    .answer-btn:hover { background: var(--primary); color: white; }
+    .answer-btn.highlight { background: var(--success); border-color: var(--success); color: white; }
+
+    .breathing-animation {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      margin: 2rem auto;
+      animation: breathe 8s infinite ease-in-out;
     }
 
-    /* Insight Section */
-    .insight-section {
-      background: var(--bg-card);
-      border-radius: 12px;
-      padding: 1.25rem;
-      margin-top: 1.5rem;
-      box-shadow: var(--shadow);
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.3); opacity: 1; }
     }
 
-    .insight-title {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .insight-list {
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    .insight-item {
+    .modal-footer {
+      padding: 1rem 1.25rem;
       background: var(--bg-light);
-      border-radius: 8px;
-      padding: 0.75rem;
-      margin-bottom: 0.5rem;
-      font-size: 0.85rem;
-    }
-
-    .insight-item .time {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      margin-bottom: 0.25rem;
-    }
-
-    /* Checkbox */
-    .checkbox-group {
       display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin: 1rem 0;
+      gap: 0.75rem;
     }
 
-    .checkbox-group input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-    }
-
-    .checkbox-group label {
+    .modal-footer button {
+      flex: 1;
+      padding: 0.75rem;
+      border-radius: 8px;
       font-size: 0.9rem;
+      font-weight: 600;
       cursor: pointer;
+      transition: all 0.3s;
     }
 
-    /* Toast */
+    .btn-prev { background: white; border: 2px solid var(--border); color: var(--text-dark); }
+    .btn-next { background: var(--primary); border: none; color: white; }
+    .btn-next:hover { background: var(--primary-light); }
+    .btn-prev:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .completion-icon { font-size: 4rem; margin-bottom: 1rem; }
+    .completion-title { color: var(--success); margin-bottom: 1rem; }
+
     .toast {
       position: fixed;
       bottom: 20px;
@@ -626,19 +574,14 @@
       padding: 0.75rem 1.5rem;
       border-radius: 8px;
       font-size: 0.85rem;
-      z-index: 1000;
+      z-index: 2000;
       opacity: 0;
       transition: all 0.3s ease;
     }
 
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .toast.success { background: var(--success); }
 
-    .toast-success { background: var(--success); }
-
-    /* Return Banner (from Manifesting) */
     .return-banner {
       background: linear-gradient(135deg, #E8DCC4, #F5F0E8);
       border-bottom: 2px solid var(--secondary);
@@ -650,25 +593,9 @@
       flex-wrap: wrap;
     }
 
-    .return-banner-content {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
-    .return-banner-content span:first-child {
-      font-size: 0.85rem;
-      color: var(--text-dark);
-    }
-
-    .return-context {
-      font-size: 0.75rem;
-      color: var(--text-light);
-      max-width: 300px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
+    .return-banner-content { display: flex; flex-direction: column; gap: 0.25rem; }
+    .return-banner-content span:first-child { font-size: 0.85rem; }
+    .return-context { font-size: 0.75rem; color: var(--text-light); }
 
     .btn-return {
       background: var(--secondary);
@@ -679,23 +606,19 @@
       font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s;
-      white-space: nowrap;
     }
 
-    .btn-return:hover {
-      background: var(--secondary-light);
-      transform: translateY(-1px);
-    }
-
-    /* Responsive */
     @media (max-width: 600px) {
-      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+      .stats-bar { padding: 0.75rem; }
+      .stat-item { padding: 0.25rem 0.5rem; }
+      .stat-value { font-size: 1.2rem; }
       .wanting-grid { grid-template-columns: 1fr; }
-      .tab-nav { gap: 0.4rem; }
-      .tab-btn { padding: 0.5rem 0.75rem; font-size: 0.75rem; }
+      .quick-grid { grid-template-columns: 1fr; }
       .answer-group { flex-direction: column; }
       .answer-btn { width: 100%; }
+      .option-grid { grid-template-columns: repeat(3, 1fr); }
+      .analogy-visual { gap: 0.5rem; }
+      .analogy-step { min-width: 70px; padding: 0.75rem; }
     }
   </style>
 </head>
@@ -705,865 +628,440 @@
       <a href="sedona-app.html" class="back-link">←</a>
       <div class="header-text">
         <h1>🕊️ Letting Go</h1>
-        <p>Teknik Melepaskan - Sedona Method</p>
+        <p>Kemampuan Alami untuk Melepaskan</p>
       </div>
     </div>
   </header>
 
   <main class="main-content">
-    <!-- Quote -->
-    <section class="quote-section">
-      <p class="quote-text" id="quote-text">"Keep it simple, sweetheart."</p>
-      <p class="quote-author" id="quote-author">— Lester Levenson</p>
-    </section>
-
-    <!-- Progress -->
-    <section class="progress-section">
-      <div class="progress-header">
-        <span class="progress-title">Progress Belajar</span>
-        <span id="progress-text">0/5 sesi selesai</span>
-      </div>
-      <div class="progress-container">
-        <div class="progress-bar" id="progress-bar"></div>
-      </div>
-    </section>
-
-    <!-- Stats -->
-    <section class="stats-grid">
+    <div class="stats-bar">
       <div class="stat-item">
         <div class="stat-value" id="stat-sessions">0</div>
-        <div class="stat-label">Sesi Selesai</div>
+        <div class="stat-label">Sesi</div>
       </div>
       <div class="stat-item">
         <div class="stat-value" id="stat-releases">0</div>
-        <div class="stat-label">Total Release</div>
+        <div class="stat-label">Release</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="stat-streak">0</div>
+        <div class="stat-label">Streak</div>
       </div>
       <div class="stat-item">
         <div class="stat-value" id="stat-insights">0</div>
         <div class="stat-label">Insight</div>
       </div>
-    </section>
+    </div>
 
-    <!-- Tab Navigation -->
     <nav class="tab-nav">
-      <button class="tab-btn active" data-tab="sesi1">📚 Sesi 1<span class="check" id="check-sesi1"></span></button>
-      <button class="tab-btn" data-tab="sesi2">🎯 Sesi 2<span class="check" id="check-sesi2"></span></button>
-      <button class="tab-btn" data-tab="sesi3">🤗 Sesi 3<span class="check" id="check-sesi3"></span></button>
-      <button class="tab-btn" data-tab="sesi4">📖 Sesi 4<span class="check" id="check-sesi4"></span></button>
-      <button class="tab-btn" data-tab="sesi5">💭 Sesi 5<span class="check" id="check-sesi5"></span></button>
-      <button class="tab-btn" data-tab="journal">📝 Journal</button>
+      <button class="tab-btn active" data-tab="fondasi">📚 Fondasi</button>
+      <button class="tab-btn" data-tab="wanting">🎯 4 Wanting</button>
+      <button class="tab-btn" data-tab="triple">🔮 Triple</button>
+      <button class="tab-btn" data-tab="story">📖 Cerita</button>
+      <button class="tab-btn" data-tab="knowing">🧠 Tahu</button>
+      <button class="tab-btn" data-tab="quick">⚡ Quick</button>
     </nav>
 
-    <!-- SESI 1: Dasar-Dasar Releasing -->
-    <div class="tab-content active" id="sesi1">
-      <div class="session-card">
-        <div class="session-header">
-          <span class="session-icon">📚</span>
-          <span class="session-title">Sesi 1: Dasar-Dasar Releasing (Fondasi)</span>
+    <!-- TAB 1: FONDASI -->
+    <div class="tab-content active" id="fondasi">
+      <div class="card">
+        <div class="card-header">
+          <span class="icon">📚</span>
+          <h2>Fondasi Releasing</h2>
         </div>
-        <div class="session-body">
-          <!-- Apa Itu Sedona Method -->
-          <div class="content-section">
+        <div class="card-body">
+          <div class="section">
             <h3>🌟 Apa Itu Sedona Method?</h3>
-            <p>Teknik sederhana namun powerful untuk melepaskan emosi yang tidak nyaman. Mengembalikan kemampuan alami kita untuk melepas — seperti yang dilakukan anak kecil secara natural.</p>
+            <p>Teknik sederhana namun powerful untuk <strong>melepaskan emosi yang tidak nyaman</strong>. Mengembalikan kemampuan alami kita untuk melepas — seperti yang dilakukan anak kecil secara natural.</p>
           </div>
 
-          <!-- 3 Kesalahan Umum -->
-          <div class="content-section">
-            <h3>⚠️ 3 Kesalahan Umum Menghadapi Emosi</h3>
+          <div class="section">
+            <h3>🚫 3 Kesalahan Umum</h3>
             <div class="mistake-grid">
               <div class="mistake-card">
-                <h4>1. Ditekan</h4>
-                <p>Pura-pura baik-baik saja, akhirnya jadi "bom waktu"</p>
+                <h4>1. DITEKAN</h4>
+                <p>Pura-pura baik-baik saja, jadi "bom waktu"</p>
               </div>
               <div class="mistake-card">
-                <h4>2. Diekspresikan Berlebihan</h4>
-                <p>Teriak, curhat kemana-mana, hanya lega sesaat</p>
+                <h4>2. DIEKSPRESIKAN</h4>
+                <p>Teriak, curhat, hanya lega sesaat</p>
               </div>
               <div class="mistake-card">
-                <h4>3. Diabaikan</h4>
-                <p>Menyibukkan diri, pakai zat adiktif, tapi emosi tetap menumpuk</p>
+                <h4>3. DIABAIKAN</h4>
+                <p>Sibukkan diri, emosi menumpuk</p>
               </div>
             </div>
           </div>
 
-          <!-- Konsep Dasar -->
-          <div class="content-section">
-            <h3>💡 Konsep Dasar</h3>
-            <div class="highlight-box">
-              <p>"Kamu bukan pikiran kamu, kamu bukan perasaan kamu"</p>
+          <div class="section">
+            <h3>🎈 Analogi Bolpen</h3>
+            <div class="analogy">
+              <div class="analogy-visual">
+                <div class="analogy-step">
+                  <span class="emoji">✊</span>
+                  <p>Genggam erat</p>
+                </div>
+                <span class="analogy-arrow">→</span>
+                <div class="analogy-step">
+                  <span class="emoji">🖐️</span>
+                  <p>Buka tangan</p>
+                </div>
+                <span class="analogy-arrow">→</span>
+                <div class="analogy-step">
+                  <span class="emoji">✨</span>
+                  <p>Jatuh/Lepas</p>
+                </div>
+              </div>
+              <p style="text-align:center;margin-top:1rem;"><strong>Sesederhana itu melepaskan.</strong></p>
             </div>
-            <p><strong>Analogi langit dan awan:</strong> Kita adalah langit, pikiran dan perasaan hanyalah awan yang numpang lewat.</p>
-            <p><strong>Analogi bolpen:</strong> Genggam bolpen erat-erat (seperti kita memegang emosi). Lalu buka tangan dan jatuhkan. Sesederhana itu melepaskan.</p>
           </div>
 
-          <!-- 3 Pertanyaan Releasing -->
-          <div class="content-section">
+          <div class="section">
+            <div class="highlight">
+              <blockquote>"Kamu bukan pikiran kamu, kamu bukan perasaan kamu"</blockquote>
+              <p style="margin-top:0.5rem;">Kita adalah <strong>langit</strong>, pikiran dan perasaan hanyalah <strong>awan yang numpang lewat</strong>.</p>
+            </div>
+          </div>
+
+          <div class="section">
             <h3>❓ 3 Pertanyaan Releasing</h3>
-            <ol class="numbered-list">
-              <li><strong>"Bisakah saya melepaskannya?"</strong></li>
-              <li><strong>"Maukah saya melepaskannya?"</strong> (Kalau ragu: "Mendingan pegangan terus atau mendingan bebas?")</li>
-              <li><strong>"Kapan?"</strong></li>
-            </ol>
-            <div class="highlight-box">
-              <p><strong>PENTING:</strong> Ini pertanyaan, bukan perintah. Jawab jujur — "iya" atau "nggak" sama-sama valid. Proses releasing terjadi SAAT kamu menjawab.</p>
+            <div class="questions-list">
+              <div class="question-item">
+                <span class="number">1</span>
+                <div>
+                  <strong>"Bisakah saya melepaskannya?"</strong>
+                  <p>Kalau bisa jatuhkan bolpen, bisa lepaskan perasaan.</p>
+                </div>
+              </div>
+              <div class="question-item">
+                <span class="number">2</span>
+                <div>
+                  <strong>"Maukah saya melepaskannya?"</strong>
+                  <p>Kalau ragu: "Mendingan pegangan terus atau bebas?"</p>
+                </div>
+              </div>
+              <div class="question-item">
+                <span class="number">3</span>
+                <div>
+                  <strong>"Kapan?"</strong>
+                  <p>Undangan untuk melepaskan SEKARANG.</p>
+                </div>
+              </div>
+            </div>
+            <div class="highlight">
+              <p><strong>⚠️ PENTING:</strong> Ini PERTANYAAN, bukan perintah. Jawab jujur — "iya" atau "nggak" valid. Releasing terjadi SAAT menjawab.</p>
             </div>
           </div>
 
-          <!-- Proses Releasing -->
-          <div class="content-section">
-            <h3>🔄 Proses Releasing Dasar</h3>
-            <ol class="numbered-list">
-              <li>Pikirkan situasi yang mengganggu</li>
-              <li>Perhatikan emosi apa yang muncul (marah, sedih, kecewa, dll)</li>
-              <li>Rasakan sensasinya di tubuh (dada, perut, kepala, pundak)</li>
-              <li>Izinkan hadir apa adanya</li>
-              <li>Tanyakan 3 pertanyaan di atas</li>
-              <li>Jawab dengan jujur — selesai</li>
-            </ol>
-          </div>
-
-          <!-- Perangkap -->
-          <div class="content-section">
-            <h3>🚫 Perangkap yang Harus Dihindari</h3>
+          <div class="section">
+            <h3>🚧 Perangkap</h3>
             <table class="comparison-table">
-              <tr>
-                <th class="dont">❌ Jangan</th>
-                <th class="do">✅ Lakukan</th>
-              </tr>
-              <tr>
-                <td class="dont">Memberi perintah ("Lepasin!")</td>
-                <td class="do">Bertanya dengan lembut</td>
-              </tr>
-              <tr>
-                <td class="dont">Bertanya ke emosi "sudah siap belum?"</td>
-                <td class="do">Kamu yang memutuskan</td>
-              </tr>
-              <tr>
-                <td class="dont">Menunggu perasaan lepas dulu</td>
-                <td class="do">Jawab langsung</td>
-              </tr>
-              <tr>
-                <td class="dont">Hanya bertanya tanpa menjawab</td>
-                <td class="do">Selalu berikan jawaban</td>
-              </tr>
-              <tr>
-                <td class="dont">Mencoba/berusaha keras</td>
-                <td class="do">Lakukan saja, tanpa usaha</td>
-              </tr>
+              <tr><th class="dont">❌ Jangan</th><th class="do">✅ Lakukan</th></tr>
+              <tr><td class="dont">Memberi perintah</td><td class="do">Bertanya lembut</td></tr>
+              <tr><td class="dont">Bertanya ke emosi</td><td class="do">Kamu yang memutuskan</td></tr>
+              <tr><td class="dont">Menunggu lepas dulu</td><td class="do">Jawab langsung</td></tr>
+              <tr><td class="dont">Berusaha keras</td><td class="do">Lakukan saja</td></tr>
             </table>
           </div>
 
-          <!-- Tool: Guided Releasing -->
-          <div class="tool-section">
-            <h3 class="tool-title">🛠️ Guided Releasing Tool</h3>
-            <div id="releasing-tool-1">
-              <div class="wizard-step active" data-step="1">
-                <div class="form-group">
-                  <label>Situasi apa yang sedang mengganggu kamu?</label>
-                  <textarea id="situation-1" rows="3" placeholder="Contoh: Aku kesal dengan rekan kerja yang tidak kooperatif..."></textarea>
-                </div>
-                <button class="btn btn-primary btn-block" onclick="nextReleasingStep(1, 2)">Mulai Releasing →</button>
-              </div>
-
-              <div class="wizard-step" data-step="2">
-                <div class="step-indicator">
-                  <div class="step-dot completed"></div>
-                  <div class="step-dot active"></div>
-                  <div class="step-dot"></div>
-                  <div class="step-dot"></div>
-                  <div class="step-dot"></div>
-                </div>
-                <p style="text-align: center; margin-bottom: 1rem;">Emosi apa yang muncul?</p>
-                <div class="option-grid" id="emotion-options-1">
-                  <div class="option-btn" data-value="marah"><span class="emoji">😠</span>Marah</div>
-                  <div class="option-btn" data-value="sedih"><span class="emoji">😢</span>Sedih</div>
-                  <div class="option-btn" data-value="takut"><span class="emoji">😨</span>Takut</div>
-                  <div class="option-btn" data-value="kecewa"><span class="emoji">😞</span>Kecewa</div>
-                  <div class="option-btn" data-value="cemas"><span class="emoji">😰</span>Cemas</div>
-                  <div class="option-btn" data-value="lainnya"><span class="emoji">🤔</span>Lainnya</div>
-                </div>
-                <div class="btn-group">
-                  <button class="btn btn-outline" onclick="prevReleasingStep(1, 1)">← Kembali</button>
-                  <button class="btn btn-primary" onclick="nextReleasingStep(1, 3)" id="next-btn-1-2" disabled>Lanjut →</button>
-                </div>
-              </div>
-
-              <div class="wizard-step" data-step="3">
-                <div class="step-indicator">
-                  <div class="step-dot completed"></div>
-                  <div class="step-dot completed"></div>
-                  <div class="step-dot active"></div>
-                  <div class="step-dot"></div>
-                  <div class="step-dot"></div>
-                </div>
-                <p style="text-align: center; margin-bottom: 1rem;">Di mana kamu merasakannya di tubuh?</p>
-                <div class="option-grid" id="body-options-1">
-                  <div class="option-btn" data-value="dada"><span class="emoji">💗</span>Dada</div>
-                  <div class="option-btn" data-value="perut"><span class="emoji">🫄</span>Perut</div>
-                  <div class="option-btn" data-value="kepala"><span class="emoji">🧠</span>Kepala</div>
-                  <div class="option-btn" data-value="pundak"><span class="emoji">🤷</span>Pundak</div>
-                  <div class="option-btn" data-value="tenggorokan"><span class="emoji">😶</span>Tenggorokan</div>
-                  <div class="option-btn" data-value="lainnya"><span class="emoji">🔍</span>Lainnya</div>
-                </div>
-                <div class="btn-group">
-                  <button class="btn btn-outline" onclick="prevReleasingStep(1, 2)">← Kembali</button>
-                  <button class="btn btn-primary" onclick="nextReleasingStep(1, 4)" id="next-btn-1-3" disabled>Lanjut →</button>
-                </div>
-              </div>
-
-              <div class="wizard-step" data-step="4">
-                <div class="step-indicator">
-                  <div class="step-dot completed"></div>
-                  <div class="step-dot completed"></div>
-                  <div class="step-dot completed"></div>
-                  <div class="step-dot active"></div>
-                  <div class="step-dot"></div>
-                </div>
-                <p style="text-align: center; color: var(--text-light); margin-bottom: 0.5rem;">Izinkan perasaan ini hadir apa adanya...</p>
-                <div class="question-card">
-                  <p>"Bisakah kamu melepaskannya?"</p>
-                </div>
-                <div class="answer-group">
-                  <button class="answer-btn" onclick="selectAnswer(this, 1, 4)">Ya</button>
-                  <button class="answer-btn" onclick="selectAnswer(this, 1, 4)">Tidak</button>
-                </div>
-                <p style="text-align: center; font-size: 0.8rem; color: var(--text-light);">Jawab dengan jujur. Kedua jawaban valid.</p>
-                <div class="btn-group">
-                  <button class="btn btn-outline" onclick="prevReleasingStep(1, 3)">← Kembali</button>
-                  <button class="btn btn-primary" onclick="nextReleasingStep(1, 5)" id="next-btn-1-4" disabled>Lanjut →</button>
-                </div>
-              </div>
-
-              <div class="wizard-step" data-step="5">
-                <div class="step-indicator">
-                  <div class="step-dot completed"></div>
-                  <div class="step-dot completed"></div>
-                  <div class="step-dot completed"></div>
-                  <div class="step-dot completed"></div>
-                  <div class="step-dot active"></div>
-                </div>
-                <div class="question-card">
-                  <p>"Maukah kamu melepaskannya?"</p>
-                </div>
-                <p style="text-align: center; font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem;">Kalau ragu: "Mendingan pegangan terus atau mendingan bebas?"</p>
-                <div class="answer-group">
-                  <button class="answer-btn" onclick="selectAnswer(this, 1, 5)">Ya, mau</button>
-                  <button class="answer-btn" onclick="selectAnswer(this, 1, 5)">Belum</button>
-                </div>
-                <div class="btn-group">
-                  <button class="btn btn-outline" onclick="prevReleasingStep(1, 4)">← Kembali</button>
-                  <button class="btn btn-primary" onclick="nextReleasingStep(1, 6)" id="next-btn-1-5" disabled>Lanjut →</button>
-                </div>
-              </div>
-
-              <div class="wizard-step" data-step="6">
-                <div class="question-card">
-                  <p>"Kapan?"</p>
-                </div>
-                <div class="answer-group">
-                  <button class="answer-btn" onclick="completeReleasing(1)" style="background: var(--success); color: #fff; border-color: var(--success);">🕊️ Sekarang</button>
-                  <button class="answer-btn" onclick="completeReleasing(1)">Nanti</button>
-                </div>
-              </div>
-
-              <div class="wizard-step" data-step="7">
-                <div style="text-align: center; padding: 2rem 0;">
-                  <div style="font-size: 4rem; margin-bottom: 1rem;">🕊️</div>
-                  <h3 style="color: var(--success); margin-bottom: 1rem;">Release Selesai!</h3>
-                  <p style="margin-bottom: 1.5rem;">Bagus! Kamu baru saja melakukan satu sesi releasing.</p>
-                  <div class="form-group">
-                    <label>Catat insight-mu (opsional):</label>
-                    <textarea id="insight-1" rows="2" placeholder="Apa yang kamu rasakan atau sadari?"></textarea>
-                  </div>
-                  <div class="btn-group">
-                    <button class="btn btn-outline" onclick="resetReleasingTool(1)">🔄 Ulangi</button>
-                    <button class="btn btn-success" onclick="saveInsightAndReset(1)">💾 Simpan & Selesai</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Mark Complete -->
-          <div class="checkbox-group">
-            <input type="checkbox" id="complete-sesi1" onchange="markSessionComplete('sesi1')">
-            <label for="complete-sesi1">Saya sudah memahami Sesi 1</label>
-          </div>
+          <button class="practice-btn" onclick="startGuidedReleasing('fondasi')">🎯 MULAI PRAKTIK RELEASING DASAR</button>
         </div>
       </div>
     </div>
 
-    <!-- SESI 2: Empat Keinginan Dasar -->
-    <div class="tab-content" id="sesi2">
-      <div class="session-card">
-        <div class="session-header">
-          <span class="session-icon">🎯</span>
-          <span class="session-title">Sesi 2: Empat Keinginan Dasar (4 Wanting)</span>
+    <!-- TAB 2: 4 WANTING -->
+    <div class="tab-content" id="wanting">
+      <div class="card">
+        <div class="card-header">
+          <span class="icon">🎯</span>
+          <h2>Empat Keinginan Dasar</h2>
         </div>
-        <div class="session-body">
-          <div class="content-section">
-            <p>Setiap emosi berakar pada keinginan yang lebih dalam. Ada 4 wanting utama, masing-masing punya pasangan/lawan:</p>
+        <div class="card-body">
+          <div class="section">
+            <p>Setiap emosi berakar pada <strong>keinginan yang lebih dalam</strong>:</p>
+            <div class="highlight">
+              <blockquote>"Semakin kamu melepas keinginan, semakin kamu MEMILIKI apa yang kamu inginkan."</blockquote>
+            </div>
           </div>
 
-          <!-- 4 Wanting Cards -->
-          <div class="wanting-grid" id="wanting-grid">
-            <div class="wanting-card" data-wanting="control" onclick="selectWanting('control')">
+          <div class="wanting-grid">
+            <div class="wanting-card control" onclick="startGuidedReleasing('wanting-control')">
               <div class="wanting-icon">🎮</div>
               <div class="wanting-name">Control</div>
               <div class="wanting-desc">Ingin mengontrol / dikontrol</div>
             </div>
-            <div class="wanting-card" data-wanting="approval" onclick="selectWanting('approval')">
+            <div class="wanting-card approval" onclick="startGuidedReleasing('wanting-approval')">
               <div class="wanting-icon">❤️</div>
               <div class="wanting-name">Approval</div>
               <div class="wanting-desc">Ingin persetujuan / cinta</div>
             </div>
-            <div class="wanting-card" data-wanting="security" onclick="selectWanting('security')">
+            <div class="wanting-card security" onclick="startGuidedReleasing('wanting-security')">
               <div class="wanting-icon">🛡️</div>
               <div class="wanting-name">Security</div>
               <div class="wanting-desc">Ingin keamanan / selamat</div>
             </div>
-            <div class="wanting-card" data-wanting="separation" onclick="selectWanting('separation')">
+            <div class="wanting-card separation" onclick="startGuidedReleasing('wanting-separation')">
               <div class="wanting-icon">🔗</div>
               <div class="wanting-name">Separation</div>
               <div class="wanting-desc">Ingin berpisah / menyatu</div>
             </div>
           </div>
 
-          <!-- Wanting Details -->
-          <div id="wanting-details">
-            <div class="wanting-detail" id="detail-control" style="display: none;">
-              <div class="content-section">
-                <h3>🎮 Wanting to Control</h3>
-                <p><strong>Lawan:</strong> Wanting to be Controlled (Ingin Dikontrol)</p>
-                <p><strong>Ciri-ciri:</strong> Rasa maksa, dorong-dorongan, tarik-tarikan, resistensi, keras tidak lembut</p>
-                <p><strong>Contoh:</strong> Mulai proyek dengan antusias, lalu hilang semangat → itu resistensi</p>
-                <div class="highlight-box">
-                  <p>"Semakin kamu melepas keinginan untuk mengontrol, semakin kamu merasa memegang kendali."</p>
-                </div>
-              </div>
-            </div>
-            <div class="wanting-detail" id="detail-approval" style="display: none;">
-              <div class="content-section">
-                <h3>❤️ Wanting Approval</h3>
-                <p><strong>Lawan:</strong> Wanting Disapproval (rebel) + Wanting to Love (ingin memberi cinta)</p>
-                <p><strong>Paradoks:</strong> Ketika kita ingin cinta, kita cenderung melakukan hal yang membuat orang lain tidak mau memberi cinta</p>
-                <div class="highlight-box">
-                  <p>"Sumber cinta yang kamu cari di luar sudah ada di dalam diri kamu."</p>
-                </div>
-                <p><strong>Jalan pintas:</strong> Perhatikan di mana cinta dan perhatian sudah kamu miliki, lalu izinkan meluas.</p>
-              </div>
-            </div>
-            <div class="wanting-detail" id="detail-security" style="display: none;">
-              <div class="content-section">
-                <h3>🛡️ Wanting Security</h3>
-                <p><strong>Lawan:</strong> Wanting to Die (Ingin Mati)</p>
-                <p><strong>Ciri-ciri:</strong> Takut mati, takut terluka, takut hal buruk terjadi → menghasilkan kecemasan</p>
-                <p><strong>Paradoks:</strong> Semakin ingin selamat, semakin merasa takut dan tidak aman</p>
-                <div class="highlight-box">
-                  <p>"Keamanan yang absolut datangnya dari dalam."</p>
-                </div>
-                <p><strong>Catatan:</strong> "Ingin mati" bisa sangat halus — seperti malas bangun pagi, malas hidup.</p>
-              </div>
-            </div>
-            <div class="wanting-detail" id="detail-separation" style="display: none;">
-              <div class="content-section">
-                <h3>🔗 Wanting Separation</h3>
-                <p><strong>Lawan:</strong> Wanting to be One (Ingin Menjadi Satu)</p>
-                <p><strong>Ciri-ciri:</strong> Merasa special, ingin jauh dari orang lain, tidak ingin jadi bagian dari sesuatu</p>
-                <div class="highlight-box">
-                  <p>"Semakin kamu melepaskan keduanya, semakin kamu merasa sudah pulang ke rumah yang tidak pernah kamu tinggalkan."</p>
-                </div>
-              </div>
-            </div>
+          <div class="section" style="margin-top:1.5rem;">
+            <h3>🎮 Control</h3>
+            <p><strong>Ciri:</strong> Rasa maksa, resistensi, keras</p>
+            <div class="highlight"><blockquote>"Semakin lepas kontrol, semakin merasa memegang kendali."</blockquote></div>
           </div>
 
-          <!-- Additional Concepts -->
-          <div class="content-section">
-            <h3>🧩 Melepas Keinginan untuk Memahami</h3>
-            <p>Keinginan untuk memahami justru MEMBLOKIR pengetahuan alami.</p>
-            <p><strong>Analogi kertas putih:</strong> Masalah = titik hitam. Kalau fokus terlalu dekat, tidak bisa lihat apa-apa. Mundur, lihat kertas putih (diri sejati) yang luas — di situlah solusinya.</p>
-            <div class="highlight-box">
-              <p>"Dengan melepas keinginan untuk tahu, kamu menjadi tahu."</p>
-            </div>
+          <div class="section">
+            <h3>❤️ Approval</h3>
+            <p><strong>Paradoks:</strong> Ingin cinta → melakukan hal yang membuat orang menjauh</p>
+            <div class="highlight"><blockquote>"Sumber cinta sudah ada di dalam diri kamu."</blockquote></div>
           </div>
 
-          <div class="content-section">
-            <h3>🎯 Fokus pada FEELING, Bukan Masalah</h3>
-            <p><strong>Analogi restoran:</strong> Masalah = pelayan yang mengantarkan makanan (emosi). Setelah makanan ada, pelayan tidak dibutuhkan. Makan (lepaskan emosi), pelayan datang lagi (cek lapisan berikutnya).</p>
-            <div class="highlight-box">
-              <p>"90% pikiran yang meribetkan kamu akan lepas kalau kamu berhenti fokus pada masalah dan mulai fokus pada feeling."</p>
-            </div>
+          <div class="section">
+            <h3>🛡️ Security</h3>
+            <p><strong>Ciri:</strong> Takut, cemas, kegelisahan</p>
+            <div class="highlight"><blockquote>"Keamanan absolut datangnya dari dalam."</blockquote></div>
           </div>
 
-          <!-- Tool: 4 Wanting Quick Release -->
-          <div class="tool-section">
-            <h3 class="tool-title">🛠️ 4 Wanting Quick Release</h3>
-            <p style="margin-bottom: 1rem;">Klik wanting yang ingin dilepaskan:</p>
-            <div class="wanting-grid">
-              <button class="wanting-card" onclick="startWantingRelease('control')" style="border: none; cursor: pointer;">
-                <div class="wanting-icon">🎮</div>
-                <div class="wanting-name">Release Control</div>
-              </button>
-              <button class="wanting-card" onclick="startWantingRelease('approval')" style="border: none; cursor: pointer;">
-                <div class="wanting-icon">❤️</div>
-                <div class="wanting-name">Release Approval</div>
-              </button>
-              <button class="wanting-card" onclick="startWantingRelease('security')" style="border: none; cursor: pointer;">
-                <div class="wanting-icon">🛡️</div>
-                <div class="wanting-name">Release Security</div>
-              </button>
-              <button class="wanting-card" onclick="startWantingRelease('separation')" style="border: none; cursor: pointer;">
-                <div class="wanting-icon">🔗</div>
-                <div class="wanting-name">Release Separation</div>
-              </button>
-            </div>
-
-            <div id="wanting-release-wizard" style="display: none; margin-top: 1.5rem;">
-              <div class="question-card">
-                <p id="wanting-question"></p>
-              </div>
-              <div class="answer-group">
-                <button class="answer-btn" onclick="wantingReleaseNext()">Ya</button>
-                <button class="answer-btn" onclick="wantingReleaseNext()">Tidak</button>
-              </div>
-              <p style="text-align: center; font-size: 0.8rem; color: var(--text-light);" id="wanting-hint"></p>
-            </div>
+          <div class="section">
+            <h3>🔗 Separation</h3>
+            <p><strong>Ciri:</strong> Merasa special, ingin jauh dari orang lain</p>
+            <div class="highlight"><blockquote>"Lepaskan keduanya, merasa sudah pulang ke rumah."</blockquote></div>
           </div>
 
-          <div class="checkbox-group">
-            <input type="checkbox" id="complete-sesi2" onchange="markSessionComplete('sesi2')">
-            <label for="complete-sesi2">Saya sudah memahami Sesi 2</label>
-          </div>
+          <button class="practice-btn" onclick="startGuidedReleasing('wanting-all')">🎯 PRAKTIK RELEASING SEMUA WANTING</button>
         </div>
       </div>
     </div>
 
-    <!-- SESI 3: Triple Welcoming -->
-    <div class="tab-content" id="sesi3">
-      <div class="session-card">
-        <div class="session-header">
-          <span class="session-icon">🤗</span>
-          <span class="session-title">Sesi 3: Triple Welcoming</span>
+    <!-- TAB 3: TRIPLE WELCOMING -->
+    <div class="tab-content" id="triple">
+      <div class="card">
+        <div class="card-header">
+          <span class="icon">🔮</span>
+          <h2>Triple Welcoming</h2>
         </div>
-        <div class="session-body">
-          <div class="content-section">
-            <p>Setiap masalah memiliki 3 komponen yang perlu disambut bersamaan:</p>
+        <div class="card-body">
+          <div class="section">
+            <p>Setiap masalah memiliki <strong>3 komponen</strong> yang perlu disambut:</p>
+          </div>
 
-            <div class="diagram-box">
-              <div class="diagram-layer">
-                <strong>1. PERASAAN/EMOSI</strong><br>
-                ← Lapisan atas (marah, sedih, dll)
+          <div class="triple-diagram">
+            <div class="layer layer-1">
+              <div class="layer-icon">😤</div>
+              <div>
+                <h4>1. EMOSI</h4>
+                <p>Marah, sedih, takut, dll</p>
               </div>
-              <div class="diagram-layer">
-                <strong>2. WANTING (Keinginan)</strong><br>
-                ← Akar emosi (control, approval, security, separation)<br>
-                <em>Bisa lebih dari satu</em>
+            </div>
+            <div class="layer layer-2">
+              <div class="layer-icon">🎯</div>
+              <div>
+                <h4>2. WANTING</h4>
+                <p>Control, Approval, Security, Separation</p>
               </div>
-              <div class="diagram-layer">
-                <strong>3. RASA KEAKUAN</strong><br>
-                ← "Ini tentang AKU"<br>
-                <em>Yang mengaitkan isu pada diri</em>
+            </div>
+            <div class="layer layer-3">
+              <div class="layer-icon">👤</div>
+              <div>
+                <h4>3. RASA KEAKUAN</h4>
+                <p>"Ini tentang AKU"</p>
               </div>
             </div>
           </div>
 
-          <div class="content-section">
-            <h3>🐱🐕 Analogi Kucing & Anjing</h3>
-            <p>Seperti kucing dan anjing berantem dalam kartun — yang terlihat hanya angin puyuh dan debu. Banyak emosi dan keinginan yang saling bertentangan. <strong>JANGAN MASUK KE DALAM KUMPARAN</strong> — mundur, biarkan terurai sendiri.</p>
-          </div>
-
-          <div class="content-section">
-            <h3>🔄 Proses Triple Welcoming</h3>
-            <ol class="numbered-list">
-              <li>Hadirkan situasi yang mengganggu</li>
-              <li>Perhatikan emosi apa yang muncul → Izinkan hadir</li>
-              <li>Gali lebih dalam: muncul dari wanting apa? → Izinkan hadir</li>
-              <li>Perhatikan rasa keakuan ("ini tentang aku") → Izinkan hadir</li>
-              <li>Biarkan energi punya momentum sendiri</li>
-              <li>Mundur selangkah, lepaskan</li>
-            </ol>
-          </div>
-
-          <div class="highlight-box">
-            <p><strong>Pertanyaan Kunci:</strong> "Apakah kamu rasa cemas itu, atau yang SADAR bahwa rasa cemas itu ada?"</p>
-          </div>
-
-          <p>Kesadaran tidak sama dengan emosi. Kesadaran tidak terpengaruh oleh cerita-cerita. Ketika sadar → langsung rilis dengan mudah.</p>
-
-          <!-- Tool: Triple Welcoming -->
-          <div class="tool-section">
-            <h3 class="tool-title">🛠️ Triple Welcoming Tool</h3>
-            <div id="triple-tool">
-              <div class="wizard-step active" data-step="1">
-                <div class="form-group">
-                  <label>Situasi yang mengganggu:</label>
-                  <textarea id="triple-situation" rows="2" placeholder="Deskripsikan situasi yang sedang kamu hadapi..."></textarea>
-                </div>
-                <button class="btn btn-primary btn-block" onclick="nextTripleStep(2)">Mulai Triple Welcoming →</button>
-              </div>
-
-              <div class="wizard-step" data-step="2">
-                <p style="text-align: center; margin-bottom: 1rem;"><strong>Layer 1: EMOSI</strong></p>
-                <p style="text-align: center; color: var(--text-light);">Emosi apa yang muncul?</p>
-                <div class="option-grid" id="triple-emotions">
-                  <div class="option-btn" data-value="marah"><span class="emoji">😠</span>Marah</div>
-                  <div class="option-btn" data-value="sedih"><span class="emoji">😢</span>Sedih</div>
-                  <div class="option-btn" data-value="takut"><span class="emoji">😨</span>Takut</div>
-                  <div class="option-btn" data-value="cemas"><span class="emoji">😰</span>Cemas</div>
-                  <div class="option-btn" data-value="malu"><span class="emoji">😳</span>Malu</div>
-                  <div class="option-btn" data-value="bersalah"><span class="emoji">😔</span>Bersalah</div>
-                </div>
-                <div class="question-card" style="margin-top: 1rem;">
-                  <p>"Bisakah kamu mengizinkan emosi ini hadir?"</p>
-                </div>
-                <div class="btn-group">
-                  <button class="btn btn-outline" onclick="prevTripleStep(1)">← Kembali</button>
-                  <button class="btn btn-primary" onclick="nextTripleStep(3)">Ya, izinkan →</button>
-                </div>
-              </div>
-
-              <div class="wizard-step" data-step="3">
-                <p style="text-align: center; margin-bottom: 1rem;"><strong>Layer 2: WANTING</strong></p>
-                <p style="text-align: center; color: var(--text-light);">Dari keinginan apa emosi ini muncul? (bisa pilih lebih dari satu)</p>
-                <div class="option-grid" id="triple-wantings">
-                  <div class="option-btn" data-value="control"><span class="emoji">🎮</span>Control</div>
-                  <div class="option-btn" data-value="approval"><span class="emoji">❤️</span>Approval</div>
-                  <div class="option-btn" data-value="security"><span class="emoji">🛡️</span>Security</div>
-                  <div class="option-btn" data-value="separation"><span class="emoji">🔗</span>Separation</div>
-                </div>
-                <div class="question-card" style="margin-top: 1rem;">
-                  <p>"Bisakah kamu mengizinkan keinginan ini hadir?"</p>
-                </div>
-                <div class="btn-group">
-                  <button class="btn btn-outline" onclick="prevTripleStep(2)">← Kembali</button>
-                  <button class="btn btn-primary" onclick="nextTripleStep(4)">Ya, izinkan →</button>
-                </div>
-              </div>
-
-              <div class="wizard-step" data-step="4">
-                <p style="text-align: center; margin-bottom: 1rem;"><strong>Layer 3: RASA KEAKUAN</strong></p>
-                <div class="question-card">
-                  <p>"Apakah ini terasa tentang KAMU? Tentang siapa kamu?"</p>
-                </div>
-                <div class="answer-group">
-                  <button class="answer-btn" onclick="nextTripleStep(5)">Ya, ini tentang aku</button>
-                </div>
-                <p style="text-align: center; color: var(--text-light); margin-top: 1rem;">Perhatikan rasa keakuan itu. Izinkan hadir.</p>
-                <div class="btn-group">
-                  <button class="btn btn-outline" onclick="prevTripleStep(3)">← Kembali</button>
-                </div>
-              </div>
-
-              <div class="wizard-step" data-step="5">
-                <div style="text-align: center; padding: 1rem;">
-                  <p style="font-size: 1.2rem; margin-bottom: 1rem;">🌊 Biarkan ketiganya hadir bersamaan...</p>
-                  <p style="color: var(--text-light); margin-bottom: 1.5rem;">Emosi, Wanting, dan Rasa Keakuan</p>
-                  <p style="font-size: 1.1rem; margin-bottom: 1rem;">Sekarang, mundur selangkah...</p>
-                  <div class="question-card">
-                    <p>"Bisakah kamu melepaskan semuanya?"</p>
-                  </div>
-                  <div class="answer-group">
-                    <button class="answer-btn" onclick="completeTriple()" style="background: var(--success); color: #fff; border-color: var(--success);">🕊️ Lepaskan Semua</button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="wizard-step" data-step="6">
-                <div style="text-align: center; padding: 2rem 0;">
-                  <div style="font-size: 4rem; margin-bottom: 1rem;">✨</div>
-                  <h3 style="color: var(--success); margin-bottom: 1rem;">Triple Welcoming Selesai!</h3>
-                  <div class="highlight-box">
-                    <p>"Apakah kamu emosi itu, atau yang SADAR akan emosi itu?"</p>
-                  </div>
-                  <button class="btn btn-primary" onclick="resetTripleTool()" style="margin-top: 1rem;">🔄 Ulangi</button>
-                </div>
-              </div>
+          <div class="section">
+            <h3>🌪️ Analogi Kucing & Anjing</h3>
+            <div class="analogy">
+              <p>Seperti kucing dan anjing berantem — yang terlihat hanya angin puyuh dan debu.</p>
+              <p style="margin-top:0.5rem;"><strong>JANGAN MASUK KE DALAM KUMPARAN</strong> — mundur, biarkan terurai sendiri.</p>
             </div>
           </div>
 
-          <div class="checkbox-group">
-            <input type="checkbox" id="complete-sesi3" onchange="markSessionComplete('sesi3')">
-            <label for="complete-sesi3">Saya sudah memahami Sesi 3</label>
+          <div class="section">
+            <div class="highlight">
+              <blockquote>"Apakah kamu rasa cemas itu, atau yang SADAR bahwa rasa cemas itu ada?"</blockquote>
+            </div>
           </div>
+
+          <button class="practice-btn" onclick="startGuidedReleasing('triple')">🎯 MULAI TRIPLE WELCOMING</button>
         </div>
       </div>
     </div>
 
-    <!-- SESI 4: Melepas Cerita -->
-    <div class="tab-content" id="sesi4">
-      <div class="session-card">
-        <div class="session-header">
-          <span class="session-icon">📖</span>
-          <span class="session-title">Sesi 4: Melepas Cerita (Story)</span>
+    <!-- TAB 4: MELEPAS CERITA -->
+    <div class="tab-content" id="story">
+      <div class="card">
+        <div class="card-header">
+          <span class="icon">📖</span>
+          <h2>Melepas Cerita</h2>
         </div>
-        <div class="session-body">
-          <div class="highlight-box">
-            <p>"Kita tidak menjalani hidup — kita menjalani KISAH hidup aku."</p>
+        <div class="card-body">
+          <div class="section">
+            <div class="highlight">
+              <blockquote>"Kita tidak menjalani hidup — kita menjalani KISAH hidup aku."</blockquote>
+            </div>
           </div>
 
-          <div class="content-section">
-            <h3>😢 Mengapa Kita Menderita?</h3>
-            <p>Penderitaan muncul karena kita PERCAYA cerita itu adalah tentang kita:</p>
-            <ul class="bullet-list">
-              <li>Cerita seorang anak, istri, suami, ibu, ayah, bos, karyawan</li>
-              <li>"Aku tidak layak", "Aku tidak cukup", "Uangku habis terus"</li>
-              <li>Semua label + cerita yang melekat padanya</li>
+          <div class="section">
+            <h3>😰 Mengapa Menderita?</h3>
+            <p>Karena kamu <strong>PERCAYA</strong> cerita itu tentang kamu:</p>
+            <ul style="margin-left:1.5rem;">
+              <li>"Aku tidak layak"</li>
+              <li>"Aku tidak cukup"</li>
+              <li>Semua label + cerita yang melekat</li>
             </ul>
           </div>
 
-          <div class="content-section">
-            <h3>✨ Kebenaran</h3>
-            <ul class="bullet-list">
-              <li>Cerita itu <strong>BUKAN FAKTA</strong> — hanya produk karangan pikiran</li>
-              <li>Cerita <strong>TIDAK TERJADI SAAT INI</strong> — hanya kenangan</li>
-              <li>Kamu <strong>BUKAN</strong> cerita seorang aku</li>
-              <li>Hidup sudah <strong>MENGURUS DIRINYA SENDIRI</strong> tanpa campur tangan siapapun</li>
-            </ul>
-          </div>
-
-          <div class="content-section">
-            <h3>🔄 Proses Releasing untuk Cerita</h3>
-            <ol class="numbered-list">
-              <li>Sambut cerita yang tidak disukai/menghambat</li>
-              <li>Periksa wanting apa yang ada</li>
-              <li>Periksa rasa keakuan — "ini tentang aku, siapa aku"</li>
-              <li>Lepaskan:
-                <ul class="bullet-list">
-                  <li>Keinginan untuk percaya cerita itu lagi</li>
-                  <li>Keinginan untuk jadi orang yang punya cerita itu</li>
-                  <li>Keinginan untuk memberikan kekuatan pada cerita</li>
-                  <li>Keinginan untuk membuat cerita itu nyata/sakral/penting</li>
-                </ul>
-              </li>
-            </ol>
-          </div>
-
-          <div class="highlight-box">
-            <p><strong>Pertanyaan Kunci:</strong> "Apakah kamu orang yang ada di cerita itu? Atau hanya ada KEBERADAAN yang mungkin menjelma menjadi cerita itu?"</p>
-          </div>
-
-          <!-- Tool: Story Release -->
-          <div class="tool-section">
-            <h3 class="tool-title">🛠️ Story Release Tool</h3>
-            <div id="story-tool">
-              <div class="wizard-step active" data-step="1">
-                <div class="form-group">
-                  <label>Cerita apa yang kamu ceritakan ke diri sendiri?</label>
-                  <textarea id="story-input" rows="4" placeholder="Contoh: Aku selalu gagal dalam hubungan. Aku tidak pernah cukup baik. Aku tidak akan pernah sukses..."></textarea>
-                </div>
-                <button class="btn btn-primary btn-block" onclick="nextStoryStep(2)">Periksa Cerita →</button>
+          <div class="section">
+            <h3>💡 Kebenaran</h3>
+            <div class="mistake-grid">
+              <div class="mistake-card" style="background:#f0f8f0;border-left-color:var(--success);">
+                <h4 style="color:var(--success);">BUKAN FAKTA</h4>
+                <p>Hanya karangan pikiran</p>
               </div>
-
-              <div class="wizard-step" data-step="2">
-                <div class="question-card">
-                  <p>"Apakah cerita ini FAKTA atau hanya PIKIRAN?"</p>
-                </div>
-                <div class="answer-group">
-                  <button class="answer-btn" onclick="nextStoryStep(3)">Hanya pikiran</button>
-                  <button class="answer-btn" onclick="nextStoryStep(3)">Rasanya seperti fakta</button>
-                </div>
-                <p style="text-align: center; color: var(--text-light); margin-top: 1rem;">Perhatikan: apakah ini realita atau hanya interpretasi?</p>
-              </div>
-
-              <div class="wizard-step" data-step="3">
-                <div class="question-card">
-                  <p>"Apakah cerita ini sedang TERJADI SEKARANG?"</p>
-                </div>
-                <div class="answer-group">
-                  <button class="answer-btn" onclick="nextStoryStep(4)">Tidak, ini kenangan</button>
-                  <button class="answer-btn" onclick="nextStoryStep(4)">Rasanya nyata</button>
-                </div>
-                <p style="text-align: center; color: var(--text-light); margin-top: 1rem;">Cerita selalu tentang masa lalu atau masa depan, bukan saat ini.</p>
-              </div>
-
-              <div class="wizard-step" data-step="4">
-                <div class="question-card">
-                  <p>"Apakah kamu MAU melepaskan cerita ini?"</p>
-                </div>
-                <p style="text-align: center; color: var(--text-light); margin-bottom: 1rem;">Melepaskan keinginan untuk percaya, memberikan kekuatan, dan menjadikan cerita ini nyata.</p>
-                <div class="answer-group">
-                  <button class="answer-btn" onclick="completeStory()" style="background: var(--success); color: #fff; border-color: var(--success);">🕊️ Ya, lepaskan</button>
-                  <button class="answer-btn" onclick="resetStoryTool()">Belum siap</button>
-                </div>
-              </div>
-
-              <div class="wizard-step" data-step="5">
-                <div style="text-align: center; padding: 2rem 0;">
-                  <div style="font-size: 4rem; margin-bottom: 1rem;">📖✨</div>
-                  <h3 style="color: var(--success); margin-bottom: 1rem;">Cerita Dilepaskan!</h3>
-                  <div class="highlight-box">
-                    <p>"Apakah kamu orang dalam cerita itu? Atau hanya ada KEBERADAAN?"</p>
-                  </div>
-                  <button class="btn btn-primary" onclick="resetStoryTool()" style="margin-top: 1rem;">🔄 Lepaskan Cerita Lain</button>
-                </div>
+              <div class="mistake-card" style="background:#f0f8f0;border-left-color:var(--success);">
+                <h4 style="color:var(--success);">TIDAK SAAT INI</h4>
+                <p>Hanya kenangan</p>
               </div>
             </div>
           </div>
 
-          <div class="checkbox-group">
-            <input type="checkbox" id="complete-sesi4" onchange="markSessionComplete('sesi4')">
-            <label for="complete-sesi4">Saya sudah memahami Sesi 4</label>
+          <div class="section">
+            <div class="highlight">
+              <blockquote>"Apakah kamu orang di cerita itu? Atau hanya ada KEBERADAAN?"</blockquote>
+            </div>
           </div>
+
+          <button class="practice-btn" onclick="startGuidedReleasing('story')">🎯 MULAI MELEPAS CERITA</button>
         </div>
       </div>
     </div>
 
-    <!-- SESI 5: Melepas Tahu -->
-    <div class="tab-content" id="sesi5">
-      <div class="session-card">
-        <div class="session-header">
-          <span class="session-icon">💭</span>
-          <span class="session-title">Sesi 5: Melepas "Tahu" (Knowing)</span>
+    <!-- TAB 5: MELEPAS TAHU -->
+    <div class="tab-content" id="knowing">
+      <div class="card">
+        <div class="card-header">
+          <span class="icon">🧠</span>
+          <h2>Melepas "Tahu"</h2>
         </div>
-        <div class="session-body">
-          <div class="content-section">
-            <h3>🔒 Mengapa "Tahu" Mengunci Kita?</h3>
-            <p>Rasa TAHU dan INGIN TAHU adalah hal yang sama — keduanya memperkuat rasa keakuan.</p>
+        <div class="card-body">
+          <div class="section">
+            <p>Rasa <strong>TAHU</strong> dan <strong>INGIN TAHU</strong> sama — keduanya memperkuat rasa keakuan.</p>
+          </div>
 
-            <div class="diagram-box">
-              Semakin tahu → Semakin ingin tahu lebih banyak<br>
-              → Semakin tidak puas<br>
-              → Semakin kuat rasa keakuan<br>
-              → Semakin terjebak
+          <div class="section">
+            <h3>🔄 Siklus Menjebak</h3>
+            <div class="analogy">
+              <p style="text-align:center;">Semakin tahu → Semakin ingin tahu → Tidak puas → Keakuan kuat → Terjebak</p>
             </div>
           </div>
 
-          <div class="content-section">
-            <h3>⚠️ Jebakan "Tahu"</h3>
-            <ul class="bullet-list">
-              <li>"Aku tahu aku punya masalah ini" → Masalah jadi nyata</li>
-              <li>"Aku tahu aku tidak layak/tidak cukup" → Limitasi jadi permanen</li>
-              <li>"Aku tahu ini cara yang benar" → Ada filter, tidak bisa melihat jernih</li>
-            </ul>
-            <div class="highlight-box">
-              <p>"Sesegera kita tahu 'ini apa', ada kebuntuan. Ada filter. Kita berhubungan dengan konsep kita tentang itu, bukan realitanya."</p>
+          <div class="section">
+            <h3>🪤 Jebakan "Tahu"</h3>
+            <table class="comparison-table">
+              <tr><th>Yang Kita Tahu</th><th>Dampak</th></tr>
+              <tr><td>"Aku tahu aku punya masalah"</td><td>Masalah jadi nyata</td></tr>
+              <tr><td>"Aku tahu aku tidak layak"</td><td>Limitasi permanen</td></tr>
+            </table>
+          </div>
+
+          <div class="section">
+            <div class="highlight">
+              <blockquote>"Apakah ada seseorang yang tahu? Atau hanya ada INI — keberadaan yang sudah apa adanya?"</blockquote>
             </div>
           </div>
 
-          <div class="content-section">
-            <h3>✨ Keberadaan Melampaui "Tahu"</h3>
-            <ul class="bullet-list">
-              <li>Keberadaan tidak perlu tahu untuk menjadi apa adanya</li>
-              <li>Hanya si AKU yang merasa perlu tahu</li>
-              <li>Semakin sedikit rasa "tahu" → Semakin natural, spontan, tidak terbatas</li>
-            </ul>
-          </div>
-
-          <div class="content-section">
-            <h3>🔄 Proses Releasing untuk "Tahu"</h3>
-            <ol class="numbered-list">
-              <li>Fokus pada satu hal yang kamu pikir kamu TAHU</li>
-              <li>Sambut rasa tahu itu</li>
-              <li>Periksa wanting dan rasa keakuan ("akulah yang tahu ini")</li>
-              <li>Lepaskan:
-                <ul class="bullet-list">
-                  <li>Keinginan untuk mencari tahu</li>
-                  <li>Keinginan untuk memahami/mengerti</li>
-                  <li>Keinginan untuk menjadikan ini masuk akal</li>
-                  <li>Rasa tahu itu sendiri</li>
-                </ul>
-              </li>
-              <li>Terbuka pada KETIDAKTAHUAN atas keberadaan</li>
-            </ol>
-          </div>
-
-          <div class="highlight-box">
-            <p><strong>Pertanyaan Kunci:</strong> "Apakah sebenarnya ada seseorang yang tahu? Atau hanya ada INI — keberadaan yang sudah apa adanya?"</p>
-          </div>
-
-          <!-- Tool: Knowing Release -->
-          <div class="tool-section">
-            <h3 class="tool-title">🛠️ Knowing Release Tool</h3>
-            <div id="knowing-tool">
-              <div class="wizard-step active" data-step="1">
-                <div class="form-group">
-                  <label>Apa yang kamu pikir kamu TAHU?</label>
-                  <textarea id="knowing-input" rows="3" placeholder="Contoh: Aku tahu aku tidak bisa melakukan itu. Aku tahu situasi ini tidak akan berubah..."></textarea>
-                </div>
-                <button class="btn btn-primary btn-block" onclick="nextKnowingStep(2)">Periksa "Tahu" →</button>
-              </div>
-
-              <div class="wizard-step" data-step="2">
-                <div class="question-card">
-                  <p>"Apakah ini benar-benar KEBENARAN atau hanya KEPERCAYAAN?"</p>
-                </div>
-                <div class="answer-group">
-                  <button class="answer-btn" onclick="nextKnowingStep(3)">Hanya kepercayaan</button>
-                  <button class="answer-btn" onclick="nextKnowingStep(3)">Rasanya seperti kebenaran</button>
-                </div>
-                <p style="text-align: center; color: var(--text-light); margin-top: 1rem;">Perhatikan: "tahu" sering hanya keyakinan yang mengeras.</p>
-              </div>
-
-              <div class="wizard-step" data-step="3">
-                <div class="question-card">
-                  <p>"Bagaimana rasanya TIDAK TAHU?"</p>
-                </div>
-                <p style="text-align: center; color: var(--text-light); margin: 1rem 0;">Biarkan dirimu merasakan ketidaktahuan sejenak...<br>Perhatikan, apakah ada kelegaan?</p>
-                <div class="answer-group">
-                  <button class="answer-btn" onclick="nextKnowingStep(4)">Ada kelegaan</button>
-                  <button class="answer-btn" onclick="nextKnowingStep(4)">Tidak nyaman</button>
-                </div>
-              </div>
-
-              <div class="wizard-step" data-step="4">
-                <div class="question-card">
-                  <p>"Bisakah kamu melepaskan rasa tahu ini?"</p>
-                </div>
-                <p style="text-align: center; color: var(--text-light); margin-bottom: 1rem;">Melepaskan keinginan untuk tahu, memahami, dan membuat masuk akal.</p>
-                <div class="answer-group">
-                  <button class="answer-btn" onclick="completeKnowing()" style="background: var(--success); color: #fff; border-color: var(--success);">🕊️ Lepaskan</button>
-                </div>
-              </div>
-
-              <div class="wizard-step" data-step="5">
-                <div style="text-align: center; padding: 2rem 0;">
-                  <div style="font-size: 4rem; margin-bottom: 1rem;">💭✨</div>
-                  <h3 style="color: var(--success); margin-bottom: 1rem;">"Tahu" Dilepaskan!</h3>
-                  <div class="highlight-box">
-                    <p>"Apakah ada seseorang yang tahu? Atau hanya ada INI — keberadaan yang sudah apa adanya?"</p>
-                  </div>
-                  <button class="btn btn-primary" onclick="resetKnowingTool()" style="margin-top: 1rem;">🔄 Lepaskan "Tahu" Lain</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="checkbox-group">
-            <input type="checkbox" id="complete-sesi5" onchange="markSessionComplete('sesi5')">
-            <label for="complete-sesi5">Saya sudah memahami Sesi 5</label>
-          </div>
+          <button class="practice-btn" onclick="startGuidedReleasing('knowing')">🎯 MULAI MELEPAS "TAHU"</button>
         </div>
       </div>
     </div>
 
-    <!-- JOURNAL -->
-    <div class="tab-content" id="journal">
-      <div class="session-card">
-        <div class="session-header">
-          <span class="session-icon">📝</span>
-          <span class="session-title">Insight Journal</span>
+    <!-- TAB 6: QUICK RELEASE -->
+    <div class="tab-content" id="quick">
+      <div class="card">
+        <div class="card-header">
+          <span class="icon">⚡</span>
+          <h2>Quick Release</h2>
         </div>
-        <div class="session-body">
-          <div class="form-group">
-            <label>Tambah Insight Baru:</label>
-            <textarea id="new-insight" rows="3" placeholder="Tuliskan insight, realisasi, atau pengalaman releasing kamu..."></textarea>
+        <div class="card-body">
+          <div class="section">
+            <p>Untuk penggunaan sehari-hari ketika butuh releasing cepat.</p>
           </div>
-          <button class="btn btn-primary" onclick="addNewInsight()">💾 Simpan Insight</button>
 
-          <div class="insight-section" style="margin-top: 1.5rem;">
-            <h3 class="insight-title">📚 Riwayat Insight</h3>
-            <div class="insight-list" id="insight-list">
-              <p style="color: var(--text-light); text-align: center;">Belum ada insight tersimpan.</p>
+          <div class="section">
+            <h3>🎯 Release Cepat</h3>
+            <div class="quick-grid">
+              <button class="quick-btn" onclick="startGuidedReleasing('quick-basic')">
+                <span class="emoji">❓</span>
+                <span class="label">3 Pertanyaan</span>
+                <span class="time">~2 menit</span>
+              </button>
+              <button class="quick-btn" onclick="startGuidedReleasing('quick-emergency')">
+                <span class="emoji">🆘</span>
+                <span class="label">Emergency</span>
+                <span class="time">~5 menit</span>
+              </button>
             </div>
           </div>
 
-          <button class="btn btn-outline btn-block" onclick="clearAllInsights()" style="margin-top: 1rem;">🗑️ Hapus Semua Insight</button>
+          <div class="section">
+            <h3>🎮 Release Wanting</h3>
+            <div class="quick-grid">
+              <button class="quick-btn" onclick="startGuidedReleasing('wanting-control')">
+                <span class="emoji">🎮</span>
+                <span class="label">Control</span>
+              </button>
+              <button class="quick-btn" onclick="startGuidedReleasing('wanting-approval')">
+                <span class="emoji">❤️</span>
+                <span class="label">Approval</span>
+              </button>
+              <button class="quick-btn" onclick="startGuidedReleasing('wanting-security')">
+                <span class="emoji">🛡️</span>
+                <span class="label">Security</span>
+              </button>
+              <button class="quick-btn" onclick="startGuidedReleasing('wanting-separation')">
+                <span class="emoji">🔗</span>
+                <span class="label">Separation</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>📋 Daily Checklist</h3>
+            <div class="checklist">
+              <label><input type="checkbox" id="daily-morning" onchange="updateDailyChecklist()"><span>🌅 Pagi</span></label>
+              <label><input type="checkbox" id="daily-afternoon" onchange="updateDailyChecklist()"><span>☀️ Siang</span></label>
+              <label><input type="checkbox" id="daily-evening" onchange="updateDailyChecklist()"><span>🌙 Malam</span></label>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </main>
 
+  <!-- Modal -->
+  <div class="modal" id="releasing-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title">Guided Releasing</h3>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-progress">
+        <div class="progress-bar"><div class="progress-fill" id="modal-progress"></div></div>
+        <div class="progress-text" id="modal-progress-text">Step 1</div>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-footer">
+        <button class="btn-prev" id="btn-prev" onclick="prevStep()">← Kembali</button>
+        <button class="btn-next" id="btn-next" onclick="nextStep()">Lanjut →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
   <script src="letting-go-app.js"></script>
 </body>
 </html>
