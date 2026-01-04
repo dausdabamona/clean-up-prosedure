@@ -54,7 +54,8 @@ body {
   font-family: 'Segoe UI', Tahoma, sans-serif;
   background: var(--bg-light);
   color: var(--text-dark);
-  line-height: 1.6;
+  font-size: 16px;
+  line-height: 1.7;
 }
 
 /* ==================== HEADER ==================== */
@@ -70,12 +71,12 @@ body {
 }
 
 .header h1 {
-  font-size: 1.4rem;
-  margin-bottom: 0.25rem;
+  font-size: 1.5rem;
+  margin-bottom: 0.3rem;
 }
 
 .header p {
-  font-size: 0.8rem;
+  font-size: 0.95rem;
   opacity: 0.9;
 }
 
@@ -118,12 +119,12 @@ body {
 .nav-tab {
   flex: 1;
   min-width: 70px;
-  padding: 0.6rem 0.25rem;
+  padding: 0.75rem 0.5rem;
   text-align: center;
   cursor: pointer;
   border: none;
   background: none;
-  font-size: 0.7rem;
+  font-size: 0.85rem;
   color: var(--text-light);
   transition: all 0.3s;
   border-bottom: 3px solid transparent;
@@ -150,7 +151,7 @@ body {
 .main-content {
   max-width: 800px;
   margin: 0 auto;
-  padding: 0.75rem;
+  padding: 1rem;
   padding-bottom: 5rem;
 }
 
@@ -175,9 +176,9 @@ body {
 .card-header {
   background: var(--primary);
   color: var(--white);
-  padding: 0.6rem 0.75rem;
+  padding: 0.75rem 1rem;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
 }
 
 .card-header.surface { background: var(--primary-light); }
@@ -187,19 +188,19 @@ body {
 .card-header.purple { background: var(--purple); }
 
 .card-body {
-  padding: 0.75rem;
+  padding: 1rem;
 }
 
 /* ==================== FORMS ==================== */
 .form-group {
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.85rem;
 }
 
 .form-group label {
   display: block;
   font-weight: 600;
-  font-size: 0.75rem;
-  margin-bottom: 0.2rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.35rem;
   color: var(--text-dark);
 }
 
@@ -207,10 +208,10 @@ body {
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 0.5rem 0.6rem;
+  padding: 0.65rem 0.85rem;
   border: 1px solid var(--border);
   border-radius: 6px;
-  font-size: 0.85rem;
+  font-size: 1rem;
   background: var(--bg-input);
   transition: border-color 0.3s;
 }
@@ -241,14 +242,14 @@ body {
 }
 
 .form-item {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.85rem;
 }
 
 .form-item label {
   display: block;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.35rem;
   color: var(--text-dark);
 }
 
@@ -256,10 +257,10 @@ body {
 .form-item input,
 .form-item textarea {
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.65rem 0.85rem;
   border: 1px solid var(--border);
   border-radius: 6px;
-  font-size: 0.85rem;
+  font-size: 1rem;
   background: var(--bg-input);
 }
 
@@ -285,11 +286,11 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  padding: 0.6rem 1rem;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
   border: none;
   border-radius: 6px;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
@@ -386,12 +387,12 @@ body {
 .toast {
   background: var(--primary);
   color: var(--white);
-  padding: 0.6rem 0.75rem;
+  padding: 0.75rem 1rem;
   border-radius: 6px;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
   box-shadow: var(--shadow);
   animation: slideIn 0.3s;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 
 .toast.success { background: var(--success); }
@@ -498,8 +499,9 @@ body {
 }
 
 .stat-label {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   color: var(--text-light);
+  margin-top: 0.2rem;
 }
 
 .stat-card.success .stat-value { color: var(--success); }
@@ -510,12 +512,12 @@ body {
 .tracker-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.75rem;
+  font-size: 0.9rem;
 }
 
 .tracker-table th,
 .tracker-table td {
-  padding: 0.4rem 0.3rem;
+  padding: 0.6rem 0.5rem;
   text-align: left;
   border-bottom: 1px solid var(--border);
 }
@@ -548,15 +550,15 @@ body {
 }
 
 .draft-item h4 {
-  font-size: 0.85rem;
-  margin-bottom: 0.2rem;
+  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
   color: var(--text-dark);
 }
 
 .draft-item p {
-  font-size: 0.7rem;
+  font-size: 0.85rem;
   color: var(--text-light);
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.2rem;
 }
 
 .draft-actions {

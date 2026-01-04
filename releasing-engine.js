@@ -383,7 +383,7 @@ const ReleasingEngine = (function() {
       }
       .releasing-modal-header h3 {
         margin: 0;
-        font-size: 1.1rem;
+        font-size: 1.2rem;
       }
       .releasing-modal-close {
         background: none;
@@ -415,7 +415,7 @@ const ReleasingEngine = (function() {
         transition: width 0.3s ease;
       }
       .releasing-progress-text {
-        font-size: 0.75rem;
+        font-size: 0.85rem;
         color: #666;
       }
       .releasing-modal-body {
@@ -433,10 +433,10 @@ const ReleasingEngine = (function() {
       }
       .releasing-btn {
         flex: 1;
-        padding: 0.75rem 1rem;
+        padding: 0.85rem 1.25rem;
         border: none;
         border-radius: 8px;
-        font-size: 0.9rem;
+        font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s;
@@ -492,13 +492,13 @@ const ReleasingEngine = (function() {
         margin-top: 1rem;
       }
       .releasing-option-btn {
-        padding: 0.75rem;
+        padding: 0.85rem;
         border: 2px solid #e0e0e0;
         border-radius: 8px;
         background: #fff;
         cursor: pointer;
         transition: all 0.2s;
-        font-size: 0.9rem;
+        font-size: 1rem;
       }
       .releasing-option-btn:hover {
         border-color: #5D4E6D;
