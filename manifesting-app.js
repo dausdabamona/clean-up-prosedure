@@ -342,6 +342,26 @@ function checkGoalQuality() {
 
 // ===== RELEASE SESSION =====
 let currentReleaseStep = 1;
+let goalReleased = false;
+
+function startGoalRelease() {
+  ReleasingEngine.startReleasing('goal-release', {
+    onComplete: function(data) {
+      goalReleased = true;
+      // Show status
+      const statusEl = document.getElementById('goalReleaseStatus');
+      if (statusEl) {
+        statusEl.style.display = 'block';
+      }
+      // Enable next button
+      const nextBtn = document.getElementById('btnToStep5');
+      if (nextBtn) {
+        nextBtn.disabled = false;
+      }
+      showToast('🌟 Release selesai!', 'success');
+    }
+  });
+}
 
 function goToReleaseStep(step) {
   // Hide all steps

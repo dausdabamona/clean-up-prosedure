@@ -643,21 +643,17 @@
               </div>
               <p class="step-question">"Release dengan Pertanyaan Dasar"</p>
 
-              <div class="release-questions-box highlight">
-                <p class="release-q">💭 "Bisakah kamu mengizinkan perasaan ini hadir sepenuhnya?"</p>
-                <p class="release-q">💭 "Bisakah kamu melepaskannya?"</p>
-                <p class="release-q">💭 "Maukah kamu melepaskannya?"</p>
-                <p class="release-q">💭 "Kapan?"</p>
-                <p class="release-q main">🌟 "Apakah kamu itu perasaan ini, atau kamu yang MENYADARI perasaan ini?"</p>
-              </div>
-
-              <button onclick="goToReleaseStep(5)" class="btn btn-release btn-block" style="margin-top:0.75rem">
-                🌊 Sudah Release - Lanjut
+              <button onclick="startGoalRelease()" class="btn btn-release btn-block">
+                🌊 Mulai Release Interaktif
               </button>
 
-              <div class="step-nav" style="margin-top:0.5rem">
+              <div id="goalReleaseStatus" class="release-status" style="display:none;">
+                ✅ Sudah di-release
+              </div>
+
+              <div class="step-nav" style="margin-top:0.75rem">
                 <button onclick="goToReleaseStep(3)" class="btn btn-secondary">← Sebelumnya</button>
-                <span></span>
+                <button onclick="goToReleaseStep(5)" class="btn btn-primary" id="btnToStep5" disabled>Selanjutnya →</button>
               </div>
             </div>
           </div>

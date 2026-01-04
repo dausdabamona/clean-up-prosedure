@@ -268,6 +268,20 @@ const ReleasingEngine = (function() {
         { type: 'breathing', text: 'Tarik napas dalam... hembuskan...', subtext: 'Biarkan semua terurai...', duration: 5000 },
         { type: 'completion', text: '🌊 Keinginan Dilepaskan!', subtext: 'Semakin lepas, semakin memiliki.' }
       ]
+    },
+
+    'goal-release': {
+      title: 'Release dengan Pertanyaan Dasar',
+      steps: [
+        { type: 'instruction', text: 'Fokus pada perasaan yang muncul saat memikirkan goal ini...', subtext: 'Biarkan hadir sepenuhnya.', duration: 4000 },
+        { type: 'yesno', text: 'Bisakah kamu mengizinkan perasaan ini hadir sepenuhnya?', subtext: 'Jangan dorong, jangan ubah. Sambut saja.' },
+        { type: 'yesno', text: 'Bisakah kamu melepaskannya?', subtext: 'Ingat, ini hanya pertanyaan.' },
+        { type: 'yesno', text: 'Maukah kamu melepaskannya?', subtext: 'Mendingan pegangan terus atau bebas?' },
+        { type: 'when', text: 'Kapan?' },
+        { type: 'breathing', text: 'Tarik napas dalam... hembuskan...', subtext: 'Lepaskan...', duration: 5000 },
+        { type: 'instruction', text: 'Apakah kamu itu perasaan ini?', subtext: 'Atau kamu yang MENYADARI perasaan ini?', duration: 5000 },
+        { type: 'completion', text: '🌟 Release Selesai!', subtext: 'Kesadaran bukan perasaan. Perasaan datang dan pergi.' }
+      ]
     }
   };
 
