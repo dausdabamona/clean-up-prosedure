@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sedona Method</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧘</text></svg>">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #2D2A26;
+      --primary-light: #4A4540;
+      --accent: #C4A962;
+      --accent-light: #D4C992;
+      --success: #6B8E6B;
+      --warning: #C9A86C;
+      --danger: #8B4D4D;
+      --bg-dark: #1A1816;
+      --bg-light: #F5F3EF;
+      --bg-card: #FFFFFF;
+      --text-dark: #2D2A26;
+      --text-light: #7A756D;
+      --text-muted: #A39E94;
+      --border: #E5E0D8;
+      --shadow: 0 2px 12px rgba(45, 42, 38, 0.08);
+      --sidebar-width: 260px;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: var(--sidebar-width);
+      height: 100vh;
+      background: var(--primary);
+      color: #fff;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      padding: 1.5rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .sidebar-header h1 {
+      font-size: 1.4rem;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+
+    .sidebar-header p {
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+
+    .sidebar-menu {
+      padding: 1rem 0;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.9rem 1.5rem;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: all 0.3s;
+      border-left: 3px solid transparent;
+      font-size: 0.9rem;
+    }
+
+    .menu-item:hover {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+    }
+
+    .menu-item.active {
+      background: rgba(196, 169, 98, 0.2);
+      border-left-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .menu-item .icon {
+      font-size: 1.2rem;
+      width: 28px;
+      text-align: center;
+    }
+
+    .menu-item .badge {
+      margin-left: auto;
+      background: var(--accent);
+      color: var(--primary);
+      font-size: 0.65rem;
+      padding: 0.15rem 0.4rem;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .menu-item.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .menu-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+      margin: 0.5rem 1.5rem;
+    }
+
+    .menu-label {
+      padding: 0.5rem 1.5rem;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 0.5rem;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    /* Welcome Section */
+    .welcome-section {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: #fff;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .welcome-section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      color: var(--accent);
+    }
+
+    .welcome-section p {
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Content Area */
+    .content-area {
+      padding: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Module Cards */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .module-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: all 0.3s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .module-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(45, 42, 38, 0.12);
+    }
+
+    .module-card.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .module-icon {
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+
+    .module-icon.cleanup { background: linear-gradient(135deg, #1a5276, #2874a6); }
+    .module-icon.daily { background: linear-gradient(135deg, #6B8E6B, #8BA88B); }
+    .module-icon.core { background: linear-gradient(135deg, #8B4D4D, #A66D6D); }
+    .module-icon.fourteen { background: linear-gradient(135deg, #7C8EA8, #9CADC8); }
+    .module-icon.manifesting { background: linear-gradient(135deg, #C4A962, #D4C992); }
+    .module-icon.letting { background: linear-gradient(135deg, #9C8E7C, #BCA99C); }
+
+    .module-body {
+      padding: 1.25rem;
+    }
+
+    .module-body h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-dark);
+    }
+
+    .module-body p {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    .module-status {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-top: 0.75rem;
+    }
+
+    .module-status.active { background: #d5f5e3; color: #27ae60; }
+    .module-status.coming { background: #fef9e7; color: #b7950b; }
+
+    /* Stats Section */
+    .stats-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .stats-section h3 {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 1rem;
+      background: var(--bg-light);
+      border-radius: 8px;
+    }
+
+    .stat-item .value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .stat-item .label {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      margin-top: 0.25rem;
+    }
+
+    /* Mobile Toggle */
+    .mobile-toggle {
+      display: none;
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 1001;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+    }
+
+    /* Quote Section */
+    .quote-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+      border-left: 4px solid var(--accent);
+    }
+
+    .quote-section blockquote {
+      font-style: italic;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .quote-section cite {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .mobile-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .overlay.show {
+        display: block;
+      }
+
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .welcome-section {
+        padding: 4rem 1.5rem 2rem;
+      }
+
+      .content-area {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Mobile Toggle -->
+  <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+  <div class="overlay" onclick="toggleSidebar()"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h1>🧘 Sedona Method</h1>
+      <p>Release & Let Go</p>
+    </div>
+
+    <nav class="sidebar-menu">
+      <div class="menu-label">Modules</div>
+
+      <a href="index.html" class="menu-item">
+        <span class="icon">📋</span>
+        <span>Clean Up Tracker</span>
+      </a>
+
+      <a href="daily-release.html" class="menu-item">
+        <span class="icon">🧘</span>
+        <span>Daily Emotional Release</span>
+      </a>
+
+      <a href="core-wanting-release.html" class="menu-item">
+        <span class="icon">🎯</span>
+        <span>7 Core Wanting Release</span>
+      </a>
+
+      <a href="14-days-release.html" class="menu-item disabled">
+        <span class="icon">📅</span>
+        <span>14 Days Release Resistance</span>
+        <span class="badge">Soon</span>
+      </a>
+
+      <div class="menu-divider"></div>
+      <div class="menu-label">Advanced</div>
+
+      <a href="manifesting-workbook.html" class="menu-item">
+        <span class="icon">✨</span>
+        <span>Manifesting Workbook</span>
+      </a>
+
+      <a href="letting-go.html" class="menu-item disabled">
+        <span class="icon">🕊️</span>
+        <span>Letting Go</span>
+        <span class="badge">Soon</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <section class="welcome-section">
+      <h2>Welcome to Sedona Method</h2>
+      <p>A powerful technique for releasing unwanted emotions and achieving inner peace. Choose a module below to begin your journey.</p>
+    </section>
+
+    <div class="content-area">
+      <!-- Quote -->
+      <div class="quote-section">
+        <blockquote>"The Sedona Method is a simple, powerful technique that shows you how to uncover your natural ability to let go of any painful or unwanted feeling in the moment."</blockquote>
+        <cite>— Hale Dwoskin</cite>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-section">
+        <h3>📊 Your Progress</h3>
+        <div class="stats-row">
+          <div class="stat-item">
+            <div class="value" id="totalSessions">0</div>
+            <div class="label">Total Sessions</div>
+          </div>
+          <div class="stat-item">
+            <div class="value" id="streakDays">0</div>
+            <div class="label">Day Streak</div>
+          </div>
+          <div class="stat-item">
+            <div class="value" id="releasesCount">0</div>
+            <div class="label">Releases</div>
+          </div>
+          <div class="stat-item">
+            <div class="value" id="goalsCount">0</div>
+            <div class="label">Goals</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modules Grid -->
+      <h3 style="margin-bottom: 1rem; color: var(--text-dark);">📚 Choose a Module</h3>
+      <div class="modules-grid">
+        <a href="index.html" class="module-card">
+          <div class="module-icon cleanup">📋</div>
+          <div class="module-body">
+            <h3>Clean Up Tracker</h3>
+            <p>Track your daily emotional releases with the comprehensive 5-layer system.</p>
+            <span class="module-status active">Active</span>
+          </div>
+        </a>
+
+        <a href="daily-release.html" class="module-card">
+          <div class="module-icon daily">🧘</div>
+          <div class="module-body">
+            <h3>Daily Emotional Release</h3>
+            <p>Quick daily release sessions for emotional wellbeing.</p>
+            <span class="module-status active">Active</span>
+          </div>
+        </a>
+
+        <a href="core-wanting-release.html" class="module-card">
+          <div class="module-icon core">🎯</div>
+          <div class="module-body">
+            <h3>7 Core Wanting Release</h3>
+            <p>Work through the 7 fundamental wantings that drive behavior.</p>
+            <span class="module-status active">Active</span>
+          </div>
+        </a>
+
+        <a href="14-days-release.html" class="module-card disabled">
+          <div class="module-icon fourteen">📅</div>
+          <div class="module-body">
+            <h3>14 Days Release Resistance</h3>
+            <p>A structured 14-day program to release deep resistance patterns.</p>
+            <span class="module-status coming">Coming Soon</span>
+          </div>
+        </a>
+
+        <a href="manifesting-workbook.html" class="module-card">
+          <div class="module-icon manifesting">✨</div>
+          <div class="module-body">
+            <h3>Manifesting Workbook</h3>
+            <p>Set goals, release resistance, and manifest with ease.</p>
+            <span class="module-status active">Active</span>
+          </div>
+        </a>
+
+        <a href="letting-go.html" class="module-card disabled">
+          <div class="module-icon letting">🕊️</div>
+          <div class="module-body">
+            <h3>Letting Go</h3>
+            <p>Advanced techniques for profound letting go experiences.</p>
+            <span class="module-status coming">Coming Soon</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Toggle sidebar on mobile
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.querySelector('.overlay').classList.toggle('show');
+    }
+
+    // Close sidebar when clicking outside
+    document.addEventListener('click', function(e) {
+      const sidebar = document.getElementById('sidebar');
+      const toggle = document.querySelector('.mobile-toggle');
+      if (window.innerWidth <= 768 &&
+          !sidebar.contains(e.target) &&
+          !toggle.contains(e.target) &&
+          sidebar.classList.contains('open')) {
+        toggleSidebar();
+      }
+    });
+
+    // Load stats (placeholder - integrate with actual API)
+    async function loadStats() {
+      // This would connect to your Google Apps Script API
+      // For now, showing placeholder
+      try {
+        // Try to get stats from localStorage or API
+        const stats = JSON.parse(localStorage.getItem('sedonaStats') || '{}');
+        document.getElementById('totalSessions').textContent = stats.totalSessions || '0';
+        document.getElementById('streakDays').textContent = stats.streakDays || '0';
+        document.getElementById('releasesCount').textContent = stats.releases || '0';
+        document.getElementById('goalsCount').textContent = stats.goals || '0';
+      } catch(e) {
+        console.log('Stats not available');
+      }
+    }
+
+    loadStats();
+  </script>
+</body>
+</html>
