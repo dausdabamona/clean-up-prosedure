@@ -255,6 +255,19 @@ const ReleasingEngine = (function() {
         { type: 'instruction', text: 'Kamu bukan emosi itu.', subtext: 'Kamu adalah yang SADAR akan emosi.', duration: 5000 },
         { type: 'completion', text: '💪 Kamu berhasil!', subtext: 'Kamu lebih kuat dari yang kamu pikir.' }
       ]
+    },
+
+    'discover-release': {
+      title: 'Release Keinginan',
+      steps: [
+        { type: 'instruction', text: 'Fokus pada keinginan/hasrat yang sudah kamu identifikasi...', subtext: 'Biarkan hadir sepenuhnya.', duration: 4000 },
+        { type: 'yesno', text: 'Bisakah kamu mengizinkan keinginan ini hadir sepenuhnya?', subtext: 'Jangan dorong, jangan ubah. Biarkan saja.' },
+        { type: 'yesno', text: 'Bisakah kamu melepaskan keinginan ini?', subtext: 'Ingat, ini hanya pertanyaan. Jawab jujur.' },
+        { type: 'yesno', text: 'Maukah kamu melepaskannya?', subtext: 'Lebih baik pegangan terus atau bebas?' },
+        { type: 'when', text: 'Kapan?' },
+        { type: 'breathing', text: 'Tarik napas dalam... hembuskan...', subtext: 'Biarkan semua terurai...', duration: 5000 },
+        { type: 'completion', text: '🌊 Keinginan Dilepaskan!', subtext: 'Semakin lepas, semakin memiliki.' }
+      ]
     }
   };
 

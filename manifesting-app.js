@@ -151,9 +151,21 @@ async function loadDashboard() {
 // ===== DISCOVER =====
 let discoverReleased = false;
 
+function startDiscoverRelease() {
+  ReleasingEngine.startReleasing('discover-release', {
+    onComplete: function(data) {
+      markDiscoverReleased();
+    }
+  });
+}
+
 function markDiscoverReleased() {
   discoverReleased = true;
-  showToast('Release tercatat!', 'success');
+  const statusEl = document.getElementById('discoverReleaseStatus');
+  if (statusEl) {
+    statusEl.style.display = 'block';
+  }
+  showToast('🌊 Release selesai!', 'success');
 }
 
 async function saveDiscoverEntry() {
@@ -173,8 +185,31 @@ async function saveDiscoverEntry() {
   const result = await callManifestingApi('saveManifestingDiscover', data);
   if (result && result.success) {
     showToast('Discover entry tersimpan!', 'success');
-    resetDiscoverForm();
+    // Show next button
+    showNextButton();
   }
+}
+
+function showNextButton() {
+  const nextBtn = document.getElementById('nextBtnContainer');
+  if (nextBtn) {
+    nextBtn.classList.add('show');
+  }
+}
+
+function hideNextButton() {
+  const nextBtn = document.getElementById('nextBtnContainer');
+  if (nextBtn) {
+    nextBtn.classList.remove('show');
+  }
+}
+
+function goToNextPerson() {
+  resetDiscoverForm();
+  hideNextButton();
+  // Scroll to top of the discover tab
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  showToast('Siap untuk orang/situasi berikutnya!', 'info');
 }
 
 function resetDiscoverForm() {
@@ -184,6 +219,10 @@ function resetDiscoverForm() {
   document.getElementById('discoverIdentificationValue').textContent = '5';
   clearWantingTags('discoverWantingTags');
   discoverReleased = false;
+  const statusEl = document.getElementById('discoverReleaseStatus');
+  if (statusEl) {
+    statusEl.style.display = 'none';
+  }
 }
 
 // ===== GOALS =====
