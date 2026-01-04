@@ -412,15 +412,53 @@ function resetTimer() {
 
 // ===== ACTION =====
 function releaseActionWanting() {
-  showToast('Lakukan release untuk wanting dari actions ini', 'info');
+  const wantings = getSelectedWantings('actionWantingTags');
+
+  if (wantings.length === 0) {
+    showToast('Pilih minimal satu wanting terlebih dahulu', 'warning');
+    return;
+  }
+
+  // Start sequential releasing for selected wantings
+  ReleasingEngine.startSequentialReleasing(wantings, {
+    onRelease: function(data) {
+      showToast('🌊 ' + (data.wantingType || 'Wanting') + ' released!', 'success');
+    },
+    onSequenceComplete: function(data) {
+      showToast('🎉 Semua ' + data.totalReleased + ' wanting berhasil di-release!', 'success');
+      clearWantingTags('actionWantingTags');
+    }
+  });
 }
 
 function releaseLimitingBeliefs() {
-  showToast('Lakukan release untuk limiting beliefs', 'info');
+  const wantings = getSelectedWantings('limitingWantingTags');
+
+  if (wantings.length === 0) {
+    showToast('Pilih minimal satu wanting terlebih dahulu', 'warning');
+    return;
+  }
+
+  // Start sequential releasing for selected wantings
+  ReleasingEngine.startSequentialReleasing(wantings, {
+    onRelease: function(data) {
+      showToast('🌊 Limiting belief released!', 'success');
+    },
+    onSequenceComplete: function(data) {
+      showToast('🎉 Semua limiting beliefs berhasil di-release!', 'success');
+      clearWantingTags('limitingWantingTags');
+    }
+  });
 }
 
 function releaseEmpoweringBeliefs() {
-  showToast('Lakukan release untuk empowering beliefs', 'info');
+  // For empowering beliefs, use the quick-basic script
+  // since we want to release attachment to positive beliefs too
+  ReleasingEngine.startReleasing('quick-basic', {
+    onComplete: function(data) {
+      showToast('🎉 Empowering beliefs released - no attachment!', 'success');
+    }
+  });
 }
 
 async function saveActionEntry() {
