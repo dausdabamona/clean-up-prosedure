@@ -1760,11 +1760,12 @@
           const name = e.target.name;
           const value = e.target.value;
 
-          // Show resistance panel for non-yes answers on Q questions
+          // Show resistance panel for non-no answers on Q questions
+          // Ya/Mungkin = perlu release, Tidak = tidak perlu
           if (name.includes('Q') && !name.includes('C')) {
             const panel = document.getElementById(name + 'Resistance');
             if (panel) {
-              if (value === 'yes') {
+              if (value === 'no') {
                 panel.classList.remove('show');
               } else {
                 panel.classList.add('show');
