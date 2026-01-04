@@ -782,7 +782,13 @@ const ReleasingEngine = (function() {
         html = '<div class="releasing-completion-icon">🎉</div>';
         html += '<h3 class="releasing-completion-title">' + step.text + '</h3>';
         html += '<p class="releasing-step-subtext">' + (step.subtext || '') + '</p>';
-        document.getElementById('re-btn-next').textContent = 'Lanjut →';
+
+        // Change button text based on sequence
+        if (sequentialQueue.length > 0 && sequentialIndex < sequentialQueue.length - 1) {
+          document.getElementById('re-btn-next').textContent = 'Lanjut ke Wanting Berikutnya →';
+        } else {
+          document.getElementById('re-btn-next').textContent = 'Selesai ✓';
+        }
 
         // Trigger release callback
         callbacks.onRelease({
@@ -853,6 +859,37 @@ const ReleasingEngine = (function() {
         responses: currentSession.responses,
         duration: Date.now() - currentSession.startTime,
         insight: insightText,
+        timestamp: new Date().toISOString()
+      });
+
+      // Check if more in sequence
+      if (sequentialQueue.length > 0 && sequentialIndex < sequentialQueue.length - 1) {
+        proceedToNextInSequence();
+      } else {
+        // All done
+        closeModal();
+
+        if (sequentialQueue.length > 0) {
+          const totalReleased = sequentialQueue.length;
+          sequentialQueue = [];
+          sequentialIndex = 0;
+          callbacks.onSequenceComplete({
+            totalReleased: totalReleased,
+            timestamp: new Date().toISOString()
+          });
+        }
+      }
+      return;
+    }
+
+    // Handle completion step - finish session
+    if (step.type === 'completion') {
+      // Complete this session
+      callbacks.onComplete({
+        scriptId: currentSession.scriptId,
+        wantingType: currentSession.script.wantingType || null,
+        responses: currentSession.responses,
+        duration: Date.now() - currentSession.startTime,
         timestamp: new Date().toISOString()
       });
 
