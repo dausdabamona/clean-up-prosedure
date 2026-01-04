@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>14 Days Free From Resistance - Sedona Method</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔓</text></svg>">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #1a5276;
+      --primary-light: #2874a6;
+      --primary-dark: #154360;
+      --secondary: #16a085;
+      --secondary-light: #1abc9c;
+      --success: #27ae60;
+      --warning: #f39c12;
+      --danger: #c0392b;
+      --bg-light: #f8f9fa;
+      --bg-dark: #2c3e50;
+      --text-dark: #2c3e50;
+      --text-light: #7f8c8d;
+      --border: #dfe6e9;
+      --white: #fff;
+      --shadow: 0 2px 15px rgba(0,0,0,0.1);
+      --shadow-hover: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: var(--white);
+      padding: 1rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow);
+    }
+
+    .header-content {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .back-link {
+      color: var(--white);
+      text-decoration: none;
+      font-size: 1.5rem;
+      padding: 0.5rem;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+
+    .back-link:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .header-text {
+      flex: 1;
+    }
+
+    .header h1 {
+      font-size: 1.3rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .header p {
+      font-size: 0.8rem;
+      opacity: 0.9;
+    }
+
+    /* Main Content */
+    .main-content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1rem;
+      padding-bottom: 2rem;
+    }
+
+    /* Progress Section */
+    .progress-section {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .progress-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-dark);
+    }
+
+    .progress-container {
+      background: #e0e0e0;
+      border-radius: 10px;
+      height: 12px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      background: linear-gradient(90deg, var(--secondary), var(--secondary-light));
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    #progress-text {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .stat-item {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Quote Section */
+    .quote-section {
+      background: linear-gradient(135deg, var(--bg-dark), #34495e);
+      color: var(--white);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    #quote {
+      font-style: italic;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      opacity: 0.95;
+    }
+
+    /* Principles Accordion */
+    .principles-section {
+      background: var(--white);
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .principles-header {
+      padding: 1rem 1.25rem;
+      background: var(--primary);
+      color: var(--white);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+    }
+
+    .principles-header:hover {
+      background: var(--primary-light);
+    }
+
+    .principles-toggle {
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+    }
+
+    .principles-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .principles-content.open {
+      max-height: 1000px;
+    }
+
+    .principle-item {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .principle-item:last-child {
+      border-bottom: none;
+    }
+
+    .principle-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .principle-text h4 {
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+      color: var(--primary);
+    }
+
+    .principle-text p {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    /* Days Section */
+    .days-section {
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    #days-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    /* Day Card */
+    .day-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      transition: all 0.3s;
+      border-left: 4px solid var(--border);
+    }
+
+    .day-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .day-card.completed {
+      border-left-color: var(--success);
+      background: linear-gradient(135deg, #f0fff4, var(--white));
+    }
+
+    .day-card.in-progress {
+      border-left-color: var(--warning);
+      background: linear-gradient(135deg, #fffdf0, var(--white));
+    }
+
+    .day-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .day-icon {
+      font-size: 1.5rem;
+    }
+
+    .day-number {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .day-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-dark);
+    }
+
+    .day-description {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-bottom: 0.75rem;
+      line-height: 1.5;
+    }
+
+    .day-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .day-status {
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .sessions-count {
+      font-size: 0.7rem;
+      color: var(--text-light);
+      background: var(--bg-light);
+      padding: 0.2rem 0.5rem;
+      border-radius: 10px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--secondary);
+      color: var(--white);
+    }
+
+    .btn-secondary:hover {
+      background: var(--secondary-light);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-outline:hover {
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--bg-dark);
+      color: var(--white);
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .toast-success {
+      background: var(--success);
+    }
+
+    .toast-error {
+      background: var(--danger);
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .quick-actions .btn {
+      flex: 1;
+      min-width: 140px;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      #days-container {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 1.1rem;
+      }
+
+      .quick-actions {
+        flex-direction: column;
+      }
+
+      .quick-actions .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="sedona-app.html" class="back-link">←</a>
+      <div class="header-text">
+        <h1>🔓 14 Days Free From Resistance</h1>
+        <p>Program Releasing 14 Hari - Sedona Method</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- Progress Section -->
+    <section class="progress-section">
+      <div class="progress-header">
+        <span class="progress-title">Progress Kamu</span>
+        <span id="progress-text">0/14 hari selesai (0%)</span>
+      </div>
+      <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+    </section>
+
+    <!-- Stats Grid -->
+    <section class="stats-grid" id="stats-container">
+      <div class="stat-item">
+        <div class="stat-value">0</div>
+        <div class="stat-label">Hari Selesai</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">0</div>
+        <div class="stat-label">Total Sesi</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">0</div>
+        <div class="stat-label">Streak Hari</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">0</div>
+        <div class="stat-label">Best Streak</div>
+      </div>
+    </section>
+
+    <!-- Quote Section -->
+    <section class="quote-section">
+      <p id="quote">"Apapun yang kamu tolak akan menolak balik."</p>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+      <a href="resistance-session.html?quick=true" class="btn btn-secondary">
+        ⚡ Quick Release
+      </a>
+      <button onclick="continueLearning()" class="btn btn-primary">
+        📚 Lanjutkan Belajar
+      </button>
+    </section>
+
+    <!-- Principles Section -->
+    <section class="principles-section">
+      <div class="principles-header" onclick="togglePrinciples()">
+        <span>📖 5 Prinsip Kunci Resistensi</span>
+        <span class="principles-toggle" id="principles-toggle">▼</span>
+      </div>
+      <div class="principles-content" id="principles-content">
+        <div class="principle-item">
+          <span class="principle-icon">🎮</span>
+          <div class="principle-text">
+            <h4>Resistensi = Keinginan Mengontrol</h4>
+            <p>Setiap resistensi pada dasarnya adalah keinginan untuk mengontrol - mengontrol apa yang terjadi, apa yang dirasakan, atau apa yang dipikirkan.</p>
+          </div>
+        </div>
+        <div class="principle-item">
+          <span class="principle-icon">🔄</span>
+          <div class="principle-text">
+            <h4>Apa yang Ditolak Bertahan</h4>
+            <p>Semakin kita menolak sesuatu, semakin besar energi yang kita berikan padanya, dan semakin ia bertahan.</p>
+          </div>
+        </div>
+        <div class="principle-item">
+          <span class="principle-icon">💧</span>
+          <div class="principle-text">
+            <h4>Apa yang Diterima Larut</h4>
+            <p>Ketika kita menyambut dan menerima apa yang ada, ia kehilangan kekuatannya dan secara alami larut.</p>
+          </div>
+        </div>
+        <div class="principle-item">
+          <span class="principle-icon">⚖️</span>
+          <div class="principle-text">
+            <h4>Resistensi Ada di Kedua Sisi</h4>
+            <p>Resistensi muncul baik terhadap melakukan sesuatu MAUPUN tidak melakukannya. Periksa kedua sisi.</p>
+          </div>
+        </div>
+        <div class="principle-item">
+          <span class="principle-icon">✨</span>
+          <div class="principle-text">
+            <h4>Keberadaan Tidak Terpengaruh</h4>
+            <p>Siapa yang kita sebenarnya (kesadaran/keberadaan) tidak pernah terpengaruh oleh resistensi yang muncul.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Days Section -->
+    <section class="days-section">
+      <h2 class="section-title">📅 Program 14 Hari</h2>
+      <div id="days-container">
+        <!-- Days will be rendered here by JS -->
+      </div>
+    </section>
+  </main>
+
+  <script src="resistance-app.js"></script>
+  <script>
+    // Toggle principles accordion
+    function togglePrinciples() {
+      const content = document.getElementById('principles-content');
+      const toggle = document.getElementById('principles-toggle');
+      content.classList.toggle('open');
+      toggle.textContent = content.classList.contains('open') ? '▲' : '▼';
+    }
+
+    // Continue learning - go to next incomplete day
+    function continueLearning() {
+      const data = ResistanceApp.getData();
+      let nextDay = 1;
+
+      for (let i = 1; i <= 14; i++) {
+        const status = data.dayProgress[`day${i}`];
+        if (status !== 'completed') {
+          nextDay = i;
+          break;
+        }
+        if (i === 14) nextDay = 14; // All completed, go to last day
+      }
+
+      ResistanceApp.startSession(nextDay);
+    }
+  </script>
+</body>
+</html>

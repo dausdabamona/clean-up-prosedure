@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sesi Releasing - 14 Days Free From Resistance</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔓</text></svg>">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #1a5276;
+      --primary-light: #2874a6;
+      --secondary: #16a085;
+      --success: #27ae60;
+      --warning: #f39c12;
+      --danger: #c0392b;
+      --bg-light: #f8f9fa;
+      --bg-dark: #2c3e50;
+      --text-dark: #2c3e50;
+      --text-light: #7f8c8d;
+      --border: #dfe6e9;
+      --white: #fff;
+      --shadow: 0 2px 15px rgba(0,0,0,0.1);
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: var(--white);
+      padding: 1rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow);
+    }
+
+    .header-content {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .back-link {
+      color: var(--white);
+      text-decoration: none;
+      font-size: 1.5rem;
+      padding: 0.5rem;
+    }
+
+    .header-text {
+      flex: 1;
+    }
+
+    .header h1 {
+      font-size: 1.1rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .header p {
+      font-size: 0.75rem;
+      opacity: 0.9;
+    }
+
+    /* Progress Dots */
+    .step-progress {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .step-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: all 0.3s;
+    }
+
+    .step-dot.active {
+      background: var(--primary);
+      transform: scale(1.3);
+    }
+
+    .step-dot.completed {
+      background: var(--success);
+    }
+
+    /* Main Content */
+    .main-content {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 1rem;
+      padding-bottom: 100px;
+    }
+
+    /* Step Indicator */
+    #step-indicator {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+
+    /* Wizard Step */
+    .wizard-step {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .wizard-step.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Step Card */
+    .step-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .step-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .step-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    .step-text {
+      font-size: 1rem;
+      color: var(--text-dark);
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+
+    .step-subtext {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+
+    /* Timer */
+    .timer-container {
+      margin: 2rem 0;
+    }
+
+    #timer {
+      font-size: 4rem;
+      font-weight: 700;
+      color: var(--primary);
+      font-family: 'Courier New', monospace;
+    }
+
+    .timer-label {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-top: 0.5rem;
+    }
+
+    /* Questions */
+    .question-reveal {
+      font-size: 1.2rem;
+      color: var(--text-dark);
+      padding: 1rem;
+      margin: 1rem 0;
+      border-left: 4px solid var(--secondary);
+      background: linear-gradient(90deg, rgba(22, 160, 133, 0.1), transparent);
+      text-align: left;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease;
+    }
+
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-dark);
+    }
+
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      resize: vertical;
+      transition: border-color 0.3s;
+    }
+
+    textarea:focus, input[type="text"]:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    /* Area Options */
+    .area-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .area-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 1rem 0.5rem;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .area-option:hover {
+      border-color: var(--primary-light);
+      background: #f8f9ff;
+    }
+
+    .area-option.selected {
+      border-color: var(--primary);
+      background: linear-gradient(135deg, #e8f4f8, #f0f8ff);
+    }
+
+    .area-option input {
+      display: none;
+    }
+
+    .area-icon {
+      font-size: 1.8rem;
+    }
+
+    .area-name {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    /* Slider */
+    .slider-container {
+      margin: 1.5rem 0;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .slider-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      min-width: 50px;
+      text-align: center;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--success), var(--warning), var(--danger));
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 3px solid var(--primary);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: var(--text-light);
+      margin-top: 0.5rem;
+    }
+
+    /* Two Sides Cards */
+    .sides-container {
+      display: grid;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .side-card {
+      background: var(--bg-light);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: left;
+    }
+
+    .side-card h4 {
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-dark);
+    }
+
+    .side-card strong {
+      color: var(--primary);
+    }
+
+    /* Results Comparison */
+    .results-comparison {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .result-item {
+      text-align: center;
+    }
+
+    .result-label {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-bottom: 0.25rem;
+    }
+
+    .result-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    .result-before {
+      color: var(--danger);
+    }
+
+    .result-after {
+      color: var(--success);
+    }
+
+    .result-arrow {
+      font-size: 2rem;
+      color: var(--text-light);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-light);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--secondary);
+      color: var(--white);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-outline:hover {
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: var(--white);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn.pulse {
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-group .btn {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    /* Skip Button */
+    .skip-btn {
+      background: none;
+      border: none;
+      color: var(--text-light);
+      font-size: 0.8rem;
+      cursor: pointer;
+      margin-top: 1rem;
+      text-decoration: underline;
+    }
+
+    .skip-btn:hover {
+      color: var(--primary);
+    }
+
+    /* Breathing Animation */
+    .breathing-circle {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      margin: 2rem auto;
+      animation: breathe 4s ease-in-out infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 1; }
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--bg-dark);
+      color: var(--white);
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .toast-success { background: var(--success); }
+    .toast-error { background: var(--danger); }
+
+    /* Responsive */
+    @media (max-width: 500px) {
+      .area-options {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .step-card {
+        padding: 1.5rem;
+      }
+
+      #timer {
+        font-size: 3rem;
+      }
+
+      .results-comparison {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .result-arrow {
+        transform: rotate(90deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="14-days-resistance.html" class="back-link">←</a>
+      <div class="header-text">
+        <h1 id="session-title">Sesi Releasing</h1>
+        <p id="session-description">Lepaskan resistensi dengan lembut</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Progress Dots -->
+  <div class="step-progress">
+    <div class="step-dot" data-step="1"></div>
+    <div class="step-dot" data-step="2"></div>
+    <div class="step-dot" data-step="3"></div>
+    <div class="step-dot" data-step="4"></div>
+    <div class="step-dot" data-step="5"></div>
+    <div class="step-dot" data-step="6"></div>
+    <div class="step-dot" data-step="7"></div>
+    <div class="step-dot" data-step="8"></div>
+  </div>
+
+  <main class="main-content" id="session-wizard">
+    <p id="step-indicator">Langkah 1 dari 8</p>
+
+    <!-- Step 1: STOP -->
+    <div class="wizard-step" id="step-1">
+      <div class="step-card">
+        <div class="step-icon">🛑</div>
+        <h2 class="step-title">STOP</h2>
+        <p class="step-text">
+          Berhenti sejenak dari semua aktivitas...<br><br>
+          Perhatikan yang sudah seadanya.<br><br>
+          Terbuka pada kemungkinan ini sudah kebebasan,<br>
+          sudah keutuhan, sudah cukup.
+        </p>
+
+        <div class="breathing-circle">
+          Bernafas...
+        </div>
+
+        <div class="timer-container">
+          <div id="timer">01:00</div>
+          <p class="timer-label">Nikmati keheningan</p>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-primary btn-next" disabled onclick="nextStep()">
+            Lanjut →
+          </button>
+        </div>
+        <button class="skip-btn" onclick="skipTimer(); enableNextButton(1);">Skip timer</button>
+      </div>
+    </div>
+
+    <!-- Step 2: FOKUS -->
+    <div class="wizard-step" id="step-2">
+      <div class="step-card">
+        <div class="step-icon">🎯</div>
+        <h2 class="step-title">FOKUS</h2>
+        <p class="step-subtext">Pilih area resistensi yang ingin dilepaskan:</p>
+
+        <div class="area-options" id="area-options">
+          <!-- Areas will be rendered by JS -->
+        </div>
+
+        <div class="form-group">
+          <label for="focus-description">Deskripsikan lebih spesifik:</label>
+          <textarea id="focus-description" rows="3" placeholder="Contoh: Saya merasa cemas tentang deadline pekerjaan minggu depan..."></textarea>
+        </div>
+
+        <div class="slider-container">
+          <div class="slider-header">
+            <label>Seberapa intens perasaan ini?</label>
+            <span class="slider-value" id="before-value">5</span>
+          </div>
+          <input type="range" id="before-rating" min="1" max="10" value="5"
+            oninput="updateSliderValue('before-rating', 'before-value')">
+          <div class="slider-labels">
+            <span>1 - Ringan</span>
+            <span>10 - Sangat Intens</span>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="prevStep()">← Kembali</button>
+          <button class="btn btn-primary" onclick="nextStep()">Lanjut →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: PERIKSA KEDUA SISI -->
+    <div class="wizard-step" id="step-3">
+      <div class="step-card">
+        <div class="step-icon">⚖️</div>
+        <h2 class="step-title">PERIKSA KEDUA SISI</h2>
+        <p class="step-subtext">Resistensi sering muncul di kedua sisi. Periksa keduanya:</p>
+
+        <div class="sides-container">
+          <div class="side-card">
+            <h4>Apakah ada penolakan untuk <strong>MELAKUKAN</strong> hal ini?</h4>
+            <div class="slider-container">
+              <div class="slider-header">
+                <span>Intensitas:</span>
+                <span class="slider-value" id="to-do-value">5</span>
+              </div>
+              <input type="range" id="resistance-to-do" min="0" max="10" value="5"
+                oninput="updateSliderValue('resistance-to-do', 'to-do-value')">
+              <div class="slider-labels">
+                <span>0 - Tidak ada</span>
+                <span>10 - Sangat kuat</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="side-card">
+            <h4>Apakah ada penolakan untuk <strong>TIDAK MELAKUKAN</strong> hal ini?</h4>
+            <div class="slider-container">
+              <div class="slider-header">
+                <span>Intensitas:</span>
+                <span class="slider-value" id="not-to-do-value">5</span>
+              </div>
+              <input type="range" id="resistance-not-to-do" min="0" max="10" value="5"
+                oninput="updateSliderValue('resistance-not-to-do', 'not-to-do-value')">
+              <div class="slider-labels">
+                <span>0 - Tidak ada</span>
+                <span>10 - Sangat kuat</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="prevStep()">← Kembali</button>
+          <button class="btn btn-primary" onclick="nextStep()">Lanjut →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: SAMBUT -->
+    <div class="wizard-step" id="step-4">
+      <div class="step-card">
+        <div class="step-icon">🤗</div>
+        <h2 class="step-title">SAMBUT</h2>
+        <p class="step-subtext">Izinkan dirimu merasakan apa yang ada...</p>
+
+        <div class="question-reveal">
+          "Bisakah kamu menyambut/mengizinkan perasaan ini ada?"
+        </div>
+
+        <div class="question-reveal">
+          "Sudahkah diizinkan untuk ada, sepenuhnya?"
+        </div>
+
+        <div class="question-reveal">
+          "Bukankah itu hanyalah yang tampaknya terjadi saja?"
+        </div>
+
+        <div class="question-reveal">
+          "Bisakah kamu membiarkannya ada, tanpa harus mengubahnya?"
+        </div>
+
+        <div class="btn-group" style="margin-top: 2rem;">
+          <button class="btn btn-outline" onclick="prevStep()">← Kembali</button>
+          <button class="btn btn-primary" onclick="nextStep()">Ya, sudah diizinkan →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5: LEPASKAN -->
+    <div class="wizard-step" id="step-5">
+      <div class="step-card">
+        <div class="step-icon">🌊</div>
+        <h2 class="step-title">LEPASKAN</h2>
+        <p class="step-subtext">Biarkan ia pergi dengan lembut...</p>
+
+        <div class="question-reveal">
+          "Bisakah kamu melepaskannya?"
+        </div>
+
+        <div class="question-reveal">
+          "Maukah kamu melepaskannya?"
+        </div>
+
+        <div class="question-reveal">
+          "Kapan?"
+        </div>
+
+        <div class="question-reveal" style="font-size: 1.5rem; font-weight: 600; color: var(--secondary);">
+          "Sekarang."
+        </div>
+
+        <div class="btn-group" style="margin-top: 2rem;">
+          <button class="btn btn-outline" onclick="prevStep()">← Kembali</button>
+          <button class="btn btn-success" onclick="nextStep()">Sudah dilepaskan ✓</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 6: ISTIRAHAT -->
+    <div class="wizard-step" id="step-6">
+      <div class="step-card">
+        <div class="step-icon">🧘</div>
+        <h2 class="step-title">ISTIRAHAT</h2>
+        <p class="step-text">
+          Duduk santai sebagai keberadaan...<br><br>
+          Sebagai kemudahan...<br>
+          Sebagai aliran...<br>
+          Sebagai cinta...
+        </p>
+
+        <div class="breathing-circle">
+          Istirahat...
+        </div>
+
+        <div class="timer-container">
+          <div id="timer">01:00</div>
+          <p class="timer-label">Nikmati ketenangan</p>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-primary btn-next" disabled onclick="nextStep()">
+            Lanjut →
+          </button>
+        </div>
+        <button class="skip-btn" onclick="skipTimer(); enableNextButton(6);">Skip timer</button>
+      </div>
+    </div>
+
+    <!-- Step 7: INQUIRY -->
+    <div class="wizard-step" id="step-7">
+      <div class="step-card">
+        <div class="step-icon">💭</div>
+        <h2 class="step-title">INQUIRY</h2>
+        <p class="step-subtext">Pertanyaan untuk memperdalam kesadaran...</p>
+
+        <div class="question-reveal">
+          "Apakah kamu yang menolak, atau yang sadar akan penolakan?"
+        </div>
+
+        <div class="question-reveal">
+          "Apakah hanya ada ini saja, saat ini?"
+        </div>
+
+        <div class="question-reveal">
+          "Siapa yang tersisa ketika resistensi pergi?"
+        </div>
+
+        <div class="question-reveal">
+          "Apakah keberadaan ini terpengaruh oleh apapun?"
+        </div>
+
+        <div class="btn-group" style="margin-top: 2rem;">
+          <button class="btn btn-outline" onclick="prevStep()">← Kembali</button>
+          <button class="btn btn-primary" onclick="nextStep()">Selesai refleksi →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 8: HASIL -->
+    <div class="wizard-step" id="step-8">
+      <div class="step-card">
+        <div class="step-icon">✨</div>
+        <h2 class="step-title">HASIL</h2>
+        <p class="step-subtext">Bagaimana perasaanmu sekarang?</p>
+
+        <div class="results-comparison">
+          <div class="result-item">
+            <div class="result-label">Sebelum</div>
+            <div class="result-value result-before" id="result-before">5</div>
+          </div>
+          <div class="result-arrow">→</div>
+          <div class="result-item">
+            <div class="result-label">Sesudah</div>
+            <div class="result-value result-after">
+              <input type="range" id="after-rating" min="1" max="10" value="3"
+                oninput="document.getElementById('after-display').textContent = this.value"
+                style="width: 80px;">
+              <div id="after-display">3</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="session-notes">Catatan (opsional):</label>
+          <textarea id="session-notes" rows="3" placeholder="Insight, perasaan, atau apapun yang ingin dicatat..."></textarea>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="repeatSession()">🔄 Ulangi Sesi</button>
+          <button class="btn btn-success" onclick="completeSession()">✓ Simpan & Selesai</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="resistance-app.js"></script>
+  <script>
+    // Initialize slider values
+    function updateSliderValue(sliderId, displayId) {
+      const slider = document.getElementById(sliderId);
+      const display = document.getElementById(displayId);
+      if (slider && display) {
+        display.textContent = slider.value;
+      }
+    }
+
+    // Enable next button (called by timer or skip)
+    function enableNextButton(step) {
+      const btn = document.querySelector(`#step-${step} .btn-next`);
+      if (btn) {
+        btn.disabled = false;
+        btn.classList.add('pulse');
+      }
+    }
+
+    // Check for quick mode
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('quick') === 'true') {
+      // Quick mode - set shorter timers and skip some steps
+      document.querySelector('.header h1').textContent = 'Quick Release';
+    }
+  </script>
+</body>
+</html>
