@@ -74,6 +74,12 @@ function doGet(e) {
   const action = e.parameter.action || '';
   const data = e.parameter.data ? JSON.parse(e.parameter.data) : null;
   const sesiId = e.parameter.sesiId || '';
+  const id = e.parameter.id || '';
+  const status = e.parameter.status || '';
+  const type = e.parameter.type || '';
+  const goalId = e.parameter.goalId || '';
+  const fromDate = e.parameter.fromDate || '';
+  const toDate = e.parameter.toDate || '';
 
   let result = { success: false, message: 'Unknown action' };
 
@@ -103,6 +109,61 @@ function doGet(e) {
       case 'ping':
         result = { success: true, message: 'API is working!', timestamp: new Date().toISOString() };
         break;
+
+      // ===== MANIFESTING CASES =====
+      case 'setupManifesting':
+        result = setupManifesting();
+        break;
+
+      // Goals
+      case 'saveManifestingGoal':
+        result = saveManifestingGoal(data);
+        break;
+      case 'getManifestingGoals':
+        result = getManifestingGoals(status || (data ? data.status : null));
+        break;
+      case 'deleteManifestingGoal':
+        result = deleteManifestingGoal(id || (data ? data.id : null));
+        break;
+
+      // Discover
+      case 'saveManifestingDiscover':
+        result = saveManifestingDiscover(data);
+        break;
+
+      // Releases
+      case 'saveManifestingRelease':
+        result = saveManifestingRelease(data);
+        break;
+
+      // Actions
+      case 'saveManifestingAction':
+        result = saveManifestingAction(data);
+        break;
+
+      // Emotions
+      case 'logManifestingEmotion':
+        result = logManifestingEmotion(data);
+        break;
+
+      // Progress
+      case 'getManifestingProgress':
+        result = getManifestingProgress();
+        break;
+      case 'initManifestingProgress':
+        result = initManifestingProgress(data ? data.startDate : null);
+        break;
+
+      // Journal
+      case 'getManifestingJournal':
+        result = getManifestingJournal(type, goalId, fromDate, toDate);
+        break;
+
+      // Stats
+      case 'getManifestingStats':
+        result = getManifestingStats();
+        break;
+
       default:
         result = { success: false, message: 'Invalid action: ' + action };
     }
@@ -610,4 +671,586 @@ function testSaveDraft() {
 
   const result = saveDraft(testData);
   Logger.log(result);
+}
+
+// ==========================================================================
+// MANIFESTING WORKBOOK - HEADERS
+// ==========================================================================
+
+const MANIFESTING_GOALS_HEADERS = [
+  'ID', 'Timestamp', 'UpdatedAt', 'Category', 'Format',
+  'GoalText', 'Status', 'IsPrimary'
+];
+
+const MANIFESTING_DISCOVER_HEADERS = [
+  'ID', 'Timestamp', 'Desire', 'Wantings',
+  'IdentificationScale', 'AwarenessInsight', 'Released'
+];
+
+const MANIFESTING_RELEASES_HEADERS = [
+  'ID', 'Timestamp', 'GoalID', 'GoalText', 'Thoughts',
+  'Wantings', 'IdentificationScale', 'AwarenessInsight',
+  'EmotionBefore', 'EmotionAfter', 'Duration'
+];
+
+const MANIFESTING_ACTIONS_HEADERS = [
+  'ID', 'Timestamp', 'GoalID', 'Actions', 'ActionWantings',
+  'LimitingBeliefs', 'LimitingWantings',
+  'EmpoweringBeliefs', 'EmpoweringWantings'
+];
+
+const MANIFESTING_EMOTIONS_HEADERS = [
+  'ID', 'Timestamp', 'Emotion', 'Context'
+];
+
+const MANIFESTING_PROGRESS_HEADERS = [
+  'ID', 'StartDate', 'LastActiveDate', 'CurrentDay',
+  'StreakDays', 'TotalReleases', 'TotalGoals'
+];
+
+// ==========================================================================
+// MANIFESTING WORKBOOK - SETUP
+// ==========================================================================
+
+function setupManifesting() {
+  const ss = getSpreadsheet();
+
+  // Goals sheet
+  let goalsSheet = ss.getSheetByName('Manifesting_Goals');
+  if (!goalsSheet) {
+    goalsSheet = ss.insertSheet('Manifesting_Goals');
+  }
+  goalsSheet.clear();
+  goalsSheet.getRange(1, 1, 1, MANIFESTING_GOALS_HEADERS.length)
+    .setValues([MANIFESTING_GOALS_HEADERS]);
+  goalsSheet.getRange(1, 1, 1, MANIFESTING_GOALS_HEADERS.length)
+    .setFontWeight('bold').setBackground('#C4A962').setFontColor('#2D2A26');
+  goalsSheet.setFrozenRows(1);
+
+  // Discover sheet
+  let discoverSheet = ss.getSheetByName('Manifesting_Discover');
+  if (!discoverSheet) {
+    discoverSheet = ss.insertSheet('Manifesting_Discover');
+  }
+  discoverSheet.clear();
+  discoverSheet.getRange(1, 1, 1, MANIFESTING_DISCOVER_HEADERS.length)
+    .setValues([MANIFESTING_DISCOVER_HEADERS]);
+  discoverSheet.getRange(1, 1, 1, MANIFESTING_DISCOVER_HEADERS.length)
+    .setFontWeight('bold').setBackground('#A8B5A0').setFontColor('#2D2A26');
+  discoverSheet.setFrozenRows(1);
+
+  // Releases sheet
+  let releasesSheet = ss.getSheetByName('Manifesting_Releases');
+  if (!releasesSheet) {
+    releasesSheet = ss.insertSheet('Manifesting_Releases');
+  }
+  releasesSheet.clear();
+  releasesSheet.getRange(1, 1, 1, MANIFESTING_RELEASES_HEADERS.length)
+    .setValues([MANIFESTING_RELEASES_HEADERS]);
+  releasesSheet.getRange(1, 1, 1, MANIFESTING_RELEASES_HEADERS.length)
+    .setFontWeight('bold').setBackground('#7C8EA8').setFontColor('#ffffff');
+  releasesSheet.setFrozenRows(1);
+
+  // Actions sheet
+  let actionsSheet = ss.getSheetByName('Manifesting_Actions');
+  if (!actionsSheet) {
+    actionsSheet = ss.insertSheet('Manifesting_Actions');
+  }
+  actionsSheet.clear();
+  actionsSheet.getRange(1, 1, 1, MANIFESTING_ACTIONS_HEADERS.length)
+    .setValues([MANIFESTING_ACTIONS_HEADERS]);
+  actionsSheet.getRange(1, 1, 1, MANIFESTING_ACTIONS_HEADERS.length)
+    .setFontWeight('bold').setBackground('#C9A8A0').setFontColor('#2D2A26');
+  actionsSheet.setFrozenRows(1);
+
+  // Emotions sheet
+  let emotionsSheet = ss.getSheetByName('Manifesting_Emotions');
+  if (!emotionsSheet) {
+    emotionsSheet = ss.insertSheet('Manifesting_Emotions');
+  }
+  emotionsSheet.clear();
+  emotionsSheet.getRange(1, 1, 1, MANIFESTING_EMOTIONS_HEADERS.length)
+    .setValues([MANIFESTING_EMOTIONS_HEADERS]);
+  emotionsSheet.getRange(1, 1, 1, MANIFESTING_EMOTIONS_HEADERS.length)
+    .setFontWeight('bold').setBackground('#9C8E7C').setFontColor('#ffffff');
+  emotionsSheet.setFrozenRows(1);
+
+  // Progress sheet
+  let progressSheet = ss.getSheetByName('Manifesting_Progress');
+  if (!progressSheet) {
+    progressSheet = ss.insertSheet('Manifesting_Progress');
+  }
+  progressSheet.clear();
+  progressSheet.getRange(1, 1, 1, MANIFESTING_PROGRESS_HEADERS.length)
+    .setValues([MANIFESTING_PROGRESS_HEADERS]);
+  progressSheet.getRange(1, 1, 1, MANIFESTING_PROGRESS_HEADERS.length)
+    .setFontWeight('bold').setBackground('#4A3F35').setFontColor('#ffffff');
+  progressSheet.setFrozenRows(1);
+
+  return { success: true, message: 'Manifesting sheets initialized!' };
+}
+
+// ==========================================================================
+// MANIFESTING GOALS CRUD
+// ==========================================================================
+
+function findRowById(sheet, id) {
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === id) {
+      return i + 1;
+    }
+  }
+  return -1;
+}
+
+function saveManifestingGoal(data) {
+  const sheet = getOrCreateSheet('Manifesting_Goals', MANIFESTING_GOALS_HEADERS);
+
+  const id = data.id || 'GOAL-' + Date.now();
+  const timestamp = new Date().toISOString();
+
+  // Check if updating existing
+  const existingRow = findRowById(sheet, id);
+
+  const row = [
+    id,
+    existingRow > 0 ? sheet.getRange(existingRow, 2).getValue() : timestamp,
+    timestamp,
+    data.category || '',
+    data.format || '',
+    data.goalText || '',
+    data.status || 'active',
+    data.isPrimary || false
+  ];
+
+  if (existingRow > 0) {
+    sheet.getRange(existingRow, 1, 1, row.length).setValues([row]);
+  } else {
+    sheet.appendRow(row);
+  }
+
+  return { success: true, message: 'Goal saved!', id: id };
+}
+
+function getManifestingGoals(status) {
+  const sheet = getOrCreateSheet('Manifesting_Goals', MANIFESTING_GOALS_HEADERS);
+  const data = sheet.getDataRange().getValues();
+
+  if (data.length <= 1) {
+    return { success: true, goals: [] };
+  }
+
+  const goals = [];
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const goalStatus = row[6];
+
+    if (status && status !== 'all' && goalStatus !== status) continue;
+
+    goals.push({
+      id: row[0],
+      timestamp: row[1],
+      updatedAt: row[2],
+      category: row[3],
+      format: row[4],
+      goalText: row[5],
+      status: row[6],
+      isPrimary: row[7]
+    });
+  }
+
+  return { success: true, goals: goals };
+}
+
+function deleteManifestingGoal(id) {
+  const sheet = getOrCreateSheet('Manifesting_Goals', MANIFESTING_GOALS_HEADERS);
+  const row = findRowById(sheet, id);
+
+  if (row > 0) {
+    sheet.getRange(row, 7).setValue('deleted');
+    sheet.getRange(row, 3).setValue(new Date().toISOString());
+    return { success: true, message: 'Goal deleted!' };
+  }
+
+  return { success: false, message: 'Goal not found' };
+}
+
+// ==========================================================================
+// MANIFESTING DISCOVER
+// ==========================================================================
+
+function saveManifestingDiscover(data) {
+  const sheet = getOrCreateSheet('Manifesting_Discover', MANIFESTING_DISCOVER_HEADERS);
+
+  const id = 'DISC-' + Date.now();
+  const timestamp = new Date().toISOString();
+
+  const row = [
+    id,
+    timestamp,
+    data.desire || '',
+    JSON.stringify(data.wantings || []),
+    data.identificationScale || 0,
+    data.awarenessInsight || '',
+    data.released || false
+  ];
+
+  sheet.appendRow(row);
+
+  return { success: true, message: 'Discover entry saved!', id: id };
+}
+
+// ==========================================================================
+// MANIFESTING RELEASES
+// ==========================================================================
+
+function saveManifestingRelease(data) {
+  const sheet = getOrCreateSheet('Manifesting_Releases', MANIFESTING_RELEASES_HEADERS);
+
+  const id = 'REL-' + Date.now();
+  const timestamp = new Date().toISOString();
+
+  const row = [
+    id,
+    timestamp,
+    data.goalId || '',
+    data.goalText || '',
+    data.thoughts || '',
+    JSON.stringify(data.wantings || []),
+    data.identificationScale || 0,
+    data.awarenessInsight || '',
+    data.emotionBefore || '',
+    data.emotionAfter || '',
+    data.duration || 0
+  ];
+
+  sheet.appendRow(row);
+
+  // Update progress
+  updateManifestingProgress('release');
+
+  return { success: true, message: 'Release session saved!', id: id };
+}
+
+// ==========================================================================
+// MANIFESTING ACTIONS
+// ==========================================================================
+
+function saveManifestingAction(data) {
+  const sheet = getOrCreateSheet('Manifesting_Actions', MANIFESTING_ACTIONS_HEADERS);
+
+  const id = 'ACT-' + Date.now();
+  const timestamp = new Date().toISOString();
+
+  const row = [
+    id,
+    timestamp,
+    data.goalId || '',
+    JSON.stringify(data.actions || []),
+    JSON.stringify(data.actionWantings || []),
+    JSON.stringify(data.limitingBeliefs || []),
+    JSON.stringify(data.limitingWantings || []),
+    JSON.stringify(data.empoweringBeliefs || []),
+    JSON.stringify(data.empoweringWantings || [])
+  ];
+
+  sheet.appendRow(row);
+
+  return { success: true, message: 'Action entry saved!', id: id };
+}
+
+// ==========================================================================
+// MANIFESTING EMOTIONS
+// ==========================================================================
+
+function logManifestingEmotion(data) {
+  const sheet = getOrCreateSheet('Manifesting_Emotions', MANIFESTING_EMOTIONS_HEADERS);
+
+  const id = 'EMO-' + Date.now();
+  const timestamp = new Date().toISOString();
+
+  const row = [
+    id,
+    timestamp,
+    data.emotion || '',
+    data.context || ''
+  ];
+
+  sheet.appendRow(row);
+
+  // Update progress (streak)
+  updateManifestingProgress('emotion');
+
+  return { success: true, message: 'Emotion logged!', id: id };
+}
+
+// ==========================================================================
+// MANIFESTING PROGRESS
+// ==========================================================================
+
+function getManifestingProgress() {
+  const sheet = getOrCreateSheet('Manifesting_Progress', MANIFESTING_PROGRESS_HEADERS);
+  const data = sheet.getDataRange().getValues();
+
+  if (data.length <= 1) {
+    return {
+      success: true,
+      progress: {
+        startDate: null,
+        lastActiveDate: null,
+        currentDay: 0,
+        streakDays: 0,
+        totalReleases: 0,
+        totalGoals: 0
+      }
+    };
+  }
+
+  const row = data[1];
+  return {
+    success: true,
+    progress: {
+      id: row[0],
+      startDate: row[1],
+      lastActiveDate: row[2],
+      currentDay: row[3],
+      streakDays: row[4],
+      totalReleases: row[5],
+      totalGoals: row[6]
+    }
+  };
+}
+
+function updateManifestingProgress(type) {
+  const sheet = getOrCreateSheet('Manifesting_Progress', MANIFESTING_PROGRESS_HEADERS);
+  const data = sheet.getDataRange().getValues();
+
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+
+  if (data.length <= 1) {
+    const row = [
+      'PROG-1',
+      todayStr,
+      todayStr,
+      1,
+      1,
+      type === 'release' ? 1 : 0,
+      0
+    ];
+    sheet.appendRow(row);
+    return;
+  }
+
+  const row = data[1];
+  const startDate = new Date(row[1]);
+  const lastActive = row[2];
+  let streakDays = parseInt(row[4]) || 0;
+  let totalReleases = parseInt(row[5]) || 0;
+
+  // Calculate current day
+  const currentDay = Math.ceil((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
+
+  // Calculate streak
+  const lastActiveDate = new Date(lastActive);
+  const daysDiff = Math.floor((today - lastActiveDate) / (1000 * 60 * 60 * 24));
+
+  if (daysDiff === 0) {
+    // Same day, no change to streak
+  } else if (daysDiff === 1) {
+    streakDays++;
+  } else {
+    streakDays = 1;
+  }
+
+  if (type === 'release') totalReleases++;
+
+  sheet.getRange(2, 3).setValue(todayStr);
+  sheet.getRange(2, 4).setValue(Math.min(currentDay, 30));
+  sheet.getRange(2, 5).setValue(streakDays);
+  sheet.getRange(2, 6).setValue(totalReleases);
+}
+
+function initManifestingProgress(startDate) {
+  const sheet = getOrCreateSheet('Manifesting_Progress', MANIFESTING_PROGRESS_HEADERS);
+
+  const lastRow = sheet.getLastRow();
+  if (lastRow > 1) {
+    sheet.deleteRows(2, lastRow - 1);
+  }
+
+  const row = [
+    'PROG-1',
+    startDate || new Date().toISOString().split('T')[0],
+    new Date().toISOString().split('T')[0],
+    1,
+    1,
+    0,
+    0
+  ];
+
+  sheet.appendRow(row);
+
+  return { success: true, message: 'Progress initialized!' };
+}
+
+// ==========================================================================
+// MANIFESTING JOURNAL (Combined)
+// ==========================================================================
+
+function getManifestingJournal(type, goalId, fromDate, toDate) {
+  const entries = [];
+
+  // Get Discover entries
+  if (!type || type === 'all' || type === 'discover') {
+    const discoverSheet = getOrCreateSheet('Manifesting_Discover', MANIFESTING_DISCOVER_HEADERS);
+    const discoverData = discoverSheet.getDataRange().getValues();
+    for (let i = 1; i < discoverData.length; i++) {
+      const row = discoverData[i];
+      entries.push({
+        id: row[0],
+        timestamp: row[1],
+        type: 'discover',
+        content: {
+          desire: row[2],
+          wantings: JSON.parse(row[3] || '[]'),
+          identificationScale: row[4],
+          awarenessInsight: row[5]
+        }
+      });
+    }
+  }
+
+  // Get Release entries
+  if (!type || type === 'all' || type === 'release') {
+    const releaseSheet = getOrCreateSheet('Manifesting_Releases', MANIFESTING_RELEASES_HEADERS);
+    const releaseData = releaseSheet.getDataRange().getValues();
+    for (let i = 1; i < releaseData.length; i++) {
+      const row = releaseData[i];
+
+      if (goalId && goalId !== 'all' && row[2] !== goalId) continue;
+
+      entries.push({
+        id: row[0],
+        timestamp: row[1],
+        type: 'release',
+        goalId: row[2],
+        content: {
+          goalText: row[3],
+          thoughts: row[4],
+          wantings: JSON.parse(row[5] || '[]'),
+          awarenessInsight: row[7],
+          emotionBefore: row[8],
+          emotionAfter: row[9]
+        }
+      });
+    }
+  }
+
+  // Get Action entries
+  if (!type || type === 'all' || type === 'action') {
+    const actionSheet = getOrCreateSheet('Manifesting_Actions', MANIFESTING_ACTIONS_HEADERS);
+    const actionData = actionSheet.getDataRange().getValues();
+    for (let i = 1; i < actionData.length; i++) {
+      const row = actionData[i];
+
+      if (goalId && goalId !== 'all' && row[2] !== goalId) continue;
+
+      entries.push({
+        id: row[0],
+        timestamp: row[1],
+        type: 'action',
+        goalId: row[2],
+        content: {
+          actions: JSON.parse(row[3] || '[]'),
+          limitingBeliefs: JSON.parse(row[5] || '[]'),
+          empoweringBeliefs: JSON.parse(row[7] || '[]')
+        }
+      });
+    }
+  }
+
+  // Get Emotion logs
+  if (!type || type === 'all' || type === 'emotion') {
+    const emotionSheet = getOrCreateSheet('Manifesting_Emotions', MANIFESTING_EMOTIONS_HEADERS);
+    const emotionData = emotionSheet.getDataRange().getValues();
+    for (let i = 1; i < emotionData.length; i++) {
+      const row = emotionData[i];
+      entries.push({
+        id: row[0],
+        timestamp: row[1],
+        type: 'emotion',
+        content: {
+          emotion: row[2],
+          context: row[3]
+        }
+      });
+    }
+  }
+
+  // Filter by date if provided
+  let filteredEntries = entries;
+  if (fromDate) {
+    const from = new Date(fromDate);
+    filteredEntries = filteredEntries.filter(e => new Date(e.timestamp) >= from);
+  }
+  if (toDate) {
+    const to = new Date(toDate);
+    to.setHours(23, 59, 59);
+    filteredEntries = filteredEntries.filter(e => new Date(e.timestamp) <= to);
+  }
+
+  // Sort by timestamp DESC
+  filteredEntries.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+  return { success: true, entries: filteredEntries };
+}
+
+// ==========================================================================
+// MANIFESTING STATS
+// ==========================================================================
+
+function getManifestingStats() {
+  const progress = getManifestingProgress();
+  const goals = getManifestingGoals('active');
+  const journal = getManifestingJournal('all');
+
+  let discoverCount = 0;
+  let releaseCount = 0;
+  let actionCount = 0;
+  let emotionLogs = {};
+
+  for (const entry of journal.entries) {
+    switch (entry.type) {
+      case 'discover': discoverCount++; break;
+      case 'release': releaseCount++; break;
+      case 'action': actionCount++; break;
+      case 'emotion':
+        const emo = entry.content.emotion;
+        emotionLogs[emo] = (emotionLogs[emo] || 0) + 1;
+        break;
+    }
+  }
+
+  // Calculate unique active days
+  const uniqueDays = new Set();
+  for (const entry of journal.entries) {
+    const day = entry.timestamp.split('T')[0];
+    uniqueDays.add(day);
+  }
+
+  return {
+    success: true,
+    stats: {
+      currentDay: progress.progress.currentDay,
+      streakDays: progress.progress.streakDays,
+      totalReleases: releaseCount,
+      totalGoals: goals.goals.length,
+      totalDiscover: discoverCount,
+      totalActions: actionCount,
+      activeDays: uniqueDays.size,
+      emotionDistribution: emotionLogs
+    }
+  };
 }
