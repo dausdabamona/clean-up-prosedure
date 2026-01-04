@@ -206,11 +206,6 @@
     <nav class="sidebar-menu">
       <div class="menu-label">Modules</div>
 
-      <a href="index.html" class="menu-item">
-        <span class="icon">📋</span>
-        <span>Clean Up Tracker</span>
-      </a>
-
       <a href="daily-release.html" class="menu-item">
         <span class="icon">🧘</span>
         <span>Daily Emotional Release</span>
@@ -286,15 +281,6 @@
       <!-- Modules Grid -->
       <h3 style="margin-bottom: 1rem; color: var(--text-dark);">📚 Choose a Module</h3>
       <div class="modules-grid">
-        <a href="index.html" class="module-card">
-          <div class="module-icon cleanup">📋</div>
-          <div class="module-body">
-            <h3>Clean Up Tracker</h3>
-            <p>Track your daily emotional releases with the comprehensive 5-layer system.</p>
-            <span class="module-status active">Active</span>
-          </div>
-        </a>
-
         <a href="daily-release.html" class="module-card">
           <div class="module-icon daily">🧘</div>
           <div class="module-body">
@@ -361,7 +347,7 @@
     // Load stats from API
     async function loadStats() {
       try {
-        // Fetch stats from Clean Up Tracker
+        // Fetch stats from API
         const statsResponse = await fetch(`${API_URL}?action=getStats`);
         const statsData = await statsResponse.json();
 
