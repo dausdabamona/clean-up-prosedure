@@ -5,7 +5,7 @@
 // ==========================================================================
 // CONFIGURATION - Stored in localStorage
 // ==========================================================================
-const FALLBACK_API_URL = 'https://script.google.com/macros/s/AKfycbwC-zuAzqjFki7Gy1zyt0sq6ohWGzADKvCeN4rCr49Pl_0IznTdxzIOyfHkLOxsjteg1A/exec';
+const FALLBACK_API_URL = 'https://script.google.com/macros/s/AKfycbxyql2BYExoYNXm-TwYibkw7jDXozNbWqeeoOmw-TNuX8gqMyW7P4Q4qD2iBFpM8odDZQ/exec';
 const FALLBACK_DEFAULT_NAME = 'Firdaus Dabamona';
 
 // Get API URL from localStorage or fallback
