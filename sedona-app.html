@@ -512,6 +512,8 @@
   </main>
 
   <script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxyql2BYExoYNXm-TwYibkw7jDXozNbWqeeoOmw-TNuX8gqMyW7P4Q4qD2iBFpM8odDZQ/exec';
+
     // Toggle sidebar on mobile
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('open');
@@ -530,19 +532,38 @@
       }
     });
 
-    // Load stats (placeholder - integrate with actual API)
+    // Load stats from API
     async function loadStats() {
-      // This would connect to your Google Apps Script API
-      // For now, showing placeholder
       try {
-        // Try to get stats from localStorage or API
+        // Fetch stats from Clean Up Tracker
+        const statsResponse = await fetch(`${API_URL}?action=getStats`);
+        const statsData = await statsResponse.json();
+
+        if (statsData.success && statsData.data) {
+          document.getElementById('totalSessions').textContent = statsData.data.totalSessions || '0';
+          document.getElementById('streakDays').textContent = statsData.data.currentStreak || '0';
+          document.getElementById('releasesCount').textContent = statsData.data.totalReleases || '0';
+        }
+
+        // Fetch goals count from Manifesting
+        try {
+          const goalsResponse = await fetch(`${API_URL}?action=getManifestingGoals`);
+          const goalsData = await goalsResponse.json();
+          if (goalsData.success && goalsData.data) {
+            document.getElementById('goalsCount').textContent = goalsData.data.length || '0';
+          }
+        } catch(e) {
+          console.log('Goals stats not available');
+        }
+
+      } catch(e) {
+        console.log('Stats not available:', e);
+        // Fallback to localStorage
         const stats = JSON.parse(localStorage.getItem('sedonaStats') || '{}');
         document.getElementById('totalSessions').textContent = stats.totalSessions || '0';
         document.getElementById('streakDays').textContent = stats.streakDays || '0';
         document.getElementById('releasesCount').textContent = stats.releases || '0';
         document.getElementById('goalsCount').textContent = stats.goals || '0';
-      } catch(e) {
-        console.log('Stats not available');
       }
     }
 

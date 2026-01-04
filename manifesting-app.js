@@ -2,6 +2,9 @@
 // MANIFESTING WORKBOOK - JAVASCRIPT
 // ==========================================================================
 
+// Default API URL
+const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbxyql2BYExoYNXm-TwYibkw7jDXozNbWqeeoOmw-TNuX8gqMyW7P4Q4qD2iBFpM8odDZQ/exec';
+
 // ===== TAB NAVIGATION =====
 function switchTab(tabId) {
   // Deactivate all tabs
@@ -76,10 +79,11 @@ function initSliders() {
 
 // ===== API CALLS =====
 async function callManifestingApi(action, data = null, params = {}) {
-  const apiUrl = localStorage.getItem('apiUrl');
-  if (!apiUrl) {
-    showToast('API URL belum dikonfigurasi! Buka Settings.', 'error');
-    return null;
+  const apiUrl = localStorage.getItem('apiUrl') || DEFAULT_API_URL;
+
+  // Auto-save default API URL to localStorage if not set
+  if (!localStorage.getItem('apiUrl')) {
+    localStorage.setItem('apiUrl', DEFAULT_API_URL);
   }
 
   try {
@@ -683,11 +687,14 @@ function escapeHtml(text) {
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', function() {
-  // Load saved API URL
-  const savedUrl = localStorage.getItem('apiUrl');
-  if (savedUrl) {
-    const apiUrlField = document.getElementById('apiUrl');
-    if (apiUrlField) apiUrlField.value = savedUrl;
+  // Load saved API URL or use default
+  const savedUrl = localStorage.getItem('apiUrl') || DEFAULT_API_URL;
+  const apiUrlField = document.getElementById('apiUrl');
+  if (apiUrlField) apiUrlField.value = savedUrl;
+
+  // Ensure API URL is saved to localStorage
+  if (!localStorage.getItem('apiUrl')) {
+    localStorage.setItem('apiUrl', DEFAULT_API_URL);
   }
 
   // Load saved settings
