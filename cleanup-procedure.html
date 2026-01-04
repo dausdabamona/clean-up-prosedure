@@ -1,0 +1,2396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clean Up Procedure - Sedona Method</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤝</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ==================== PAGE-SPECIFIC STYLES ==================== */
+
+    /* Header Gradient */
+    .header.cleanup {
+      background: linear-gradient(135deg, #1a5276, #2874a6);
+    }
+
+    /* Progress Indicator */
+    .progress-indicator {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .progress-step {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--bg-light);
+      color: var(--text-light);
+      transition: all 0.3s;
+    }
+
+    .progress-step.active {
+      background: var(--primary);
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .progress-step.completed {
+      background: var(--success);
+      color: white;
+    }
+
+    .progress-step .step-icon {
+      font-size: 0.9rem;
+    }
+
+    .progress-arrow {
+      color: var(--border);
+      font-size: 0.8rem;
+    }
+
+    /* Step Colors */
+    .step-control { border-left: 4px solid #2874a6; }
+    .step-control .card-header { background: #2874a6; }
+    .step-approval { border-left: 4px solid #9b59b6; }
+    .step-approval .card-header { background: #9b59b6; }
+    .step-security { border-left: 4px solid #e67e22; }
+    .step-security .card-header { background: #e67e22; }
+    .step-separation { border-left: 4px solid #8e44ad; }
+    .step-separation .card-header { background: #8e44ad; }
+
+    /* Question Card */
+    .question-card {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      box-shadow: var(--shadow);
+    }
+
+    .question-text {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 0.75rem;
+      line-height: 1.5;
+    }
+
+    .question-text .target-name {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* Radio Options */
+    .radio-options {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .radio-option {
+      flex: 1;
+      min-width: 80px;
+    }
+
+    .radio-option input {
+      display: none;
+    }
+
+    .radio-option label {
+      display: block;
+      padding: 0.6rem 1rem;
+      text-align: center;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .radio-option input:checked + label {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+    }
+
+    .radio-option.yes input:checked + label {
+      border-color: var(--success);
+      background: var(--success);
+    }
+
+    .radio-option.no input:checked + label {
+      border-color: var(--danger);
+      background: var(--danger);
+    }
+
+    .radio-option.maybe input:checked + label {
+      border-color: var(--warning);
+      background: var(--warning);
+    }
+
+    /* Resistance Panel */
+    .resistance-panel {
+      background: #fff5f5;
+      border: 1px solid #f5c6cb;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 0.75rem;
+      display: none;
+    }
+
+    .resistance-panel.show {
+      display: block;
+      animation: fadeInUp 0.3s ease;
+    }
+
+    .resistance-panel h4 {
+      color: var(--danger);
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .resistance-panel p {
+      font-size: 0.8rem;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .release-btn {
+      background: linear-gradient(135deg, var(--success), #229954);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .release-btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 3px 10px rgba(39, 174, 96, 0.3);
+    }
+
+    /* Release Counter */
+    .release-counter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      background: var(--bg-light);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .release-counter .count {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .release-counter .label {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    /* Completion Questions */
+    .completion-section {
+      background: #f0fff4;
+      border: 1px solid #c6f6d5;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .completion-section h4 {
+      color: var(--success);
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* Target Selection */
+    .target-form {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+    }
+
+    .target-display {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .target-display .name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .target-display .relation {
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    /* Grounding Panel */
+    .grounding-panel {
+      background: linear-gradient(135deg, #e8f8f5, #d1f2eb);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .grounding-panel h3 {
+      color: #1abc9c;
+      margin-bottom: 0.5rem;
+    }
+
+    .grounding-panel p {
+      font-size: 0.85rem;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+    }
+
+    /* Session Timer */
+    .session-timer {
+      position: fixed;
+      top: 70px;
+      right: 1rem;
+      background: var(--primary);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      z-index: 50;
+      box-shadow: var(--shadow);
+    }
+
+    /* History List */
+    .history-item {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      box-shadow: var(--shadow);
+      border-left: 4px solid var(--primary);
+    }
+
+    .history-item.complete {
+      border-left-color: var(--success);
+    }
+
+    .history-item.ongoing {
+      border-left-color: var(--warning);
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+    }
+
+    .history-header h4 {
+      font-size: 1rem;
+      color: var(--text-dark);
+    }
+
+    .history-header .status {
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .history-header .status.complete {
+      background: #d5f5e3;
+      color: var(--success);
+    }
+
+    .history-header .status.ongoing {
+      background: #fef9e7;
+      color: var(--warning);
+    }
+
+    .history-meta {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+    }
+
+    .history-progress {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .history-progress .step-badge {
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      background: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    .history-progress .step-badge.done {
+      background: var(--success);
+      color: white;
+    }
+
+    /* People List */
+    .person-card {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .person-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .person-info {
+      flex: 1;
+    }
+
+    .person-info h4 {
+      font-size: 1rem;
+      color: var(--text-dark);
+    }
+
+    .person-info p {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    .person-stats {
+      text-align: right;
+    }
+
+    .person-stats .count {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .person-stats .label {
+      font-size: 0.7rem;
+      color: var(--text-light);
+    }
+
+    /* Reference Cards */
+    .reference-card {
+      background: var(--white);
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .reference-card .ref-header {
+      padding: 0.75rem 1rem;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .reference-card .ref-header.control { background: #2874a6; }
+    .reference-card .ref-header.approval { background: #9b59b6; }
+    .reference-card .ref-header.security { background: #e67e22; }
+    .reference-card .ref-header.separation { background: #8e44ad; }
+
+    .reference-card .ref-body {
+      padding: 1rem;
+      display: none;
+    }
+
+    .reference-card .ref-body.show {
+      display: block;
+    }
+
+    .reference-card .ref-body h5 {
+      font-size: 0.85rem;
+      color: var(--text-dark);
+      margin: 0.75rem 0 0.5rem;
+    }
+
+    .reference-card .ref-body ul {
+      font-size: 0.8rem;
+      color: var(--text-dark);
+      padding-left: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .reference-card .ref-body li {
+      margin-bottom: 0.3rem;
+    }
+
+    /* Resume Modal */
+    .resume-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 1rem;
+    }
+
+    .resume-modal.show {
+      display: flex;
+    }
+
+    .resume-modal-content {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 1.5rem;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .resume-modal-content h3 {
+      margin-bottom: 0.5rem;
+      color: var(--text-dark);
+    }
+
+    .resume-modal-content p {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+
+    .resume-modal-content .btn-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* Quick Mode Toggle */
+    .quick-mode-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      background: var(--bg-light);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .quick-mode-toggle label {
+      font-size: 0.85rem;
+      color: var(--text-dark);
+      flex: 1;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 26px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: var(--border);
+      border-radius: 26px;
+      transition: 0.3s;
+    }
+
+    .toggle-slider:before {
+      content: '';
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+      background: var(--success);
+    }
+
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(24px);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-light);
+    }
+
+    .empty-state .icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+      font-size: 0.9rem;
+    }
+
+    /* Step Navigation */
+    .step-nav {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .step-nav .btn {
+      flex: 1;
+    }
+
+    /* Insight Box */
+    .insight-box {
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .insight-box h4 {
+      color: #b45309;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .insight-box textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.75rem;
+      font-size: 0.85rem;
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .progress-indicator {
+        padding: 0.75rem 0.5rem;
+        gap: 0.25rem;
+      }
+
+      .progress-step {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.65rem;
+      }
+
+      .progress-arrow {
+        font-size: 0.6rem;
+      }
+
+      .session-timer {
+        top: auto;
+        bottom: 70px;
+        right: 0.5rem;
+        font-size: 0.75rem;
+        padding: 0.4rem 0.75rem;
+      }
+
+      .radio-options {
+        flex-direction: row;
+      }
+
+      .radio-option {
+        min-width: 60px;
+      }
+
+      .radio-option label {
+        padding: 0.5rem 0.5rem;
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header cleanup">
+    <h1>Clean Up Procedure</h1>
+    <p>Membersihkan hubungan dengan orang lain</p>
+  </header>
+
+  <!-- Back Navigation -->
+  <div class="nav-link">
+    <a href="sedona-app.html">← Kembali ke Menu</a>
+  </div>
+
+  <!-- Progress Indicator (shown during worksheet) -->
+  <div class="progress-indicator" id="progressIndicator" style="display: none;">
+    <div class="progress-step" id="progControl" data-step="control">
+      <span class="step-icon">○</span>
+      <span>Control</span>
+    </div>
+    <span class="progress-arrow">→</span>
+    <div class="progress-step" id="progApproval" data-step="approval">
+      <span class="step-icon">○</span>
+      <span>Approval</span>
+    </div>
+    <span class="progress-arrow">→</span>
+    <div class="progress-step" id="progSecurity" data-step="security">
+      <span class="step-icon">○</span>
+      <span>Security</span>
+    </div>
+    <span class="progress-arrow">→</span>
+    <div class="progress-step" id="progSeparation" data-step="separation">
+      <span class="step-icon">○</span>
+      <span>Separation</span>
+    </div>
+  </div>
+
+  <!-- Session Timer -->
+  <div class="session-timer" id="sessionTimer" style="display: none;">
+    <span id="timerDisplay">00:00</span>
+  </div>
+
+  <!-- Tab Navigation -->
+  <nav class="nav-tabs">
+    <button class="nav-tab active" data-tab="worksheet">
+      <span class="icon">📝</span>
+      <span>Worksheet</span>
+    </button>
+    <button class="nav-tab" data-tab="history">
+      <span class="icon">📜</span>
+      <span>Riwayat</span>
+    </button>
+    <button class="nav-tab" data-tab="people">
+      <span class="icon">👥</span>
+      <span>People</span>
+    </button>
+    <button class="nav-tab" data-tab="dashboard">
+      <span class="icon">📊</span>
+      <span>Dashboard</span>
+    </button>
+    <button class="nav-tab" data-tab="reference">
+      <span class="icon">📖</span>
+      <span>Reference</span>
+    </button>
+    <button class="nav-tab" data-tab="settings">
+      <span class="icon">⚙️</span>
+      <span>Settings</span>
+    </button>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- ==================== WORKSHEET TAB ==================== -->
+    <section class="tab-content active" id="worksheetTab">
+      <!-- Step 0: Target Selection -->
+      <div id="step0" class="step-section">
+        <div class="card">
+          <div class="card-header">🎯 Pilih Target</div>
+          <div class="card-body">
+            <div class="target-form">
+              <div class="form-group">
+                <label>Nama Orang</label>
+                <input type="text" id="targetName" placeholder="Masukkan nama orang yang akan di-cleanup" autocomplete="off">
+              </div>
+
+              <div class="form-group">
+                <label>Relasi</label>
+                <select id="targetRelation">
+                  <option value="">Pilih relasi...</option>
+                  <option value="Keluarga">Keluarga</option>
+                  <option value="Pasangan">Pasangan</option>
+                  <option value="Teman">Teman</option>
+                  <option value="Rekan Kerja">Rekan Kerja</option>
+                  <option value="Atasan">Atasan</option>
+                  <option value="Bawahan">Bawahan</option>
+                  <option value="Klien">Klien</option>
+                  <option value="Mantan">Mantan</option>
+                  <option value="Lainnya">Lainnya</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                  <input type="checkbox" id="targetDeceased" style="width: auto;">
+                  <span>Orang ini sudah meninggal</span>
+                </label>
+              </div>
+
+              <div class="quick-mode-toggle">
+                <label>⚡ Quick Mode (skip grounding)</label>
+                <div class="toggle-switch">
+                  <input type="checkbox" id="quickModeToggle">
+                  <span class="toggle-slider"></span>
+                </div>
+              </div>
+
+              <button class="btn btn-primary btn-block" onclick="startCleanup()">
+                🚀 Mulai Cleanup
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grounding Panel -->
+      <div id="groundingPanel" style="display: none;">
+        <div class="grounding-panel">
+          <h3>🧘 Grounding</h3>
+          <p>Sebelum memulai, tarik napas dalam-dalam. Rasakan kehadiran Anda di sini dan saat ini. Buka hati Anda untuk proses pelepasan ini.</p>
+          <p><strong>Fokuskan pikiran pada <span id="groundingName"></span>.</strong></p>
+          <p>Bayangkan wajahnya, suaranya, dan interaksi Anda dengannya.</p>
+          <button class="btn btn-success" onclick="proceedToStep1()">
+            ✅ Saya Siap
+          </button>
+        </div>
+      </div>
+
+      <!-- Target Display (shown during process) -->
+      <div id="targetDisplay" class="target-display" style="display: none;">
+        <div class="name" id="displayName"></div>
+        <div class="relation" id="displayRelation"></div>
+      </div>
+
+      <!-- Step 1: Control -->
+      <div id="step1" class="step-section" style="display: none;">
+        <div class="card step-control">
+          <div class="card-header">💪 Step 1: CONTROL (Wanting Control)</div>
+          <div class="card-body">
+            <div class="release-counter">
+              <span class="count" id="controlReleaseCount">0</span>
+              <span class="label">releases</span>
+            </div>
+
+            <!-- Set A - Mereka ke Kamu -->
+            <div class="question-card" id="controlQ1">
+              <div class="question-text">
+                Pernahkah <span class="target-name"></span> mencoba mengendalikan kamu?
+              </div>
+              <div class="radio-options">
+                <div class="radio-option yes">
+                  <input type="radio" name="controlQ1" id="controlQ1Yes" value="yes">
+                  <label for="controlQ1Yes">Ya</label>
+                </div>
+                <div class="radio-option no">
+                  <input type="radio" name="controlQ1" id="controlQ1No" value="no">
+                  <label for="controlQ1No">Tidak</label>
+                </div>
+                <div class="radio-option maybe">
+                  <input type="radio" name="controlQ1" id="controlQ1Maybe" value="maybe">
+                  <label for="controlQ1Maybe">Mungkin</label>
+                </div>
+              </div>
+              <div class="resistance-panel" id="controlQ1Resistance">
+                <h4>🔄 Release Resistance</h4>
+                <p>Bisakah kamu melepaskan keinginan untuk balik mengontrol <span class="target-name"></span>?</p>
+                <button class="release-btn" onclick="doRelease('control', 'controlQ1')">🕊️ Lepaskan</button>
+              </div>
+            </div>
+
+            <div class="question-card" id="controlQ2">
+              <div class="question-text">
+                Bisakah kamu melepaskan keinginan untuk dikontrol oleh <span class="target-name"></span>?
+              </div>
+              <div class="radio-options">
+                <div class="radio-option yes">
+                  <input type="radio" name="controlQ2" id="controlQ2Yes" value="yes">
+                  <label for="controlQ2Yes">Ya</label>
+                </div>
+                <div class="radio-option no">
+                  <input type="radio" name="controlQ2" id="controlQ2No" value="no">
+                  <label for="controlQ2No">Tidak</label>
+                </div>
+                <div class="radio-option maybe">
+                  <input type="radio" name="controlQ2" id="controlQ2Maybe" value="maybe">
+                  <label for="controlQ2Maybe">Mungkin</label>
+                </div>
+              </div>
+              <div class="resistance-panel" id="controlQ2Resistance">
+                <h4>🔄 Release Resistance</h4>
+                <p>Fokus pada resistensi yang kamu rasakan. Bisakah kamu mengizinkannya ada?</p>
+                <button class="release-btn" onclick="doRelease('control', 'controlQ2')">🕊️ Lepaskan</button>
+              </div>
+            </div>
+
+            <!-- Set B - Kamu ke Mereka -->
+            <div class="question-card" id="controlQ3">
+              <div class="question-text">
+                Pernahkah kamu mencoba mengontrol <span class="target-name"></span>?
+              </div>
+              <div class="radio-options">
+                <div class="radio-option yes">
+                  <input type="radio" name="controlQ3" id="controlQ3Yes" value="yes">
+                  <label for="controlQ3Yes">Ya</label>
+                </div>
+                <div class="radio-option no">
+                  <input type="radio" name="controlQ3" id="controlQ3No" value="no">
+                  <label for="controlQ3No">Tidak</label>
+                </div>
+                <div class="radio-option maybe">
+                  <input type="radio" name="controlQ3" id="controlQ3Maybe" value="maybe">
+                  <label for="controlQ3Maybe">Mungkin</label>
+                </div>
+              </div>
+              <div class="resistance-panel" id="controlQ3Resistance">
+                <h4>🔄 Release Resistance</h4>
+                <p>Bisakah kamu melepaskan keinginan untuk mengontrol <span class="target-name"></span>?</p>
+                <button class="release-btn" onclick="doRelease('control', 'controlQ3')">🕊️ Lepaskan</button>
+              </div>
+            </div>
+
+            <!-- Completion Questions -->
+            <div class="completion-section" id="controlCompletion">
+              <h4>✅ Completion Questions</h4>
+
+              <div class="question-card">
+                <div class="question-text">
+                  1. Bisakah kamu mengizinkan <span class="target-name"></span> menjadi seperti apa adanya?
+                </div>
+                <div class="radio-options">
+                  <div class="radio-option yes">
+                    <input type="radio" name="controlC1" id="controlC1Yes" value="yes">
+                    <label for="controlC1Yes">Ya</label>
+                  </div>
+                  <div class="radio-option no">
+                    <input type="radio" name="controlC1" id="controlC1No" value="no">
+                    <label for="controlC1No">Tidak</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="question-card">
+                <div class="question-text">
+                  2. Maukah kamu membiarkan <span class="target-name"></span> seperti apa adanya?
+                </div>
+                <div class="radio-options">
+                  <div class="radio-option yes">
+                    <input type="radio" name="controlC2" id="controlC2Yes" value="yes">
+                    <label for="controlC2Yes">Ya</label>
+                  </div>
+                  <div class="radio-option no">
+                    <input type="radio" name="controlC2" id="controlC2No" value="no">
+                    <label for="controlC2No">Tidak</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="question-card">
+                <div class="question-text">
+                  3. Apakah saat ini kamu memberi <span class="target-name"></span> hak atas dirinya sendiri?
+                </div>
+                <div class="radio-options">
+                  <div class="radio-option yes">
+                    <input type="radio" name="controlC3" id="controlC3Yes" value="yes">
+                    <label for="controlC3Yes">Ya</label>
+                  </div>
+                  <div class="radio-option no">
+                    <input type="radio" name="controlC3" id="controlC3No" value="no">
+                    <label for="controlC3No">Tidak</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-nav">
+              <button class="btn btn-outline" onclick="backToTarget()">← Kembali</button>
+              <button class="btn btn-primary" onclick="goToStep('approval')" id="controlNextBtn" disabled>Lanjut ke Approval →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Approval -->
+      <div id="step2" class="step-section" style="display: none;">
+        <div class="card step-approval">
+          <div class="card-header">💕 Step 2: APPROVAL (Wanting Approval)</div>
+          <div class="card-body">
+            <div class="release-counter">
+              <span class="count" id="approvalReleaseCount">0</span>
+              <span class="label">releases</span>
+            </div>
+
+            <!-- Set A - Kamu ke Mereka -->
+            <div class="question-card" id="approvalQ1">
+              <div class="question-text">
+                Pernahkah kamu tidak menyukai atau tidak menyetujui <span class="target-name"></span>?
+              </div>
+              <div class="radio-options">
+                <div class="radio-option yes">
+                  <input type="radio" name="approvalQ1" id="approvalQ1Yes" value="yes">
+                  <label for="approvalQ1Yes">Ya</label>
+                </div>
+                <div class="radio-option no">
+                  <input type="radio" name="approvalQ1" id="approvalQ1No" value="no">
+                  <label for="approvalQ1No">Tidak</label>
+                </div>
+                <div class="radio-option maybe">
+                  <input type="radio" name="approvalQ1" id="approvalQ1Maybe" value="maybe">
+                  <label for="approvalQ1Maybe">Mungkin</label>
+                </div>
+              </div>
+              <div class="resistance-panel" id="approvalQ1Resistance">
+                <h4>🔄 Release Resistance</h4>
+                <p>Bisakah kamu melepaskan ketidaksukaan terhadap <span class="target-name"></span>?</p>
+                <button class="release-btn" onclick="doRelease('approval', 'approvalQ1')">🕊️ Lepaskan</button>
+              </div>
+            </div>
+
+            <div class="question-card" id="approvalQ2">
+              <div class="question-text">
+                Bisakah kamu melepaskan keinginan untuk menahan welas asih dari <span class="target-name"></span>?
+              </div>
+              <div class="radio-options">
+                <div class="radio-option yes">
+                  <input type="radio" name="approvalQ2" id="approvalQ2Yes" value="yes">
+                  <label for="approvalQ2Yes">Ya</label>
+                </div>
+                <div class="radio-option no">
+                  <input type="radio" name="approvalQ2" id="approvalQ2No" value="no">
+                  <label for="approvalQ2No">Tidak</label>
+                </div>
+                <div class="radio-option maybe">
+                  <input type="radio" name="approvalQ2" id="approvalQ2Maybe" value="maybe">
+                  <label for="approvalQ2Maybe">Mungkin</label>
+                </div>
+              </div>
+              <div class="resistance-panel" id="approvalQ2Resistance">
+                <h4>🔄 Release Resistance</h4>
+                <p>Fokus pada resistensi. Bisakah kamu mengizinkannya ada, lalu lepaskan?</p>
+                <button class="release-btn" onclick="doRelease('approval', 'approvalQ2')">🕊️ Lepaskan</button>
+              </div>
+            </div>
+
+            <!-- Set B - Mereka ke Kamu -->
+            <div class="question-card" id="approvalQ3">
+              <div class="question-text">
+                Pernahkah <span class="target-name"></span> tidak menyukai atau tidak menyetujui kamu?
+              </div>
+              <div class="radio-options">
+                <div class="radio-option yes">
+                  <input type="radio" name="approvalQ3" id="approvalQ3Yes" value="yes">
+                  <label for="approvalQ3Yes">Ya</label>
+                </div>
+                <div class="radio-option no">
+                  <input type="radio" name="approvalQ3" id="approvalQ3No" value="no">
+                  <label for="approvalQ3No">Tidak</label>
+                </div>
+                <div class="radio-option maybe">
+                  <input type="radio" name="approvalQ3" id="approvalQ3Maybe" value="maybe">
+                  <label for="approvalQ3Maybe">Mungkin</label>
+                </div>
+              </div>
+              <div class="resistance-panel" id="approvalQ3Resistance">
+                <h4>🔄 Release Resistance</h4>
+                <p>Bisakah kamu melepaskan keinginan untuk mendapat approval dari <span class="target-name"></span>?</p>
+                <button class="release-btn" onclick="doRelease('approval', 'approvalQ3')">🕊️ Lepaskan</button>
+              </div>
+            </div>
+
+            <!-- Completion Questions -->
+            <div class="completion-section" id="approvalCompletion">
+              <h4>✅ Completion Questions</h4>
+
+              <div class="question-card">
+                <div class="question-text">
+                  1. Bisakah kamu hanya memiliki perasaan welas asih dan penerimaan terhadap <span class="target-name"></span>?
+                </div>
+                <div class="radio-options">
+                  <div class="radio-option yes">
+                    <input type="radio" name="approvalC1" id="approvalC1Yes" value="yes">
+                    <label for="approvalC1Yes">Ya</label>
+                  </div>
+                  <div class="radio-option no">
+                    <input type="radio" name="approvalC1" id="approvalC1No" value="no">
+                    <label for="approvalC1No">Tidak</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="question-card">
+                <div class="question-text">
+                  2. Maukah kamu hanya memiliki perasaan welas asih untuk <span class="target-name"></span>?
+                </div>
+                <div class="radio-options">
+                  <div class="radio-option yes">
+                    <input type="radio" name="approvalC2" id="approvalC2Yes" value="yes">
+                    <label for="approvalC2Yes">Ya</label>
+                  </div>
+                  <div class="radio-option no">
+                    <input type="radio" name="approvalC2" id="approvalC2No" value="no">
+                    <label for="approvalC2No">Tidak</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="question-card">
+                <div class="question-text">
+                  3. Apakah saat ini kamu hanya memiliki perasaan welas asih untuk <span class="target-name"></span>?
+                </div>
+                <div class="radio-options">
+                  <div class="radio-option yes">
+                    <input type="radio" name="approvalC3" id="approvalC3Yes" value="yes">
+                    <label for="approvalC3Yes">Ya</label>
+                  </div>
+                  <div class="radio-option no">
+                    <input type="radio" name="approvalC3" id="approvalC3No" value="no">
+                    <label for="approvalC3No">Tidak</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-nav">
+              <button class="btn btn-outline" onclick="goToStep('control')">← Control</button>
+              <button class="btn btn-primary" onclick="goToStep('security')" id="approvalNextBtn" disabled>Lanjut ke Security →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Security -->
+      <div id="step3" class="step-section" style="display: none;">
+        <div class="card step-security">
+          <div class="card-header">🛡️ Step 3: SECURITY (Wanting Security/Survival)</div>
+          <div class="card-body">
+            <div class="release-counter">
+              <span class="count" id="securityReleaseCount">0</span>
+              <span class="label">releases</span>
+            </div>
+
+            <!-- Set A - Mereka ke Kamu -->
+            <div class="question-card" id="securityQ1">
+              <div class="question-text">
+                Pernahkah <span class="target-name"></span> menantang, menentang, atau mengancam kamu?
+              </div>
+              <div class="radio-options">
+                <div class="radio-option yes">
+                  <input type="radio" name="securityQ1" id="securityQ1Yes" value="yes">
+                  <label for="securityQ1Yes">Ya</label>
+                </div>
+                <div class="radio-option no">
+                  <input type="radio" name="securityQ1" id="securityQ1No" value="no">
+                  <label for="securityQ1No">Tidak</label>
+                </div>
+                <div class="radio-option maybe">
+                  <input type="radio" name="securityQ1" id="securityQ1Maybe" value="maybe">
+                  <label for="securityQ1Maybe">Mungkin</label>
+                </div>
+              </div>
+              <div class="resistance-panel" id="securityQ1Resistance">
+                <h4>🔄 Release Resistance</h4>
+                <p>Bisakah kamu melepaskan keinginan untuk balik mengancam <span class="target-name"></span>?</p>
+                <button class="release-btn" onclick="doRelease('security', 'securityQ1')">🕊️ Lepaskan</button>
+              </div>
+            </div>
+
+            <div class="question-card" id="securityQ2">
+              <div class="question-text">
+                Bisakah kamu melepaskan keinginan untuk melindungi diri dari <span class="target-name"></span>?
+              </div>
+              <div class="radio-options">
+                <div class="radio-option yes">
+                  <input type="radio" name="securityQ2" id="securityQ2Yes" value="yes">
+                  <label for="securityQ2Yes">Ya</label>
+                </div>
+                <div class="radio-option no">
+                  <input type="radio" name="securityQ2" id="securityQ2No" value="no">
+                  <label for="securityQ2No">Tidak</label>
+                </div>
+                <div class="radio-option maybe">
+                  <input type="radio" name="securityQ2" id="securityQ2Maybe" value="maybe">
+                  <label for="securityQ2Maybe">Mungkin</label>
+                </div>
+              </div>
+              <div class="resistance-panel" id="securityQ2Resistance">
+                <h4>🔄 Release Resistance</h4>
+                <p>Fokus pada resistensi. Bisakah kamu mengizinkannya ada?</p>
+                <button class="release-btn" onclick="doRelease('security', 'securityQ2')">🕊️ Lepaskan</button>
+              </div>
+            </div>
+
+            <!-- Set B - Kamu ke Mereka -->
+            <div class="question-card" id="securityQ3">
+              <div class="question-text">
+                Pernahkah kamu menantang, menentang, atau mengancam <span class="target-name"></span>?
+              </div>
+              <div class="radio-options">
+                <div class="radio-option yes">
+                  <input type="radio" name="securityQ3" id="securityQ3Yes" value="yes">
+                  <label for="securityQ3Yes">Ya</label>
+                </div>
+                <div class="radio-option no">
+                  <input type="radio" name="securityQ3" id="securityQ3No" value="no">
+                  <label for="securityQ3No">Tidak</label>
+                </div>
+                <div class="radio-option maybe">
+                  <input type="radio" name="securityQ3" id="securityQ3Maybe" value="maybe">
+                  <label for="securityQ3Maybe">Mungkin</label>
+                </div>
+              </div>
+              <div class="resistance-panel" id="securityQ3Resistance">
+                <h4>🔄 Release Resistance</h4>
+                <p>Bisakah kamu melepaskan keinginan untuk menyerang <span class="target-name"></span>?</p>
+                <button class="release-btn" onclick="doRelease('security', 'securityQ3')">🕊️ Lepaskan</button>
+              </div>
+            </div>
+
+            <!-- Completion Questions -->
+            <div class="completion-section" id="securityCompletion">
+              <h4>✅ Completion Questions</h4>
+
+              <div class="question-card">
+                <div class="question-text">
+                  1. Bisakah kamu hanya memiliki perasaan sejahtera, aman, dan percaya terhadap <span class="target-name"></span>?
+                </div>
+                <div class="radio-options">
+                  <div class="radio-option yes">
+                    <input type="radio" name="securityC1" id="securityC1Yes" value="yes">
+                    <label for="securityC1Yes">Ya</label>
+                  </div>
+                  <div class="radio-option no">
+                    <input type="radio" name="securityC1" id="securityC1No" value="no">
+                    <label for="securityC1No">Tidak</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="question-card">
+                <div class="question-text">
+                  2. Maukah kamu hanya memiliki perasaan aman dan percaya terhadap <span class="target-name"></span>?
+                </div>
+                <div class="radio-options">
+                  <div class="radio-option yes">
+                    <input type="radio" name="securityC2" id="securityC2Yes" value="yes">
+                    <label for="securityC2Yes">Ya</label>
+                  </div>
+                  <div class="radio-option no">
+                    <input type="radio" name="securityC2" id="securityC2No" value="no">
+                    <label for="securityC2No">Tidak</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="question-card">
+                <div class="question-text">
+                  3. Apakah saat ini kamu hanya memiliki perasaan nyaman, aman, dan percaya dengan <span class="target-name"></span>?
+                </div>
+                <div class="radio-options">
+                  <div class="radio-option yes">
+                    <input type="radio" name="securityC3" id="securityC3Yes" value="yes">
+                    <label for="securityC3Yes">Ya</label>
+                  </div>
+                  <div class="radio-option no">
+                    <input type="radio" name="securityC3" id="securityC3No" value="no">
+                    <label for="securityC3No">Tidak</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-nav">
+              <button class="btn btn-outline" onclick="goToStep('approval')">← Approval</button>
+              <button class="btn btn-primary" onclick="goToStep('separation')" id="securityNextBtn" disabled>Lanjut ke Separation →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Separation -->
+      <div id="step4" class="step-section" style="display: none;">
+        <div class="card step-separation">
+          <div class="card-header">🌌 Step 4: SEPARATION (Wanting to be Separate / Oneness)</div>
+          <div class="card-body">
+            <div class="release-counter">
+              <span class="count" id="separationReleaseCount">0</span>
+              <span class="label">releases</span>
+            </div>
+
+            <!-- Set A - Mereka ke Kamu -->
+            <div class="question-card" id="separationQ1">
+              <div class="question-text">
+                Pernahkah <span class="target-name"></span> menolak, ingin jauh-jauh, atau mencoba berpisah dari kamu?
+              </div>
+              <div class="radio-options">
+                <div class="radio-option yes">
+                  <input type="radio" name="separationQ1" id="separationQ1Yes" value="yes">
+                  <label for="separationQ1Yes">Ya</label>
+                </div>
+                <div class="radio-option no">
+                  <input type="radio" name="separationQ1" id="separationQ1No" value="no">
+                  <label for="separationQ1No">Tidak</label>
+                </div>
+                <div class="radio-option maybe">
+                  <input type="radio" name="separationQ1" id="separationQ1Maybe" value="maybe">
+                  <label for="separationQ1Maybe">Mungkin</label>
+                </div>
+              </div>
+              <div class="resistance-panel" id="separationQ1Resistance">
+                <h4>🔄 Release Resistance</h4>
+                <p>Bisakah kamu melepaskan keinginan untuk melakukan hal yang sama?</p>
+                <button class="release-btn" onclick="doRelease('separation', 'separationQ1')">🕊️ Lepaskan</button>
+              </div>
+            </div>
+
+            <div class="question-card" id="separationQ2">
+              <div class="question-text">
+                Bisakah kamu melepaskan keinginan untuk menjadi satu dengan <span class="target-name"></span>?
+              </div>
+              <div class="radio-options">
+                <div class="radio-option yes">
+                  <input type="radio" name="separationQ2" id="separationQ2Yes" value="yes">
+                  <label for="separationQ2Yes">Ya</label>
+                </div>
+                <div class="radio-option no">
+                  <input type="radio" name="separationQ2" id="separationQ2No" value="no">
+                  <label for="separationQ2No">Tidak</label>
+                </div>
+                <div class="radio-option maybe">
+                  <input type="radio" name="separationQ2" id="separationQ2Maybe" value="maybe">
+                  <label for="separationQ2Maybe">Mungkin</label>
+                </div>
+              </div>
+              <div class="resistance-panel" id="separationQ2Resistance">
+                <h4>🔄 Release Resistance</h4>
+                <p>Fokus pada resistensi. Bisakah kamu mengizinkannya, lalu melepaskan?</p>
+                <button class="release-btn" onclick="doRelease('separation', 'separationQ2')">🕊️ Lepaskan</button>
+              </div>
+            </div>
+
+            <!-- Set B - Kamu ke Mereka -->
+            <div class="question-card" id="separationQ3">
+              <div class="question-text">
+                Pernahkah kamu menolak, ingin jauh-jauh, atau mencoba memisahkan diri dari <span class="target-name"></span>?
+              </div>
+              <div class="radio-options">
+                <div class="radio-option yes">
+                  <input type="radio" name="separationQ3" id="separationQ3Yes" value="yes">
+                  <label for="separationQ3Yes">Ya</label>
+                </div>
+                <div class="radio-option no">
+                  <input type="radio" name="separationQ3" id="separationQ3No" value="no">
+                  <label for="separationQ3No">Tidak</label>
+                </div>
+                <div class="radio-option maybe">
+                  <input type="radio" name="separationQ3" id="separationQ3Maybe" value="maybe">
+                  <label for="separationQ3Maybe">Mungkin</label>
+                </div>
+              </div>
+              <div class="resistance-panel" id="separationQ3Resistance">
+                <h4>🔄 Release Resistance</h4>
+                <p>Bisakah kamu melepaskan keinginan untuk berpisah dari <span class="target-name"></span>?</p>
+                <button class="release-btn" onclick="doRelease('separation', 'separationQ3')">🕊️ Lepaskan</button>
+              </div>
+            </div>
+
+            <!-- Completion Questions -->
+            <div class="completion-section" id="separationCompletion">
+              <h4>✅ Completion Questions</h4>
+
+              <div class="question-card">
+                <div class="question-text">
+                  1. Bisakah kamu hanya memiliki perasaan oneness — "saya adalah kamu, kamu adalah saya, hanya ada satu" — dengan <span class="target-name"></span>?
+                </div>
+                <div class="radio-options">
+                  <div class="radio-option yes">
+                    <input type="radio" name="separationC1" id="separationC1Yes" value="yes">
+                    <label for="separationC1Yes">Ya</label>
+                  </div>
+                  <div class="radio-option no">
+                    <input type="radio" name="separationC1" id="separationC1No" value="no">
+                    <label for="separationC1No">Tidak</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="question-card">
+                <div class="question-text">
+                  2. Maukah kamu memiliki perasaan oneness dengan <span class="target-name"></span>?
+                </div>
+                <div class="radio-options">
+                  <div class="radio-option yes">
+                    <input type="radio" name="separationC2" id="separationC2Yes" value="yes">
+                    <label for="separationC2Yes">Ya</label>
+                  </div>
+                  <div class="radio-option no">
+                    <input type="radio" name="separationC2" id="separationC2No" value="no">
+                    <label for="separationC2No">Tidak</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="question-card">
+                <div class="question-text">
+                  3. Apakah saat ini kamu hanya memiliki perasaan oneness dengan <span class="target-name"></span>?
+                </div>
+                <div class="radio-options">
+                  <div class="radio-option yes">
+                    <input type="radio" name="separationC3" id="separationC3Yes" value="yes">
+                    <label for="separationC3Yes">Ya</label>
+                  </div>
+                  <div class="radio-option no">
+                    <input type="radio" name="separationC3" id="separationC3No" value="no">
+                    <label for="separationC3No">Tidak</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-nav">
+              <button class="btn btn-outline" onclick="goToStep('security')">← Security</button>
+              <button class="btn btn-success" onclick="goToStep('result')" id="separationNextBtn" disabled>🎉 Lihat Hasil →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5: Result -->
+      <div id="step5" class="step-section" style="display: none;">
+        <div class="card">
+          <div class="card-header hasil">🎉 Hasil Cleanup</div>
+          <div class="card-body">
+            <div class="target-display" style="display: block; margin-bottom: 1rem;">
+              <div class="name" id="resultName"></div>
+              <div class="relation" id="resultRelation"></div>
+            </div>
+
+            <div class="stats-grid stats-grid-4" style="margin-bottom: 1rem;">
+              <div class="stat-card">
+                <div class="stat-value" id="resultControlReleases">0</div>
+                <div class="stat-label">Control</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="resultApprovalReleases">0</div>
+                <div class="stat-label">Approval</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="resultSecurityReleases">0</div>
+                <div class="stat-label">Security</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="resultSeparationReleases">0</div>
+                <div class="stat-label">Separation</div>
+              </div>
+            </div>
+
+            <div class="stats-grid" style="margin-bottom: 1rem;">
+              <div class="stat-card success">
+                <div class="stat-value" id="resultTotalReleases">0</div>
+                <div class="stat-label">Total Releases</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="resultDuration">00:00</div>
+                <div class="stat-label">Durasi</div>
+              </div>
+            </div>
+
+            <div class="insight-box">
+              <h4>💡 Insight / Catatan</h4>
+              <textarea id="resultInsight" placeholder="Tulis insight atau catatan dari sesi ini..."></textarea>
+            </div>
+
+            <div class="btn-group" style="margin-top: 1rem;">
+              <button class="btn btn-success" onclick="saveAndComplete()">💾 Simpan & Selesai</button>
+              <button class="btn btn-warning" onclick="saveLater()">⏸️ Lanjutkan Nanti</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== HISTORY TAB ==================== -->
+    <section class="tab-content" id="historyTab">
+      <div class="card">
+        <div class="card-header">📜 Riwayat Cleanup</div>
+        <div class="card-body">
+          <div id="historyList">
+            <div class="loading">
+              <div class="spinner"></div>
+              <p>Memuat riwayat...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PEOPLE TAB ==================== -->
+    <section class="tab-content" id="peopleTab">
+      <div class="card">
+        <div class="card-header">👥 Daftar Orang</div>
+        <div class="card-body">
+          <div id="peopleList">
+            <div class="loading">
+              <div class="spinner"></div>
+              <p>Memuat data...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== DASHBOARD TAB ==================== -->
+    <section class="tab-content" id="dashboardTab">
+      <div class="stats-grid stats-grid-4">
+        <div class="stat-card">
+          <div class="stat-value" id="dashTotalSessions">0</div>
+          <div class="stat-label">Total Sesi</div>
+        </div>
+        <div class="stat-card success">
+          <div class="stat-value" id="dashCompleteSessions">0</div>
+          <div class="stat-label">Selesai</div>
+        </div>
+        <div class="stat-card warning">
+          <div class="stat-value" id="dashOngoingSessions">0</div>
+          <div class="stat-label">Ongoing</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="dashTotalPeople">0</div>
+          <div class="stat-label">Orang</div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="dashTotalReleases">0</div>
+          <div class="stat-label">Total Releases</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="dashAvgReleases">0</div>
+          <div class="stat-label">Avg per Sesi</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">📈 Releases per Wanting</div>
+        <div class="card-body">
+          <div class="stats-grid stats-grid-4">
+            <div class="stat-card" style="border-top: 3px solid #2874a6;">
+              <div class="stat-value" id="dashControlReleases">0</div>
+              <div class="stat-label">Control</div>
+            </div>
+            <div class="stat-card" style="border-top: 3px solid #9b59b6;">
+              <div class="stat-value" id="dashApprovalReleases">0</div>
+              <div class="stat-label">Approval</div>
+            </div>
+            <div class="stat-card" style="border-top: 3px solid #e67e22;">
+              <div class="stat-value" id="dashSecurityReleases">0</div>
+              <div class="stat-label">Security</div>
+            </div>
+            <div class="stat-card" style="border-top: 3px solid #8e44ad;">
+              <div class="stat-value" id="dashSeparationReleases">0</div>
+              <div class="stat-label">Separation</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== REFERENCE TAB ==================== -->
+    <section class="tab-content" id="referenceTab">
+      <div class="card" style="margin-bottom: 1rem;">
+        <div class="card-body">
+          <h3 style="margin-bottom: 0.5rem;">📖 Clean Up Procedure</h3>
+          <p style="font-size: 0.85rem; color: var(--text-light);">
+            Clean Up Procedure adalah teknik Sedona Method untuk membersihkan hubungan dengan orang lain.
+            Prosedur ini melepaskan emosi yang tersimpan terhadap seseorang melalui 4 tahap berdasarkan 4 Wanting.
+          </p>
+        </div>
+      </div>
+
+      <div class="reference-card">
+        <div class="ref-header control" onclick="toggleReference(this)">
+          💪 Control (Wanting Control)
+          <span>▼</span>
+        </div>
+        <div class="ref-body">
+          <p>Keinginan untuk mengontrol situasi dan orang lain.</p>
+          <h5>Pertanyaan Utama:</h5>
+          <ul>
+            <li>Pernahkah [Nama] mencoba mengendalikan kamu?</li>
+            <li>Bisakah kamu melepaskan keinginan untuk dikontrol oleh [Nama]?</li>
+            <li>Pernahkah kamu mencoba mengontrol [Nama]?</li>
+          </ul>
+          <h5>Completion:</h5>
+          <ul>
+            <li>Bisakah kamu mengizinkan [Nama] menjadi seperti apa adanya?</li>
+            <li>Maukah kamu membiarkan [Nama] seperti apa adanya?</li>
+            <li>Apakah saat ini kamu memberi [Nama] hak atas dirinya sendiri?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="reference-card">
+        <div class="ref-header approval" onclick="toggleReference(this)">
+          💕 Approval (Wanting Approval)
+          <span>▼</span>
+        </div>
+        <div class="ref-body">
+          <p>Kebutuhan untuk diakui, diterima, dan disukai.</p>
+          <h5>Pertanyaan Utama:</h5>
+          <ul>
+            <li>Pernahkah kamu tidak menyukai atau tidak menyetujui [Nama]?</li>
+            <li>Bisakah kamu melepaskan keinginan untuk menahan welas asih dari [Nama]?</li>
+            <li>Pernahkah [Nama] tidak menyukai atau tidak menyetujui kamu?</li>
+          </ul>
+          <h5>Completion:</h5>
+          <ul>
+            <li>Bisakah kamu hanya memiliki perasaan welas asih dan penerimaan?</li>
+            <li>Maukah kamu hanya memiliki perasaan welas asih?</li>
+            <li>Apakah saat ini kamu hanya memiliki perasaan welas asih?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="reference-card">
+        <div class="ref-header security" onclick="toggleReference(this)">
+          🛡️ Security (Wanting Security)
+          <span>▼</span>
+        </div>
+        <div class="ref-body">
+          <p>Pencarian rasa aman dan kelangsungan hidup.</p>
+          <h5>Pertanyaan Utama:</h5>
+          <ul>
+            <li>Pernahkah [Nama] menantang, menentang, atau mengancam kamu?</li>
+            <li>Bisakah kamu melepaskan keinginan untuk melindungi diri dari [Nama]?</li>
+            <li>Pernahkah kamu menantang, menentang, atau mengancam [Nama]?</li>
+          </ul>
+          <h5>Completion:</h5>
+          <ul>
+            <li>Bisakah kamu hanya memiliki perasaan sejahtera, aman, dan percaya?</li>
+            <li>Maukah kamu hanya memiliki perasaan aman dan percaya?</li>
+            <li>Apakah saat ini kamu hanya memiliki perasaan nyaman, aman, dan percaya?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="reference-card">
+        <div class="ref-header separation" onclick="toggleReference(this)">
+          🌌 Separation (Wanting Separation / Oneness)
+          <span>▼</span>
+        </div>
+        <div class="ref-body">
+          <p>Keinginan untuk berbeda atau menyatu dengan orang lain.</p>
+          <h5>Pertanyaan Utama:</h5>
+          <ul>
+            <li>Pernahkah [Nama] menolak atau mencoba berpisah dari kamu?</li>
+            <li>Bisakah kamu melepaskan keinginan untuk menjadi satu dengan [Nama]?</li>
+            <li>Pernahkah kamu menolak atau mencoba memisahkan diri dari [Nama]?</li>
+          </ul>
+          <h5>Completion:</h5>
+          <ul>
+            <li>Bisakah kamu hanya memiliki perasaan oneness?</li>
+            <li>Maukah kamu memiliki perasaan oneness?</li>
+            <li>Apakah saat ini kamu hanya memiliki perasaan oneness?</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SETTINGS TAB ==================== -->
+    <section class="tab-content" id="settingsTab">
+      <div class="card">
+        <div class="card-header">⚙️ Pengaturan</div>
+        <div class="card-body">
+          <div class="form-group">
+            <label>API URL</label>
+            <input type="text" id="settingsApiUrl" placeholder="Google Apps Script URL">
+          </div>
+
+          <div class="form-group">
+            <label>Nama Default</label>
+            <input type="text" id="settingsDefaultName" placeholder="Nama Anda">
+          </div>
+
+          <div class="quick-mode-toggle">
+            <label>🐛 Debug Mode</label>
+            <div class="toggle-switch">
+              <input type="checkbox" id="settingsDebugMode">
+              <span class="toggle-slider"></span>
+            </div>
+          </div>
+
+          <div class="quick-mode-toggle">
+            <label>⚡ Quick Mode Default</label>
+            <div class="toggle-switch">
+              <input type="checkbox" id="settingsQuickMode">
+              <span class="toggle-slider"></span>
+            </div>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-primary" onclick="saveSettingsForm()">💾 Simpan</button>
+            <button class="btn btn-outline" onclick="loadSettingsForm()">🔄 Reset</button>
+          </div>
+
+          <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+
+          <div class="btn-group">
+            <button class="btn btn-danger btn-sm" onclick="clearLocalData()">🗑️ Hapus Data Lokal</button>
+            <button class="btn btn-outline btn-sm" onclick="exportData()">📤 Export Data</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Resume Modal -->
+  <div class="resume-modal" id="resumeModal">
+    <div class="resume-modal-content">
+      <h3>🔄 Sesi Belum Selesai</h3>
+      <p>Ada sesi cleanup dengan <strong id="resumeTargetName"></strong> yang belum selesai. Lanjutkan?</p>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="resumeSession()">Lanjutkan</button>
+        <button class="btn btn-outline" onclick="newSession()">Sesi Baru</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Common JS -->
+  <script src="common.js"></script>
+
+  <script>
+    // ==========================================================================
+    // CLEANUP PROCEDURE - MAIN JAVASCRIPT
+    // ==========================================================================
+
+    // State
+    let currentSession = null;
+    let sessionTimer = null;
+    let sessionSeconds = 0;
+    let historyData = [];
+    let peopleData = [];
+
+    // Steps mapping
+    const STEPS = ['control', 'approval', 'security', 'separation', 'result'];
+    const STEP_COLORS = {
+      control: '#2874a6',
+      approval: '#9b59b6',
+      security: '#e67e22',
+      separation: '#8e44ad'
+    };
+
+    // ==========================================================================
+    // INITIALIZATION
+    // ==========================================================================
+    document.addEventListener('DOMContentLoaded', () => {
+      initTabs();
+      initRadioListeners();
+      loadSettingsForm();
+      checkResumeSession();
+      loadDashboard();
+
+      // Load quick mode from settings
+      const settings = loadSettings();
+      document.getElementById('quickModeToggle').checked = settings.quickMode;
+    });
+
+    // ==========================================================================
+    // TAB NAVIGATION
+    // ==========================================================================
+    function initTabs() {
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          const tabId = tab.dataset.tab;
+
+          // Update active tab
+          document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+
+          // Show content
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          document.getElementById(tabId + 'Tab').classList.add('active');
+
+          // Load data if needed
+          if (tabId === 'history') loadHistory();
+          if (tabId === 'people') loadPeople();
+          if (tabId === 'dashboard') loadDashboard();
+        });
+      });
+    }
+
+    // ==========================================================================
+    // RADIO LISTENERS
+    // ==========================================================================
+    function initRadioListeners() {
+      document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          const name = e.target.name;
+          const value = e.target.value;
+
+          // Show resistance panel for non-yes answers on Q questions
+          if (name.includes('Q') && !name.includes('C')) {
+            const panel = document.getElementById(name + 'Resistance');
+            if (panel) {
+              if (value === 'yes') {
+                panel.classList.remove('show');
+              } else {
+                panel.classList.add('show');
+              }
+            }
+          }
+
+          // Check completion for step
+          const step = name.replace(/[QC]\d/, '').toLowerCase();
+          checkStepCompletion(step);
+
+          // Auto-save
+          autoSave();
+        });
+      });
+    }
+
+    // ==========================================================================
+    // CLEANUP FLOW
+    // ==========================================================================
+    function startCleanup() {
+      const name = document.getElementById('targetName').value.trim();
+      const relation = document.getElementById('targetRelation').value;
+
+      if (!name) {
+        showToast('Masukkan nama orang', 'error');
+        return;
+      }
+
+      if (!relation) {
+        showToast('Pilih relasi', 'error');
+        return;
+      }
+
+      // Initialize session
+      currentSession = {
+        id: generateSessionId('CUP'),
+        targetName: name,
+        relation: relation,
+        deceased: document.getElementById('targetDeceased').checked,
+        status: 'Ongoing',
+        currentStep: 'control',
+        control: { complete: false, releases: 0 },
+        approval: { complete: false, releases: 0 },
+        security: { complete: false, releases: 0 },
+        separation: { complete: false, releases: 0 },
+        totalReleases: 0,
+        insight: '',
+        startedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      // Update target name in all questions
+      updateTargetNames(name);
+
+      // Show display
+      document.getElementById('displayName').textContent = name;
+      document.getElementById('displayRelation').textContent = relation;
+
+      const quickMode = document.getElementById('quickModeToggle').checked;
+
+      if (quickMode) {
+        proceedToStep1();
+      } else {
+        // Show grounding
+        document.getElementById('step0').style.display = 'none';
+        document.getElementById('groundingName').textContent = name;
+        document.getElementById('groundingPanel').style.display = 'block';
+      }
+
+      // Start timer
+      startSessionTimer();
+
+      // Save to localStorage
+      autoSave();
+    }
+
+    function proceedToStep1() {
+      document.getElementById('groundingPanel').style.display = 'none';
+      document.getElementById('targetDisplay').style.display = 'block';
+      document.getElementById('progressIndicator').style.display = 'flex';
+      document.getElementById('sessionTimer').style.display = 'block';
+
+      goToStep('control');
+    }
+
+    function backToTarget() {
+      if (confirm('Kembali ke pemilihan target? Progress akan disimpan.')) {
+        document.getElementById('step1').style.display = 'none';
+        document.getElementById('step2').style.display = 'none';
+        document.getElementById('step3').style.display = 'none';
+        document.getElementById('step4').style.display = 'none';
+        document.getElementById('targetDisplay').style.display = 'none';
+        document.getElementById('progressIndicator').style.display = 'none';
+        document.getElementById('sessionTimer').style.display = 'none';
+        document.getElementById('step0').style.display = 'block';
+
+        stopSessionTimer();
+      }
+    }
+
+    function goToStep(step) {
+      // Hide all steps
+      for (let i = 1; i <= 5; i++) {
+        document.getElementById('step' + i).style.display = 'none';
+      }
+
+      // Update progress indicator
+      updateProgressIndicator(step);
+
+      // Show target step
+      const stepIndex = STEPS.indexOf(step) + 1;
+      document.getElementById('step' + stepIndex).style.display = 'block';
+
+      // Update current step
+      if (currentSession) {
+        currentSession.currentStep = step;
+        autoSave();
+      }
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateProgressIndicator(currentStep) {
+      const stepOrder = ['control', 'approval', 'security', 'separation'];
+      const currentIndex = stepOrder.indexOf(currentStep);
+
+      stepOrder.forEach((step, index) => {
+        const el = document.getElementById('prog' + step.charAt(0).toUpperCase() + step.slice(1));
+        const icon = el.querySelector('.step-icon');
+
+        el.classList.remove('active', 'completed');
+
+        if (currentSession && currentSession[step]?.complete) {
+          el.classList.add('completed');
+          icon.textContent = '✓';
+        } else if (index === currentIndex) {
+          el.classList.add('active');
+          icon.textContent = '●';
+        } else {
+          icon.textContent = '○';
+        }
+      });
+    }
+
+    function updateTargetNames(name) {
+      document.querySelectorAll('.target-name').forEach(el => {
+        el.textContent = name;
+      });
+    }
+
+    // ==========================================================================
+    // RELEASE HANDLING
+    // ==========================================================================
+    function doRelease(step, questionId) {
+      if (!currentSession) return;
+
+      currentSession[step].releases++;
+      currentSession.totalReleases++;
+
+      // Update counter
+      document.getElementById(step + 'ReleaseCount').textContent = currentSession[step].releases;
+
+      // Hide resistance panel
+      document.getElementById(questionId + 'Resistance').classList.remove('show');
+
+      // Reset the question to allow re-answering
+      document.querySelectorAll(`input[name="${questionId}"]`).forEach(r => r.checked = false);
+
+      showToast('Release recorded! 🕊️', 'success');
+      autoSave();
+    }
+
+    function checkStepCompletion(step) {
+      if (!currentSession) return;
+
+      // Check all completion questions are "yes"
+      const c1 = document.querySelector(`input[name="${step}C1"]:checked`)?.value === 'yes';
+      const c2 = document.querySelector(`input[name="${step}C2"]:checked`)?.value === 'yes';
+      const c3 = document.querySelector(`input[name="${step}C3"]:checked`)?.value === 'yes';
+
+      const complete = c1 && c2 && c3;
+      currentSession[step].complete = complete;
+
+      // Enable/disable next button
+      const nextBtn = document.getElementById(step + 'NextBtn');
+      if (nextBtn) {
+        nextBtn.disabled = !complete;
+      }
+
+      updateProgressIndicator(currentSession.currentStep);
+    }
+
+    // ==========================================================================
+    // RESULT & SAVE
+    // ==========================================================================
+    function showResult() {
+      document.getElementById('resultName').textContent = currentSession.targetName;
+      document.getElementById('resultRelation').textContent = currentSession.relation;
+      document.getElementById('resultControlReleases').textContent = currentSession.control.releases;
+      document.getElementById('resultApprovalReleases').textContent = currentSession.approval.releases;
+      document.getElementById('resultSecurityReleases').textContent = currentSession.security.releases;
+      document.getElementById('resultSeparationReleases').textContent = currentSession.separation.releases;
+      document.getElementById('resultTotalReleases').textContent = currentSession.totalReleases;
+      document.getElementById('resultDuration').textContent = formatDuration(sessionSeconds);
+    }
+
+    async function saveAndComplete() {
+      if (!currentSession) return;
+
+      currentSession.status = 'Complete';
+      currentSession.insight = document.getElementById('resultInsight').value;
+      currentSession.duration = sessionSeconds;
+      currentSession.completedAt = new Date().toISOString();
+
+      // Save to API
+      const result = await apiCall('saveCleanupProcedure', currentSession);
+
+      if (result?.success) {
+        showToast('Cleanup selesai dan tersimpan! 🎉', 'success');
+        clearSession();
+        resetWorksheet();
+      } else {
+        // Save to localStorage as backup
+        saveToLocalHistory(currentSession);
+        showToast('Tersimpan secara lokal', 'warning');
+        clearSession();
+        resetWorksheet();
+      }
+    }
+
+    function saveLater() {
+      if (!currentSession) return;
+
+      currentSession.insight = document.getElementById('resultInsight').value;
+      autoSave();
+
+      showToast('Progress tersimpan. Lanjutkan kapan saja.', 'info');
+    }
+
+    // ==========================================================================
+    // SESSION MANAGEMENT
+    // ==========================================================================
+    function autoSave() {
+      if (currentSession) {
+        currentSession.updatedAt = new Date().toISOString();
+        saveToStorage('cleanupCurrentSession', currentSession);
+      }
+    }
+
+    function clearSession() {
+      currentSession = null;
+      removeFromStorage('cleanupCurrentSession');
+      stopSessionTimer();
+    }
+
+    function resetWorksheet() {
+      // Reset all radio buttons
+      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+
+      // Hide all resistance panels
+      document.querySelectorAll('.resistance-panel').forEach(p => p.classList.remove('show'));
+
+      // Reset counters
+      ['control', 'approval', 'security', 'separation'].forEach(step => {
+        document.getElementById(step + 'ReleaseCount').textContent = '0';
+      });
+
+      // Reset form
+      document.getElementById('targetName').value = '';
+      document.getElementById('targetRelation').value = '';
+      document.getElementById('targetDeceased').checked = false;
+      document.getElementById('resultInsight').value = '';
+
+      // Hide elements
+      document.getElementById('progressIndicator').style.display = 'none';
+      document.getElementById('sessionTimer').style.display = 'none';
+      document.getElementById('targetDisplay').style.display = 'none';
+      document.getElementById('groundingPanel').style.display = 'none';
+
+      // Hide all steps except 0
+      for (let i = 1; i <= 5; i++) {
+        document.getElementById('step' + i).style.display = 'none';
+      }
+      document.getElementById('step0').style.display = 'block';
+
+      // Disable next buttons
+      ['control', 'approval', 'security', 'separation'].forEach(step => {
+        const btn = document.getElementById(step + 'NextBtn');
+        if (btn) btn.disabled = true;
+      });
+    }
+
+    function checkResumeSession() {
+      const saved = loadFromStorage('cleanupCurrentSession');
+      if (saved && saved.status === 'Ongoing') {
+        document.getElementById('resumeTargetName').textContent = saved.targetName;
+        document.getElementById('resumeModal').classList.add('show');
+      }
+    }
+
+    function resumeSession() {
+      const saved = loadFromStorage('cleanupCurrentSession');
+      if (!saved) return;
+
+      currentSession = saved;
+
+      // Restore UI
+      document.getElementById('targetName').value = saved.targetName;
+      document.getElementById('targetRelation').value = saved.relation;
+      document.getElementById('targetDeceased').checked = saved.deceased;
+
+      updateTargetNames(saved.targetName);
+      document.getElementById('displayName').textContent = saved.targetName;
+      document.getElementById('displayRelation').textContent = saved.relation;
+
+      // Restore counters
+      ['control', 'approval', 'security', 'separation'].forEach(step => {
+        document.getElementById(step + 'ReleaseCount').textContent = saved[step].releases;
+      });
+
+      // Show progress
+      document.getElementById('step0').style.display = 'none';
+      document.getElementById('targetDisplay').style.display = 'block';
+      document.getElementById('progressIndicator').style.display = 'flex';
+      document.getElementById('sessionTimer').style.display = 'block';
+
+      // Resume timer
+      sessionSeconds = saved.duration || 0;
+      startSessionTimer();
+
+      // Go to current step
+      goToStep(saved.currentStep);
+
+      // Close modal
+      document.getElementById('resumeModal').classList.remove('show');
+
+      showToast('Sesi dilanjutkan', 'info');
+    }
+
+    function newSession() {
+      clearSession();
+      resetWorksheet();
+      document.getElementById('resumeModal').classList.remove('show');
+    }
+
+    // ==========================================================================
+    // TIMER
+    // ==========================================================================
+    function startSessionTimer() {
+      sessionTimer = setInterval(() => {
+        sessionSeconds++;
+        document.getElementById('timerDisplay').textContent = formatDuration(sessionSeconds);
+
+        if (currentSession) {
+          currentSession.duration = sessionSeconds;
+        }
+      }, 1000);
+    }
+
+    function stopSessionTimer() {
+      if (sessionTimer) {
+        clearInterval(sessionTimer);
+        sessionTimer = null;
+      }
+      sessionSeconds = 0;
+    }
+
+    function formatDuration(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // ==========================================================================
+    // HISTORY
+    // ==========================================================================
+    async function loadHistory() {
+      const container = document.getElementById('historyList');
+
+      try {
+        const result = await apiCall('getCleanupProcedures');
+
+        if (result?.success && result.data) {
+          historyData = result.data;
+        } else {
+          historyData = loadFromStorage('cleanupHistory', []);
+        }
+
+        renderHistory();
+      } catch (e) {
+        historyData = loadFromStorage('cleanupHistory', []);
+        renderHistory();
+      }
+    }
+
+    function renderHistory() {
+      const container = document.getElementById('historyList');
+
+      if (historyData.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">📜</div>
+            <p>Belum ada riwayat cleanup</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = historyData.map(item => `
+        <div class="history-item ${item.status.toLowerCase()}">
+          <div class="history-header">
+            <h4>${item.targetName}</h4>
+            <span class="status ${item.status.toLowerCase()}">${item.status}</span>
+          </div>
+          <div class="history-meta">
+            ${item.relation} • ${formatDate(item.startedAt)} • ${item.totalReleases} releases
+          </div>
+          <div class="history-progress">
+            <span class="step-badge ${item.control?.complete ? 'done' : ''}">Control</span>
+            <span class="step-badge ${item.approval?.complete ? 'done' : ''}">Approval</span>
+            <span class="step-badge ${item.security?.complete ? 'done' : ''}">Security</span>
+            <span class="step-badge ${item.separation?.complete ? 'done' : ''}">Separation</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function saveToLocalHistory(session) {
+      const history = loadFromStorage('cleanupHistory', []);
+      history.unshift(session);
+      saveToStorage('cleanupHistory', history);
+    }
+
+    // ==========================================================================
+    // PEOPLE
+    // ==========================================================================
+    async function loadPeople() {
+      const container = document.getElementById('peopleList');
+
+      try {
+        const result = await apiCall('getCleanupPeople');
+
+        if (result?.success && result.data) {
+          peopleData = result.data;
+        } else {
+          // Aggregate from history
+          peopleData = aggregatePeople();
+        }
+
+        renderPeople();
+      } catch (e) {
+        peopleData = aggregatePeople();
+        renderPeople();
+      }
+    }
+
+    function aggregatePeople() {
+      const history = loadFromStorage('cleanupHistory', []);
+      const peopleMap = {};
+
+      history.forEach(item => {
+        if (!peopleMap[item.targetName]) {
+          peopleMap[item.targetName] = {
+            name: item.targetName,
+            relation: item.relation,
+            sessions: 0,
+            releases: 0
+          };
+        }
+        peopleMap[item.targetName].sessions++;
+        peopleMap[item.targetName].releases += item.totalReleases || 0;
+      });
+
+      return Object.values(peopleMap);
+    }
+
+    function renderPeople() {
+      const container = document.getElementById('peopleList');
+
+      if (peopleData.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">👥</div>
+            <p>Belum ada data orang</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = peopleData.map(person => `
+        <div class="person-card">
+          <div class="person-avatar">${person.name.charAt(0).toUpperCase()}</div>
+          <div class="person-info">
+            <h4>${person.name}</h4>
+            <p>${person.relation} • ${person.sessions} sesi</p>
+          </div>
+          <div class="person-stats">
+            <div class="count">${person.releases}</div>
+            <div class="label">releases</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ==========================================================================
+    // DASHBOARD
+    // ==========================================================================
+    async function loadDashboard() {
+      try {
+        const result = await apiCall('getCleanupStats');
+
+        if (result?.success && result.data) {
+          updateDashboard(result.data);
+        } else {
+          updateDashboard(calculateLocalStats());
+        }
+      } catch (e) {
+        updateDashboard(calculateLocalStats());
+      }
+    }
+
+    function calculateLocalStats() {
+      const history = loadFromStorage('cleanupHistory', []);
+
+      const stats = {
+        totalSessions: history.length,
+        completeSessions: history.filter(h => h.status === 'Complete').length,
+        ongoingSessions: history.filter(h => h.status === 'Ongoing').length,
+        totalPeople: new Set(history.map(h => h.targetName)).size,
+        totalReleases: history.reduce((sum, h) => sum + (h.totalReleases || 0), 0),
+        controlReleases: history.reduce((sum, h) => sum + (h.control?.releases || 0), 0),
+        approvalReleases: history.reduce((sum, h) => sum + (h.approval?.releases || 0), 0),
+        securityReleases: history.reduce((sum, h) => sum + (h.security?.releases || 0), 0),
+        separationReleases: history.reduce((sum, h) => sum + (h.separation?.releases || 0), 0)
+      };
+
+      stats.avgReleases = stats.totalSessions > 0 ? Math.round(stats.totalReleases / stats.totalSessions) : 0;
+
+      return stats;
+    }
+
+    function updateDashboard(stats) {
+      document.getElementById('dashTotalSessions').textContent = stats.totalSessions || 0;
+      document.getElementById('dashCompleteSessions').textContent = stats.completeSessions || 0;
+      document.getElementById('dashOngoingSessions').textContent = stats.ongoingSessions || 0;
+      document.getElementById('dashTotalPeople').textContent = stats.totalPeople || 0;
+      document.getElementById('dashTotalReleases').textContent = stats.totalReleases || 0;
+      document.getElementById('dashAvgReleases').textContent = stats.avgReleases || 0;
+      document.getElementById('dashControlReleases').textContent = stats.controlReleases || 0;
+      document.getElementById('dashApprovalReleases').textContent = stats.approvalReleases || 0;
+      document.getElementById('dashSecurityReleases').textContent = stats.securityReleases || 0;
+      document.getElementById('dashSeparationReleases').textContent = stats.separationReleases || 0;
+    }
+
+    // ==========================================================================
+    // REFERENCE
+    // ==========================================================================
+    function toggleReference(header) {
+      const body = header.nextElementSibling;
+      body.classList.toggle('show');
+      header.querySelector('span').textContent = body.classList.contains('show') ? '▲' : '▼';
+    }
+
+    // ==========================================================================
+    // SETTINGS
+    // ==========================================================================
+    function loadSettingsForm() {
+      const settings = loadSettings();
+      document.getElementById('settingsApiUrl').value = settings.apiUrl || '';
+      document.getElementById('settingsDefaultName').value = settings.defaultName || '';
+      document.getElementById('settingsDebugMode').checked = settings.debugMode;
+      document.getElementById('settingsQuickMode').checked = settings.quickMode;
+    }
+
+    function saveSettingsForm() {
+      const settings = {
+        apiUrl: document.getElementById('settingsApiUrl').value,
+        defaultName: document.getElementById('settingsDefaultName').value,
+        debugMode: document.getElementById('settingsDebugMode').checked,
+        quickMode: document.getElementById('settingsQuickMode').checked
+      };
+
+      saveSettings(settings);
+      showToast('Pengaturan disimpan', 'success');
+    }
+
+    function clearLocalData() {
+      if (confirm('Hapus semua data lokal? Ini tidak dapat dibatalkan.')) {
+        removeFromStorage('cleanupCurrentSession');
+        removeFromStorage('cleanupHistory');
+        showToast('Data lokal dihapus', 'success');
+        loadDashboard();
+      }
+    }
+
+    function exportData() {
+      const data = {
+        currentSession: loadFromStorage('cleanupCurrentSession'),
+        history: loadFromStorage('cleanupHistory', []),
+        exportedAt: new Date().toISOString()
+      };
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `cleanup-procedure-export-${getTodayKey()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      showToast('Data diekspor', 'success');
+    }
+
+    // ==========================================================================
+    // STEP 5 TRIGGER
+    // ==========================================================================
+    // Override goToStep for result
+    const originalGoToStep = goToStep;
+    goToStep = function(step) {
+      if (step === 'result') {
+        showResult();
+      }
+      originalGoToStep(step);
+    };
+  </script>
+</body>
+</html>
