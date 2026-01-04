@@ -412,15 +412,55 @@ function resetTimer() {
 
 // ===== ACTION =====
 function releaseActionWanting() {
-  showToast('Lakukan release untuk wanting dari actions ini', 'info');
+  // Get selected wantings and actions
+  const wantings = getSelectedWantings('actionWantingTags');
+  const actions = [
+    document.getElementById('action1')?.value,
+    document.getElementById('action2')?.value,
+    document.getElementById('action3')?.value
+  ].filter(a => a);
+
+  // Store context for return
+  const context = {
+    source: 'manifesting',
+    type: 'action-wanting',
+    wantings: wantings,
+    content: actions.join(', ') || 'Actions',
+    returnUrl: 'manifesting-workbook.html#action',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('lettingGo_returnContext', JSON.stringify(context));
+
+  // Redirect to Letting Go with quick release mode
+  window.location.href = 'letting-go.html?mode=quick-release&type=wanting';
 }
 
 function releaseLimitingBeliefs() {
-  showToast('Lakukan release untuk limiting beliefs', 'info');
+  // Get selected wantings and beliefs
+  const wantings = getSelectedWantings('limitingWantingTags');
+  const beliefs = [
+    document.getElementById('limiting1')?.value,
+    document.getElementById('limiting2')?.value,
+    document.getElementById('limiting3')?.value
+  ].filter(b => b);
+
+  // Store context for return
+  const context = {
+    source: 'manifesting',
+    type: 'limiting-beliefs',
+    wantings: wantings,
+    content: beliefs.join(', ') || 'Limiting Beliefs',
+    returnUrl: 'manifesting-workbook.html#action',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('lettingGo_returnContext', JSON.stringify(context));
+
+  // Redirect to Letting Go with story release mode
+  window.location.href = 'letting-go.html?mode=quick-release&type=story';
 }
 
 function releaseEmpoweringBeliefs() {
-  showToast('Lakukan release untuk empowering beliefs', 'info');
+  showToast('Empowering beliefs tidak perlu di-release, tapi di-embrace!', 'info');
 }
 
 async function saveActionEntry() {

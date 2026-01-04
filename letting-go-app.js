@@ -46,6 +46,9 @@ let knowingState = {
 // Journal State
 let insights = [];
 
+// Return Context (from Manifesting)
+let returnContext = null;
+
 // Quotes
 const quotes = [
     { text: "Semua emosi hanyalah energi yang bisa dilepaskan.", author: "Hale Dwoskin" },
@@ -65,9 +68,106 @@ document.addEventListener('DOMContentLoaded', function() {
     updateStats();
     showRandomQuote();
 
+    // Check for quick-release mode from Manifesting
+    checkQuickReleaseMode();
+
     // Auto-save setiap 30 detik
     setInterval(saveToLocalStorage, 30000);
 });
+
+// ==================== QUICK RELEASE MODE (from Manifesting) ====================
+function checkQuickReleaseMode() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = urlParams.get('mode');
+    const type = urlParams.get('type');
+
+    if (mode === 'quick-release') {
+        // Load return context
+        try {
+            const contextStr = localStorage.getItem('lettingGo_returnContext');
+            if (contextStr) {
+                returnContext = JSON.parse(contextStr);
+                showQuickReleaseMode(type);
+            }
+        } catch (e) {
+            console.error('Error loading return context:', e);
+        }
+    }
+}
+
+function showQuickReleaseMode(type) {
+    if (!returnContext) return;
+
+    // Show return banner
+    showReturnBanner();
+
+    // Switch to appropriate tab and pre-fill
+    if (type === 'wanting') {
+        // Go to Sesi 2 for wanting release
+        switchTab('sesi2');
+
+        // Pre-select wantings if available
+        if (returnContext.wantings && returnContext.wantings.length > 0) {
+            setTimeout(() => {
+                const firstWanting = returnContext.wantings[0];
+                if (firstWanting) {
+                    startWantingRelease(firstWanting);
+                }
+            }, 500);
+        }
+    } else if (type === 'story') {
+        // Go to Sesi 4 for story/belief release
+        switchTab('sesi4');
+
+        // Pre-fill the story input
+        setTimeout(() => {
+            const storyInput = document.getElementById('story-input');
+            if (storyInput && returnContext.content) {
+                storyInput.value = returnContext.content;
+            }
+        }, 500);
+    }
+}
+
+function showReturnBanner() {
+    if (!returnContext) return;
+
+    const banner = document.createElement('div');
+    banner.id = 'return-banner';
+    banner.className = 'return-banner';
+    banner.innerHTML = `
+        <div class="return-banner-content">
+            <span>📍 Release dari: <strong>Manifesting Workbook</strong></span>
+            <span class="return-context">${returnContext.content || ''}</span>
+        </div>
+        <button onclick="returnToManifesting()" class="btn-return">
+            ← Kembali ke Manifesting
+        </button>
+    `;
+
+    // Insert after header
+    const header = document.querySelector('.header');
+    if (header) {
+        header.insertAdjacentElement('afterend', banner);
+    }
+}
+
+function returnToManifesting() {
+    if (returnContext && returnContext.returnUrl) {
+        // Clear context
+        localStorage.removeItem('lettingGo_returnContext');
+        window.location.href = returnContext.returnUrl;
+    } else {
+        window.location.href = 'manifesting-workbook.html';
+    }
+}
+
+function completeAndReturn() {
+    showToast('🎉 Release selesai! Kembali ke Manifesting...', 'success');
+    setTimeout(() => {
+        returnToManifesting();
+    }, 1500);
+}
 
 // ==================== LOCAL STORAGE ====================
 function loadFromLocalStorage() {
@@ -406,10 +506,20 @@ function completeWantingRelease() {
 
     showToast(`🎉 Keinginan "${wantingState.selectedWanting}" berhasil dilepaskan!`, 'success');
 
-    // Reset
-    setTimeout(() => {
-        resetWantingTool();
-    }, 2000);
+    // Check if we came from Manifesting
+    if (returnContext && returnContext.source === 'manifesting') {
+        setTimeout(() => {
+            if (confirm('Release selesai! Kembali ke Manifesting Workbook?')) {
+                completeAndReturn();
+            } else {
+                resetWantingTool();
+            }
+        }, 1000);
+    } else {
+        setTimeout(() => {
+            resetWantingTool();
+        }, 2000);
+    }
 }
 
 function resetWantingTool() {
@@ -522,9 +632,20 @@ function completeStory() {
 
     showToast('🎉 Cerita berhasil dilepaskan! Anda lebih bebas sekarang.', 'success');
 
-    setTimeout(() => {
-        resetStoryTool();
-    }, 2000);
+    // Check if we came from Manifesting
+    if (returnContext && returnContext.source === 'manifesting') {
+        setTimeout(() => {
+            if (confirm('Release selesai! Kembali ke Manifesting Workbook?')) {
+                completeAndReturn();
+            } else {
+                resetStoryTool();
+            }
+        }, 1000);
+    } else {
+        setTimeout(() => {
+            resetStoryTool();
+        }, 2000);
+    }
 }
 
 function resetStoryTool() {
