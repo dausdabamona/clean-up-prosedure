@@ -167,6 +167,13 @@
     .checklist{list-style:none;margin:0;padding:0}
     .checklist li{padding:0.3rem 0;font-size:0.8rem}
 
+    /* Modal Overlay */
+    .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:1rem}
+    .modal-overlay.show{display:flex}
+    .modal-content{background:var(--white);border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.2);max-width:500px;width:100%;max-height:90vh;overflow-y:auto;animation:fadeInUp 0.3s ease}
+    .modal-header{padding:1rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .modal-header h3{color:var(--primary)}
+
     /* Responsive */
     @media(max-width:480px){
       .header h1{font-size:1.1rem}
@@ -967,6 +974,34 @@
 
   <!-- Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Resume Action Modal -->
+  <div class="modal-overlay" id="resumeActionModal">
+    <div class="modal-content" style="max-width:400px;">
+      <div class="modal-header">
+        <h3 style="font-size:1rem;margin:0;">📝 Lanjutkan Draft?</h3>
+      </div>
+      <div class="modal-body" style="padding:1rem;">
+        <p style="font-size:0.9rem;margin-bottom:0.75rem;">
+          Anda memiliki draft action yang belum disimpan.
+        </p>
+        <p style="font-size:0.8rem;color:var(--text-light);margin-bottom:0.5rem;">
+          Disimpan: <span id="draftTimeAgo">-</span>
+        </p>
+        <div style="background:var(--bg-light);padding:0.75rem;border-radius:6px;font-size:0.8rem;white-space:pre-wrap;" id="draftPreview">
+          -
+        </div>
+      </div>
+      <div class="modal-footer" style="display:flex;gap:0.5rem;padding:1rem;border-top:1px solid var(--border);">
+        <button onclick="discardActionDraft()" class="btn btn-secondary" style="flex:1;">
+          🗑️ Buang Draft
+        </button>
+        <button onclick="resumeActionDraft()" class="btn btn-primary" style="flex:1;">
+          ✅ Lanjutkan
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script src="common.js"></script>
   <script src="releasing-engine.js"></script>
