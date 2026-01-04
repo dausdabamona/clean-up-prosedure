@@ -1760,27 +1760,16 @@
           const name = e.target.name;
           const value = e.target.value;
 
-          // Show resistance panel based on question type
+          // Show resistance panel for Q questions
+          // Ya/Mungkin = perlu dilepaskan (show panel)
+          // Tidak = tidak perlu dilepaskan (hide panel)
           if (name.includes('Q') && !name.includes('C')) {
             const panel = document.getElementById(name + 'Resistance');
             if (panel) {
-              // Q2 adalah pertanyaan releasing "Bisakah kamu melepaskan..."
-              // Ya = sudah bisa release (hide panel), Tidak/Mungkin = perlu bantuan (show panel)
-              if (name.includes('Q2')) {
-                if (value === 'yes') {
-                  panel.classList.remove('show');
-                } else {
-                  panel.classList.add('show');
-                }
-              }
-              // Q1 dan Q3 adalah pertanyaan probing "Pernahkah..."
-              // Ya/Mungkin = ada yang perlu di-release (show panel), Tidak = tidak perlu (hide panel)
-              else {
-                if (value === 'no') {
-                  panel.classList.remove('show');
-                } else {
-                  panel.classList.add('show');
-                }
+              if (value === 'no') {
+                panel.classList.remove('show');
+              } else {
+                panel.classList.add('show');
               }
             }
           }
