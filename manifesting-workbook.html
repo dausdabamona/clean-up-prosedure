@@ -7,53 +7,28 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
   <link rel="stylesheet" href="styles.css">
   <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    :root{--primary:#8e44ad;--primary-light:#9b59b6;--secondary:#3498db;--success:#27ae60;--warning:#f39c12;--danger:#c0392b;--gold:#C4A962;--bg-light:#f8f9fa;--bg-input:#f5eef8;--text-dark:#2c3e50;--text-light:#7f8c8d;--border:#bdc3c7;--white:#fff;--shadow:0 2px 10px rgba(0,0,0,0.1)}
-    body{font-family:'Segoe UI',Tahoma,sans-serif;background:var(--bg-light);color:var(--text-dark);line-height:1.6}
+    /* ==================== PAGE-SPECIFIC STYLES ==================== */
+    /* Purple theme for manifesting */
+    :root{--primary:#8e44ad;--primary-light:#9b59b6;--gold:#C4A962;--bg-input:#f5eef8}
+    .header{background:linear-gradient(135deg,var(--primary),var(--primary-light))}
+    .btn-primary{background:var(--primary)}
+    .btn-primary:hover{background:var(--primary-light)}
 
-    /* Header */
-    .header{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:var(--white);padding:1rem;text-align:center;position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
-    .header h1{font-size:1.4rem;margin-bottom:0.25rem}
-    .header p{font-size:0.8rem;opacity:0.9}
+    /* Page-specific header link */
     .header-link{display:inline-block;margin-top:0.5rem;color:rgba(255,255,255,0.8);font-size:0.75rem;text-decoration:none}
     .header-link:hover{color:var(--white)}
 
-    /* Navigation */
-    .nav-tabs{display:flex;background:var(--white);border-bottom:2px solid var(--border);overflow-x:auto}
-    .nav-tab{flex:1;min-width:60px;padding:0.5rem 0.25rem;text-align:center;cursor:pointer;border:none;background:none;font-size:0.65rem;color:var(--text-light);transition:all 0.3s;border-bottom:3px solid transparent}
-    .nav-tab:hover{background:var(--bg-light);color:var(--primary)}
-    .nav-tab.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
-    .nav-tab .icon{display:block;font-size:1rem;margin-bottom:0.1rem}
-
-    /* Main Content */
-    .main-content{max-width:800px;margin:0 auto;padding:0.75rem;padding-bottom:5rem}
-    .tab-content{display:none}
-    .tab-content.active{display:block}
-
-    /* Cards */
-    .card{background:var(--white);border-radius:10px;box-shadow:var(--shadow);margin-bottom:0.75rem;overflow:hidden}
-    .card-header{background:var(--primary);color:var(--white);padding:0.6rem 0.75rem;font-weight:600;font-size:0.85rem}
-    .card-body{padding:0.75rem}
-
-    /* Forms */
-    .form-group{margin-bottom:0.6rem}
-    .form-group label,.form-label{display:block;font-weight:600;font-size:0.75rem;margin-bottom:0.2rem;color:var(--text-dark)}
-    .form-control{width:100%;padding:0.5rem 0.6rem;border:1px solid var(--border);border-radius:6px;font-size:0.85rem;background:var(--bg-input);transition:border-color 0.3s}
-    .form-control:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 2px rgba(142,68,173,0.1)}
-    textarea.form-control{resize:vertical;min-height:60px}
-
-    /* Buttons */
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:0.4rem;padding:0.6rem 1rem;border:none;border-radius:6px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.3s}
-    .btn-primary{background:var(--primary);color:var(--white)}
-    .btn-primary:hover{background:var(--primary-light)}
-    .btn-secondary{background:var(--bg-light);color:var(--text-dark);border:1px solid var(--border)}
-    .btn-secondary:hover{background:var(--border)}
-    .btn-success{background:var(--success);color:var(--white)}
-    .btn-danger{background:var(--danger);color:var(--white)}
+    /* Page-specific button variants */
     .btn-release{background:linear-gradient(135deg,#3498db,#2980b9);color:var(--white)}
-    .btn-block{width:100%}
     .btn-icon{background:none;border:none;cursor:pointer;font-size:1rem;padding:0.25rem}
-    .btn-group{display:flex;gap:0.4rem;flex-wrap:wrap}
+
+    /* Release Status */
+    .release-status{background:#d4edda;color:#155724;padding:0.75rem 1rem;border-radius:8px;margin-top:0.75rem;text-align:center;font-weight:600;animation:fadeInUp 0.3s ease}
+
+    /* Next Button Container */
+    .next-btn-container{position:fixed;bottom:0;left:0;right:0;background:var(--white);padding:1rem;box-shadow:0 -4px 20px rgba(0,0,0,0.1);z-index:100;display:none}
+    .next-btn-container.show{display:block}
+    .next-btn-container .btn{width:100%;font-size:1.1rem;padding:1rem}
 
     /* Progress Bar */
     .progress-bar{height:20px;background:var(--bg-light);border-radius:10px;overflow:hidden;margin-bottom:0.5rem}
@@ -176,16 +151,6 @@
     .danger-zone h4{color:var(--danger)}
     .danger-zone .btn{margin-top:0.5rem}
 
-    /* Toast */
-    .toast-container{position:fixed;top:0.75rem;right:0.75rem;z-index:300;max-width:300px}
-    .toast{background:var(--primary);color:var(--white);padding:0.6rem 0.75rem;border-radius:6px;margin-bottom:0.4rem;box-shadow:var(--shadow);animation:slideIn 0.3s;font-size:0.8rem}
-    .toast.success{background:var(--success)}
-    .toast.error{background:var(--danger)}
-    .toast.warning{background:var(--warning)}
-    .toast.show{opacity:1}
-    @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
-    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-
     /* Input Group */
     .input-group{display:flex;flex-direction:column;gap:0.4rem}
     .input-group input{width:100%}
@@ -201,6 +166,13 @@
     /* Checklist */
     .checklist{list-style:none;margin:0;padding:0}
     .checklist li{padding:0.3rem 0;font-size:0.8rem}
+
+    /* Modal Overlay */
+    .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:1rem}
+    .modal-overlay.show{display:flex}
+    .modal-content{background:var(--white);border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.2);max-width:500px;width:100%;max-height:90vh;overflow-y:auto;animation:fadeInUp 0.3s ease}
+    .modal-header{padding:1rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .modal-header h3{color:var(--primary)}
 
     /* Responsive */
     @media(max-width:480px){
@@ -384,16 +356,13 @@
           <h4>Release</h4>
           <p class="hint">"Bisakah saya melepaskan keinginan/hasrat ini?"</p>
 
-          <div class="release-questions-box">
-            <p class="release-q">💭 "Bisakah kamu mengizinkan keinginan ini hadir sepenuhnya?"</p>
-            <p class="release-q">💭 "Bisakah kamu melepaskan keinginan ini?"</p>
-            <p class="release-q">💭 "Maukah kamu melepaskannya?"</p>
-            <p class="release-q">💭 "Kapan?"</p>
-          </div>
-
-          <button onclick="markDiscoverReleased()" class="btn btn-release btn-block" style="margin-top:0.75rem">
-            🌊 Sudah Release
+          <button onclick="startDiscoverRelease()" class="btn btn-release btn-block">
+            🌊 Mulai Release Interaktif
           </button>
+
+          <div id="discoverReleaseStatus" class="release-status" style="display:none;">
+            ✅ Sudah di-release
+          </div>
         </div>
       </div>
 
@@ -681,21 +650,17 @@
               </div>
               <p class="step-question">"Release dengan Pertanyaan Dasar"</p>
 
-              <div class="release-questions-box highlight">
-                <p class="release-q">💭 "Bisakah kamu mengizinkan perasaan ini hadir sepenuhnya?"</p>
-                <p class="release-q">💭 "Bisakah kamu melepaskannya?"</p>
-                <p class="release-q">💭 "Maukah kamu melepaskannya?"</p>
-                <p class="release-q">💭 "Kapan?"</p>
-                <p class="release-q main">🌟 "Apakah kamu itu perasaan ini, atau kamu yang MENYADARI perasaan ini?"</p>
-              </div>
-
-              <button onclick="goToReleaseStep(5)" class="btn btn-release btn-block" style="margin-top:0.75rem">
-                🌊 Sudah Release - Lanjut
+              <button onclick="startGoalRelease()" class="btn btn-release btn-block">
+                🌊 Mulai Release Interaktif
               </button>
 
-              <div class="step-nav" style="margin-top:0.5rem">
+              <div id="goalReleaseStatus" class="release-status" style="display:none;">
+                ✅ Sudah di-release
+              </div>
+
+              <div class="step-nav" style="margin-top:0.75rem">
                 <button onclick="goToReleaseStep(3)" class="btn btn-secondary">← Sebelumnya</button>
-                <span></span>
+                <button onclick="goToReleaseStep(5)" class="btn btn-primary" id="btnToStep5" disabled>Selanjutnya →</button>
               </div>
             </div>
           </div>
@@ -947,7 +912,7 @@
       <div class="card">
         <div class="card-body">
           <h4 style="font-size:0.9rem;margin-bottom:0.5rem">🔗 API Configuration</h4>
-          <p class="hint">Gunakan API URL yang sama dengan Clean Up Tracker</p>
+          <p class="hint">Gunakan API URL dari Google Apps Script</p>
 
           <div class="form-group">
             <label class="form-label">Google Apps Script URL:</label>
@@ -1000,11 +965,46 @@
 
   </main>
 
+  <!-- Next Button Container (shows after saving discover entry) -->
+  <div class="next-btn-container" id="nextBtnContainer">
+    <button onclick="goToNextPerson()" class="btn btn-primary">
+      ➡️ Lanjut ke Orang/Situasi Berikutnya
+    </button>
+  </div>
+
   <!-- Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
 
+  <!-- Resume Action Modal -->
+  <div class="modal-overlay" id="resumeActionModal">
+    <div class="modal-content" style="max-width:400px;">
+      <div class="modal-header">
+        <h3 style="font-size:1rem;margin:0;">📝 Lanjutkan Draft?</h3>
+      </div>
+      <div class="modal-body" style="padding:1rem;">
+        <p style="font-size:0.9rem;margin-bottom:0.75rem;">
+          Anda memiliki draft action yang belum disimpan.
+        </p>
+        <p style="font-size:0.8rem;color:var(--text-light);margin-bottom:0.5rem;">
+          Disimpan: <span id="draftTimeAgo">-</span>
+        </p>
+        <div style="background:var(--bg-light);padding:0.75rem;border-radius:6px;font-size:0.8rem;white-space:pre-wrap;" id="draftPreview">
+          -
+        </div>
+      </div>
+      <div class="modal-footer" style="display:flex;gap:0.5rem;padding:1rem;border-top:1px solid var(--border);">
+        <button onclick="discardActionDraft()" class="btn btn-secondary" style="flex:1;">
+          🗑️ Buang Draft
+        </button>
+        <button onclick="resumeActionDraft()" class="btn btn-primary" style="flex:1;">
+          ✅ Lanjutkan
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script src="common.js"></script>
-  <script src="app.js"></script>
+  <script src="releasing-engine.js"></script>
   <script src="manifesting-app.js"></script>
 </body>
 </html>

@@ -206,11 +206,6 @@
     <nav class="sidebar-menu">
       <div class="menu-label">Modules</div>
 
-      <a href="index.html" class="menu-item">
-        <span class="icon">📋</span>
-        <span>Clean Up Tracker</span>
-      </a>
-
       <a href="daily-release.html" class="menu-item">
         <span class="icon">🧘</span>
         <span>Daily Emotional Release</span>
@@ -234,10 +229,14 @@
         <span>Manifesting Workbook</span>
       </a>
 
-      <a href="letting-go.html" class="menu-item disabled">
+      <a href="cleanup-procedure.html" class="menu-item">
+        <span class="icon">🤝</span>
+        <span>Clean Up Procedure</span>
+      </a>
+
+      <a href="letting-go.html" class="menu-item">
         <span class="icon">🕊️</span>
         <span>Letting Go</span>
-        <span class="badge">Soon</span>
       </a>
     </nav>
   </aside>
@@ -282,15 +281,6 @@
       <!-- Modules Grid -->
       <h3 style="margin-bottom: 1rem; color: var(--text-dark);">📚 Choose a Module</h3>
       <div class="modules-grid">
-        <a href="index.html" class="module-card">
-          <div class="module-icon cleanup">📋</div>
-          <div class="module-body">
-            <h3>Clean Up Tracker</h3>
-            <p>Track your daily emotional releases with the comprehensive 5-layer system.</p>
-            <span class="module-status active">Active</span>
-          </div>
-        </a>
-
         <a href="daily-release.html" class="module-card">
           <div class="module-icon daily">🧘</div>
           <div class="module-body">
@@ -327,12 +317,21 @@
           </div>
         </a>
 
-        <a href="letting-go.html" class="module-card disabled">
+        <a href="cleanup-procedure.html" class="module-card">
+          <div class="module-icon cleanup">🤝</div>
+          <div class="module-body">
+            <h3>Clean Up Procedure</h3>
+            <p>Membersihkan hubungan dengan orang lain melalui 4 Wanting.</p>
+            <span class="module-status active">Active</span>
+          </div>
+        </a>
+
+        <a href="letting-go.html" class="module-card">
           <div class="module-icon letting">🕊️</div>
           <div class="module-body">
             <h3>Letting Go</h3>
             <p>Advanced techniques for profound letting go experiences.</p>
-            <span class="module-status coming">Coming Soon</span>
+            <span class="module-status active">Active</span>
           </div>
         </a>
       </div>
@@ -348,7 +347,7 @@
     // Load stats from API
     async function loadStats() {
       try {
-        // Fetch stats from Clean Up Tracker
+        // Fetch stats from API
         const statsResponse = await fetch(`${API_URL}?action=getStats`);
         const statsData = await statsResponse.json();
 

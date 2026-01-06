@@ -7,43 +7,13 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔓</text></svg>">
   <link rel="stylesheet" href="styles.css">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
+    /* ==================== PAGE-SPECIFIC STYLES ==================== */
+    /* Additional variables for this page */
     :root {
-      --primary: #1a5276;
-      --primary-light: #2874a6;
       --secondary: #16a085;
-      --success: #27ae60;
-      --warning: #f39c12;
-      --danger: #c0392b;
-      --bg-light: #f8f9fa;
-      --bg-dark: #2c3e50;
-      --text-dark: #2c3e50;
-      --text-light: #7f8c8d;
-      --border: #dfe6e9;
-      --white: #fff;
-      --shadow: 0 2px 15px rgba(0,0,0,0.1);
     }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: var(--bg-light);
-      color: var(--text-dark);
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    /* Header */
-    .header {
-      background: linear-gradient(135deg, var(--primary), var(--primary-light));
-      color: var(--white);
-      padding: 1rem 1.5rem;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: var(--shadow);
-    }
-
+    /* Header layout adjustments */
     .header-content {
       max-width: 600px;
       margin: 0 auto;
@@ -51,27 +21,10 @@
       align-items: center;
       gap: 1rem;
     }
-
-    .back-link {
-      color: var(--white);
-      text-decoration: none;
-      font-size: 1.5rem;
-      padding: 0.5rem;
-    }
-
-    .header-text {
-      flex: 1;
-    }
-
-    .header h1 {
-      font-size: 1.1rem;
-      margin-bottom: 0.15rem;
-    }
-
-    .header p {
-      font-size: 0.75rem;
-      opacity: 0.9;
-    }
+    .back-link { color: var(--white); text-decoration: none; font-size: 1.5rem; padding: 0.5rem; }
+    .header-text { flex: 1; }
+    .header h1 { font-size: 1.1rem; margin-bottom: 0.15rem; }
+    .header p { font-size: 0.75rem; opacity: 0.9; }
 
     /* Progress Dots */
     .step-progress {
@@ -380,78 +333,11 @@
       color: var(--text-light);
     }
 
-    /* Buttons */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-      text-decoration: none;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: var(--white);
-    }
-
-    .btn-primary:hover:not(:disabled) {
-      background: var(--primary-light);
-      transform: translateY(-2px);
-    }
-
-    .btn-secondary {
-      background: var(--secondary);
-      color: var(--white);
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 2px solid var(--primary);
-      color: var(--primary);
-    }
-
-    .btn-outline:hover {
-      background: var(--primary);
-      color: var(--white);
-    }
-
-    .btn-success {
-      background: var(--success);
-      color: var(--white);
-    }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .btn.pulse {
-      animation: pulse 1s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-
-    .btn-group {
-      display: flex;
-      gap: 0.75rem;
-      margin-top: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    .btn-group .btn {
-      flex: 1;
-      min-width: 120px;
-    }
+    /* Page-specific button styles */
+    .btn-secondary { background: var(--secondary); color: var(--white); }
+    .btn.pulse { animation: pulseBtn 1s infinite; }
+    @keyframes pulseBtn { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    .btn-group { margin-top: 1.5rem; }
 
     /* Skip Button */
     .skip-btn {

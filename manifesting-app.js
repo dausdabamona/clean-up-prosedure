@@ -151,9 +151,21 @@ async function loadDashboard() {
 // ===== DISCOVER =====
 let discoverReleased = false;
 
+function startDiscoverRelease() {
+  ReleasingEngine.startReleasing('discover-release', {
+    onComplete: function(data) {
+      markDiscoverReleased();
+    }
+  });
+}
+
 function markDiscoverReleased() {
   discoverReleased = true;
-  showToast('Release tercatat!', 'success');
+  const statusEl = document.getElementById('discoverReleaseStatus');
+  if (statusEl) {
+    statusEl.style.display = 'block';
+  }
+  showToast('🌊 Release selesai!', 'success');
 }
 
 async function saveDiscoverEntry() {
@@ -173,8 +185,31 @@ async function saveDiscoverEntry() {
   const result = await callManifestingApi('saveManifestingDiscover', data);
   if (result && result.success) {
     showToast('Discover entry tersimpan!', 'success');
-    resetDiscoverForm();
+    // Show next button
+    showNextButton();
   }
+}
+
+function showNextButton() {
+  const nextBtn = document.getElementById('nextBtnContainer');
+  if (nextBtn) {
+    nextBtn.classList.add('show');
+  }
+}
+
+function hideNextButton() {
+  const nextBtn = document.getElementById('nextBtnContainer');
+  if (nextBtn) {
+    nextBtn.classList.remove('show');
+  }
+}
+
+function goToNextPerson() {
+  resetDiscoverForm();
+  hideNextButton();
+  // Scroll to top of the discover tab
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  showToast('Siap untuk orang/situasi berikutnya!', 'info');
 }
 
 function resetDiscoverForm() {
@@ -184,6 +219,10 @@ function resetDiscoverForm() {
   document.getElementById('discoverIdentificationValue').textContent = '5';
   clearWantingTags('discoverWantingTags');
   discoverReleased = false;
+  const statusEl = document.getElementById('discoverReleaseStatus');
+  if (statusEl) {
+    statusEl.style.display = 'none';
+  }
 }
 
 // ===== GOALS =====
@@ -303,6 +342,26 @@ function checkGoalQuality() {
 
 // ===== RELEASE SESSION =====
 let currentReleaseStep = 1;
+let goalReleased = false;
+
+function startGoalRelease() {
+  ReleasingEngine.startReleasing('goal-release', {
+    onComplete: function(data) {
+      goalReleased = true;
+      // Show status
+      const statusEl = document.getElementById('goalReleaseStatus');
+      if (statusEl) {
+        statusEl.style.display = 'block';
+      }
+      // Enable next button
+      const nextBtn = document.getElementById('btnToStep5');
+      if (nextBtn) {
+        nextBtn.disabled = false;
+      }
+      showToast('🌟 Release selesai!', 'success');
+    }
+  });
+}
 
 function goToReleaseStep(step) {
   // Hide all steps
@@ -411,16 +470,239 @@ function resetTimer() {
 }
 
 // ===== ACTION =====
+const ACTION_DRAFT_KEY = 'manifesting_action_draft';
+
+function getActionDraft() {
+  return {
+    goalId: document.getElementById('actionGoalSelect').value,
+    actions: [
+      document.getElementById('action1').value,
+      document.getElementById('action2').value,
+      document.getElementById('action3').value
+    ],
+    actionWantings: getSelectedWantings('actionWantingTags'),
+    limitingBeliefs: [
+      document.getElementById('limiting1').value,
+      document.getElementById('limiting2').value,
+      document.getElementById('limiting3').value
+    ],
+    limitingWantings: getSelectedWantings('limitingWantingTags'),
+    empoweringBeliefs: [
+      document.getElementById('empowering1').value,
+      document.getElementById('empowering2').value,
+      document.getElementById('empowering3').value
+    ],
+    savedAt: new Date().toISOString()
+  };
+}
+
+function autoSaveAction() {
+  const draft = getActionDraft();
+  // Only save if there's some content
+  const hasContent = draft.actions.some(a => a) ||
+                     draft.limitingBeliefs.some(b => b) ||
+                     draft.empoweringBeliefs.some(b => b) ||
+                     draft.actionWantings.length > 0 ||
+                     draft.limitingWantings.length > 0;
+
+  if (hasContent) {
+    localStorage.setItem(ACTION_DRAFT_KEY, JSON.stringify(draft));
+  }
+}
+
+function loadActionDraft() {
+  const saved = localStorage.getItem(ACTION_DRAFT_KEY);
+  if (saved) {
+    try {
+      return JSON.parse(saved);
+    } catch (e) {
+      return null;
+    }
+  }
+  return null;
+}
+
+function restoreActionDraft(draft) {
+  if (!draft) return;
+
+  // Restore goal selection
+  if (draft.goalId) {
+    document.getElementById('actionGoalSelect').value = draft.goalId;
+  }
+
+  // Restore actions
+  if (draft.actions) {
+    document.getElementById('action1').value = draft.actions[0] || '';
+    document.getElementById('action2').value = draft.actions[1] || '';
+    document.getElementById('action3').value = draft.actions[2] || '';
+  }
+
+  // Restore action wantings
+  if (draft.actionWantings) {
+    draft.actionWantings.forEach(w => {
+      const btn = document.querySelector(`#actionWantingTags [data-wanting="${w}"]`);
+      if (btn) btn.classList.add('selected');
+    });
+  }
+
+  // Restore limiting beliefs
+  if (draft.limitingBeliefs) {
+    document.getElementById('limiting1').value = draft.limitingBeliefs[0] || '';
+    document.getElementById('limiting2').value = draft.limitingBeliefs[1] || '';
+    document.getElementById('limiting3').value = draft.limitingBeliefs[2] || '';
+  }
+
+  // Restore limiting wantings
+  if (draft.limitingWantings) {
+    draft.limitingWantings.forEach(w => {
+      const btn = document.querySelector(`#limitingWantingTags [data-wanting="${w}"]`);
+      if (btn) btn.classList.add('selected');
+    });
+  }
+
+  // Restore empowering beliefs
+  if (draft.empoweringBeliefs) {
+    document.getElementById('empowering1').value = draft.empoweringBeliefs[0] || '';
+    document.getElementById('empowering2').value = draft.empoweringBeliefs[1] || '';
+    document.getElementById('empowering3').value = draft.empoweringBeliefs[2] || '';
+  }
+
+  showToast('📝 Draft action dilanjutkan', 'info');
+}
+
+function clearActionDraft() {
+  localStorage.removeItem(ACTION_DRAFT_KEY);
+}
+
+function checkActionDraft() {
+  const draft = loadActionDraft();
+  if (draft) {
+    // Show resume modal
+    const modal = document.getElementById('resumeActionModal');
+    if (modal) {
+      // Format saved time
+      const savedDate = new Date(draft.savedAt);
+      const timeAgo = formatTimeAgo(savedDate);
+      document.getElementById('draftTimeAgo').textContent = timeAgo;
+
+      // Show preview
+      let preview = '';
+      if (draft.actions && draft.actions.filter(a => a).length > 0) {
+        preview += 'Actions: ' + draft.actions.filter(a => a).join(', ') + '\n';
+      }
+      if (draft.limitingBeliefs && draft.limitingBeliefs.filter(b => b).length > 0) {
+        preview += 'Limiting: ' + draft.limitingBeliefs.filter(b => b).length + ' beliefs\n';
+      }
+      document.getElementById('draftPreview').textContent = preview || 'Data tersimpan';
+
+      modal.classList.add('show');
+    }
+  }
+}
+
+function resumeActionDraft() {
+  const draft = loadActionDraft();
+  restoreActionDraft(draft);
+  document.getElementById('resumeActionModal').classList.remove('show');
+  // Switch to Action tab
+  switchTab('action');
+}
+
+function discardActionDraft() {
+  clearActionDraft();
+  document.getElementById('resumeActionModal').classList.remove('show');
+  showToast('Draft dihapus', 'info');
+}
+
+function formatTimeAgo(date) {
+  const now = new Date();
+  const diff = now - date;
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+
+  if (minutes < 1) return 'Baru saja';
+  if (minutes < 60) return minutes + ' menit yang lalu';
+  if (hours < 24) return hours + ' jam yang lalu';
+  return days + ' hari yang lalu';
+}
+
+function initActionAutoSave() {
+  // Auto-save on input changes
+  const actionInputs = ['action1', 'action2', 'action3',
+                        'limiting1', 'limiting2', 'limiting3',
+                        'empowering1', 'empowering2', 'empowering3',
+                        'actionGoalSelect'];
+
+  actionInputs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', autoSaveAction);
+      el.addEventListener('change', autoSaveAction);
+    }
+  });
+
+  // Auto-save on wanting tag click
+  ['actionWantingTags', 'limitingWantingTags'].forEach(containerId => {
+    const container = document.getElementById(containerId);
+    if (container) {
+      container.addEventListener('click', function(e) {
+        if (e.target.classList.contains('wanting-tag')) {
+          setTimeout(autoSaveAction, 100);
+        }
+      });
+    }
+  });
+}
+
 function releaseActionWanting() {
-  showToast('Lakukan release untuk wanting dari actions ini', 'info');
+  const wantings = getSelectedWantings('actionWantingTags');
+
+  if (wantings.length === 0) {
+    showToast('Pilih minimal satu wanting terlebih dahulu', 'warning');
+    return;
+  }
+
+  // Start sequential releasing for selected wantings
+  ReleasingEngine.startSequentialReleasing(wantings, {
+    onRelease: function(data) {
+      showToast('🌊 ' + (data.wantingType || 'Wanting') + ' released!', 'success');
+    },
+    onSequenceComplete: function(data) {
+      showToast('🎉 Semua ' + data.totalReleased + ' wanting berhasil di-release!', 'success');
+      clearWantingTags('actionWantingTags');
+    }
+  });
 }
 
 function releaseLimitingBeliefs() {
-  showToast('Lakukan release untuk limiting beliefs', 'info');
+  const wantings = getSelectedWantings('limitingWantingTags');
+
+  if (wantings.length === 0) {
+    showToast('Pilih minimal satu wanting terlebih dahulu', 'warning');
+    return;
+  }
+
+  // Start sequential releasing for selected wantings
+  ReleasingEngine.startSequentialReleasing(wantings, {
+    onRelease: function(data) {
+      showToast('🌊 Limiting belief released!', 'success');
+    },
+    onSequenceComplete: function(data) {
+      showToast('🎉 Semua limiting beliefs berhasil di-release!', 'success');
+      clearWantingTags('limitingWantingTags');
+    }
+  });
 }
 
 function releaseEmpoweringBeliefs() {
-  showToast('Lakukan release untuk empowering beliefs', 'info');
+  // For empowering beliefs, use the quick-basic script
+  // since we want to release attachment to positive beliefs too
+  ReleasingEngine.startReleasing('quick-basic', {
+    onComplete: function(data) {
+      showToast('🎉 Empowering beliefs released - no attachment!', 'success');
+    }
+  });
 }
 
 async function saveActionEntry() {
@@ -454,6 +736,7 @@ async function saveActionEntry() {
   const result = await callManifestingApi('saveManifestingAction', data);
   if (result && result.success) {
     showToast('Action entry tersimpan!', 'success');
+    clearActionDraft(); // Clear the auto-saved draft
     resetActionForm();
   }
 }
@@ -464,8 +747,10 @@ function resetActionForm() {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
+  document.getElementById('actionGoalSelect').value = '';
   clearWantingTags('actionWantingTags');
   clearWantingTags('limitingWantingTags');
+  clearActionDraft();
 }
 
 // ===== JOURNAL =====
@@ -725,6 +1010,12 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('input[name="timerDuration"]').forEach(radio => {
     radio.addEventListener('change', resetTimer);
   });
+
+  // Init action auto-save
+  initActionAutoSave();
+
+  // Check for saved action draft
+  checkActionDraft();
 
   // Load initial data
   loadDashboard();
