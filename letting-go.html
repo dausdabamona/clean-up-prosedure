@@ -1042,8 +1042,26 @@
     </div>
   </main>
 
+  <!-- Modal -->
+  <div class="modal" id="releasing-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title">Guided Releasing</h3>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-progress">
+        <div class="progress-bar"><div class="progress-fill" id="modal-progress"></div></div>
+        <div class="progress-text" id="modal-progress-text">Step 1</div>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-footer">
+        <button class="btn-prev" id="btn-prev" onclick="prevStep()">← Kembali</button>
+        <button class="btn-next" id="btn-next" onclick="nextStep()">Lanjut →</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
-  <script src="releasing-engine.js"></script>
   <script src="letting-go-app.js"></script>
 </body>
 </html>
