@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teknik Lanjutan - Sedona Method</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Page-specific styles */
+    .header.advanced {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+
+    /* Quick Release Section */
+    .quick-release-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .quick-release-section h3 {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .quick-release-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .quick-btn {
+      padding: 1rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: white;
+      text-align: center;
+    }
+
+    .quick-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .quick-btn.holistic { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+    .quick-btn.stop { background: linear-gradient(135deg, #10b981, #059669); }
+    .quick-btn.river { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+    .quick-btn.inquiry { background: linear-gradient(135deg, #8b5cf6, #a855f7); }
+
+    /* Quote Section */
+    .quote-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+      border-left: 4px solid #667eea;
+    }
+
+    .quote-section blockquote {
+      font-style: italic;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .quote-section cite {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    /* Techniques Grid */
+    .techniques-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .technique-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .technique-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(102, 126, 234, 0.2);
+    }
+
+    .technique-header {
+      padding: 1.5rem;
+      color: white;
+      text-align: center;
+    }
+
+    .technique-header.holistic { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+    .technique-header.river { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+    .technique-header.high { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .technique-header.stop { background: linear-gradient(135deg, #10b981, #059669); }
+    .technique-header.inquiry { background: linear-gradient(135deg, #8b5cf6, #a855f7); }
+    .technique-header.time { background: linear-gradient(135deg, #64748b, #475569); }
+    .technique-header.happiness { background: linear-gradient(135deg, #ec4899, #db2777); }
+    .technique-header.love { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+    .technique-header .icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .technique-header h3 {
+      font-size: 1.1rem;
+      margin: 0;
+    }
+
+    .technique-body {
+      padding: 1.25rem;
+    }
+
+    .technique-body p {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+
+    .technique-body .when-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .technique-body ul {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      padding-left: 1.25rem;
+      margin: 0;
+    }
+
+    .technique-body ul li {
+      margin-bottom: 0.25rem;
+    }
+
+    .start-btn {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 8px;
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: all 0.2s;
+    }
+
+    .start-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Tools Section */
+    .tools-section {
+      margin-top: 2rem;
+    }
+
+    .tools-section h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: var(--text-dark);
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .tool-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    }
+
+    .tool-card .icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tool-card h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+      color: var(--text-dark);
+    }
+
+    .tool-card p {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    /* Progress Section */
+    .progress-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .progress-section h3 {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      color: var(--text-dark);
+    }
+
+    .progress-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .progress-item {
+      text-align: center;
+      padding: 0.75rem;
+      background: var(--bg-light);
+      border-radius: 8px;
+    }
+
+    .progress-item .count {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #667eea;
+    }
+
+    .progress-item .label {
+      font-size: 0.7rem;
+      color: var(--text-light);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .quick-release-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .techniques-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Mobile Toggle -->
+  <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+  <div class="overlay" onclick="toggleSidebar()"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h1>🧘 Sedona Method</h1>
+      <p>Release & Let Go</p>
+    </div>
+
+    <nav class="sidebar-menu">
+      <div class="menu-label">Modules</div>
+
+      <a href="sedona-app.html" class="menu-item">
+        <span class="icon">🏠</span>
+        <span>Home</span>
+      </a>
+
+      <a href="daily-release.html" class="menu-item">
+        <span class="icon">🧘</span>
+        <span>Daily Emotional Release</span>
+      </a>
+
+      <a href="core-wanting-release.html" class="menu-item">
+        <span class="icon">🎯</span>
+        <span>7 Core Wanting Release</span>
+      </a>
+
+      <a href="14-days-resistance.html" class="menu-item">
+        <span class="icon">🔓</span>
+        <span>14 Days Free From Resistance</span>
+      </a>
+
+      <div class="menu-divider"></div>
+      <div class="menu-label">Advanced</div>
+
+      <a href="manifesting-workbook.html" class="menu-item">
+        <span class="icon">✨</span>
+        <span>Manifesting Workbook</span>
+      </a>
+
+      <a href="cleanup-procedure.html" class="menu-item">
+        <span class="icon">🤝</span>
+        <span>Clean Up Procedure</span>
+      </a>
+
+      <a href="letting-go.html" class="menu-item">
+        <span class="icon">🕊️</span>
+        <span>Letting Go</span>
+      </a>
+
+      <a href="advanced-techniques.html" class="menu-item active">
+        <span class="icon">🚀</span>
+        <span>Teknik Lanjutan</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content-sidebar">
+    <!-- Header -->
+    <header class="header advanced">
+      <div class="header-content">
+        <a href="sedona-app.html" class="back-btn">← Kembali</a>
+        <h1>🚀 Teknik Lanjutan</h1>
+        <p>Advanced Releasing Techniques dari Coach Lia</p>
+      </div>
+    </header>
+
+    <div class="container" style="padding: 1.5rem;">
+      <!-- Quote -->
+      <div class="quote-section" id="quoteSection">
+        <blockquote id="quoteText">"Keep it simple, sweetheart."</blockquote>
+        <cite id="quoteAuthor">— Lester Levenson</cite>
+      </div>
+
+      <!-- Quick Release -->
+      <div class="quick-release-section">
+        <h3>⚡ Quick Release (1-2 menit)</h3>
+        <div class="quick-release-grid">
+          <button class="quick-btn holistic" onclick="startQuickRelease('holisticQuick')">
+            🔄 Holistic
+          </button>
+          <button class="quick-btn stop" onclick="startQuickRelease('stopQuick')">
+            ⏹️ STOP
+          </button>
+          <button class="quick-btn river" onclick="startQuickRelease('riverQuick')">
+            🌊 Sungai
+          </button>
+          <button class="quick-btn inquiry" onclick="startQuickRelease('inquiryQuick')">
+            ❓ Inquiry
+          </button>
+        </div>
+      </div>
+
+      <!-- Techniques Grid -->
+      <h3 style="margin-bottom: 1rem; color: var(--text-dark);">🎯 8 Teknik Lanjutan</h3>
+      <div class="techniques-grid">
+        <!-- 1. Holistic Release -->
+        <div class="technique-card" onclick="startTechnique('holistic')">
+          <div class="technique-header holistic">
+            <div class="icon">🔄</div>
+            <h3>Holistic Release</h3>
+          </div>
+          <div class="technique-body">
+            <p>Teknik powerful untuk mengguncang struktur resistensi dengan mengalternasikan penolakan dan penerimaan.</p>
+            <div class="when-label">Gunakan saat:</div>
+            <ul>
+              <li>Resistensi sangat kuat</li>
+              <li>Kebiasaan sulit dilepas</li>
+              <li>Ketakutan intens</li>
+            </ul>
+            <button class="start-btn">Mulai Teknik →</button>
+          </div>
+        </div>
+
+        <!-- 2. River of Life -->
+        <div class="technique-card" onclick="startTechnique('river')">
+          <div class="technique-header river">
+            <div class="icon">🌊</div>
+            <h3>Sungai Kehidupan</h3>
+          </div>
+          <div class="technique-body">
+            <p>Membiarkan diri mengapung di sungai kehidupan, bukan berenang melawan arus.</p>
+            <div class="when-label">Gunakan saat:</div>
+            <ul>
+              <li>Merasa harus berjuang keras</li>
+              <li>Hidup terasa berat</li>
+              <li>Ingin mengontrol segalanya</li>
+            </ul>
+            <button class="start-btn">Mulai Teknik →</button>
+          </div>
+        </div>
+
+        <!-- 3. Get High to Release -->
+        <div class="technique-card" onclick="startTechnique('getHigh')">
+          <div class="technique-header high">
+            <div class="icon">⬆️</div>
+            <h3>Get High to Release</h3>
+          </div>
+          <div class="technique-body">
+            <p>Teknik Lester: ketika sudah merasa nyaman, tarik resistensi ke permukaan untuk dilepaskan.</p>
+            <div class="when-label">Gunakan saat:</div>
+            <ul>
+              <li>Setelah meditasi/rileksasi</li>
+              <li>Saat sedang merasa baik</li>
+              <li>Pembersihan proaktif</li>
+            </ul>
+            <button class="start-btn">Mulai Teknik →</button>
+          </div>
+        </div>
+
+        <!-- 4. STOP -->
+        <div class="technique-card" onclick="startTechnique('stop')">
+          <div class="technique-header stop">
+            <div class="icon">⏹️</div>
+            <h3>STOP / Berhenti</h3>
+          </div>
+          <div class="technique-body">
+            <p>Teknik paling sederhana dan paling powerful. Hanya BERHENTI. Keberadaan tidak membutuhkan usaha.</p>
+            <div class="when-label">Gunakan saat:</div>
+            <ul>
+              <li>Pikiran terlalu sibuk</li>
+              <li>Merasa overwhelmed</li>
+              <li>Kapan saja</li>
+            </ul>
+            <button class="start-btn">Mulai Teknik →</button>
+          </div>
+        </div>
+
+        <!-- 5. Inquiry -->
+        <div class="technique-card" onclick="startTechnique('inquiry')">
+          <div class="technique-header inquiry">
+            <div class="icon">❓</div>
+            <h3>Inquiry: Aku Ini Apa?</h3>
+          </div>
+          <div class="technique-body">
+            <p>Self-inquiry menggunakan "APA" bukan "SIAPA" - untuk mengenali diri sejati.</p>
+            <div class="when-label">Gunakan saat:</div>
+            <ul>
+              <li>Ingin mengenal diri lebih dalam</li>
+              <li>Merasa tersesat</li>
+              <li>Mencari kejelasan</li>
+            </ul>
+            <button class="start-btn">Mulai Teknik →</button>
+          </div>
+        </div>
+
+        <!-- 6. Time Resistance -->
+        <div class="technique-card" onclick="startTechnique('time')">
+          <div class="technique-header time">
+            <div class="icon">⏰</div>
+            <h3>Resistensi Waktu</h3>
+          </div>
+          <div class="technique-body">
+            <p>Membebaskan diri dari ilusi waktu. Satu-satunya waktu yang pernah dialami adalah SAAT INI.</p>
+            <div class="when-label">Gunakan saat:</div>
+            <ul>
+              <li>Merasa tidak punya waktu</li>
+              <li>Cemas tentang masa depan</li>
+              <li>Terjebak masa lalu</li>
+            </ul>
+            <button class="start-btn">Mulai Teknik →</button>
+          </div>
+        </div>
+
+        <!-- 7. Happiness Resistance -->
+        <div class="technique-card" onclick="startTechnique('happiness')">
+          <div class="technique-header happiness">
+            <div class="icon">😊</div>
+            <h3>Resistensi Kebahagiaan</h3>
+          </div>
+          <div class="technique-body">
+            <p>Menyadari bahwa mencari kebahagiaan di luar adalah PENOLAKAN terhadap kebahagiaan yang sudah ada.</p>
+            <div class="when-label">Gunakan saat:</div>
+            <ul>
+              <li>Merasa tidak bahagia</li>
+              <li>Selalu mencari "lebih"</li>
+              <li>Tidak puas dengan hidup</li>
+            </ul>
+            <button class="start-btn">Mulai Teknik →</button>
+          </div>
+        </div>
+
+        <!-- 8. Love Resistance -->
+        <div class="technique-card" onclick="startTechnique('love')">
+          <div class="technique-header love">
+            <div class="icon">❤️</div>
+            <h3>Resistensi Cinta</h3>
+          </div>
+          <div class="technique-body">
+            <p>Menyadari bahwa kamu ADALAH cinta. Cinta murni tanpa syarat sudah ada di sini.</p>
+            <div class="when-label">Gunakan saat:</div>
+            <ul>
+              <li>Merasa tidak dicintai</li>
+              <li>Sulit memaafkan</li>
+              <li>Hubungan bermasalah</li>
+            </ul>
+            <button class="start-btn">Mulai Teknik →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tools Section -->
+      <div class="tools-section">
+        <h3>🛠️ Tools Tambahan</h3>
+        <div class="tools-grid">
+          <div class="tool-card" onclick="startTool('realityCheck')">
+            <div class="icon">🔍</div>
+            <h4>Reality Check</h4>
+            <p>Menyadari cerita tidak nyata</p>
+          </div>
+          <div class="tool-card" onclick="startTool('cleanUpPerson')">
+            <div class="icon">🧹</div>
+            <h4>Clean Up Person</h4>
+            <p>Bersihkan emosi ke seseorang</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Section -->
+      <div class="progress-section">
+        <h3>📊 Progress Teknik Lanjutan</h3>
+        <div class="progress-grid" id="progressGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Common JS -->
+  <script src="common.js"></script>
+  <script src="releasing-engine.js"></script>
+  <script src="advanced-techniques.js"></script>
+</body>
+</html>
