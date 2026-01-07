@@ -265,6 +265,233 @@ const advancedScripts = {
       { type: 'completion', text: 'Bagaimana perasaan kamu terhadap orang itu sekarang?', subtext: 'Lebih ringan? Lebih netral? Ulangi clean up ini sampai benar-benar bersih.' },
       { type: 'insight', text: 'Catatan tentang orang ini:', placeholder: 'Tulis catatan...' }
     ]
+  },
+
+  // ==================== MANIFESTING TECHNIQUES ====================
+
+  // MANIFESTING 1: GOAL PROCESS
+  'goalProcess': {
+    title: 'Goal Process - Proses Goal',
+    description: 'Langkah-langkah untuk manifesting goal dengan releasing',
+    steps: [
+      { type: 'instruction', text: 'Stop dulu sebentar... rileks...', subtext: 'Biarkan tubuh dan pikiran tenang', duration: 6000 },
+      { type: 'input', text: 'Apa GOAL yang ingin kamu manifestasikan?', subtext: 'Tuliskan dengan jelas dan spesifik', placeholder: 'Contoh: Penghasilan 100 juta per bulan, Hubungan yang harmonis, dll' },
+      { type: 'instruction', text: 'Sekarang bayangkan goal itu SUDAH TERJADI...', subtext: 'Rasakan perasaannya seolah sudah tercapai', duration: 10000 },
+      { type: 'instruction', text: 'Perhatikan - apakah ada RESISTENSI yang muncul?', subtext: 'Mungkin berupa keraguan, ketakutan, atau ketidakpercayaan', duration: 8000 },
+      { type: 'yesno', text: 'Bisakah kamu menyambut resistensi itu?', highlight: 'Bisa' },
+      { type: 'instruction', text: 'Boleh gak dilepas keinginan untuk MENGONTROL cara goal ini tercapai?', duration: 8000 },
+      { type: 'yesno', text: 'Mau gak melepas keinginan untuk mengontrol?', highlight: 'Mau' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'instruction', text: 'Boleh gak dilepas KETAKUTAN bahwa goal tidak akan tercapai?', duration: 8000 },
+      { type: 'yesno', text: 'Mau gak melepas ketakutan itu?', highlight: 'Mau' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'instruction', text: 'Boleh gak dilepas KEINGINAN akan goal ini?', subtext: 'Bukan berarti tidak mau goal-nya, tapi melepas ATTACHMENT', duration: 10000 },
+      { type: 'yesno', text: 'Mau gak melepas attachment terhadap goal?', highlight: 'Mau' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'instruction', text: 'Sekarang bayangkan TIDAK MENDAPATKAN goal itu...', subtext: 'Rasakan apa yang muncul', duration: 10000 },
+      { type: 'yesno', text: 'Bisakah kamu baik-baik saja bahkan tanpa goal itu?', highlight: 'Bisa' },
+      { type: 'instruction', text: 'Boleh gak dilepas keinginan untuk MEMBUKTIKAN sesuatu lewat goal ini?', duration: 8000 },
+      { type: 'yesno', text: 'Mau gak melepasnya?', highlight: 'Mau' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'instruction', text: 'Sekarang bayangkan lagi goal itu SUDAH TERJADI...', subtext: 'Bagaimana perasaannya sekarang?', duration: 10000 },
+      { type: 'completion', text: 'Bagus! Goal Process selesai.', subtext: 'Ulangi proses ini secara rutin untuk membersihkan lebih banyak resistensi.' },
+      { type: 'insight', text: 'Insight tentang goal ini:', placeholder: 'Tulis insight...' }
+    ]
+  },
+
+  // MANIFESTING 2: HOLISTIC RELEASE UNTUK GOAL
+  'holisticGoal': {
+    title: 'Holistic Release untuk Goal',
+    description: 'Menggunakan teknik holistic untuk membersihkan resistensi terhadap goal',
+    steps: [
+      { type: 'instruction', text: 'Stop dulu... rileks...', duration: 6000 },
+      { type: 'input', text: 'Apa GOAL yang ingin kamu bersihkan resistensinya?', placeholder: 'Tuliskan goal kamu' },
+      { type: 'instruction', text: 'Bayangkan goal itu sudah tercapai...', subtext: 'Rasakan kegembiraan, kepuasan, kebebasan', duration: 10000 },
+      { type: 'instruction', text: 'Sekarang, TOLAK sebanyak-banyaknya keinginan akan goal itu...', subtext: 'Gak pengen, gak mau, jauh-jauh!', duration: 10000 },
+      { type: 'yesno', text: 'Boleh gak DITOLAK sebanyak-banyaknya?', highlight: 'Bisa' },
+      { type: 'instruction', text: 'Sekarang kebalikannya - TERIMA sebanyak-banyaknya...', subtext: 'Biarkan keinginan itu hadir, izinkan ada', duration: 10000 },
+      { type: 'yesno', text: 'Boleh gak DITERIMA sebanyak-banyaknya?', highlight: 'Bisa' },
+      { type: 'instruction', text: 'TOLAK lagi...', duration: 8000 },
+      { type: 'instruction', text: 'TERIMA lagi...', duration: 8000 },
+      { type: 'instruction', text: 'TOLAK...', duration: 6000 },
+      { type: 'instruction', text: 'TERIMA...', duration: 6000 },
+      { type: 'instruction', text: 'Sekarang perhatikan...', subtext: 'Bisa gak menemukan orang yang menginginkan goal itu?', duration: 8000 },
+      { type: 'yesno', text: 'Bisa menemukan orang yang menginginkan?', highlight: 'Tidak ada' },
+      { type: 'instruction', text: 'Boleh gak dilepas KEINGINAN untuk mau HIDUPKAN LAGI attachment seperti itu?', duration: 6000 },
+      { type: 'yesno', text: 'Mau gak melepas keinginan itu?', highlight: 'Mau' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'instruction', text: 'Yang tersisa apa?', subtext: 'Perhatikan... kekosongan? Kebebasan? Kedamaian?', duration: 10000 },
+      { type: 'completion', text: 'Excellent! Holistic Release untuk Goal selesai.', subtext: 'Goal lebih mudah terwujud dari tempat yang bersih dan bebas attachment.' },
+      { type: 'insight', text: 'Insight:', placeholder: 'Tulis insight...' }
+    ]
+  },
+
+  // MANIFESTING 3: ACTION STEP BRAINSTORM
+  'actionBrainstorm': {
+    title: 'Action Step Brainstorm',
+    description: 'Brainstorming aksi dengan releasing untuk goal',
+    steps: [
+      { type: 'instruction', text: 'Stop dulu... rileks...', duration: 6000 },
+      { type: 'input', text: 'Apa GOAL yang ingin kamu brainstorm action step-nya?', placeholder: 'Tuliskan goal kamu' },
+      { type: 'instruction', text: 'Bayangkan goal itu SUDAH TERCAPAI dengan mudah dan gembira...', duration: 10000 },
+      { type: 'instruction', text: 'Dari tempat goal sudah tercapai...', subtext: 'Apa SATU aksi yang bisa kamu lakukan HARI INI?', duration: 8000 },
+      { type: 'input', text: 'Tulis aksi pertama yang muncul:', placeholder: 'Contoh: Telepon klien, Buat konten, dll' },
+      { type: 'instruction', text: 'Perhatikan - ada resistensi terhadap aksi itu?', duration: 6000 },
+      { type: 'yesno', text: 'Bisakah kamu melepas resistensi terhadap aksi itu?', highlight: 'Bisa' },
+      { type: 'yesno', text: 'Maukah kamu melepasnya?', highlight: 'Mau' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'instruction', text: 'Apa aksi SELANJUTNYA yang bisa dilakukan?', duration: 8000 },
+      { type: 'input', text: 'Tulis aksi kedua:', placeholder: 'Aksi selanjutnya...' },
+      { type: 'instruction', text: 'Lepas resistensi terhadap aksi kedua...', duration: 8000 },
+      { type: 'instruction', text: 'Apa aksi KETIGA yang muncul?', duration: 8000 },
+      { type: 'input', text: 'Tulis aksi ketiga:', placeholder: 'Aksi ketiga...' },
+      { type: 'instruction', text: 'Lepas resistensi terhadap aksi ketiga...', duration: 8000 },
+      { type: 'instruction', text: 'Sekarang dari ketiga aksi itu, mana yang paling RINGAN dan MENYENANGKAN untuk dilakukan?', duration: 10000 },
+      { type: 'instruction', text: 'Boleh gak dilepas keinginan untuk MENUNDA aksi itu?', duration: 8000 },
+      { type: 'yesno', text: 'Mau gak melepas keinginan untuk menunda?', highlight: 'Mau' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'completion', text: 'Bagus! Sekarang kamu punya action steps yang bersih.', subtext: 'Lakukan aksi dari tempat yang ringan dan bebas resistensi.' },
+      { type: 'insight', text: 'Action steps yang akan dilakukan:', placeholder: 'Tulis rencana aksi...' }
+    ]
+  },
+
+  // MANIFESTING 4: TURN IT OVER
+  'turnItOver': {
+    title: 'Turn It Over - Serahkan',
+    description: 'Menyerahkan goal ke sungai kehidupan',
+    steps: [
+      { type: 'instruction', text: 'Stop dulu... rileks...', subtext: 'Biarkan yang sudah seapadanya', duration: 8000 },
+      { type: 'input', text: 'Apa GOAL atau situasi yang ingin kamu serahkan?', placeholder: 'Tuliskan goal atau situasi' },
+      { type: 'instruction', text: 'Bayangkan goal itu seperti bola yang kamu pegang erat-erat...', duration: 8000 },
+      { type: 'instruction', text: 'Perhatikan bagaimana rasanya MENGGENGGAM goal itu...', subtext: 'Mungkin terasa berat, tegang, atau khawatir', duration: 10000 },
+      { type: 'instruction', text: 'Sekarang, bayangkan ada SUNGAI KEHIDUPAN yang mengalir...', subtext: 'Aliran universal yang tahu cara terbaik untuk mewujudkan segalanya', duration: 10000 },
+      { type: 'instruction', text: 'Bisakah kamu LETAKKAN bola goal itu di atas sungai kehidupan?', subtext: 'Biarkan sungai yang membawanya...', duration: 10000 },
+      { type: 'yesno', text: 'Bisakah kamu menyerahkan goal ini ke sungai kehidupan?', highlight: 'Bisa' },
+      { type: 'yesno', text: 'Maukah kamu menyerahkannya?', highlight: 'Mau' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'instruction', text: 'Lihat bola itu mengapung dan dibawa oleh sungai...', subtext: 'Kamu tidak perlu tahu cara-nya, hanya percaya sungai akan membawanya ke tempat terbaik', duration: 12000 },
+      { type: 'instruction', text: 'Boleh gak dilepas keinginan untuk MENGAMBIL KEMBALI goal itu dari sungai?', duration: 8000 },
+      { type: 'yesno', text: 'Mau gak melepas keinginan untuk mengambil kembali?', highlight: 'Mau' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'instruction', text: 'Bisakah kamu PERCAYA bahwa sungai kehidupan tahu cara terbaik?', duration: 10000 },
+      { type: 'instruction', text: 'Biarkan diri kamu juga MENGAPUNG di sungai...', subtext: 'Didukung, dibawa, tanpa usaha', duration: 12000 },
+      { type: 'completion', text: 'Selamat! Kamu telah menyerahkan goal ke sungai kehidupan.', subtext: 'Percaya bahwa yang terbaik akan terjadi, dengan cara yang mungkin tidak terduga.' },
+      { type: 'insight', text: 'Insight:', placeholder: 'Tulis insight...' }
+    ]
+  },
+
+  // MANIFESTING 5: FREEWAY
+  'freeway': {
+    title: 'Freeway - Jalan Bebas Hambatan',
+    description: 'Membersihkan jalan menuju goal dari semua hambatan',
+    steps: [
+      { type: 'instruction', text: 'Stop dulu... rileks...', duration: 6000 },
+      { type: 'input', text: 'Apa GOAL yang ingin kamu bersihkan jalannya?', placeholder: 'Tuliskan goal kamu' },
+      { type: 'instruction', text: 'Bayangkan ada JALAN dari tempat kamu sekarang ke goal itu...', duration: 8000 },
+      { type: 'instruction', text: 'Perhatikan - apakah jalannya MULUS atau ada HAMBATAN?', subtext: 'Mungkin terlihat batu besar, lubang, atau penghalang', duration: 10000 },
+      { type: 'input', text: 'Hambatan pertama apa yang terlihat di jalan itu?', placeholder: 'Contoh: Ketakutan gagal, tidak punya modal, dll' },
+      { type: 'instruction', text: 'Bisakah kamu menyambut hambatan itu?', duration: 6000 },
+      { type: 'yesno', text: 'Bisakah kamu melepaskan hambatan pertama itu?', highlight: 'Bisa' },
+      { type: 'yesno', text: 'Maukah kamu melepasnya?', highlight: 'Mau' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'instruction', text: 'Lihat hambatan itu MENGHILANG dari jalan...', duration: 8000 },
+      { type: 'input', text: 'Hambatan kedua apa yang terlihat?', placeholder: 'Hambatan selanjutnya...' },
+      { type: 'yesno', text: 'Bisakah kamu melepaskan hambatan kedua?', highlight: 'Bisa' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'instruction', text: 'Lihat hambatan itu juga MENGHILANG...', duration: 8000 },
+      { type: 'input', text: 'Hambatan ketiga (jika ada)?', placeholder: 'Hambatan terakhir...' },
+      { type: 'yesno', text: 'Bisakah kamu melepaskan hambatan ketiga?', highlight: 'Bisa' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'instruction', text: 'Sekarang lihat JALAN itu...', subtext: 'Sudah bersih? Sudah mulus? Sudah bebas hambatan?', duration: 10000 },
+      { type: 'instruction', text: 'Bayangkan kamu BERJALAN dengan mudah di jalan itu menuju goal...', duration: 10000 },
+      { type: 'instruction', text: 'Boleh gak dilepas keinginan untuk MENCIPTAKAN hambatan baru di jalan?', duration: 8000 },
+      { type: 'yesno', text: 'Mau gak melepasnya?', highlight: 'Mau' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'completion', text: 'Excellent! Jalan menuju goal sudah bersih.', subtext: 'Kamu bisa berjalan dengan mudah dan ringan menuju goal kamu.' },
+      { type: 'insight', text: 'Insight tentang hambatan yang dilepaskan:', placeholder: 'Tulis insight...' }
+    ]
+  },
+
+  // MANIFESTING 6: MENGAKSES KEMAHAKUASAAN
+  'allPower': {
+    title: 'Mengakses Kemahakuasaan',
+    description: 'Menyadari bahwa kamu sudah memiliki semua kekuatan untuk mewujudkan apapun',
+    steps: [
+      { type: 'instruction', text: 'Stop dulu... rileks dalam...', subtext: 'Biarkan yang sudah seapadanya', duration: 8000 },
+      { type: 'instruction', text: 'Terbuka pada kemungkinan bahwa INI sudah kebebasan...', subtext: 'Sudah keutuhan, sudah tidak terbatas', duration: 10000 },
+      { type: 'input', text: 'Apa yang kamu ingin wujudkan?', placeholder: 'Tuliskan keinginan kamu' },
+      { type: 'instruction', text: 'Perhatikan - ketika memikirkan keinginan itu...', subtext: 'Apakah kamu merasa KECIL, TERBATAS, atau TIDAK MAMPU?', duration: 10000 },
+      { type: 'instruction', text: 'Bisakah kamu menyambut perasaan terbatas itu?', duration: 8000 },
+      { type: 'yesno', text: 'Bisakah kamu melepas perasaan KECIL dan TERBATAS?', highlight: 'Bisa' },
+      { type: 'yesno', text: 'Maukah kamu melepasnya?', highlight: 'Mau' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'instruction', text: 'Sekarang tanyakan pada diri sendiri...', subtext: 'Apakah keberadaan ini terbatas? Atau tidak terbatas?', duration: 10000 },
+      { type: 'instruction', text: 'Bisakah kamu merasakan ketidakterbatasan yang sudah menjadi sifat sejati kamu?', duration: 10000 },
+      { type: 'instruction', text: 'Dari tempat yang tidak terbatas ini...', subtext: 'Apakah keinginan itu terasa mungkin?', duration: 10000 },
+      { type: 'instruction', text: 'Bisakah kamu melepas PEMBATASAN yang kamu letakkan pada diri sendiri?', duration: 8000 },
+      { type: 'yesno', text: 'Mau gak melepas pembatasan itu?', highlight: 'Mau' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'instruction', text: 'Tanyakan: Apakah aku ini TERPISAH dari kehidupan?', subtext: 'Atau apakah aku INI ADALAH kehidupan itu sendiri?', duration: 12000 },
+      { type: 'instruction', text: 'Bisakah kamu duduk saja sebagai KEMAHAKUASAAN itu sendiri?', subtext: 'Yang sudah menjadi sifat sejati kamu', duration: 12000 },
+      { type: 'instruction', text: 'Dari tempat ini - semua yang kamu inginkan sudah ada di sini...', subtext: 'Hanya tinggal izinkan manifestasinya terjadi', duration: 10000 },
+      { type: 'completion', text: 'Kamu sudah adalah KEMAHAKUASAAN itu sendiri.', subtext: 'Tidak perlu mendapatkan apapun - hanya mengizinkan yang sudah ada untuk termanifestasi.' },
+      { type: 'insight', text: 'Insight:', placeholder: 'Tulis insight...' }
+    ]
+  },
+
+  // MANIFESTING TOOL 1: BELIEF CLEARING
+  'beliefClearing': {
+    title: 'Belief Clearing - Membersihkan Keyakinan',
+    description: 'Membersihkan keyakinan yang menghalangi manifestasi',
+    steps: [
+      { type: 'instruction', text: 'Stop dulu... rileks...', duration: 6000 },
+      { type: 'input', text: 'Apa GOAL yang ingin kamu manifestasikan?', placeholder: 'Tuliskan goal kamu' },
+      { type: 'instruction', text: 'Sekarang perhatikan...', subtext: 'Apa KEYAKINAN yang mengatakan bahwa goal ini tidak mungkin?', duration: 8000 },
+      { type: 'input', text: 'Tulis keyakinan pembatas pertama:', placeholder: 'Contoh: Saya tidak cukup pintar, Ini terlalu sulit, dll' },
+      { type: 'instruction', text: 'Perhatikan keyakinan itu...', subtext: 'Apakah itu FAKTA atau hanya CERITA?', duration: 10000 },
+      { type: 'yesno', text: 'Bisakah kamu melepas keyakinan pembatas itu?', highlight: 'Bisa' },
+      { type: 'yesno', text: 'Maukah kamu melepasnya?', highlight: 'Mau' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'input', text: 'Keyakinan pembatas kedua (jika ada):', placeholder: 'Keyakinan lain...' },
+      { type: 'yesno', text: 'Bisakah kamu melepas keyakinan kedua?', highlight: 'Bisa' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'input', text: 'Keyakinan pembatas ketiga (jika ada):', placeholder: 'Keyakinan terakhir...' },
+      { type: 'yesno', text: 'Bisakah kamu melepas keyakinan ketiga?', highlight: 'Bisa' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'instruction', text: 'Sekarang tanyakan: Apakah keinginan ini bisa saya izinkan untuk terwujud?', duration: 10000 },
+      { type: 'instruction', text: 'Boleh gak dilepas keinginan untuk MEMPERTAHANKAN keyakinan pembatas?', duration: 8000 },
+      { type: 'yesno', text: 'Mau gak melepasnya?', highlight: 'Mau' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'completion', text: 'Keyakinan pembatas sudah dibersihkan.', subtext: 'Sekarang goal kamu memiliki ruang untuk terwujud.' },
+      { type: 'insight', text: 'Keyakinan yang dilepaskan:', placeholder: 'Tulis keyakinan yang sudah dilepas...' }
+    ]
+  },
+
+  // MANIFESTING TOOL 2: 4 WANTING CHECKER
+  'wantingChecker': {
+    title: '4 Wanting Checker',
+    description: 'Mengecek apakah 4 keinginan dasar menghambat goal',
+    steps: [
+      { type: 'instruction', text: 'Stop dulu... rileks...', duration: 6000 },
+      { type: 'input', text: 'Apa GOAL yang ingin kamu cek?', placeholder: 'Tuliskan goal kamu' },
+      { type: 'instruction', text: 'Sekarang kita akan cek 4 KEINGINAN DASAR yang mungkin menghambat goal ini...', duration: 6000 },
+      { type: 'instruction', text: '1. WANTING APPROVAL', subtext: 'Apakah kamu menginginkan goal ini untuk MENDAPAT PERSETUJUAN atau PUJIAN dari orang lain?', duration: 10000 },
+      { type: 'yesno', text: 'Bisakah kamu melepas keinginan untuk mendapat approval lewat goal ini?', highlight: 'Bisa' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'instruction', text: '2. WANTING CONTROL', subtext: 'Apakah kamu menginginkan goal ini untuk MENGONTROL sesuatu atau seseorang?', duration: 10000 },
+      { type: 'yesno', text: 'Bisakah kamu melepas keinginan untuk mengontrol lewat goal ini?', highlight: 'Bisa' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'instruction', text: '3. WANTING SECURITY', subtext: 'Apakah kamu menginginkan goal ini karena TAKUT tidak aman tanpanya?', duration: 10000 },
+      { type: 'yesno', text: 'Bisakah kamu melepas keinginan akan keamanan lewat goal ini?', highlight: 'Bisa' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'instruction', text: '4. WANTING SEPARATION', subtext: 'Apakah kamu menginginkan goal ini untuk MEMBUKTIKAN bahwa kamu BERBEDA atau LEBIH BAIK dari orang lain?', duration: 10000 },
+      { type: 'yesno', text: 'Bisakah kamu melepas keinginan untuk berbeda/lebih baik lewat goal ini?', highlight: 'Bisa' },
+      { type: 'when', text: 'Kapan?' },
+      { type: 'instruction', text: 'Sekarang rasakan goal itu lagi...', subtext: 'Bagaimana perasaannya setelah melepas keempat keinginan dasar?', duration: 10000 },
+      { type: 'instruction', text: 'Dari tempat yang lebih bersih ini...', subtext: 'Apakah goal itu masih terasa penting? Atau kamu sudah merasa bebas baik dengan atau tanpanya?', duration: 10000 },
+      { type: 'completion', text: 'Excellent! 4 Wanting sudah dicek dan dibersihkan.', subtext: 'Goal yang bersih dari 4 wanting lebih mudah terwujud karena tidak ada resistensi yang menghambat.' },
+      { type: 'insight', text: 'Insight:', placeholder: 'Tulis insight...' }
+    ]
   }
 };
 
@@ -284,7 +511,20 @@ const quotes = [
   { text: "Berbicara dari cinta, dayanya beda.", author: "Coach Lia" },
   { text: "Duit gak pernah abis kalau gak ada resistensi.", author: "Coach Lia" },
   { text: "Keberadaan tidak butuh bantuan kamu untuk jadi ada.", author: "Coach Lia" },
-  { text: "Hanya ada INI. Tidak bisa ditambah, tidak bisa dikurang.", author: "Coach Lia" }
+  { text: "Hanya ada INI. Tidak bisa ditambah, tidak bisa dikurang.", author: "Coach Lia" },
+  // Manifesting Quotes
+  { text: "Goal hanya alasan untuk melepas resistensi.", author: "Coach Lia" },
+  { text: "Yang kamu inginkan sudah di sini. Hanya perlu melepas yang menghalangi.", author: "Lester Levenson" },
+  { text: "Attachment pada goal adalah hambatan terbesar untuk goal itu terwujud.", author: "Coach Lia" },
+  { text: "Turn it over to the river of life.", author: "Coach Lia" },
+  { text: "Kamu tidak perlu tahu caranya. Sungai kehidupan tahu.", author: "Coach Lia" },
+  { text: "Semakin kamu melepas, semakin goal mendekati kamu.", author: "Lester Levenson" },
+  { text: "Manifesting bukan tentang mendapatkan, tapi tentang MENJADI.", author: "Coach Lia" },
+  { text: "Goal yang bersih terwujud dengan sendirinya.", author: "Coach Lia" },
+  { text: "Kamu sudah adalah kemahakuasaan itu sendiri.", author: "Lester Levenson" },
+  { text: "Bukan tentang apakah kamu bisa, tapi apakah kamu MAU melepas.", author: "Coach Lia" },
+  { text: "Keinginan yang tidak ter-attach adalah doa yang paling kuat.", author: "Coach Lia" },
+  { text: "Semua yang kamu cari di luar sudah lengkap di dalam.", author: "Lester Levenson" }
 ];
 
 // ==================== PROGRESS TRACKING ====================
@@ -299,6 +539,15 @@ let advancedProgress = JSON.parse(localStorage.getItem('advancedTechniquesProgre
   love: 0,
   realityCheck: 0,
   cleanUpPerson: 0,
+  // Manifesting Progress
+  goalProcess: 0,
+  holisticGoal: 0,
+  actionBrainstorm: 0,
+  turnItOver: 0,
+  freeway: 0,
+  allPower: 0,
+  beliefClearing: 0,
+  wantingChecker: 0,
   totalSessions: 0
 };
 
@@ -310,6 +559,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Render progress
   renderProgress();
+  renderManifestingProgress();
 
   // Initialize ReleasingEngine with advanced scripts
   if (typeof ReleasingEngine !== 'undefined') {
@@ -387,11 +637,36 @@ function startTool(toolId) {
         advancedProgress.totalSessions++;
         saveProgress();
         renderProgress();
+        renderManifestingProgress();
         showToast('Tool selesai!', 'success');
       }
     });
 
     ReleasingEngine.startReleasing(toolId);
+  } else {
+    showToast('ReleasingEngine tidak tersedia', 'error');
+  }
+}
+
+function startManifesting(scriptId) {
+  if (typeof ReleasingEngine !== 'undefined') {
+    // Add script if not exists
+    if (!ReleasingEngine.getScript(scriptId)) {
+      ReleasingEngine.getScripts()[scriptId] = advancedScripts[scriptId];
+    }
+
+    ReleasingEngine.init({
+      onComplete: function(result) {
+        advancedProgress[scriptId]++;
+        advancedProgress.totalSessions++;
+        saveProgress();
+        renderProgress();
+        renderManifestingProgress();
+        showToast('Sesi ' + advancedScripts[scriptId].title + ' selesai!', 'success');
+      }
+    });
+
+    ReleasingEngine.startReleasing(scriptId);
   } else {
     showToast('ReleasingEngine tidak tersedia', 'error');
   }
@@ -415,6 +690,27 @@ function renderProgress() {
     { id: 'time', name: 'Waktu' },
     { id: 'happiness', name: 'Bahagia' },
     { id: 'love', name: 'Cinta' }
+  ];
+
+  grid.innerHTML = items.map(function(item) {
+    return '<div class="progress-item">' +
+      '<div class="count">' + (advancedProgress[item.id] || 0) + '</div>' +
+      '<div class="label">' + item.name + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderManifestingProgress() {
+  const grid = document.getElementById('manifestingProgressGrid');
+  if (!grid) return;
+
+  const items = [
+    { id: 'goalProcess', name: 'Goal Process' },
+    { id: 'holisticGoal', name: 'Holistic Goal' },
+    { id: 'actionBrainstorm', name: 'Action' },
+    { id: 'turnItOver', name: 'Turn Over' },
+    { id: 'freeway', name: 'Freeway' },
+    { id: 'allPower', name: 'Kuasa' }
   ];
 
   grid.innerHTML = items.map(function(item) {
