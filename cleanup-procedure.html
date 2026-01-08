@@ -709,6 +709,10 @@
       <span class="icon">📊</span>
       <span>Dashboard</span>
     </button>
+    <button class="nav-tab" data-tab="advanced">
+      <span class="icon">🚀</span>
+      <span>Advanced</span>
+    </button>
     <button class="nav-tab" data-tab="reference">
       <span class="icon">📖</span>
       <span>Reference</span>
@@ -1585,6 +1589,105 @@
       </div>
     </section>
 
+    <!-- ==================== ADVANCED TAB ==================== -->
+    <section class="tab-content" id="advancedTab">
+      <div class="card" style="margin-bottom: 1rem;">
+        <div class="card-body">
+          <h3 style="margin-bottom: 0.5rem;">🚀 Advanced Clean Up Techniques</h3>
+          <p style="font-size: 0.85rem; color: var(--text-light);">
+            Teknik-teknik lanjutan untuk proses clean up yang lebih mendalam. Gunakan setelah menyelesaikan 4 Wanting dasar.
+          </p>
+        </div>
+      </div>
+
+      <!-- PRE-CLEAN UP -->
+      <div class="card" style="margin-bottom: 1rem;">
+        <div class="card-header" style="background: #1abc9c;">🧘 Pre-Clean Up (Persiapan)</div>
+        <div class="card-body">
+          <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem;">Persiapan sebelum memulai clean up yang lebih dalam.</p>
+          <div class="btn-group" style="flex-wrap: wrap; gap: 0.5rem;">
+            <button class="btn btn-outline btn-sm" onclick="startAdvancedCleanup('grounding')">🧘 Grounding & Centering</button>
+            <button class="btn btn-outline btn-sm" onclick="startAdvancedCleanup('setIntention')">🎯 Set Intention</button>
+            <button class="btn btn-outline btn-sm" onclick="startAdvancedCleanup('identifyEmotion')">💭 Identifikasi Emosi</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADVANCED RELEASE TECHNIQUES -->
+      <div class="card" style="margin-bottom: 1rem;">
+        <div class="card-header" style="background: #9b59b6;">💪 Advanced Release Techniques</div>
+        <div class="card-body">
+          <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem;">Teknik releasing lanjutan untuk melepas resistensi yang lebih dalam.</p>
+          <div class="btn-group" style="flex-wrap: wrap; gap: 0.5rem;">
+            <button class="btn btn-outline btn-sm" onclick="startAdvancedCleanup('holisticPerson')">🔄 Holistic Release - Orang</button>
+            <button class="btn btn-outline btn-sm" onclick="startAdvancedCleanup('loveRelease')">💗 Love Release</button>
+            <button class="btn btn-outline btn-sm" onclick="startAdvancedCleanup('forgivenessRelease')">🙏 Forgiveness Release</button>
+            <button class="btn btn-outline btn-sm" onclick="startAdvancedCleanup('mirrorTechnique')">🪞 Mirror Technique</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- POST-CLEAN UP -->
+      <div class="card" style="margin-bottom: 1rem;">
+        <div class="card-header" style="background: #27ae60;">✨ Post-Clean Up (Penyelesaian)</div>
+        <div class="card-body">
+          <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem;">Proses penutupan setelah clean up untuk memaksimalkan hasil.</p>
+          <div class="btn-group" style="flex-wrap: wrap; gap: 0.5rem;">
+            <button class="btn btn-outline btn-sm" onclick="startAdvancedCleanup('finalForgiveness')">🕊️ Final Forgiveness</button>
+            <button class="btn btn-outline btn-sm" onclick="startAdvancedCleanup('sendingLove')">💝 Sending Love</button>
+            <button class="btn btn-outline btn-sm" onclick="startAdvancedCleanup('completionLetter')">✉️ Completion Letter</button>
+            <button class="btn btn-outline btn-sm" onclick="startAdvancedCleanup('gratitudeRelease')">🙏 Gratitude Release</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADDITIONAL DIMENSIONS -->
+      <div class="card" style="margin-bottom: 1rem;">
+        <div class="card-header" style="background: #e67e22;">🌀 Additional Dimensions</div>
+        <div class="card-body">
+          <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem;">Clean up dari berbagai sudut pandang dan dimensi waktu.</p>
+          <div class="btn-group" style="flex-wrap: wrap; gap: 0.5rem;">
+            <button class="btn btn-outline btn-sm" onclick="startAdvancedCleanup('cleanUpSituation')">📍 Clean Up Situasi/Kejadian</button>
+            <button class="btn btn-outline btn-sm" onclick="startAdvancedCleanup('cleanUpPast')">⏪ Clean Up Versi Masa Lalu</button>
+            <button class="btn btn-outline btn-sm" onclick="startAdvancedCleanup('cleanUpFuture')">⏩ Clean Up Ekspektasi Masa Depan</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAINTENANCE TOOLS -->
+      <div class="card" style="margin-bottom: 1rem;">
+        <div class="card-header" style="background: #3498db;">🔧 Maintenance Tools</div>
+        <div class="card-body">
+          <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem;">Tools harian untuk menjaga hubungan tetap bersih.</p>
+          <div class="btn-group" style="flex-wrap: wrap; gap: 0.5rem;">
+            <button class="btn btn-outline btn-sm" onclick="startAdvancedCleanup('dailyLove')">💕 Daily Love Sending</button>
+            <button class="btn btn-outline btn-sm" onclick="startAdvancedCleanup('quickCheckIn')">✅ Quick Check-in</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPLETE SESSION -->
+      <div class="card" style="margin-bottom: 1rem;">
+        <div class="card-header" style="background: linear-gradient(135deg, #2874a6, #8e44ad);">⭐ Complete Session</div>
+        <div class="card-body">
+          <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem;">Sesi clean up lengkap dari awal sampai akhir dalam satu proses.</p>
+          <button class="btn btn-primary btn-block" onclick="startAdvancedCleanup('completeSession')">
+            🚀 Start Complete Clean Up Session
+          </button>
+        </div>
+      </div>
+
+      <!-- QUOTE -->
+      <div class="card" style="background: linear-gradient(135deg, #f5f7fa, #e4e8ec);">
+        <div class="card-body" style="text-align: center;">
+          <p id="cleanupQuote" style="font-style: italic; color: var(--text-dark); margin-bottom: 0.5rem;">
+            "Memaafkan adalah memberikan hadiah untuk dirimu sendiri."
+          </p>
+          <small id="cleanupQuoteAuthor" style="color: var(--text-light);">— Coach Lia</small>
+        </div>
+      </div>
+    </section>
+
     <!-- ==================== REFERENCE TAB ==================== -->
     <section class="tab-content" id="referenceTab">
       <div class="card" style="margin-bottom: 1rem;">
@@ -1751,6 +1854,7 @@
   <!-- Common JS -->
   <script src="common.js"></script>
   <script src="releasing-engine.js"></script>
+  <script src="cleanup-scripts.js"></script>
 
   <script>
     // ==========================================================================
@@ -1808,8 +1912,22 @@
           if (tabId === 'history') loadHistory();
           if (tabId === 'people') loadPeople();
           if (tabId === 'dashboard') loadDashboard();
+          if (tabId === 'advanced') showRandomCleanupQuote();
         });
       });
+    }
+
+    // Show random cleanup quote
+    function showRandomCleanupQuote() {
+      if (typeof cleanupQuotes !== 'undefined' && cleanupQuotes.length > 0) {
+        const randomQuote = cleanupQuotes[Math.floor(Math.random() * cleanupQuotes.length)];
+        const quoteEl = document.getElementById('cleanupQuote');
+        const authorEl = document.getElementById('cleanupQuoteAuthor');
+        if (quoteEl && authorEl) {
+          quoteEl.textContent = '"' + randomQuote.text + '"';
+          authorEl.textContent = '— ' + randomQuote.author;
+        }
+      }
     }
 
     // ==========================================================================
