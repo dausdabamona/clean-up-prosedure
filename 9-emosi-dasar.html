@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>9 Emosi Dasar - Sedona Method</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎭</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Page-specific styles */
+    .header.emosi {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7);
+    }
+
+    /* Quote Section */
+    .quote-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+      border-left: 4px solid #8b5cf6;
+    }
+
+    .quote-section blockquote {
+      font-style: italic;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .quote-section cite {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    /* Emotional Scale Info */
+    .scale-info {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .scale-info h3 {
+      margin-bottom: 1rem;
+      color: var(--text-dark);
+    }
+
+    .scale-visual {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .scale-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .scale-item .number {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .scale-item .arrow {
+      margin-left: auto;
+      opacity: 0.7;
+    }
+
+    /* Negative emotions - dark to light (low energy) */
+    .scale-item.apati { background: linear-gradient(90deg, #1f2937, #374151); color: white; }
+    .scale-item.kesedihan { background: linear-gradient(90deg, #374151, #4b5563); color: white; }
+    .scale-item.ketakutan { background: linear-gradient(90deg, #4b5563, #6b7280); color: white; }
+    .scale-item.nafsu { background: linear-gradient(90deg, #f59e0b, #d97706); color: white; }
+    .scale-item.kemarahan { background: linear-gradient(90deg, #ef4444, #dc2626); color: white; }
+    .scale-item.kebanggaan { background: linear-gradient(90deg, #ec4899, #db2777); color: white; }
+    /* Positive emotions - bright colors */
+    .scale-item.keberanian { background: linear-gradient(90deg, #10b981, #059669); color: white; }
+    .scale-item.penerimaan { background: linear-gradient(90deg, #0ea5e9, #0284c7); color: white; }
+    .scale-item.kedamaian { background: linear-gradient(90deg, #8b5cf6, #7c3aed); color: white; }
+
+    /* Section Headers */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 2rem 0 1rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .section-header h3 {
+      margin: 0;
+      color: var(--text-dark);
+    }
+
+    .section-header .badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge.negative {
+      background: #fecaca;
+      color: #dc2626;
+    }
+
+    .badge.positive {
+      background: #bbf7d0;
+      color: #16a34a;
+    }
+
+    /* Emotion Cards Grid */
+    .emotion-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .emotion-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .emotion-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(139, 92, 246, 0.2);
+    }
+
+    .emotion-header {
+      padding: 1.25rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .emotion-header .icon {
+      font-size: 2rem;
+    }
+
+    .emotion-header .info h4 {
+      margin: 0 0 0.25rem 0;
+      font-size: 1.1rem;
+    }
+
+    .emotion-header .info .type {
+      font-size: 0.75rem;
+      opacity: 0.9;
+    }
+
+    /* Negative emotion headers */
+    .emotion-header.apati { background: linear-gradient(135deg, #1f2937, #374151); }
+    .emotion-header.kesedihan { background: linear-gradient(135deg, #374151, #4b5563); }
+    .emotion-header.ketakutan { background: linear-gradient(135deg, #4b5563, #6b7280); }
+    .emotion-header.nafsu { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .emotion-header.kemarahan { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .emotion-header.kebanggaan { background: linear-gradient(135deg, #ec4899, #db2777); }
+    /* Positive emotion headers */
+    .emotion-header.keberanian { background: linear-gradient(135deg, #10b981, #059669); }
+    .emotion-header.penerimaan { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+    .emotion-header.kedamaian { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+    .emotion-body {
+      padding: 1.25rem;
+    }
+
+    .emotion-body p {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+
+    .emotion-body .technique {
+      font-size: 0.8rem;
+      color: var(--text-dark);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .emotion-body ul {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      padding-left: 1.25rem;
+      margin: 0;
+    }
+
+    .emotion-body ul li {
+      margin-bottom: 0.25rem;
+    }
+
+    .start-btn {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 8px;
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: all 0.2s;
+    }
+
+    .start-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .start-btn.release {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+
+    .start-btn.release:hover {
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+    }
+
+    .start-btn.expand {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    .start-btn.expand:hover {
+      background: linear-gradient(135deg, #059669, #047857);
+    }
+
+    /* Quick Release Section */
+    .quick-section {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: white;
+    }
+
+    .quick-section h3 {
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .quick-btn {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: white;
+      color: #6366f1;
+    }
+
+    .quick-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* Progress Section */
+    .progress-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .progress-section h3 {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      color: var(--text-dark);
+    }
+
+    .progress-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .progress-item {
+      text-align: center;
+      padding: 0.75rem;
+      background: var(--bg-light);
+      border-radius: 8px;
+    }
+
+    .progress-item .count {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #8b5cf6;
+    }
+
+    .progress-item .label {
+      font-size: 0.7rem;
+      color: var(--text-light);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .emotion-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .scale-visual {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Mobile Toggle -->
+  <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+  <div class="overlay" onclick="toggleSidebar()"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h1>🧘 Sedona Method</h1>
+      <p>Release & Let Go</p>
+    </div>
+
+    <nav class="sidebar-menu">
+      <div class="menu-label">Modules</div>
+
+      <a href="sedona-app.html" class="menu-item">
+        <span class="icon">🏠</span>
+        <span>Home</span>
+      </a>
+
+      <a href="daily-release.html" class="menu-item">
+        <span class="icon">🧘</span>
+        <span>Daily Emotional Release</span>
+      </a>
+
+      <a href="core-wanting-release.html" class="menu-item">
+        <span class="icon">🎯</span>
+        <span>7 Core Wanting Release</span>
+      </a>
+
+      <a href="14-days-resistance.html" class="menu-item">
+        <span class="icon">🔓</span>
+        <span>14 Days Free From Resistance</span>
+      </a>
+
+      <div class="menu-divider"></div>
+      <div class="menu-label">Advanced</div>
+
+      <a href="9-emosi-dasar.html" class="menu-item active">
+        <span class="icon">🎭</span>
+        <span>9 Emosi Dasar</span>
+      </a>
+
+      <a href="manifesting-workbook.html" class="menu-item">
+        <span class="icon">✨</span>
+        <span>Manifesting Workbook</span>
+      </a>
+
+      <a href="cleanup-procedure.html" class="menu-item">
+        <span class="icon">🤝</span>
+        <span>Clean Up Procedure</span>
+      </a>
+
+      <a href="letting-go.html" class="menu-item">
+        <span class="icon">🕊️</span>
+        <span>Letting Go</span>
+      </a>
+
+      <a href="advanced-techniques.html" class="menu-item">
+        <span class="icon">🚀</span>
+        <span>Teknik Lanjutan</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content-sidebar">
+    <!-- Header -->
+    <header class="header emosi">
+      <div class="header-content">
+        <a href="sedona-app.html" class="back-btn">← Kembali</a>
+        <h1>🎭 9 Emosi Dasar</h1>
+        <p>Release Negatif & Penuhi Positif ke Seluruh Alam Semesta</p>
+      </div>
+    </header>
+
+    <div class="container" style="padding: 1.5rem;">
+      <!-- Quote -->
+      <div class="quote-section">
+        <blockquote id="emosiQuoteText">"Emosi adalah energi yang ingin bergerak. Biarkan bergerak."</blockquote>
+        <cite id="emosiQuoteAuthor">— Coach Lia</cite>
+      </div>
+
+      <!-- Quick Release -->
+      <div class="quick-section">
+        <h3>⚡ Full Emotional Release (Quick)</h3>
+        <p style="margin-bottom: 1rem; opacity: 0.9; font-size: 0.9rem;">Lepaskan semua emosi negatif dan penuhi dengan positif dalam satu sesi singkat</p>
+        <button class="quick-btn" onclick="startEmosi('fullRelease')">
+          🔄 Mulai Full Release
+        </button>
+      </div>
+
+      <!-- Emotional Scale Info -->
+      <div class="scale-info">
+        <h3>📊 Skala Emosi Sedona Method</h3>
+        <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem;">
+          Dari terendah ke tertinggi. Lepaskan emosi negatif, penuhi dengan emosi positif.
+        </p>
+        <div class="scale-visual">
+          <div class="scale-item kedamaian"><span class="number">9</span> Kedamaian (Peace) <span class="arrow">↑ TERTINGGI</span></div>
+          <div class="scale-item penerimaan"><span class="number">8</span> Penerimaan (Acceptance)</div>
+          <div class="scale-item keberanian"><span class="number">7</span> Keberanian (Courage) <span class="arrow">← POSITIF</span></div>
+          <div class="scale-item kebanggaan"><span class="number">6</span> Kebanggaan (Pride)</div>
+          <div class="scale-item kemarahan"><span class="number">5</span> Kemarahan (Anger)</div>
+          <div class="scale-item nafsu"><span class="number">4</span> Nafsu (Lust)</div>
+          <div class="scale-item ketakutan"><span class="number">3</span> Ketakutan (Fear)</div>
+          <div class="scale-item kesedihan"><span class="number">2</span> Kesedihan (Grief)</div>
+          <div class="scale-item apati"><span class="number">1</span> Apati (Apathy) <span class="arrow">↓ TERENDAH</span></div>
+        </div>
+      </div>
+
+      <!-- EMOSI NEGATIF -->
+      <div class="section-header">
+        <h3>⬇️ Emosi Negatif</h3>
+        <span class="badge negative">Lepaskan</span>
+      </div>
+
+      <div class="emotion-grid">
+        <!-- 1. Apati -->
+        <div class="emotion-card" onclick="startEmosi('apati')">
+          <div class="emotion-header apati">
+            <div class="icon">😶</div>
+            <div class="info">
+              <h4>1. Apati</h4>
+              <div class="type">Emosi Terendah</div>
+            </div>
+          </div>
+          <div class="emotion-body">
+            <p>Perasaan tidak berdaya, putus asa, "tidak bisa", menyerah total.</p>
+            <div class="technique">Teknik: Welcoming + Wanting Release</div>
+            <ul>
+              <li>Sambut perasaan tidak berdaya</li>
+              <li>Lepas keinginan untuk tetap apatis</li>
+              <li>Lepas apati dengan napas</li>
+            </ul>
+            <button class="start-btn release">Lepaskan Apati →</button>
+          </div>
+        </div>
+
+        <!-- 2. Kesedihan -->
+        <div class="emotion-card" onclick="startEmosi('kesedihan')">
+          <div class="emotion-header kesedihan">
+            <div class="icon">😢</div>
+            <div class="info">
+              <h4>2. Kesedihan</h4>
+              <div class="type">Grief / Duka</div>
+            </div>
+          </div>
+          <div class="emotion-body">
+            <p>Perasaan kehilangan, duka, keputusasaan, kerinduan akan yang tidak ada.</p>
+            <div class="technique">Teknik: Welcoming + Acceptance</div>
+            <ul>
+              <li>Izinkan kesedihan hadir</li>
+              <li>Lepas keinginan akan yang tidak ada</li>
+              <li>Biarkan mengalir keluar</li>
+            </ul>
+            <button class="start-btn release">Lepaskan Kesedihan →</button>
+          </div>
+        </div>
+
+        <!-- 3. Ketakutan -->
+        <div class="emotion-card" onclick="startEmosi('ketakutan')">
+          <div class="emotion-header ketakutan">
+            <div class="icon">😰</div>
+            <div class="info">
+              <h4>3. Ketakutan</h4>
+              <div class="type">Fear / Kecemasan</div>
+            </div>
+          </div>
+          <div class="emotion-body">
+            <p>Proyeksi ke masa depan, kecemasan, khawatir, panik tentang yang mungkin terjadi.</p>
+            <div class="technique">Teknik: Reality Check + Security Release</div>
+            <ul>
+              <li>Cek: apakah terjadi SEKARANG?</li>
+              <li>Lepas wanting security</li>
+              <li>Temukan keberanian di baliknya</li>
+            </ul>
+            <button class="start-btn release">Lepaskan Ketakutan →</button>
+          </div>
+        </div>
+
+        <!-- 4. Nafsu -->
+        <div class="emotion-card" onclick="startEmosi('nafsu')">
+          <div class="emotion-header nafsu">
+            <div class="icon">🔥</div>
+            <div class="info">
+              <h4>4. Nafsu</h4>
+              <div class="type">Lust / Craving</div>
+            </div>
+          </div>
+          <div class="emotion-body">
+            <p>Keinginan kuat yang memperbudak, craving, obsesi, "harus punya".</p>
+            <div class="technique">Teknik: Wanting Release</div>
+            <ul>
+              <li>Sadari ini kelangkaan menyamar</li>
+              <li>Lepas keinginan yang memperbudak</li>
+              <li>Temukan kecukupan di dalam</li>
+            </ul>
+            <button class="start-btn release">Lepaskan Nafsu →</button>
+          </div>
+        </div>
+
+        <!-- 5. Kemarahan -->
+        <div class="emotion-card" onclick="startEmosi('kemarahan')">
+          <div class="emotion-header kemarahan">
+            <div class="icon">😠</div>
+            <div class="info">
+              <h4>5. Kemarahan</h4>
+              <div class="type">Anger / Frustrasi</div>
+            </div>
+          </div>
+          <div class="emotion-body">
+            <p>Frustrasi, dendam, ketidakpuasan, energi yang ingin melawan.</p>
+            <div class="technique">Teknik: Control Release</div>
+            <ul>
+              <li>Kenali sebagai cinta yang terluka</li>
+              <li>Lepas wanting control</li>
+              <li>Biarkan api padam</li>
+            </ul>
+            <button class="start-btn release">Lepaskan Kemarahan →</button>
+          </div>
+        </div>
+
+        <!-- 6. Kebanggaan -->
+        <div class="emotion-card" onclick="startEmosi('kebanggaan')">
+          <div class="emotion-header kebanggaan">
+            <div class="icon">👑</div>
+            <div class="info">
+              <h4>6. Kebanggaan</h4>
+              <div class="type">Pride / Ego</div>
+            </div>
+          </div>
+          <div class="emotion-body">
+            <p>Ego, arogansi, merasa lebih dari orang lain, memisahkan diri.</p>
+            <div class="technique">Teknik: Separation Release</div>
+            <ul>
+              <li>Sadari ini memisahkan</li>
+              <li>Lepas wanting separation</li>
+              <li>Temukan kesetaraan sejati</li>
+            </ul>
+            <button class="start-btn release">Lepaskan Kebanggaan →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Negatif -->
+      <div class="progress-section">
+        <h3>📊 Progress Melepas Emosi Negatif</h3>
+        <div class="progress-grid" id="negativeProgressGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- EMOSI POSITIF -->
+      <div class="section-header">
+        <h3>⬆️ Emosi Positif</h3>
+        <span class="badge positive">Penuhi ke Alam Semesta</span>
+      </div>
+
+      <div class="emotion-grid">
+        <!-- 7. Keberanian -->
+        <div class="emotion-card" onclick="startEmosi('keberanian')">
+          <div class="emotion-header keberanian">
+            <div class="icon">💪</div>
+            <div class="info">
+              <h4>7. Keberanian</h4>
+              <div class="type">Courage / Confidence</div>
+            </div>
+          </div>
+          <div class="emotion-body">
+            <p>Kepercayaan diri, kesediaan untuk bertindak, siap menghadapi apapun.</p>
+            <div class="technique">Teknik: Expansion to Universe</div>
+            <ul>
+              <li>Rasakan keberanian di hati</li>
+              <li>Penuhi tubuh, jiwa, rumah</li>
+              <li>Perluas hingga seluruh alam semesta</li>
+            </ul>
+            <button class="start-btn expand">Penuhi Keberanian →</button>
+          </div>
+        </div>
+
+        <!-- 8. Penerimaan -->
+        <div class="emotion-card" onclick="startEmosi('penerimaan')">
+          <div class="emotion-header penerimaan">
+            <div class="icon">🙏</div>
+            <div class="info">
+              <h4>8. Penerimaan</h4>
+              <div class="type">Acceptance / Peace with What Is</div>
+            </div>
+          </div>
+          <div class="emotion-body">
+            <p>Damai dengan apa yang ada, tanpa perlawanan, aktif menerima.</p>
+            <div class="technique">Teknik: Expansion to Universe</div>
+            <ul>
+              <li>Rasakan penerimaan di hati</li>
+              <li>Penuhi tubuh, jiwa, rumah</li>
+              <li>Perluas hingga seluruh alam semesta</li>
+            </ul>
+            <button class="start-btn expand">Penuhi Penerimaan →</button>
+          </div>
+        </div>
+
+        <!-- 9. Kedamaian -->
+        <div class="emotion-card" onclick="startEmosi('kedamaian')">
+          <div class="emotion-header kedamaian">
+            <div class="icon">☮️</div>
+            <div class="info">
+              <h4>9. Kedamaian</h4>
+              <div class="type">Peace / Serenity</div>
+            </div>
+          </div>
+          <div class="emotion-body">
+            <p>Ketenangan sempurna, keseimbangan, harmoni, sifat sejati.</p>
+            <div class="technique">Teknik: Expansion to Universe</div>
+            <ul>
+              <li>Rasakan kedamaian di inti diri</li>
+              <li>Penuhi tubuh, jiwa, rumah</li>
+              <li>Perluas hingga seluruh alam semesta</li>
+            </ul>
+            <button class="start-btn expand">Penuhi Kedamaian →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Positif -->
+      <div class="progress-section">
+        <h3>📊 Progress Memenuhi Emosi Positif</h3>
+        <div class="progress-grid" id="positiveProgressGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Expansion Info -->
+      <div class="scale-info" style="margin-top: 1.5rem; border-left: 4px solid #10b981;">
+        <h3>🌌 Proses Ekspansi Emosi Positif</h3>
+        <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem;">
+          Untuk emosi positif, kita tidak hanya merasakan - tapi MEMENUHI seluruh ruang:
+        </p>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+          <span style="background: #dcfce7; color: #16a34a; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">❤️ Hati</span>
+          <span style="background: #dcfce7; color: #16a34a; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">🧍 Tubuh</span>
+          <span style="background: #dcfce7; color: #16a34a; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">✨ Jiwa</span>
+          <span style="background: #dcfce7; color: #16a34a; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">🏠 Rumah</span>
+          <span style="background: #dcfce7; color: #16a34a; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">🏢 Kantor</span>
+          <span style="background: #dcfce7; color: #16a34a; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">🏘️ Kompleks</span>
+          <span style="background: #dcfce7; color: #16a34a; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">🏙️ Kota</span>
+          <span style="background: #dcfce7; color: #16a34a; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">🗺️ Provinsi</span>
+          <span style="background: #dcfce7; color: #16a34a; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">🏝️ Pulau</span>
+          <span style="background: #dcfce7; color: #16a34a; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">🇮🇩 Negara</span>
+          <span style="background: #dcfce7; color: #16a34a; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">🌍 Darat & Laut</span>
+          <span style="background: #dcfce7; color: #16a34a; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">🌌 Alam Semesta</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Common JS -->
+  <script src="common.js"></script>
+  <script src="releasing-engine.js"></script>
+  <script src="9-emosi-dasar.js"></script>
+</body>
+</html>
