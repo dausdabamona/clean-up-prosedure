@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NLP Techniques - State Modeling & Submodalities</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ==================== NLP THEME ==================== */
+    :root {
+      --nlp-primary: #2874a6;
+      --nlp-secondary: #3498db;
+      --nlp-accent: #1abc9c;
+      --nlp-gradient: linear-gradient(135deg, #2874a6, #3498db);
+    }
+    .header { background: var(--nlp-gradient); }
+    .card-header { background: var(--nlp-gradient); }
+    .btn-primary { background: var(--nlp-gradient); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(40, 116, 166, 0.3); }
+
+    /* Back link */
+    .back-link { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--white); text-decoration: none; font-size: 1.5rem; opacity: 0.8; }
+    .back-link:hover { opacity: 1; }
+
+    /* Tabs */
+    .nav-tabs { display: flex; background: var(--white); padding: 0.5rem; gap: 0.25rem; overflow-x: auto; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .nav-tab { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0.6rem 0.4rem; border: none; background: none; cursor: pointer; border-radius: 8px; transition: all 0.3s; min-width: 70px; }
+    .nav-tab .icon { font-size: 1.3rem; margin-bottom: 0.2rem; }
+    .nav-tab span:not(.icon) { font-size: 0.65rem; color: var(--text-light); }
+    .nav-tab.active { background: var(--nlp-primary); }
+    .nav-tab.active span { color: var(--white); }
+
+    /* Main Content */
+    .main-content { max-width: 600px; margin: 0 auto; padding: 1rem; padding-bottom: 2rem; }
+
+    /* Tab Content */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* Technique Card */
+    .technique-card { background: var(--white); border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; box-shadow: var(--shadow); cursor: pointer; transition: all 0.3s; border-left: 4px solid var(--nlp-primary); }
+    .technique-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+    .technique-card:active { transform: scale(0.98); }
+    .technique-header { display: flex; align-items: center; gap: 0.75rem; }
+    .technique-icon { font-size: 2rem; }
+    .technique-info { flex: 1; }
+    .technique-title { font-weight: 700; color: var(--nlp-primary); font-size: 1rem; margin-bottom: 0.25rem; }
+    .technique-desc { font-size: 0.8rem; color: var(--text-light); }
+    .technique-arrow { color: var(--text-light); font-size: 1.2rem; }
+
+    /* Category Header */
+    .category-header { display: flex; align-items: center; gap: 0.5rem; margin: 1.5rem 0 0.75rem 0; padding-bottom: 0.5rem; border-bottom: 2px solid var(--nlp-primary); }
+    .category-header .emoji { font-size: 1.5rem; }
+    .category-header h3 { font-size: 1rem; color: var(--nlp-primary); font-weight: 700; margin: 0; }
+
+    /* Submodalities Grid */
+    .submod-category { background: var(--white); border-radius: 12px; margin-bottom: 1rem; overflow: hidden; box-shadow: var(--shadow); }
+    .submod-header { background: var(--nlp-gradient); color: var(--white); padding: 0.75rem 1rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+    .submod-list { padding: 0.5rem; }
+    .submod-item { display: flex; align-items: center; padding: 0.6rem; border-bottom: 1px solid var(--border); }
+    .submod-item:last-child { border-bottom: none; }
+    .submod-label { flex: 1; font-size: 0.85rem; color: var(--text-dark); }
+    .submod-scale { display: flex; gap: 0.25rem; flex: 2; }
+    .scale-btn { flex: 1; padding: 0.4rem 0.2rem; font-size: 0.65rem; border: 1px solid var(--border); background: var(--bg-light); border-radius: 4px; cursor: pointer; transition: all 0.2s; text-align: center; }
+    .scale-btn:hover { border-color: var(--nlp-primary); }
+    .scale-btn.selected { background: var(--nlp-primary); color: var(--white); border-color: var(--nlp-primary); }
+
+    /* Quick Start Card */
+    .quick-start { background: linear-gradient(135deg, #ebf5fb, #d4e6f1); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; border: 2px solid var(--nlp-secondary); }
+    .quick-start h3 { color: var(--nlp-primary); font-size: 1rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+
+    /* Info Box */
+    .info-box { background: linear-gradient(135deg, #fef9e7, #fcf3cf); border: 1px solid #f7dc6f; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
+    .info-box h4 { color: #9a7d0a; font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .info-box p { font-size: 0.8rem; color: var(--text-dark); line-height: 1.6; }
+    .info-box ul { margin-left: 1rem; font-size: 0.8rem; line-height: 1.8; }
+
+    /* Quote Card */
+    .quote-card { background: linear-gradient(135deg, #f5f7fa, #e4e8ec); border-radius: 10px; padding: 1rem; text-align: center; margin-bottom: 1rem; }
+    .quote-text { font-style: italic; color: var(--text-dark); margin-bottom: 0.5rem; font-size: 0.9rem; }
+    .quote-author { font-size: 0.75rem; color: var(--text-light); }
+
+    /* Progress Section */
+    .progress-section { margin-top: 1.5rem; }
+    .progress-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
+    .progress-item { background: var(--white); border-radius: 8px; padding: 0.5rem; text-align: center; box-shadow: var(--shadow); }
+    .progress-item.done { background: #d5f5e3; }
+    .progress-emoji { font-size: 1.5rem; }
+    .progress-count { font-size: 0.7rem; color: var(--text-light); }
+
+    /* History Item */
+    .history-item { background: var(--white); border-radius: 10px; padding: 0.75rem; margin-bottom: 0.5rem; box-shadow: var(--shadow); border-left: 4px solid var(--nlp-accent); }
+    .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+    .history-title { font-weight: 600; color: var(--nlp-primary); font-size: 0.9rem; }
+    .history-date { font-size: 0.7rem; color: var(--text-light); }
+    .history-notes { font-size: 0.8rem; color: var(--text-dark); }
+
+    /* Empty State */
+    .empty-state { text-align: center; padding: 2rem; color: var(--text-light); }
+    .empty-state .emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+
+    /* Responsive */
+    @media(max-width:480px) {
+      .header h1 { font-size: 1.2rem; }
+      .nav-tab { padding: 0.5rem 0.25rem; min-width: 60px; }
+      .nav-tab .icon { font-size: 1.1rem; }
+      .technique-title { font-size: 0.95rem; }
+      .scale-btn { padding: 0.35rem 0.15rem; font-size: 0.6rem; }
+      .progress-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="sedona-app.html" class="back-link">←</a>
+    <h1>🧠 NLP Techniques</h1>
+    <p>Neuro-Linguistic Programming</p>
+  </header>
+
+  <nav class="nav-tabs">
+    <button class="nav-tab active" data-tab="beranda"><span class="icon">🏠</span><span>Beranda</span></button>
+    <button class="nav-tab" data-tab="modeling"><span class="icon">👤</span><span>Modeling</span></button>
+    <button class="nav-tab" data-tab="submod"><span class="icon">🔍</span><span>Submod</span></button>
+    <button class="nav-tab" data-tab="techniques"><span class="icon">⚡</span><span>Teknik</span></button>
+    <button class="nav-tab" data-tab="history"><span class="icon">📜</span><span>History</span></button>
+  </nav>
+
+  <main class="main-content">
+
+    <!-- ==================== TAB: BERANDA ==================== -->
+    <section class="tab-content active" id="berandaTab">
+      <!-- Quick Start -->
+      <div class="quick-start">
+        <h3><span>🚀</span> Quick Start</h3>
+        <button class="btn btn-primary btn-block" onclick="startNLP('stateModeling')" style="margin-bottom:0.5rem">
+          👤 State Modeling - Copy State Orang Lain
+        </button>
+        <button class="btn btn-secondary btn-block" onclick="startNLP('submodalitiesMapping')">
+          🔍 Submodalities Mapping
+        </button>
+      </div>
+
+      <!-- Info Box -->
+      <div class="info-box">
+        <h4>🧠 Apa itu NLP?</h4>
+        <p>Neuro-Linguistic Programming adalah metodologi untuk memahami dan mengubah pola pikiran dan perilaku manusia melalui:</p>
+        <ul>
+          <li><strong>Neuro:</strong> Cara otak memproses informasi</li>
+          <li><strong>Linguistic:</strong> Bahasa internal dan eksternal</li>
+          <li><strong>Programming:</strong> Pola perilaku yang bisa diubah</li>
+        </ul>
+      </div>
+
+      <!-- Quote -->
+      <div class="quote-card">
+        <p class="quote-text" id="nlpQuote">"The map is not the territory."</p>
+        <p class="quote-author" id="nlpQuoteAuthor">— Alfred Korzybski</p>
+      </div>
+
+      <!-- Progress -->
+      <div class="progress-section">
+        <h4 style="font-size:0.9rem;margin-bottom:0.75rem;color:var(--nlp-primary)">📊 Progress</h4>
+        <div class="progress-grid" id="progressGrid">
+          <div class="progress-item">
+            <div class="progress-emoji">👤</div>
+            <div class="progress-count"><span id="modelingCount">0</span> sesi</div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-emoji">🔍</div>
+            <div class="progress-count"><span id="submodCount">0</span> mapping</div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-emoji">⚓</div>
+            <div class="progress-count"><span id="anchorCount">0</span> anchor</div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-emoji">⭐</div>
+            <div class="progress-count"><span id="totalCount">0</span> total</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB: MODELING ==================== -->
+    <section class="tab-content" id="modelingTab">
+      <div class="info-box" style="margin-bottom:1rem">
+        <h4>👤 State Modeling</h4>
+        <p>Teknik untuk "meng-copy" state dan kemampuan orang lain dengan cara mempelajari dan mereplikasi representasi internal mereka.</p>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('stateModeling')">
+        <div class="technique-header">
+          <div class="technique-icon">👤</div>
+          <div class="technique-info">
+            <div class="technique-title">State Modeling - Copy State</div>
+            <div class="technique-desc">Copy state excellence dari orang lain lengkap dengan submodalities</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('deepTraceId')">
+        <div class="technique-header">
+          <div class="technique-icon">🌀</div>
+          <div class="technique-info">
+            <div class="technique-title">Deep Trance Identification</div>
+            <div class="technique-desc">Teknik advance untuk menyatu dengan model dan menyerap kemampuannya</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('newBehaviorGenerator')">
+        <div class="technique-header">
+          <div class="technique-icon">🎬</div>
+          <div class="technique-info">
+            <div class="technique-title">New Behavior Generator</div>
+            <div class="technique-desc">Memprogram perilaku baru dengan visualisasi role model</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('perceptualPositions')">
+        <div class="technique-header">
+          <div class="technique-icon">👁️</div>
+          <div class="technique-info">
+            <div class="technique-title">Perceptual Positions</div>
+            <div class="technique-desc">Melihat situasi dari 3 perspektif berbeda</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB: SUBMODALITIES ==================== -->
+    <section class="tab-content" id="submodTab">
+      <div class="info-box" style="margin-bottom:1rem">
+        <h4>🔍 Submodalities</h4>
+        <p>Submodalities adalah "detail halus" dari representasi internal kita - brightness, size, location dari gambar mental; volume, pitch dari suara internal; intensitas dari perasaan.</p>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('submodalitiesMapping')">
+        <div class="technique-header">
+          <div class="technique-icon">🗺️</div>
+          <div class="technique-info">
+            <div class="technique-title">Submodalities Mapping</div>
+            <div class="technique-desc">Pemetaan lengkap Visual, Auditory, Kinesthetic</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('swishPattern')">
+        <div class="technique-header">
+          <div class="technique-icon">🔄</div>
+          <div class="technique-info">
+            <div class="technique-title">Swish Pattern</div>
+            <div class="technique-desc">Mengganti state tidak diinginkan dengan yang diinginkan</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <!-- Quick Reference -->
+      <div class="category-header">
+        <span class="emoji">📖</span>
+        <h3>Quick Reference: Submodalities</h3>
+      </div>
+
+      <div class="submod-category">
+        <div class="submod-header"><span>👁️</span> Visual (Penglihatan)</div>
+        <div class="submod-list">
+          <div class="submod-item">
+            <span class="submod-label">Brightness</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Gelap ↔ Terang</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Size</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Kecil ↔ Besar</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Distance</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Jauh ↔ Dekat</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Color</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">B/W ↔ Berwarna</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Focus</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Blur ↔ Tajam</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Associated/Dissociated</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Lihat diri ↔ Dari mata sendiri</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="submod-category">
+        <div class="submod-header"><span>👂</span> Auditory (Pendengaran)</div>
+        <div class="submod-list">
+          <div class="submod-item">
+            <span class="submod-label">Volume</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Pelan ↔ Keras</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Pitch</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Rendah ↔ Tinggi</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Tempo</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Lambat ↔ Cepat</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Location</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Internal ↔ External</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="submod-category">
+        <div class="submod-header"><span>✋</span> Kinesthetic (Perasaan)</div>
+        <div class="submod-list">
+          <div class="submod-item">
+            <span class="submod-label">Intensity</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Lemah ↔ Kuat</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Temperature</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Dingin ↔ Hangat</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Pressure</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Ringan ↔ Berat</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Location</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Terpusat ↔ Menyebar</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB: TECHNIQUES ==================== -->
+    <section class="tab-content" id="techniquesTab">
+      <div class="category-header">
+        <span class="emoji">⚓</span>
+        <h3>Anchoring & State</h3>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('anchoring')">
+        <div class="technique-header">
+          <div class="technique-icon">⚓</div>
+          <div class="technique-info">
+            <div class="technique-title">Anchoring</div>
+            <div class="technique-desc">Membuat trigger untuk mengakses state tertentu kapan saja</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('circleOfExcellence')">
+        <div class="technique-header">
+          <div class="technique-icon">⭕</div>
+          <div class="technique-info">
+            <div class="technique-title">Circle of Excellence</div>
+            <div class="technique-desc">Membuat lingkaran imajiner berisi state-state powerful</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="category-header">
+        <span class="emoji">🔄</span>
+        <h3>Pattern Change</h3>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('swishPattern')">
+        <div class="technique-header">
+          <div class="technique-icon">🔄</div>
+          <div class="technique-info">
+            <div class="technique-title">Swish Pattern</div>
+            <div class="technique-desc">Mengganti representasi internal secara cepat</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('newBehaviorGenerator')">
+        <div class="technique-header">
+          <div class="technique-icon">🎬</div>
+          <div class="technique-info">
+            <div class="technique-title">New Behavior Generator</div>
+            <div class="technique-desc">Memprogram perilaku baru ke sistem saraf</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="category-header">
+        <span class="emoji">👁️</span>
+        <h3>Perspective</h3>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('perceptualPositions')">
+        <div class="technique-header">
+          <div class="technique-icon">👁️</div>
+          <div class="technique-info">
+            <div class="technique-title">Perceptual Positions</div>
+            <div class="technique-desc">Melihat situasi dari 3 perspektif berbeda</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB: HISTORY ==================== -->
+    <section class="tab-content" id="historyTab">
+      <h3 style="font-size:1rem;color:var(--nlp-primary);margin-bottom:1rem">📜 History Sesi NLP</h3>
+      <div id="historyContainer">
+        <div class="empty-state">
+          <div class="emoji">📭</div>
+          <p>Belum ada history sesi.</p>
+          <p style="font-size:0.8rem">Mulai sesi pertamamu!</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Releasing Modal -->
+  <div class="releasing-modal" id="releasingModal"></div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="common.js"></script>
+  <script src="releasing-engine.js"></script>
+  <script src="nlp-scripts.js"></script>
+
+  <script>
+    // ==================== TAB NAVIGATION ====================
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabId = tab.dataset.tab;
+
+        // Update active tab
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Show content
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById(tabId + 'Tab').classList.add('active');
+
+        // Load data if needed
+        if (tabId === 'history') loadHistory();
+      });
+    });
+
+    // ==================== RANDOM QUOTE ====================
+    function updateQuote() {
+      if (typeof getRandomNLPQuote === 'function') {
+        const quote = getRandomNLPQuote();
+        document.getElementById('nlpQuote').textContent = '"' + quote.text + '"';
+        document.getElementById('nlpQuoteAuthor').textContent = '— ' + quote.author;
+      }
+    }
+
+    // ==================== PROGRESS ====================
+    function loadProgress() {
+      const history = JSON.parse(localStorage.getItem('nlp_history') || '[]');
+
+      let modeling = 0, submod = 0, anchor = 0;
+      history.forEach(h => {
+        if (['stateModeling', 'deepTraceId', 'newBehaviorGenerator', 'perceptualPositions'].includes(h.scriptId)) modeling++;
+        if (['submodalitiesMapping', 'swishPattern'].includes(h.scriptId)) submod++;
+        if (['anchoring', 'circleOfExcellence'].includes(h.scriptId)) anchor++;
+      });
+
+      document.getElementById('modelingCount').textContent = modeling;
+      document.getElementById('submodCount').textContent = submod;
+      document.getElementById('anchorCount').textContent = anchor;
+      document.getElementById('totalCount').textContent = history.length;
+    }
+
+    // ==================== HISTORY ====================
+    function loadHistory() {
+      const history = JSON.parse(localStorage.getItem('nlp_history') || '[]');
+      const container = document.getElementById('historyContainer');
+
+      if (history.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="emoji">📭</div>
+            <p>Belum ada history sesi.</p>
+            <p style="font-size:0.8rem">Mulai sesi pertamamu!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = history.slice().reverse().map(h => `
+        <div class="history-item">
+          <div class="history-header">
+            <div class="history-title">${h.title || h.scriptId}</div>
+            <div class="history-date">${formatDate(h.timestamp)}</div>
+          </div>
+          ${h.notes ? `<div class="history-notes">${h.notes}</div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function formatDate(timestamp) {
+      if (!timestamp) return '-';
+      const d = new Date(timestamp);
+      return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    // ==================== SAVE TO HISTORY ====================
+    // Override ReleasingEngine complete to save history
+    const originalStartNLP = window.startNLP;
+    window.startNLP = function(scriptId) {
+      if (typeof ReleasingEngine !== 'undefined') {
+        if (!ReleasingEngine.getScript(scriptId) && nlpScripts[scriptId]) {
+          ReleasingEngine.getScripts()[scriptId] = nlpScripts[scriptId];
+        }
+
+        ReleasingEngine.init({
+          onComplete: function(result) {
+            // Save to history
+            const history = JSON.parse(localStorage.getItem('nlp_history') || '[]');
+            history.push({
+              scriptId: scriptId,
+              title: nlpScripts[scriptId]?.title || scriptId,
+              timestamp: new Date().toISOString(),
+              notes: result?.insight || ''
+            });
+            localStorage.setItem('nlp_history', JSON.stringify(history));
+
+            loadProgress();
+            showToast('Sesi ' + (nlpScripts[scriptId]?.title || scriptId) + ' selesai!', 'success');
+          }
+        });
+
+        ReleasingEngine.startReleasing(scriptId);
+      } else {
+        showToast('ReleasingEngine tidak tersedia', 'error');
+      }
+    };
+
+    // ==================== INIT ====================
+    document.addEventListener('DOMContentLoaded', () => {
+      updateQuote();
+      loadProgress();
+    });
+  </script>
+</body>
+</html>
