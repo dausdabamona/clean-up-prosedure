@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>7 Core Wanting Release - Sedona Method</title>
+  <title>4 Core Wanting Release - Sedona Method</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
   <link rel="stylesheet" href="styles.css">
   <style>
@@ -194,19 +194,40 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .fade-in { animation: fadeIn 0.4s ease-out; }
 
+    /* Advanced Techniques Section */
+    .advanced-techniques { margin-top: 1.5rem; }
+    .technique-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; font-weight: 700; color: var(--primary); }
+    .technique-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    .technique-card { background: var(--white); border: 2px solid var(--border); border-radius: 10px; padding: 1rem; cursor: pointer; transition: all 0.3s; text-align: center; }
+    .technique-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: var(--shadow); }
+    .technique-card.active { border-color: var(--success); background: #d5f5e3; }
+    .technique-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .technique-name { font-weight: 700; color: var(--text-dark); font-size: 0.85rem; margin-bottom: 0.25rem; }
+    .technique-desc { font-size: 0.7rem; color: var(--text-light); }
+
+    /* Technique Modal/Steps */
+    .technique-steps { background: linear-gradient(135deg, #f5eef8, #fff); border-radius: 10px; padding: 1.25rem; margin-top: 1rem; }
+    .technique-steps-header { font-weight: 700; color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .technique-step { background: var(--white); border-radius: 8px; padding: 0.85rem; margin-bottom: 0.75rem; border-left: 4px solid var(--primary); font-size: 0.9rem; line-height: 1.6; }
+    .technique-step.highlight { background: linear-gradient(135deg, #fef9e7, #fff); border-left-color: #f39c12; }
+    .affirmation-list { list-style: none; }
+    .affirmation-list li { padding: 0.6rem; background: var(--bg-light); border-radius: 6px; margin-bottom: 0.5rem; font-size: 0.85rem; font-style: italic; color: var(--text-dark); }
+    .affirmation-list li::before { content: '✨ '; }
+
     /* Responsive */
     @media (max-width: 480px) {
       .wanting-grid { grid-template-columns: 1fr; }
       .completion-stats { grid-template-columns: 1fr; }
       .phase-dot { width: 28px; height: 28px; font-size: 0.65rem; }
+      .technique-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <header class="header">
     <a href="sedona-app.html" class="back-link">←</a>
-    <h1>🎯 7 Core Wanting Release</h1>
-    <p>Melepaskan Keinginan Dasar Sampai ke Akar</p>
+    <h1>🎯 4 Core Wanting Release</h1>
+    <p>Letting Go - Melepas Keinginan Dasar dengan Teknik Advance</p>
   </header>
 
   <div class="container">
@@ -675,6 +696,35 @@
               </div>
             </div>
 
+            <!-- Advanced Techniques Section -->
+            <div class="advanced-techniques hidden" id="advancedTechniquesSection">
+              <div class="technique-header">
+                <span>🚀</span>
+                <span>Teknik Advance untuk Pelepasan Lebih Dalam</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem;">
+                Pilih teknik tambahan jika intensitas masih tinggi atau ingin melepas lebih dalam:
+              </p>
+              <div class="technique-grid" id="techniqueGrid">
+                <!-- Dynamic: Rendered based on selected wanting -->
+              </div>
+
+              <!-- Technique Steps Display -->
+              <div class="technique-steps hidden" id="techniqueStepsDisplay">
+                <div class="technique-steps-header">
+                  <span>📝</span>
+                  <span id="techniqueStepsTitle">Langkah-langkah</span>
+                </div>
+                <div id="techniqueStepsContent">
+                  <!-- Dynamic steps here -->
+                </div>
+                <div class="btn-group" style="margin-top: 1rem;">
+                  <button class="btn btn-outline btn-sm" onclick="closeTechniqueSteps()">← Kembali ke Pilihan</button>
+                  <button class="btn btn-success btn-sm" onclick="completeTechniqueStep()">✅ Selesai Teknik Ini</button>
+                </div>
+              </div>
+            </div>
+
             <!-- Intensity After -->
             <div class="intensity-container hidden" id="intensityAfterSection" style="margin-top: 1.5rem;">
               <div class="intensity-label">Seberapa kuat keinginan ini SEKARANG setelah pelepasan?</div>
@@ -741,12 +791,14 @@
   <script src="common.js"></script>
   <script>
     // ==================== DATA ====================
+    // ==================== 4 CORE WANTINGS dengan Teknik Advance ====================
     const CORE_WANTINGS = {
       control: {
         name: 'CONTROL',
-        emoji: '🎮',
+        emoji: '💪',
         desc: 'Ingin mengontrol situasi, orang, atau hasil',
-        shadow: 'Frustrasi, micromanaging, anxiety',
+        shadow: 'Frustrasi, micromanaging, anxiety, kemarahan',
+        color: '#2874a6',
         rootQuestions: [
           'Apa yang akan terjadi jika kamu tidak bisa mengontrol situasi ini?',
           'Kapan pertama kali kamu merasa perlu mengontrol segalanya?',
@@ -754,13 +806,61 @@
           'Apa yang kamu hindari dengan mencoba mengontrol?',
           'Bagaimana jika hasilnya justru lebih baik tanpa kontrolmu?'
         ],
-        welcomeText: 'Keinginan untuk mengontrol adalah upaya untuk merasa aman. Biarkan keinginan ini hadir... Rasakan bagaimana tubuhmu bereaksi terhadap ketidakpastian... Terima bahwa mencoba mengontrol adalah cara kamu melindungi diri...'
+        welcomeText: 'Keinginan untuk mengontrol adalah upaya untuk merasa aman. Biarkan keinginan ini hadir... Rasakan bagaimana tubuhmu bereaksi terhadap ketidakpastian... Terima bahwa mencoba mengontrol adalah cara kamu melindungi diri...',
+        advancedTechniques: {
+          holisticRelease: {
+            name: 'Holistic Release - Control',
+            steps: [
+              'TOLAK sebanyak-banyaknya keinginan untuk mengontrol...',
+              'TERIMA sebanyak-banyaknya keinginan untuk mengontrol...',
+              'TOLAK lagi... dorong jauh-jauh...',
+              'TERIMA lagi... peluk, sambut...',
+              'Bisa menemukan yang menolak/menerima? (Tidak ada)',
+              'Lepaskan keinginan untuk BEREAKSI terhadap kontrol'
+            ]
+          },
+          divingIn: {
+            name: 'Diving In - Masuk ke Inti',
+            steps: [
+              'Di mana kamu merasakan keinginan kontrol di TUBUH?',
+              'Masuk lebih dalam ke sensasi itu...',
+              'Apa yang ada di BAWAH keinginan kontrol? (Takut? Tidak aman?)',
+              'Masuk lebih dalam lagi... apa inti paling dasarnya?',
+              'Bisakah melepaskan inti itu sekarang?'
+            ]
+          },
+          courageousness: {
+            name: 'Courageousness - Keberanian',
+            steps: [
+              'Bisakah kamu mengizinkan kemungkinan untuk TIDAK mengontrol?',
+              'Bisakah kamu membiarkan hasil apapun yang terjadi?',
+              'Apa yang tersisa jika kamu melepas kebutuhan mengontrol?',
+              'Darimana KEBERANIAN untuk melepas kontrol?'
+            ]
+          },
+          lettingGo: {
+            name: 'Letting Go Affirmations',
+            affirmations: [
+              'Aku melepaskan kebutuhan untuk mengontrol hasil.',
+              'Aku menyerahkan kendali kepada kecerdasan yang lebih tinggi.',
+              'Aku percaya bahwa segalanya berjalan sesuai waktu yang tepat.',
+              'Aku bebas dari keterikatan pada hasil tertentu.',
+              'Aku membiarkan hidup mengalir dengan alami.'
+            ]
+          }
+        },
+        completionQuestions: [
+          'Bisakah kamu mengizinkan orang/situasi menjadi seperti apa adanya?',
+          'Maukah kamu membiarkan semuanya seperti apa adanya?',
+          'Apakah saat ini kamu memberi hak kepada orang lain atas diri mereka sendiri?'
+        ]
       },
       approval: {
         name: 'APPROVAL',
-        emoji: '❤️',
-        desc: 'Ingin dicintai, diterima, divalidasi',
-        shadow: 'People-pleasing, takut penolakan',
+        emoji: '💕',
+        desc: 'Ingin dicintai, diterima, divalidasi, disetujui',
+        shadow: 'People-pleasing, takut penolakan, mencari validasi',
+        color: '#9b59b6',
         rootQuestions: [
           'Siapa yang persetujuannya paling kamu cari?',
           'Apa yang akan terjadi jika orang itu tidak menyetujuimu?',
@@ -768,13 +868,61 @@
           'Apakah kamu bisa menyetujui dirimu sendiri?',
           'Apa yang membuatmu berharga tanpa persetujuan siapapun?'
         ],
-        welcomeText: 'Keinginan untuk disetujui adalah kerinduan untuk dicintai. Biarkan keinginan ini hadir... Rasakan bagaimana rasanya ingin diterima... Terima bahwa mencari persetujuan adalah cara kamu mencari koneksi...'
+        welcomeText: 'Keinginan untuk disetujui adalah kerinduan untuk dicintai. Biarkan keinginan ini hadir... Rasakan bagaimana rasanya ingin diterima... Terima bahwa mencari persetujuan adalah cara kamu mencari koneksi...',
+        advancedTechniques: {
+          holisticRelease: {
+            name: 'Holistic Release - Approval',
+            steps: [
+              'TOLAK sebanyak-banyaknya keinginan untuk disetujui...',
+              'TERIMA sebanyak-banyaknya keinginan untuk disetujui...',
+              'TOLAK lagi... dorong jauh-jauh...',
+              'TERIMA lagi... peluk, sambut...',
+              'Bisa menemukan yang menolak/menerima? (Tidak ada)',
+              'Lepaskan keinginan untuk BEREAKSI terhadap persetujuan'
+            ]
+          },
+          divingIn: {
+            name: 'Diving In - Masuk ke Inti',
+            steps: [
+              'Di mana kamu merasakan keinginan approval di TUBUH?',
+              'Masuk lebih dalam ke sensasi itu...',
+              'Apa yang ada di BAWAH keinginan approval? (Tidak berharga? Kesepian?)',
+              'Masuk lebih dalam lagi... apa inti paling dasarnya?',
+              'Bisakah melepaskan inti itu sekarang?'
+            ]
+          },
+          selfApproval: {
+            name: 'Self-Approval Technique',
+            steps: [
+              'Bisakah kamu menyetujui dirimu sendiri SEKARANG?',
+              'Bisakah kamu mencintai dirimu tanpa syarat?',
+              'Bagaimana rasanya jika kamu sudah 100% diterima?',
+              'Approval yang sejati datang dari dalam dirimu sendiri.'
+            ]
+          },
+          lettingGo: {
+            name: 'Letting Go Affirmations',
+            affirmations: [
+              'Aku melepaskan kebutuhan untuk disetujui orang lain.',
+              'Aku menyetujui diriku sendiri sepenuhnya.',
+              'Aku tidak membutuhkan validasi eksternal untuk merasa berharga.',
+              'Aku bebas dari pendapat orang lain tentang diriku.',
+              'Cinta yang sejati dimulai dari mencintai diriku sendiri.'
+            ]
+          }
+        },
+        completionQuestions: [
+          'Bisakah kamu hanya memiliki perasaan welas asih dan penerimaan?',
+          'Maukah kamu hanya memiliki perasaan welas asih?',
+          'Apakah saat ini kamu hanya memiliki perasaan welas asih terhadap dirimu dan orang lain?'
+        ]
       },
       security: {
         name: 'SECURITY',
         emoji: '🛡️',
-        desc: 'Ingin aman, terlindungi, stabil',
-        shadow: 'Worry, risk-averse, over-planning',
+        desc: 'Ingin aman, terlindungi, stabil, survive',
+        shadow: 'Worry, risk-averse, over-planning, anxiety',
+        color: '#e67e22',
         rootQuestions: [
           'Apa ancaman terbesar yang kamu rasakan saat ini?',
           'Kapan pertama kali kamu merasa tidak aman?',
@@ -782,63 +930,116 @@
           'Bagaimana kamu bisa merasa aman di dalam dirimu sendiri?',
           'Apa yang tetap stabil meski situasi berubah?'
         ],
-        welcomeText: 'Keinginan untuk aman adalah respons alami terhadap ketidakpastian hidup. Biarkan keinginan ini hadir... Rasakan di mana rasa tidak aman itu berada... Terima bahwa mencari keamanan adalah cara kamu merawat diri...'
-      },
-      worth: {
-        name: 'WORTH',
-        emoji: '💎',
-        desc: 'Ingin merasa cukup, berharga, layak',
-        shadow: 'Perfectionism, impostor syndrome',
-        rootQuestions: [
-          'Apa yang harus kamu capai untuk merasa berharga?',
-          'Siapa yang pertama kali membuat kamu merasa tidak cukup?',
-          'Apakah nilai dirimu tergantung pada pencapaian?',
-          'Bagaimana jika kamu sudah cukup apa adanya?',
-          'Apa yang membuatmu berharga tanpa melakukan apapun?'
-        ],
-        welcomeText: 'Keinginan untuk merasa berharga adalah kerinduan untuk diakui keberadaanmu. Biarkan keinginan ini hadir... Rasakan bagaimana rasanya merasa tidak cukup... Terima bahwa mencari nilai diri adalah bagian dari perjalanan...'
-      },
-      freedom: {
-        name: 'FREEDOM',
-        emoji: '🦅',
-        desc: 'Ingin bebas dari beban, kewajiban, batasan',
-        shadow: 'Avoidance, commitment issues',
-        rootQuestions: [
-          'Apa yang membuatmu merasa terkurung?',
-          'Kebebasan seperti apa yang sebenarnya kamu cari?',
-          'Apa yang kamu hindari dengan ingin bebas?',
-          'Apakah ada kebebasan di dalam batasan?',
-          'Bagaimana jika kamu sudah bebas, hanya tidak menyadarinya?'
-        ],
-        welcomeText: 'Keinginan untuk bebas adalah kerinduan untuk menjadi diri sendiri. Biarkan keinginan ini hadir... Rasakan di mana kamu merasa terikat... Terima bahwa mencari kebebasan adalah cara kamu menghormati diri...'
+        welcomeText: 'Keinginan untuk aman adalah respons alami terhadap ketidakpastian hidup. Biarkan keinginan ini hadir... Rasakan di mana rasa tidak aman itu berada... Terima bahwa mencari keamanan adalah cara kamu merawat diri...',
+        advancedTechniques: {
+          holisticRelease: {
+            name: 'Holistic Release - Security',
+            steps: [
+              'TOLAK sebanyak-banyaknya keinginan untuk aman...',
+              'TERIMA sebanyak-banyaknya keinginan untuk aman...',
+              'TOLAK lagi... dorong jauh-jauh...',
+              'TERIMA lagi... peluk, sambut...',
+              'Bisa menemukan yang menolak/menerima? (Tidak ada)',
+              'Lepaskan keinginan untuk BEREAKSI terhadap ketidakamanan'
+            ]
+          },
+          divingIn: {
+            name: 'Diving In - Masuk ke Inti',
+            steps: [
+              'Di mana kamu merasakan ketakutan/ketidakamanan di TUBUH?',
+              'Masuk lebih dalam ke sensasi itu...',
+              'Apa yang ada di BAWAH ketakutan? (Kematian? Kehilangan?)',
+              'Masuk lebih dalam lagi... apa inti paling dasarnya?',
+              'Bisakah melepaskan inti itu sekarang?'
+            ]
+          },
+          innerSecurity: {
+            name: 'Inner Security Technique',
+            steps: [
+              'Keamanan sejati tidak bisa datang dari luar.',
+              'Bisakah kamu menemukan tempat yang selalu aman di dalam dirimu?',
+              'Kesadaran yang mengamati ketakutan - apakah dia terancam?',
+              'Dari ruang kesadaran itu, bisakah kamu merasa aman?'
+            ]
+          },
+          lettingGo: {
+            name: 'Letting Go Affirmations',
+            affirmations: [
+              'Aku melepaskan semua ketakutan akan ketidakamanan.',
+              'Keamanan sejati ada di dalam diriku.',
+              'Aku percaya bahwa aku selalu dilindungi.',
+              'Aku melepaskan kekhawatiran tentang masa depan.',
+              'Di inti diriku, aku selalu aman dan utuh.'
+            ]
+          }
+        },
+        completionQuestions: [
+          'Bisakah kamu hanya memiliki perasaan sejahtera, aman, dan percaya?',
+          'Maukah kamu hanya memiliki perasaan aman dan percaya?',
+          'Apakah saat ini kamu hanya memiliki perasaan nyaman, aman, dan percaya?'
+        ]
       },
       separation: {
         name: 'SEPARATION',
-        emoji: '🏝️',
-        desc: 'Ingin berbeda, terpisah, unik',
-        shadow: 'Isolasi, kesepian, merasa berbeda',
+        emoji: '🌌',
+        desc: 'Ingin berbeda, terpisah, lebih baik dari orang lain',
+        shadow: 'Isolasi, kesombongan, merasa lebih/kurang dari orang lain',
+        color: '#8e44ad',
         rootQuestions: [
           'Dari siapa atau apa kamu ingin terpisah?',
           'Apa yang membuatmu merasa perlu berbeda dari orang lain?',
+          'Apakah kamu merasa lebih baik atau lebih buruk dari orang lain?',
           'Kapan pertama kali kamu merasa tidak termasuk?',
-          'Apakah keunikan membutuhkan pemisahan?',
           'Bagaimana jika kamu bisa unik dan tetap terhubung?'
         ],
-        welcomeText: 'Keinginan untuk terpisah adalah cara melindungi identitasmu. Biarkan keinginan ini hadir... Rasakan bagaimana rasanya ingin berbeda... Terima bahwa mencari keunikan adalah cara kamu mengekspresikan diri...'
-      },
-      oneness: {
-        name: 'ONENESS',
-        emoji: '🤝',
-        desc: 'Ingin menyatu, terhubung, menjadi bagian',
-        shadow: 'Codependency, kehilangan identitas',
-        rootQuestions: [
-          'Dengan siapa atau apa kamu ingin menyatu?',
-          'Apa yang kamu takutkan dari sendirian?',
-          'Apakah kamu bisa terhubung tanpa kehilangan dirimu?',
-          'Di mana batas antara koneksi dan ketergantungan?',
-          'Bagaimana jika kamu sudah utuh tanpa perlu siapapun?'
-        ],
-        welcomeText: 'Keinginan untuk menyatu adalah kerinduan untuk koneksi mendalam. Biarkan keinginan ini hadir... Rasakan bagaimana rasanya ingin terhubung... Terima bahwa mencari koneksi adalah sifat alami manusia...'
+        welcomeText: 'Keinginan untuk terpisah adalah cara melindungi identitasmu. Biarkan keinginan ini hadir... Rasakan bagaimana rasanya ingin berbeda... Terima bahwa mencari keunikan adalah cara kamu mengekspresikan diri...',
+        advancedTechniques: {
+          holisticRelease: {
+            name: 'Holistic Release - Separation',
+            steps: [
+              'TOLAK sebanyak-banyaknya keinginan untuk terpisah...',
+              'TERIMA sebanyak-banyaknya keinginan untuk terpisah...',
+              'TOLAK lagi... dorong jauh-jauh...',
+              'TERIMA lagi... peluk, sambut...',
+              'Bisa menemukan yang menolak/menerima? (Tidak ada)',
+              'Lepaskan keinginan untuk BEREAKSI terhadap separation'
+            ]
+          },
+          divingIn: {
+            name: 'Diving In - Masuk ke Inti',
+            steps: [
+              'Di mana kamu merasakan keinginan separation di TUBUH?',
+              'Masuk lebih dalam ke sensasi itu...',
+              'Apa yang ada di BAWAH? (Takut tidak diterima? Merasa tidak layak?)',
+              'Masuk lebih dalam lagi... apa inti paling dasarnya?',
+              'Bisakah melepaskan inti itu sekarang?'
+            ]
+          },
+          onenessExperience: {
+            name: 'Oneness Experience',
+            steps: [
+              'Bisakah kamu merasakan bahwa kita semua SAMA di inti?',
+              'Di balik perbedaan, ada kesatuan yang mendasar.',
+              'Bisakah kamu merasa terhubung tanpa kehilangan identitas?',
+              'Apa yang tersisa jika kamu melepas semua separation?'
+            ]
+          },
+          lettingGo: {
+            name: 'Letting Go Affirmations',
+            affirmations: [
+              'Aku melepaskan kebutuhan untuk merasa berbeda.',
+              'Aku terhubung dengan semua makhluk.',
+              'Keunikanku tidak membutuhkan pemisahan.',
+              'Aku adalah bagian dari kesatuan yang lebih besar.',
+              'Aku melepaskan semua rasa lebih tinggi atau lebih rendah dari orang lain.'
+            ]
+          }
+        },
+        completionQuestions: [
+          'Bisakah kamu hanya memiliki perasaan oneness/kesatuan?',
+          'Maukah kamu memiliki perasaan oneness?',
+          'Apakah saat ini kamu hanya memiliki perasaan oneness dengan semua yang ada?'
+        ]
       }
     };
 
@@ -1321,6 +1522,97 @@
     function showIntensityAfter() {
       document.getElementById('intensityAfterSection').classList.remove('hidden');
       document.getElementById('completeBtn').classList.remove('hidden');
+
+      // Show advanced techniques if intensity is still high
+      renderAdvancedTechniques();
+      document.getElementById('advancedTechniquesSection').classList.remove('hidden');
+    }
+
+    // ==================== ADVANCED TECHNIQUES ====================
+    let currentTechnique = null;
+
+    function renderAdvancedTechniques() {
+      if (!selectedWanting) return;
+
+      const wanting = CORE_WANTINGS[selectedWanting];
+      const grid = document.getElementById('techniqueGrid');
+
+      const techniques = wanting.advancedTechniques;
+      const techniqueIcons = {
+        holisticRelease: '🔄',
+        divingIn: '🏊',
+        courageousness: '🦁',
+        selfApproval: '💝',
+        innerSecurity: '🏠',
+        onenessExperience: '🤝',
+        lettingGo: '✨'
+      };
+
+      grid.innerHTML = Object.entries(techniques).map(([key, tech]) => `
+        <div class="technique-card" onclick="selectTechnique('${key}')">
+          <div class="technique-icon">${techniqueIcons[key] || '🔮'}</div>
+          <div class="technique-name">${tech.name}</div>
+          <div class="technique-desc">${key === 'lettingGo' ? 'Afirmasi pelepasan' : 'Teknik advance'}</div>
+        </div>
+      `).join('');
+    }
+
+    function selectTechnique(techniqueKey) {
+      currentTechnique = techniqueKey;
+
+      // Highlight selected card
+      document.querySelectorAll('.technique-card').forEach(c => c.classList.remove('active'));
+      event.target.closest('.technique-card').classList.add('active');
+
+      // Get technique data
+      const wanting = CORE_WANTINGS[selectedWanting];
+      const tech = wanting.advancedTechniques[techniqueKey];
+
+      // Show steps
+      const stepsContainer = document.getElementById('techniqueStepsDisplay');
+      const stepsTitle = document.getElementById('techniqueStepsTitle');
+      const stepsContent = document.getElementById('techniqueStepsContent');
+
+      stepsTitle.textContent = tech.name;
+
+      if (techniqueKey === 'lettingGo') {
+        // Show affirmations
+        stepsContent.innerHTML = `
+          <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem;">
+            Baca dan resapi setiap afirmasi. Rasakan kebenarannya di dalam dirimu:
+          </p>
+          <ul class="affirmation-list">
+            ${tech.affirmations.map(aff => `<li>${aff}</li>`).join('')}
+          </ul>
+        `;
+      } else {
+        // Show steps
+        stepsContent.innerHTML = tech.steps.map((step, i) => `
+          <div class="technique-step ${i === tech.steps.length - 1 ? 'highlight' : ''}">
+            <strong>Step ${i + 1}:</strong> ${step}
+          </div>
+        `).join('');
+      }
+
+      // Hide grid, show steps
+      document.getElementById('techniqueGrid').style.display = 'none';
+      stepsContainer.classList.remove('hidden');
+    }
+
+    function closeTechniqueSteps() {
+      document.getElementById('techniqueStepsDisplay').classList.add('hidden');
+      document.getElementById('techniqueGrid').style.display = 'grid';
+      document.querySelectorAll('.technique-card').forEach(c => c.classList.remove('active'));
+      currentTechnique = null;
+    }
+
+    function completeTechniqueStep() {
+      showToast('Teknik ' + CORE_WANTINGS[selectedWanting].advancedTechniques[currentTechnique].name + ' selesai!', 'success');
+      closeTechniqueSteps();
+
+      // Add to release count
+      releaseData.advancedTechniquesUsed = releaseData.advancedTechniquesUsed || [];
+      releaseData.advancedTechniquesUsed.push(currentTechnique);
     }
 
     // ==================== TIMER ====================
