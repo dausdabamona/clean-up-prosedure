@@ -90,6 +90,43 @@ const nlpScripts = {
       { type: 'instruction', text: 'Tekan tombol di bawah untuk mengisi checklist submodalities', duration: 6000 },
       { type: 'choice', text: 'Lanjut ke Submodalities Checklist?', options: ['Ya, Lanjutkan'] },
 
+      // Submodalities Checklist - Visual
+      { type: 'instruction', text: '=== CHECKLIST: VISUAL (Penglihatan) ===', subtext: 'Perhatikan representasi visual dari state model', duration: 5000 },
+      { type: 'instruction', text: 'Bayangkan orang itu dalam state excellence...', subtext: 'Perhatikan gambar internal yang muncul', duration: 6000 },
+      { type: 'choice', text: 'Gambar internal: TERANG atau GELAP?', options: ['Sangat Gelap', 'Gelap', 'Sedang', 'Terang', 'Sangat Terang'] },
+      { type: 'choice', text: 'Ukuran gambar: BESAR atau KECIL?', options: ['Sangat Kecil', 'Kecil', 'Sedang', 'Besar', 'Sangat Besar'] },
+      { type: 'choice', text: 'Jarak gambar: JAUH atau DEKAT?', options: ['Sangat Jauh', 'Jauh', 'Sedang', 'Dekat', 'Sangat Dekat'] },
+      { type: 'choice', text: 'BERWARNA atau HITAM-PUTIH?', options: ['Hitam-Putih', 'Sedikit Warna', 'Berwarna', 'Warna Vivid'] },
+      { type: 'choice', text: 'FOKUS/TAJAM atau BLUR?', options: ['Sangat Blur', 'Blur', 'Sedang', 'Tajam', 'Kristal Clear'] },
+      { type: 'choice', text: 'BERGERAK atau DIAM?', options: ['Diam/Foto', 'Sedikit Gerak', 'Bergerak Pelan', 'Bergerak Normal', 'Film Cepat'] },
+      { type: 'choice', text: 'Dimensi: 2D FLAT atau 3D DEPTH?', options: ['2D Flat', 'Sedikit Depth', '3D Normal', '3D Immersive'] },
+      { type: 'choice', text: 'BERBINGKAI atau PANORAMA?', options: ['Berbingkai Kecil', 'Berbingkai', 'Tanpa Bingkai', 'Panorama Luas'] },
+      { type: 'input', text: 'LOKASI gambar (atas/bawah, kiri/kanan)?', placeholder: 'Contoh: Depan agak kanan, sedikit di atas' },
+
+      // Submodalities Checklist - Auditory
+      { type: 'instruction', text: '=== CHECKLIST: AUDITORY (Pendengaran) ===', subtext: 'Perhatikan representasi suara dari state model', duration: 5000 },
+      { type: 'choice', text: 'Apakah ada SUARA/DIALOG internal?', options: ['Tidak Ada', 'Samar', 'Ada', 'Jelas', 'Sangat Jelas'] },
+      { type: 'choice', text: 'VOLUME suara?', options: ['Sangat Pelan', 'Pelan', 'Sedang', 'Keras', 'Sangat Keras'] },
+      { type: 'choice', text: 'PITCH/NADA suara?', options: ['Sangat Rendah', 'Rendah', 'Sedang', 'Tinggi', 'Sangat Tinggi'] },
+      { type: 'choice', text: 'TEMPO bicara?', options: ['Sangat Lambat', 'Lambat', 'Sedang', 'Cepat', 'Sangat Cepat'] },
+      { type: 'choice', text: 'TONE suara?', options: ['Kasar/Tegas', 'Netral', 'Halus/Lembut', 'Hangat'] },
+      { type: 'choice', text: 'Suara dari DALAM kepala atau LUAR?', options: ['Dari Dalam', 'Campuran', 'Dari Luar'] },
+      { type: 'choice', text: 'ARAH suara?', options: ['Satu Arah', 'Stereo', 'Surround'] },
+      { type: 'input', text: 'Apa KATA-KATA yang terdengar (jika ada)?', placeholder: 'Self-talk atau dialog yang terdengar' },
+
+      // Submodalities Checklist - Kinesthetic
+      { type: 'instruction', text: '=== CHECKLIST: KINESTHETIC (Perasaan) ===', subtext: 'Perhatikan sensasi tubuh dari state model', duration: 5000 },
+      { type: 'choice', text: 'INTENSITAS perasaan?', options: ['Sangat Lemah', 'Lemah', 'Sedang', 'Kuat', 'Sangat Kuat'] },
+      { type: 'choice', text: 'SUHU sensasi?', options: ['Dingin', 'Sejuk', 'Netral', 'Hangat', 'Panas'] },
+      { type: 'choice', text: 'TEKANAN/BERAT?', options: ['Sangat Ringan', 'Ringan', 'Netral', 'Berat', 'Sangat Berat'] },
+      { type: 'choice', text: 'TEKSTUR sensasi?', options: ['Halus', 'Netral', 'Kasar'] },
+      { type: 'choice', text: 'Sensasi MENYEBAR atau TERPUSAT?', options: ['Sangat Terpusat', 'Terpusat', 'Agak Menyebar', 'Menyebar Luas', 'Seluruh Tubuh'] },
+      { type: 'choice', text: 'Sensasi DIAM atau BERGERAK?', options: ['Diam', 'Berdenyut', 'Bergerak Pelan', 'Mengalir', 'Berputar/Spiral'] },
+      { type: 'input', text: 'Di mana LOKASI sensasi di tubuh?', placeholder: 'Contoh: Dada, perut, solar plexus' },
+      { type: 'input', text: 'Jika sensasi punya BENTUK, seperti apa?', placeholder: 'Contoh: Bola cahaya, gelombang, api' },
+
+      { type: 'instruction', text: 'Checklist Submodalities SELESAI!', subtext: 'Informasi ini akan membantu kamu meng-copy state dengan presisi', duration: 5000 },
+
       // Step 5: Step Into
       { type: 'instruction', text: '=== STEP 5: STEP INTO THE MODEL ===', duration: 4000 },
       { type: 'instruction', text: 'Sekarang, MASUK ke dalam tubuh orang itu...', subtext: 'Bayangkan kamu menjadi dia', duration: 10000 },
