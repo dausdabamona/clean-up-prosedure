@@ -315,6 +315,90 @@ const ReleasingEngine = (function() {
   let modalElement = null;
   let callbacks = {};
 
+  // ==================== VOICE GUIDANCE ====================
+  let voiceEnabled = false;
+  let speechSynthesis = window.speechSynthesis;
+  let currentUtterance = null;
+  let selectedVoice = null;
+
+  function initVoice() {
+    if (!speechSynthesis) {
+      console.log('Speech synthesis not supported');
+      return;
+    }
+
+    // Load saved preference
+    voiceEnabled = localStorage.getItem('releasing_voice_enabled') === 'true';
+
+    // Get Indonesian voice or default
+    function setVoice() {
+      const voices = speechSynthesis.getVoices();
+      // Try to find Indonesian voice
+      selectedVoice = voices.find(v => v.lang.includes('id')) ||
+                      voices.find(v => v.lang.includes('ID')) ||
+                      voices.find(v => v.name.includes('Indonesia')) ||
+                      voices.find(v => v.lang.includes('en')) ||
+                      voices[0];
+    }
+
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = setVoice;
+    }
+    setVoice();
+  }
+
+  function toggleVoice() {
+    voiceEnabled = !voiceEnabled;
+    localStorage.setItem('releasing_voice_enabled', voiceEnabled);
+    updateVoiceButton();
+
+    if (voiceEnabled) {
+      speak('Panduan suara diaktifkan');
+    } else {
+      stopSpeaking();
+    }
+  }
+
+  function updateVoiceButton() {
+    const btn = document.getElementById('re-voice-toggle');
+    if (btn) {
+      btn.innerHTML = voiceEnabled ? '🔊' : '🔇';
+      btn.title = voiceEnabled ? 'Matikan Suara' : 'Aktifkan Suara';
+      btn.classList.toggle('active', voiceEnabled);
+    }
+  }
+
+  function speak(text) {
+    if (!voiceEnabled || !speechSynthesis) return;
+
+    // Stop any current speech
+    stopSpeaking();
+
+    // Clean text from emojis and special chars for better speech
+    const cleanText = text
+      .replace(/[😠😢😔😰😨🔮💗🫄🧠💪😮‍💨🎯🎮❤️🛡️🔗☯️💝🌟🎊⭐✅🔄⚡🧘🔢📺✌️🌀🥛🪞🎬🌙💚]/g, '')
+      .replace(/===/g, '')
+      .replace(/\.\.\./g, ', ')
+      .trim();
+
+    if (!cleanText) return;
+
+    currentUtterance = new SpeechSynthesisUtterance(cleanText);
+    currentUtterance.voice = selectedVoice;
+    currentUtterance.lang = 'id-ID';
+    currentUtterance.rate = 0.9; // Slightly slower
+    currentUtterance.pitch = 1;
+    currentUtterance.volume = 1;
+
+    speechSynthesis.speak(currentUtterance);
+  }
+
+  function stopSpeaking() {
+    if (speechSynthesis) {
+      speechSynthesis.cancel();
+    }
+  }
+
   // ==================== INITIALIZATION ====================
   function init(options) {
     options = options || {};
@@ -333,6 +417,10 @@ const ReleasingEngine = (function() {
     if (!modalElement) {
       createModal();
     }
+
+    // Initialize voice guidance
+    initVoice();
+    updateVoiceButton();
   }
 
   // ==================== MODAL CREATION ====================
@@ -348,7 +436,10 @@ const ReleasingEngine = (function() {
         <div class="releasing-modal-content">
           <div class="releasing-modal-header">
             <h3 id="re-modal-title">Releasing</h3>
-            <button class="releasing-modal-close" onclick="ReleasingEngine.closeModal()">&times;</button>
+            <div class="releasing-modal-actions">
+              <button class="releasing-voice-toggle" id="re-voice-toggle" onclick="ReleasingEngine.toggleVoice()" title="Aktifkan Suara">🔇</button>
+              <button class="releasing-modal-close" onclick="ReleasingEngine.closeModal()">&times;</button>
+            </div>
           </div>
           <div class="releasing-modal-progress">
             <div class="releasing-progress-bar">
@@ -425,6 +516,35 @@ const ReleasingEngine = (function() {
       .releasing-modal-header h3 {
         margin: 0;
         font-size: 1.2rem;
+        flex: 1;
+      }
+      .releasing-modal-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .releasing-voice-toggle {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: #fff;
+        font-size: 1.2rem;
+        cursor: pointer;
+        opacity: 0.8;
+        transition: all 0.2s;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .releasing-voice-toggle:hover {
+        opacity: 1;
+        background: rgba(255,255,255,0.3);
+      }
+      .releasing-voice-toggle.active {
+        background: rgba(76, 175, 80, 0.8);
+        opacity: 1;
       }
       .releasing-modal-close {
         background: none;
@@ -837,6 +957,15 @@ const ReleasingEngine = (function() {
     }
 
     body.innerHTML = html;
+
+    // Voice guidance - speak the step text
+    if (voiceEnabled && step.text) {
+      let textToSpeak = step.text;
+      if (step.subtext) {
+        textToSpeak += '. ' + step.subtext;
+      }
+      speak(textToSpeak);
+    }
   }
 
   // ==================== USER INTERACTIONS ====================
@@ -997,6 +1126,7 @@ const ReleasingEngine = (function() {
   }
 
   function closeModal() {
+    stopSpeaking();
     if (modalElement) {
       modalElement.classList.remove('active');
     }
@@ -1028,7 +1158,8 @@ const ReleasingEngine = (function() {
     selectAnswer: selectAnswer,
     getScripts: getScripts,
     getScript: getScript,
-    getWantingScriptId: getWantingScriptId
+    getWantingScriptId: getWantingScriptId,
+    toggleVoice: toggleVoice
   };
 
 })();
