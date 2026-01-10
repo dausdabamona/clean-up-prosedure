@@ -970,6 +970,377 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
+// ===== TECHNIQUE MODALS =====
+const techniqueReleaseStatus = {
+  goalProcess: false,
+  wantingChecker: { control: false, approval: false, security: false, separation: false },
+  holisticRelease: { advantages: false, disadvantages: false, advNot: false, disadvNot: false },
+  actionBrainstorm: false,
+  beliefClearing: { limiting: false, empowering: false },
+  turnItOver: false,
+  releaseDoer: false,
+  freeway: false,
+  allPower: false,
+  worldAsDream: false
+};
+
+function openTechniqueModal(techniqueId) {
+  const modalId = techniqueId + 'Modal';
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    // Init sliders in modal
+    initTechniqueSliders(modal);
+    // Init wanting tags in modal
+    initTechniqueWantingTags(modal);
+  }
+}
+
+function closeTechniqueModal(techniqueId) {
+  const modalId = techniqueId + 'Modal';
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+}
+
+function initTechniqueSliders(modal) {
+  modal.querySelectorAll('.slider').forEach(slider => {
+    const displayId = slider.id + 'Value';
+    const display = document.getElementById(displayId);
+    if (display) {
+      slider.addEventListener('input', function() {
+        display.textContent = this.value;
+      });
+    }
+  });
+}
+
+function initTechniqueWantingTags(modal) {
+  modal.querySelectorAll('.wanting-tags').forEach(container => {
+    container.querySelectorAll('.wanting-tag').forEach(tag => {
+      // Remove existing listener to avoid duplicates
+      tag.removeEventListener('click', toggleWantingTag);
+      tag.addEventListener('click', toggleWantingTag);
+    });
+  });
+}
+
+function toggleWantingTag() {
+  this.classList.toggle('selected');
+}
+
+function doTechniqueRelease(techniqueId, releaseType) {
+  // Use the ReleasingEngine for quick release
+  ReleasingEngine.startReleasing('quick-basic', {
+    onComplete: function(data) {
+      // Update status based on technique
+      updateTechniqueReleaseStatus(techniqueId, releaseType);
+      showToast('🌊 Release selesai!', 'success');
+    }
+  });
+}
+
+function updateTechniqueReleaseStatus(techniqueId, releaseType) {
+  switch (techniqueId) {
+    case 'goalProcess':
+      techniqueReleaseStatus.goalProcess = true;
+      const gpStatus = document.getElementById('gp-release-status');
+      if (gpStatus) gpStatus.style.display = 'block';
+      break;
+
+    case 'holisticRelease':
+      if (releaseType === 'advantages') techniqueReleaseStatus.holisticRelease.advantages = true;
+      if (releaseType === 'disadvantages') techniqueReleaseStatus.holisticRelease.disadvantages = true;
+      if (releaseType === 'adv-not') techniqueReleaseStatus.holisticRelease.advNot = true;
+      if (releaseType === 'disadv-not') techniqueReleaseStatus.holisticRelease.disadvNot = true;
+      break;
+
+    case 'beliefClearing':
+      if (releaseType === 'limiting') techniqueReleaseStatus.beliefClearing.limiting = true;
+      if (releaseType === 'empowering') techniqueReleaseStatus.beliefClearing.empowering = true;
+      break;
+
+    case 'turnItOver':
+      techniqueReleaseStatus.turnItOver = true;
+      const tioStatus = document.getElementById('tio-release-status');
+      if (tioStatus) tioStatus.style.display = 'block';
+      break;
+
+    case 'releaseDoer':
+      techniqueReleaseStatus.releaseDoer = true;
+      const rdStatus = document.getElementById('rd-release-status');
+      if (rdStatus) rdStatus.style.display = 'block';
+      break;
+
+    case 'freeway':
+      techniqueReleaseStatus.freeway = true;
+      break;
+
+    case 'allPower':
+      techniqueReleaseStatus.allPower = true;
+      const apStatus = document.getElementById('ap-release-status');
+      if (apStatus) apStatus.style.display = 'block';
+      break;
+
+    case 'worldAsDream':
+      techniqueReleaseStatus.worldAsDream = true;
+      break;
+  }
+}
+
+// For 4 Wanting Checker
+function doWantingRelease(wantingType) {
+  ReleasingEngine.startReleasing('wanting-' + wantingType, {
+    onComplete: function(data) {
+      techniqueReleaseStatus.wantingChecker[wantingType] = true;
+      const statusEl = document.getElementById('wc-' + wantingType + '-status');
+      if (statusEl) statusEl.style.display = 'block';
+
+      // Check if all 4 are done
+      const wc = techniqueReleaseStatus.wantingChecker;
+      if (wc.control && wc.approval && wc.security && wc.separation) {
+        const allStatus = document.getElementById('wc-all-status');
+        if (allStatus) allStatus.style.display = 'block';
+      }
+
+      showToast('🌊 w/' + wantingType.charAt(0) + ' released!', 'success');
+    }
+  });
+}
+
+// For Action Brainstorm wanting release
+function releaseActionBrainstormWanting() {
+  const container = document.getElementById('ab-wantingTags');
+  if (!container) return;
+
+  const selected = [];
+  container.querySelectorAll('.wanting-tag.selected').forEach(tag => {
+    selected.push(tag.dataset.wanting);
+  });
+
+  if (selected.length === 0) {
+    showToast('Pilih minimal satu wanting', 'warning');
+    return;
+  }
+
+  ReleasingEngine.startSequentialReleasing(selected, {
+    onRelease: function(data) {
+      showToast('🌊 Wanting released!', 'success');
+    },
+    onSequenceComplete: function(data) {
+      showToast('🎉 Semua wanting dari actions released!', 'success');
+      // Clear selected
+      container.querySelectorAll('.wanting-tag.selected').forEach(tag => {
+        tag.classList.remove('selected');
+      });
+    }
+  });
+}
+
+async function saveTechniqueSession(techniqueId) {
+  let data = {
+    technique: techniqueId,
+    timestamp: new Date().toISOString()
+  };
+
+  // Collect data based on technique
+  switch (techniqueId) {
+    case 'goalProcess':
+      data.goal = document.getElementById('gp-goal')?.value || '';
+      data.feeling = document.getElementById('gp-feeling')?.value || '';
+      data.intensity = document.getElementById('gp-intensity')?.value || 5;
+      data.released = techniqueReleaseStatus.goalProcess;
+      break;
+
+    case 'wantingChecker':
+      data.goal = document.getElementById('wc-goal')?.value || '';
+      data.releasedWantings = techniqueReleaseStatus.wantingChecker;
+      break;
+
+    case 'holisticRelease':
+      data.goal = document.getElementById('hr-goal')?.value || '';
+      data.advantages = document.getElementById('hr-advantages')?.value || '';
+      data.disadvantages = document.getElementById('hr-disadvantages')?.value || '';
+      data.advNot = document.getElementById('hr-adv-not')?.value || '';
+      data.disadvNot = document.getElementById('hr-disadv-not')?.value || '';
+      data.intensity = document.getElementById('hr-intensity')?.value || 5;
+      data.releasedParts = techniqueReleaseStatus.holisticRelease;
+      break;
+
+    case 'actionBrainstorm':
+      data.goal = document.getElementById('ab-goal')?.value || '';
+      data.actions = [
+        document.getElementById('ab-action1')?.value || '',
+        document.getElementById('ab-action2')?.value || '',
+        document.getElementById('ab-action3')?.value || ''
+      ].filter(a => a);
+      data.finalAction = document.getElementById('ab-finalAction')?.value || '';
+      break;
+
+    case 'beliefClearing':
+      data.goal = document.getElementById('bc-goal')?.value || '';
+      data.limitingBeliefs = [
+        document.getElementById('bc-limiting1')?.value || '',
+        document.getElementById('bc-limiting2')?.value || '',
+        document.getElementById('bc-limiting3')?.value || ''
+      ].filter(b => b);
+      data.empoweringBeliefs = [
+        document.getElementById('bc-empowering1')?.value || '',
+        document.getElementById('bc-empowering2')?.value || '',
+        document.getElementById('bc-empowering3')?.value || ''
+      ].filter(b => b);
+      data.insight = document.getElementById('bc-insight')?.value || '';
+      data.releasedParts = techniqueReleaseStatus.beliefClearing;
+      break;
+
+    case 'turnItOver':
+      data.goal = document.getElementById('tio-goal')?.value || '';
+      data.burden = document.getElementById('tio-burden')?.value || '';
+      data.intensity = document.getElementById('tio-intensity')?.value || 5;
+      data.insight = document.getElementById('tio-insight')?.value || '';
+      data.released = techniqueReleaseStatus.turnItOver;
+      break;
+
+    case 'releaseDoer':
+      data.goal = document.getElementById('rd-goal')?.value || '';
+      data.doer = document.getElementById('rd-doer')?.value || '';
+      data.freeAction = document.getElementById('rd-freeAction')?.value || '';
+      data.released = techniqueReleaseStatus.releaseDoer;
+      break;
+
+    case 'freeway':
+      data.goal = document.getElementById('fw-goal')?.value || '';
+      data.intensity = document.getElementById('fw-intensity')?.value || 5;
+      data.insight = document.getElementById('fw-insight')?.value || '';
+      data.released = techniqueReleaseStatus.freeway;
+      break;
+
+    case 'allPower':
+      data.goal = document.getElementById('ap-goal')?.value || '';
+      data.powerGiven = document.getElementById('ap-powerGiven')?.value || '';
+      data.intensity = document.getElementById('ap-intensity')?.value || 5;
+      data.insight = document.getElementById('ap-insight')?.value || '';
+      data.released = techniqueReleaseStatus.allPower;
+      break;
+
+    case 'worldAsDream':
+      data.goal = document.getElementById('wad-goal')?.value || '';
+      data.awareness = document.getElementById('wad-awareness')?.value || '';
+      data.intensity = document.getElementById('wad-intensity')?.value || 5;
+      data.insight = document.getElementById('wad-insight')?.value || '';
+      data.released = techniqueReleaseStatus.worldAsDream;
+      break;
+  }
+
+  // Save to API
+  const result = await callManifestingApi('saveTechniqueSession', data);
+  if (result && result.success) {
+    showToast('Sesi ' + getTechniqueName(techniqueId) + ' tersimpan!', 'success');
+    closeTechniqueModal(techniqueId);
+    resetTechniqueForm(techniqueId);
+  } else {
+    // Save locally if API fails
+    saveTechniqueLocally(data);
+    showToast('Sesi tersimpan lokal', 'info');
+    closeTechniqueModal(techniqueId);
+    resetTechniqueForm(techniqueId);
+  }
+}
+
+function getTechniqueName(techniqueId) {
+  const names = {
+    goalProcess: 'Goal Process',
+    wantingChecker: '4 Wanting Checker',
+    holisticRelease: 'Holistic Release',
+    actionBrainstorm: 'Action Brainstorm',
+    beliefClearing: 'Belief Clearing',
+    turnItOver: 'Turn It Over',
+    releaseDoer: 'Release the Doer',
+    freeway: 'Freeway',
+    allPower: 'All Power',
+    worldAsDream: 'World as Dream'
+  };
+  return names[techniqueId] || techniqueId;
+}
+
+function saveTechniqueLocally(data) {
+  const key = 'manifesting_technique_sessions';
+  let sessions = JSON.parse(localStorage.getItem(key) || '[]');
+  sessions.push(data);
+  localStorage.setItem(key, JSON.stringify(sessions));
+}
+
+function resetTechniqueForm(techniqueId) {
+  // Reset status
+  switch (techniqueId) {
+    case 'goalProcess':
+      techniqueReleaseStatus.goalProcess = false;
+      const gpStatus = document.getElementById('gp-release-status');
+      if (gpStatus) gpStatus.style.display = 'none';
+      break;
+
+    case 'wantingChecker':
+      techniqueReleaseStatus.wantingChecker = { control: false, approval: false, security: false, separation: false };
+      ['control', 'approval', 'security', 'separation'].forEach(w => {
+        const el = document.getElementById('wc-' + w + '-status');
+        if (el) el.style.display = 'none';
+      });
+      const wcAll = document.getElementById('wc-all-status');
+      if (wcAll) wcAll.style.display = 'none';
+      break;
+
+    case 'holisticRelease':
+      techniqueReleaseStatus.holisticRelease = { advantages: false, disadvantages: false, advNot: false, disadvNot: false };
+      break;
+
+    case 'beliefClearing':
+      techniqueReleaseStatus.beliefClearing = { limiting: false, empowering: false };
+      break;
+
+    case 'turnItOver':
+      techniqueReleaseStatus.turnItOver = false;
+      const tioStatus = document.getElementById('tio-release-status');
+      if (tioStatus) tioStatus.style.display = 'none';
+      break;
+
+    case 'releaseDoer':
+      techniqueReleaseStatus.releaseDoer = false;
+      const rdStatus = document.getElementById('rd-release-status');
+      if (rdStatus) rdStatus.style.display = 'none';
+      break;
+
+    case 'allPower':
+      techniqueReleaseStatus.allPower = false;
+      const apStatus = document.getElementById('ap-release-status');
+      if (apStatus) apStatus.style.display = 'none';
+      break;
+
+    default:
+      // Reset other techniques
+      techniqueReleaseStatus[techniqueId] = false;
+  }
+
+  // Clear form fields in the modal
+  const modal = document.getElementById(techniqueId + 'Modal');
+  if (modal) {
+    modal.querySelectorAll('input[type="text"], textarea').forEach(el => {
+      el.value = '';
+    });
+    modal.querySelectorAll('.slider').forEach(el => {
+      el.value = 5;
+      const displayId = el.id + 'Value';
+      const display = document.getElementById(displayId);
+      if (display) display.textContent = '5';
+    });
+    modal.querySelectorAll('.wanting-tag.selected').forEach(tag => {
+      tag.classList.remove('selected');
+    });
+  }
+}
+
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', function() {
   // Load saved API URL or use default
