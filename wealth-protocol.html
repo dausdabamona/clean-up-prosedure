@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wealth Protocol - Installing Rp 3 Miliar Target</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ==================== WEALTH THEME ==================== */
+    :root {
+      --wealth-primary: #1a5276;
+      --wealth-secondary: #2874a6;
+      --wealth-gold: #C4A962;
+      --wealth-green: #27ae60;
+      --wealth-gradient: linear-gradient(135deg, #1a5276, #C4A962);
+    }
+    .header { background: var(--wealth-gradient); }
+    .card-header { background: var(--wealth-gradient); }
+    .btn-primary { background: var(--wealth-gradient); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(26, 82, 118, 0.3); }
+
+    /* Back link */
+    .back-link { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--white); text-decoration: none; font-size: 1.5rem; opacity: 0.8; }
+    .back-link:hover { opacity: 1; }
+
+    /* Tabs */
+    .nav-tabs { display: flex; background: var(--white); padding: 0.5rem; gap: 0.25rem; overflow-x: auto; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .nav-tab { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0.6rem 0.4rem; border: none; background: none; cursor: pointer; border-radius: 8px; transition: all 0.3s; min-width: 60px; }
+    .nav-tab .icon { font-size: 1.3rem; margin-bottom: 0.2rem; }
+    .nav-tab span:not(.icon) { font-size: 0.6rem; color: var(--text-light); text-align: center; }
+    .nav-tab.active { background: var(--wealth-primary); }
+    .nav-tab.active span { color: var(--white); }
+
+    /* Main Content */
+    .main-content { max-width: 600px; margin: 0 auto; padding: 1rem; padding-bottom: 2rem; }
+
+    /* Tab Content */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* Phase Card */
+    .phase-card { background: var(--white); border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; box-shadow: var(--shadow); cursor: pointer; transition: all 0.3s; border-left: 4px solid var(--wealth-primary); }
+    .phase-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+    .phase-card:active { transform: scale(0.98); }
+    .phase-header { display: flex; align-items: center; gap: 0.75rem; }
+    .phase-icon { font-size: 2rem; }
+    .phase-info { flex: 1; }
+    .phase-title { font-weight: 700; color: var(--wealth-primary); font-size: 1rem; margin-bottom: 0.25rem; }
+    .phase-desc { font-size: 0.8rem; color: var(--text-light); }
+    .phase-arrow { color: var(--text-light); font-size: 1.2rem; }
+
+    /* Phase badges */
+    .phase-badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 10px; font-size: 0.65rem; font-weight: 600; margin-left: 0.5rem; }
+    .phase-badge.sedona { background: #fadbd8; color: #c0392b; }
+    .phase-badge.nlp { background: #d4e6f1; color: #2874a6; }
+    .phase-badge.silva { background: #d5f5e3; color: #1e8449; }
+    .phase-badge.habits { background: #fdebd0; color: #b9770e; }
+
+    /* Category Header */
+    .category-header { display: flex; align-items: center; gap: 0.5rem; margin: 1.5rem 0 0.75rem 0; padding-bottom: 0.5rem; border-bottom: 2px solid var(--wealth-primary); }
+    .category-header .emoji { font-size: 1.5rem; }
+    .category-header h3 { font-size: 1rem; color: var(--wealth-primary); font-weight: 700; margin: 0; }
+
+    /* Info Box */
+    .info-box { background: linear-gradient(135deg, #fef9e7, #fcf3cf); border: 1px solid #f7dc6f; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
+    .info-box h4 { color: #9a7d0a; font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .info-box p { font-size: 0.8rem; color: var(--text-dark); line-height: 1.6; }
+    .info-box ul { margin-left: 1rem; font-size: 0.8rem; line-height: 1.8; }
+
+    /* Target Display */
+    .target-display { background: linear-gradient(135deg, #1a5276, #C4A962); border-radius: 16px; padding: 2rem 1rem; text-align: center; color: white; margin-bottom: 1rem; }
+    .target-amount { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .target-label { font-size: 0.9rem; opacity: 0.9; }
+
+    /* Progress Section */
+    .progress-section { margin-top: 1.5rem; }
+    .progress-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
+    .progress-item { background: var(--white); border-radius: 8px; padding: 0.5rem; text-align: center; box-shadow: var(--shadow); }
+    .progress-item.done { background: #d5f5e3; }
+    .progress-emoji { font-size: 1.5rem; }
+    .progress-count { font-size: 0.7rem; color: var(--text-light); }
+
+    /* Daily Schedule */
+    .schedule-card { background: var(--white); border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; box-shadow: var(--shadow); }
+    .schedule-time { font-weight: 700; color: var(--wealth-gold); font-size: 0.8rem; margin-bottom: 0.5rem; }
+    .schedule-items { font-size: 0.85rem; color: var(--text-dark); }
+    .schedule-items li { margin-bottom: 0.3rem; }
+
+    /* Metrics Card */
+    .metrics-card { background: var(--white); border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; box-shadow: var(--shadow); border-left: 4px solid var(--wealth-green); }
+    .metrics-title { font-weight: 700; color: var(--wealth-primary); font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .metrics-items { font-size: 0.8rem; }
+    .metrics-items li { margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.5rem; }
+
+    /* Round indicator */
+    .round-badge { display: inline-block; background: var(--wealth-primary); color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.7rem; font-weight: 600; margin-bottom: 0.5rem; }
+
+    /* Quote Card */
+    .quote-card { background: linear-gradient(135deg, #f5f7fa, #e4e8ec); border-radius: 10px; padding: 1rem; text-align: center; margin-bottom: 1rem; }
+    .quote-text { font-style: italic; color: var(--text-dark); margin-bottom: 0.5rem; font-size: 0.9rem; }
+    .quote-author { font-size: 0.75rem; color: var(--text-light); }
+
+    /* History Item */
+    .history-item { background: var(--white); border-radius: 10px; padding: 0.75rem; margin-bottom: 0.5rem; box-shadow: var(--shadow); border-left: 4px solid var(--wealth-gold); }
+    .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+    .history-title { font-weight: 600; color: var(--wealth-primary); font-size: 0.9rem; }
+    .history-date { font-size: 0.7rem; color: var(--text-light); }
+    .history-notes { font-size: 0.8rem; color: var(--text-dark); }
+
+    /* Empty State */
+    .empty-state { text-align: center; padding: 2rem; color: var(--text-light); }
+    .empty-state .emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+
+    /* Net Worth Input */
+    .networth-input { background: var(--white); border-radius: 12px; padding: 1rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
+    .networth-input label { display: block; font-weight: 600; color: var(--wealth-primary); margin-bottom: 0.5rem; }
+    .networth-input input { width: 100%; padding: 0.75rem; border: 2px solid var(--border); border-radius: 8px; font-size: 1.2rem; text-align: center; }
+    .networth-input input:focus { border-color: var(--wealth-primary); outline: none; }
+
+    /* Chart placeholder */
+    .chart-area { background: var(--white); border-radius: 12px; padding: 1rem; margin-bottom: 1rem; box-shadow: var(--shadow); min-height: 150px; }
+    .chart-bars { display: flex; align-items: flex-end; gap: 0.5rem; height: 120px; padding: 0 1rem; }
+    .chart-bar { flex: 1; background: linear-gradient(to top, var(--wealth-primary), var(--wealth-gold)); border-radius: 4px 4px 0 0; min-height: 10px; transition: height 0.5s; }
+
+    /* Responsive */
+    @media(max-width:480px) {
+      .header h1 { font-size: 1.2rem; }
+      .nav-tab { padding: 0.5rem 0.25rem; min-width: 50px; }
+      .nav-tab .icon { font-size: 1.1rem; }
+      .nav-tab span:not(.icon) { font-size: 0.55rem; }
+      .phase-title { font-size: 0.95rem; }
+      .progress-grid { grid-template-columns: repeat(2, 1fr); }
+      .target-amount { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="sedona-app.html" class="back-link">←</a>
+    <h1>💰 Wealth Protocol</h1>
+    <p>Installing Rp 3 Miliar Target</p>
+  </header>
+
+  <nav class="nav-tabs">
+    <button class="nav-tab active" data-tab="beranda"><span class="icon">🏠</span><span>Beranda</span></button>
+    <button class="nav-tab" data-tab="sedona"><span class="icon">🧘</span><span>Sedona</span></button>
+    <button class="nav-tab" data-tab="nlp"><span class="icon">🧠</span><span>NLP</span></button>
+    <button class="nav-tab" data-tab="silva"><span class="icon">🎯</span><span>Silva</span></button>
+    <button class="nav-tab" data-tab="habits"><span class="icon">⚡</span><span>Habits</span></button>
+    <button class="nav-tab" data-tab="progress"><span class="icon">📊</span><span>Progress</span></button>
+  </nav>
+
+  <main class="main-content">
+
+    <!-- ==================== TAB: BERANDA ==================== -->
+    <section class="tab-content active" id="berandaTab">
+      <!-- Target Display -->
+      <div class="target-display">
+        <div class="target-amount">Rp 3.000.000.000</div>
+        <div class="target-label">Target Net Worth</div>
+      </div>
+
+      <!-- Quote -->
+      <div class="quote-card">
+        <p class="quote-text" id="wealthQuote">"Belief akan follow BEHAVIOR, bukan sebaliknya."</p>
+        <p class="quote-author">— Wealth Protocol</p>
+      </div>
+
+      <!-- Progress -->
+      <div class="progress-section">
+        <h4 style="font-size:0.9rem;margin-bottom:0.75rem;color:var(--wealth-primary)">📊 Session Progress</h4>
+        <div class="progress-grid" id="progressGrid">
+          <div class="progress-item">
+            <div class="progress-emoji">🧘</div>
+            <div class="progress-count"><span id="sedonaCount">0</span> sedona</div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-emoji">🧠</div>
+            <div class="progress-count"><span id="nlpCount">0</span> nlp</div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-emoji">🎯</div>
+            <div class="progress-count"><span id="silvaCount">0</span> silva</div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-emoji">⭐</div>
+            <div class="progress-count"><span id="totalWealthCount">0</span> total</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Daily Schedule -->
+      <div class="category-header" style="margin-top:1.5rem">
+        <span class="emoji">📅</span>
+        <h3>Daily Protocol (15-20 menit)</h3>
+      </div>
+
+      <div class="schedule-card">
+        <div class="schedule-time">🌅 PAGI (Setelah Subuh)</div>
+        <ul class="schedule-items">
+          <li>Silva Alpha Session (10 menit)</li>
+          <li>Finance Check (2 menit)</li>
+          <li>Sedona Release (5 menit)</li>
+        </ul>
+      </div>
+
+      <div class="schedule-card">
+        <div class="schedule-time">🌤️ SIANG (Sepanjang Hari)</div>
+        <ul class="schedule-items">
+          <li>Anchoring 3x (30 detik)</li>
+          <li>Affirmation setelah shalat (5x)</li>
+        </ul>
+      </div>
+
+      <div class="schedule-card">
+        <div class="schedule-time">🌙 MALAM (Sebelum Tidur)</div>
+        <ul class="schedule-items">
+          <li>Review Journal (5 menit)</li>
+          <li>Optional: Silva Alpha (10 menit)</li>
+        </ul>
+      </div>
+
+      <!-- Quick Start -->
+      <div class="category-header">
+        <span class="emoji">🚀</span>
+        <h3>Quick Start</h3>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('sedonaClearingFull')">
+        <div class="phase-header">
+          <div class="phase-icon">🧘</div>
+          <div class="phase-info">
+            <div class="phase-title">Full Sedona Clearing</div>
+            <div class="phase-desc">Release semua emotional blocks terhadap Rp 3M</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('silvaAlphaSession')">
+        <div class="phase-header">
+          <div class="phase-icon">🎯</div>
+          <div class="phase-info">
+            <div class="phase-title">Daily Silva Alpha</div>
+            <div class="phase-desc">Mental screen visualization Rp 3M</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB: SEDONA ==================== -->
+    <section class="tab-content" id="sedonaTab">
+      <div class="info-box">
+        <h4>🧘 Phase 1: Sedona Method - Clearing Resistance</h4>
+        <p>Release semua emotional blocks terhadap angka Rp 3 miliar. Gunakan teknik Welcoming & Releasing untuk membersihkan layer demi layer.</p>
+      </div>
+
+      <div class="category-header">
+        <span class="emoji">📍</span>
+        <h3>Step 1: Identify Current Feelings</h3>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('sedonaIdentify')">
+        <div class="phase-header">
+          <div class="phase-icon">🔍</div>
+          <div class="phase-info">
+            <div class="phase-title">Identify Feelings <span class="phase-badge sedona">Sedona</span></div>
+            <div class="phase-desc">Notice sensasi & perasaan tentang "Rp 3 Miliar"</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="category-header">
+        <span class="emoji">🌊</span>
+        <h3>Step 2: Release Layer by Layer</h3>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('sedonaReleaseFear')">
+        <div class="phase-header">
+          <div class="phase-icon">😰</div>
+          <div class="phase-info">
+            <div class="phase-title">Round 1: Fear/Doubt <span class="phase-badge sedona">Sedona</span></div>
+            <div class="phase-desc">Release keraguan bahwa bisa achieve Rp 3M</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('sedonaReleaseUnworthy')">
+        <div class="phase-header">
+          <div class="phase-icon">😔</div>
+          <div class="phase-info">
+            <div class="phase-title">Round 2: Unworthiness <span class="phase-badge sedona">Sedona</span></div>
+            <div class="phase-desc">Release belief "terlalu banyak untuk saya"</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('sedonaReleaseIdentity')">
+        <div class="phase-header">
+          <div class="phase-icon">🎭</div>
+          <div class="phase-info">
+            <div class="phase-title">Round 3: Identity Conflict <span class="phase-badge sedona">Sedona</span></div>
+            <div class="phase-desc">Release konflik "PNS sederhana" vs "punya 3M"</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('sedonaReleaseSafety')">
+        <div class="phase-header">
+          <div class="phase-icon">🛡️</div>
+          <div class="phase-info">
+            <div class="phase-title">Round 4: Safety Concerns <span class="phase-badge sedona">Sedona</span></div>
+            <div class="phase-desc">Release fear bahwa wealth = problems</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('sedonaReleaseImpossible')">
+        <div class="phase-header">
+          <div class="phase-icon">🚫</div>
+          <div class="phase-info">
+            <div class="phase-title">Round 5: "Impossible" Story <span class="phase-badge sedona">Sedona</span></div>
+            <div class="phase-desc">Release story "PNS tidak bisa achieve this"</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="category-header">
+        <span class="emoji">🔺</span>
+        <h3>Step 3: Holistic Releasing</h3>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('sedonaHolistic')">
+        <div class="phase-header">
+          <div class="phase-icon">🔺</div>
+          <div class="phase-info">
+            <div class="phase-title">Wanting-Control-Security Triangle <span class="phase-badge sedona">Sedona</span></div>
+            <div class="phase-desc">Release the 3 core wants around Rp 3M</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="category-header">
+        <span class="emoji">✨</span>
+        <h3>Step 4: Ultimate Allowing</h3>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('sedonaUltimate')">
+        <div class="phase-header">
+          <div class="phase-icon">🌟</div>
+          <div class="phase-info">
+            <div class="phase-title">Ultimate Releasing Questions <span class="phase-badge sedona">Sedona</span></div>
+            <div class="phase-desc">Allow Rp 3M to happen, to have, to BE</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB: NLP ==================== -->
+    <section class="tab-content" id="nlpTab">
+      <div class="info-box">
+        <h4>🧠 Phase 2: NLP - Installing New Belief & Identity</h4>
+        <p>Setelah clearing resistance, install belief baru menggunakan Submodalities, Anchoring, dan Future Pacing.</p>
+      </div>
+
+      <div class="category-header">
+        <span class="emoji">🔍</span>
+        <h3>Step 1: Submodalities Shift</h3>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('nlpSubmodalities')">
+        <div class="phase-header">
+          <div class="phase-icon">🎨</div>
+          <div class="phase-info">
+            <div class="phase-title">Submodalities Mapping & Shift <span class="phase-badge nlp">NLP</span></div>
+            <div class="phase-desc">Ubah representasi internal "Rp 3M impossible" → "natural"</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="category-header">
+        <span class="emoji">📥</span>
+        <h3>Step 2: Belief Installation</h3>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('nlpBeliefInstall')">
+        <div class="phase-header">
+          <div class="phase-icon">💎</div>
+          <div class="phase-info">
+            <div class="phase-title">Belief Installation <span class="phase-badge nlp">NLP</span></div>
+            <div class="phase-desc">Install "Saya memiliki net worth Rp 3 miliar"</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="category-header">
+        <span class="emoji">🎬</span>
+        <h3>Step 3: Future Pacing</h3>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('nlpFuturePace')">
+        <div class="phase-header">
+          <div class="phase-icon">🎥</div>
+          <div class="phase-info">
+            <div class="phase-title">Mental Rehearsal <span class="phase-badge nlp">NLP</span></div>
+            <div class="phase-desc">Visualisasi momen achievement & living as "3M person"</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="category-header">
+        <span class="emoji">⚓</span>
+        <h3>Step 4: Wealth State Anchoring</h3>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('nlpAnchoring')">
+        <div class="phase-header">
+          <div class="phase-icon">⚓</div>
+          <div class="phase-info">
+            <div class="phase-title">Create Wealth Anchor <span class="phase-badge nlp">NLP</span></div>
+            <div class="phase-desc">Pasang anchor untuk akses "calm confidence wealth state"</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB: SILVA ==================== -->
+    <section class="tab-content" id="silvaTab">
+      <div class="info-box">
+        <h4>🎯 Phase 3: Silva Method - Alpha Programming</h4>
+        <p>Gunakan Alpha State untuk program subconscious dengan visualisasi dan affirmation yang powerful.</p>
+      </div>
+
+      <div class="category-header">
+        <span class="emoji">🧘</span>
+        <h3>Daily Alpha Session</h3>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('silvaAlphaSession')">
+        <div class="phase-header">
+          <div class="phase-icon">🌊</div>
+          <div class="phase-info">
+            <div class="phase-title">Alpha State Entry <span class="phase-badge silva">Silva</span></div>
+            <div class="phase-desc">Countdown 3-2-1 ke alpha level (10-15 menit)</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="category-header">
+        <span class="emoji">📺</span>
+        <h3>Mental Screen Visualization</h3>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('silvaMentalScreen')">
+        <div class="phase-header">
+          <div class="phase-icon">📺</div>
+          <div class="phase-info">
+            <div class="phase-title">Wealth Visualization <span class="phase-badge silva">Silva</span></div>
+            <div class="phase-desc">Project bank statement, portfolio, future self di mental screen</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="category-header">
+        <span class="emoji">📿</span>
+        <h3>Alpha Affirmations</h3>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('silvaAffirmations')">
+        <div class="phase-header">
+          <div class="phase-icon">🗣️</div>
+          <div class="phase-info">
+            <div class="phase-title">Wealth Affirmations in Alpha <span class="phase-badge silva">Silva</span></div>
+            <div class="phase-desc">Powerful affirmations saat di alpha state</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB: HABITS ==================== -->
+    <section class="tab-content" id="habitsTab">
+      <div class="info-box">
+        <h4>⚡ Phase 4: Atomic Habits - Identity & Systems</h4>
+        <p>Become the person who HAS Rp 3M through identity-based habits and systems.</p>
+      </div>
+
+      <div class="category-header">
+        <span class="emoji">👤</span>
+        <h3>Identity Declaration</h3>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('habitsIdentity')">
+        <div class="phase-header">
+          <div class="phase-icon">🦋</div>
+          <div class="phase-info">
+            <div class="phase-title">Identity-Based Goals <span class="phase-badge habits">Habits</span></div>
+            <div class="phase-desc">Define "Siapa yang punya net worth Rp 3M?"</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="category-header">
+        <span class="emoji">📋</span>
+        <h3>Tiny Habits Setup</h3>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('habitsTiny')">
+        <div class="phase-header">
+          <div class="phase-icon">🔗</div>
+          <div class="phase-info">
+            <div class="phase-title">Create Micro-Habits <span class="phase-badge habits">Habits</span></div>
+            <div class="phase-desc">Setup habit stacking untuk wealth behaviors</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="category-header">
+        <span class="emoji">✅</span>
+        <h3>Daily Habits Checklist</h3>
+      </div>
+
+      <div class="phase-card" onclick="startWealth('habitsChecklist')">
+        <div class="phase-header">
+          <div class="phase-icon">📝</div>
+          <div class="phase-info">
+            <div class="phase-title">Today's Wealth Habits <span class="phase-badge habits">Habits</span></div>
+            <div class="phase-desc">Check & track daily wealth-building habits</div>
+          </div>
+          <div class="phase-arrow">→</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB: PROGRESS ==================== -->
+    <section class="tab-content" id="progressTab">
+      <div class="info-box">
+        <h4>📊 Track Your Wealth Journey</h4>
+        <p>Monitor progress, net worth, dan metrics untuk memastikan protocol berjalan efektif.</p>
+      </div>
+
+      <!-- Net Worth Input -->
+      <div class="networth-input">
+        <label>💰 Current Net Worth (Rp)</label>
+        <input type="text" id="currentNetWorth" placeholder="50,000,000" oninput="formatNetWorth(this)">
+        <button class="btn btn-primary btn-block" style="margin-top:0.75rem" onclick="saveNetWorth()">Update Net Worth</button>
+      </div>
+
+      <!-- Chart Area -->
+      <div class="chart-area">
+        <h4 style="font-size:0.9rem;color:var(--wealth-primary);margin-bottom:0.75rem">📈 Net Worth Progress</h4>
+        <div class="chart-bars" id="chartBars">
+          <!-- Bars will be generated dynamically -->
+        </div>
+      </div>
+
+      <!-- Milestones -->
+      <div class="category-header">
+        <span class="emoji">🎯</span>
+        <h3>Milestones</h3>
+      </div>
+
+      <div class="metrics-card">
+        <div class="metrics-title">After 1 Month</div>
+        <ul class="metrics-items">
+          <li><span id="m1_1">⬜</span> Angka Rp 3M terasa less scary</li>
+          <li><span id="m1_2">⬜</span> Habits mulai stick (4/5 days/week)</li>
+          <li><span id="m1_3">⬜</span> Invest at least Rp 10 juta</li>
+        </ul>
+      </div>
+
+      <div class="metrics-card">
+        <div class="metrics-title">After 3 Months</div>
+        <ul class="metrics-items">
+          <li><span id="m3_1">⬜</span> Rp 3M feels inevitable</li>
+          <li><span id="m3_2">⬜</span> Automatic investing jalan</li>
+          <li><span id="m3_3">⬜</span> Net worth naik Rp 30-50 juta</li>
+        </ul>
+      </div>
+
+      <div class="metrics-card">
+        <div class="metrics-title">After 6 Months</div>
+        <ul class="metrics-items">
+          <li><span id="m6_1">⬜</span> Identity shift completed</li>
+          <li><span id="m6_2">⬜</span> Decisions aligned automatically</li>
+          <li><span id="m6_3">⬜</span> Passive income Rp 2-3 juta/bulan</li>
+        </ul>
+      </div>
+
+      <!-- History -->
+      <div class="category-header">
+        <span class="emoji">📜</span>
+        <h3>Session History</h3>
+      </div>
+
+      <div id="historyContainer">
+        <div class="empty-state">
+          <div class="emoji">📭</div>
+          <p>Belum ada history sesi.</p>
+          <p style="font-size:0.8rem">Mulai sesi pertamamu!</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Releasing Modal -->
+  <div class="releasing-modal" id="releasingModal"></div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="common.js"></script>
+  <script src="releasing-engine.js"></script>
+  <script src="wealth-scripts.js"></script>
+
+  <script>
+    // ==================== TAB NAVIGATION ====================
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabId = tab.dataset.tab;
+
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById(tabId + 'Tab').classList.add('active');
+
+        if (tabId === 'progress') {
+          loadHistory();
+          loadNetWorthChart();
+        }
+      });
+    });
+
+    // ==================== PROGRESS ====================
+    function loadProgress() {
+      const history = JSON.parse(localStorage.getItem('wealth_history') || '[]');
+
+      let sedona = 0, nlp = 0, silva = 0;
+      history.forEach(h => {
+        if (h.scriptId.includes('sedona')) sedona++;
+        else if (h.scriptId.includes('nlp')) nlp++;
+        else if (h.scriptId.includes('silva')) silva++;
+      });
+
+      document.getElementById('sedonaCount').textContent = sedona;
+      document.getElementById('nlpCount').textContent = nlp;
+      document.getElementById('silvaCount').textContent = silva;
+      document.getElementById('totalWealthCount').textContent = history.length;
+    }
+
+    // ==================== HISTORY ====================
+    function loadHistory() {
+      const history = JSON.parse(localStorage.getItem('wealth_history') || '[]');
+      const container = document.getElementById('historyContainer');
+
+      if (history.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="emoji">📭</div>
+            <p>Belum ada history sesi.</p>
+            <p style="font-size:0.8rem">Mulai sesi pertamamu!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = history.slice().reverse().slice(0, 20).map(h => `
+        <div class="history-item">
+          <div class="history-header">
+            <div class="history-title">${h.title || h.scriptId}</div>
+            <div class="history-date">${formatDate(h.timestamp)}</div>
+          </div>
+          ${h.notes ? `<div class="history-notes">${h.notes}</div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function formatDate(timestamp) {
+      if (!timestamp) return '-';
+      const d = new Date(timestamp);
+      return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    // ==================== NET WORTH ====================
+    function formatNetWorth(input) {
+      let value = input.value.replace(/[^0-9]/g, '');
+      if (value) {
+        value = parseInt(value).toLocaleString('id-ID');
+      }
+      input.value = value;
+    }
+
+    function saveNetWorth() {
+      const input = document.getElementById('currentNetWorth');
+      const value = parseInt(input.value.replace(/[^0-9]/g, '')) || 0;
+
+      const netWorthHistory = JSON.parse(localStorage.getItem('networth_history') || '[]');
+      netWorthHistory.push({
+        amount: value,
+        date: new Date().toISOString()
+      });
+      localStorage.setItem('networth_history', JSON.stringify(netWorthHistory));
+      localStorage.setItem('current_networth', value);
+
+      showToast('Net Worth updated!', 'success');
+      loadNetWorthChart();
+    }
+
+    function loadNetWorthChart() {
+      const history = JSON.parse(localStorage.getItem('networth_history') || '[]');
+      const container = document.getElementById('chartBars');
+
+      if (history.length === 0) {
+        container.innerHTML = '<p style="text-align:center;color:var(--text-light);width:100%">Belum ada data</p>';
+        return;
+      }
+
+      const last6 = history.slice(-6);
+      const maxAmount = Math.max(...last6.map(h => h.amount), 1);
+      const target = 3000000000;
+
+      container.innerHTML = last6.map(h => {
+        const height = Math.max((h.amount / target) * 100, 5);
+        const date = new Date(h.date);
+        const label = date.toLocaleDateString('id-ID', { month: 'short' });
+        return `
+          <div style="flex:1;text-align:center;">
+            <div class="chart-bar" style="height:${height}%"></div>
+            <div style="font-size:0.6rem;color:var(--text-light);margin-top:0.25rem">${label}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ==================== QUOTES ====================
+    const wealthQuotes = [
+      { text: "Belief akan follow BEHAVIOR, bukan sebaliknya.", author: "Wealth Protocol" },
+      { text: "Goal is not to have Rp 3M, but to BECOME the person who has Rp 3M.", author: "James Clear (adapted)" },
+      { text: "Ketika Anda consistently behave like wealthy person, brain akan conclude: I AM this kind of person.", author: "Wealth Protocol" },
+      { text: "Could I allow myself to HAVE Rp 3 miliar?", author: "Sedona Method" },
+      { text: "Setiap hari, dalam segala hal, kekayaan saya bertambah.", author: "Silva Method" },
+      { text: "The map is not the territory - your beliefs about money are not reality.", author: "NLP" }
+    ];
+
+    function updateQuote() {
+      const quote = wealthQuotes[Math.floor(Math.random() * wealthQuotes.length)];
+      document.getElementById('wealthQuote').textContent = '"' + quote.text + '"';
+    }
+
+    // ==================== START WEALTH SESSION ====================
+    function startWealth(scriptId) {
+      if (typeof ReleasingEngine !== 'undefined' && wealthScripts[scriptId]) {
+        if (!ReleasingEngine.getScript(scriptId)) {
+          ReleasingEngine.getScripts()[scriptId] = wealthScripts[scriptId];
+        }
+
+        ReleasingEngine.init({
+          onComplete: function(result) {
+            const history = JSON.parse(localStorage.getItem('wealth_history') || '[]');
+            history.push({
+              scriptId: scriptId,
+              title: wealthScripts[scriptId]?.title || scriptId,
+              timestamp: new Date().toISOString(),
+              notes: result?.insight || ''
+            });
+            localStorage.setItem('wealth_history', JSON.stringify(history));
+
+            loadProgress();
+            showToast('Sesi ' + (wealthScripts[scriptId]?.title || scriptId) + ' selesai!', 'success');
+          }
+        });
+
+        ReleasingEngine.startReleasing(scriptId);
+      } else {
+        showToast('Script tidak tersedia', 'error');
+      }
+    }
+
+    // ==================== INIT ====================
+    document.addEventListener('DOMContentLoaded', () => {
+      updateQuote();
+      loadProgress();
+
+      // Load saved net worth
+      const savedNetWorth = localStorage.getItem('current_networth');
+      if (savedNetWorth) {
+        document.getElementById('currentNetWorth').value = parseInt(savedNetWorth).toLocaleString('id-ID');
+      }
+    });
+  </script>
+</body>
+</html>
