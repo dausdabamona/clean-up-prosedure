@@ -57,6 +57,7 @@ const nlpScripts = {
   'stateModeling': {
     title: 'State Modeling - Copy State Orang Lain',
     description: 'Teknik NLP untuk meng-copy state/kondisi mental seseorang yang excellence',
+    level: 'intermediate',
     steps: [
       { type: 'instruction', text: 'STATE MODELING', subtext: 'Teknik untuk meng-copy state excellence dari orang lain', duration: 8000 },
       { type: 'instruction', text: 'Duduk dengan nyaman...', subtext: 'Rilekskan tubuh, buka pikiran', duration: 6000 },
@@ -167,6 +168,7 @@ const nlpScripts = {
   'submodalitiesMapping': {
     title: 'Submodalities Mapping',
     description: 'Pemetaan detail submodalities dari sebuah state',
+    level: 'basic',
     steps: [
       { type: 'instruction', text: 'SUBMODALITIES MAPPING', subtext: 'Memetakan representasi internal secara detail', duration: 6000 },
       { type: 'input', text: 'State/pengalaman apa yang ingin kamu petakan?', placeholder: 'Contoh: Percaya diri, motivasi, kenangan indah' },
@@ -213,6 +215,7 @@ const nlpScripts = {
   'swishPattern': {
     title: 'Swish Pattern',
     description: 'Mengganti state/perilaku tidak diinginkan dengan yang diinginkan',
+    level: 'basic',
     steps: [
       { type: 'instruction', text: 'SWISH PATTERN', subtext: 'Mengganti representasi internal secara cepat', duration: 6000 },
 
@@ -261,6 +264,7 @@ const nlpScripts = {
   'anchoring': {
     title: 'Anchoring - Pasang Jangkar State',
     description: 'Membuat trigger untuk mengakses state tertentu kapan saja',
+    level: 'basic',
     steps: [
       { type: 'instruction', text: 'ANCHORING', subtext: 'Membuat jangkar untuk mengakses state kapan saja', duration: 6000 },
 
@@ -319,6 +323,7 @@ const nlpScripts = {
   'circleOfExcellence': {
     title: 'Circle of Excellence',
     description: 'Membuat lingkaran imajiner berisi state-state powerful',
+    level: 'basic',
     steps: [
       { type: 'instruction', text: 'CIRCLE OF EXCELLENCE', subtext: 'Membuat lingkaran berisi state-state terbaikmu', duration: 6000 },
 
@@ -368,6 +373,7 @@ const nlpScripts = {
   'perceptualPositions': {
     title: 'Perceptual Positions',
     description: 'Melihat situasi dari 3 perspektif berbeda',
+    level: 'intermediate',
     steps: [
       { type: 'instruction', text: 'PERCEPTUAL POSITIONS', subtext: 'Melihat situasi dari berbagai sudut pandang', duration: 6000 },
 
@@ -416,6 +422,7 @@ const nlpScripts = {
   'newBehaviorGenerator': {
     title: 'New Behavior Generator',
     description: 'Memprogram perilaku baru dengan visualisasi',
+    level: 'intermediate',
     steps: [
       { type: 'instruction', text: 'NEW BEHAVIOR GENERATOR', subtext: 'Memprogram perilaku baru ke dalam sistem sarafmu', duration: 6000 },
 
@@ -461,6 +468,7 @@ const nlpScripts = {
   'deepTraceId': {
     title: 'Deep Trance Identification (Simplified)',
     description: 'Menjadi satu dengan model untuk menyerap kemampuannya',
+    level: 'advanced',
     steps: [
       { type: 'instruction', text: 'DEEP TRANCE IDENTIFICATION', subtext: 'Teknik advance untuk menyerap kemampuan model', duration: 6000 },
 
@@ -514,6 +522,356 @@ const nlpScripts = {
 
       { type: 'completion', text: 'Deep Trance Identification Selesai!', subtext: 'Kemampuan model sekarang terintegrasi dengan dirimu.' },
       { type: 'insight', text: 'Catatan pengalaman:', placeholder: 'Apa yang kamu rasakan dan insights yang muncul...' }
+    ]
+  },
+
+  // ==================== TIMELINE THERAPY ====================
+  'timelineTherapy': {
+    title: 'Timeline Therapy',
+    description: 'Mengubah hubungan dengan masa lalu dan masa depan',
+    level: 'intermediate',
+    steps: [
+      { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Rileks. Izinkan saat ini apa adanya.', duration: 5000 },
+      { type: 'instruction', text: 'TIMELINE THERAPY', subtext: 'Teknik untuk mengubah hubungan dengan waktu', duration: 6000 },
+
+      { type: 'input', text: 'Isu/emosi negatif APA yang ingin kamu selesaikan?', placeholder: 'Contoh: Takut ditolak, trauma masa lalu, kecemasan' },
+      { type: 'instruction', text: 'Tutup mata... rilekskan tubuh...', duration: 8000 },
+      { type: 'breathing', text: 'Tarik napas dalam... tahan... hembuskan...', duration: 8000 },
+
+      // Elicit Timeline
+      { type: 'instruction', text: '=== STEP 1: TEMUKAN TIMELINE ===', duration: 4000 },
+      { type: 'instruction', text: 'Bayangkan garis waktu hidupmu...', subtext: 'MASA LALU di satu sisi, MASA DEPAN di sisi lain', duration: 10000 },
+      { type: 'choice', text: 'Masa LALU ada di sebelah mana?', options: ['Kiri', 'Kanan', 'Belakang', 'Depan'] },
+      { type: 'choice', text: 'Masa DEPAN ada di sebelah mana?', options: ['Kiri', 'Kanan', 'Belakang', 'Depan'] },
+      { type: 'instruction', text: 'Lihat garis waktu itu membentang...', subtext: 'Dari masa lalu hingga masa depan', duration: 10000 },
+
+      // Float Above
+      { type: 'instruction', text: '=== STEP 2: NAIK KE ATAS TIMELINE ===', duration: 4000 },
+      { type: 'instruction', text: 'Sekarang, bayangkan dirimu NAIK ke atas...', subtext: 'Melayang di atas timeline-mu', duration: 10000 },
+      { type: 'instruction', text: 'Dari atas sini, kamu bisa melihat seluruh timeline...', duration: 8000 },
+      { type: 'instruction', text: 'Lihat masa lalu... SEKARANG... dan masa depan...', duration: 10000 },
+
+      // Find Root Cause
+      { type: 'instruction', text: '=== STEP 3: TEMUKAN AKAR MASALAH ===', duration: 4000 },
+      { type: 'instruction', text: 'Terbang ke arah MASA LALU...', subtext: 'Cari KEJADIAN PERTAMA yang memulai isu ini', duration: 10000 },
+      { type: 'instruction', text: 'Biarkan alam bawah sadar membawamu ke sana...', duration: 12000 },
+      { type: 'instruction', text: 'BERHENTI tepat DI ATAS kejadian itu...', subtext: 'Jangan masuk ke dalamnya, tetap di atas', duration: 10000 },
+      { type: 'input', text: 'Kira-kira BERAPA usia kamu saat kejadian itu?', placeholder: 'Perkiraan usia' },
+
+      // Learn the Lesson
+      { type: 'instruction', text: '=== STEP 4: AMBIL PELAJARAN ===', duration: 4000 },
+      { type: 'instruction', text: 'Dari posisi di atas ini, dengan kebijaksanaan dewasamu...', duration: 8000 },
+      { type: 'instruction', text: 'Apa PELAJARAN positif dari kejadian ini?', subtext: 'Yang perlu dipelajari agar bisa move on', duration: 12000 },
+      { type: 'input', text: 'Tuliskan pelajaran/hikmah yang bisa diambil:', placeholder: 'Pelajaran positif dari kejadian itu' },
+      { type: 'instruction', text: 'Sekarang KIRIMKAN pelajaran itu ke dirimu yang lebih muda...', duration: 10000 },
+      { type: 'instruction', text: 'Lihat dirimu yang muda MENERIMA pelajaran itu...', duration: 10000 },
+
+      // Release
+      { type: 'instruction', text: '=== STEP 5: LEPASKAN EMOSI ===', duration: 4000 },
+      { type: 'instruction', text: 'Sekarang terbang LEBIH JAUH ke masa lalu...', subtext: 'SEBELUM kejadian itu terjadi', duration: 10000 },
+      { type: 'instruction', text: 'Dari sini, LIHAT ke arah masa depan...', duration: 8000 },
+      { type: 'instruction', text: 'Perhatikan... apakah emosi negatif itu masih ada?', duration: 10000 },
+      { type: 'yesno', text: 'Apakah emosi negatif sudah berkurang atau hilang?', highlight: 'Ya' },
+
+      // Return
+      { type: 'instruction', text: '=== STEP 6: KEMBALI KE SEKARANG ===', duration: 4000 },
+      { type: 'instruction', text: 'Sekarang terbang kembali ke SEKARANG...', subtext: 'Bawa semua pelajaran dan perubahan', duration: 10000 },
+      { type: 'instruction', text: 'Turun perlahan kembali ke tubuhmu...', duration: 8000 },
+      { type: 'instruction', text: 'Rasakan perubahan yang terjadi...', duration: 10000 },
+
+      { type: 'completion', text: 'Timeline Therapy Selesai!', subtext: 'Hubunganmu dengan masa lalu telah berubah.' },
+      { type: 'insight', text: 'Catatan:', placeholder: 'Pelajaran dan perubahan yang kamu rasakan...' }
+    ]
+  },
+
+  // ==================== META MODEL QUESTIONS ====================
+  'metaModel': {
+    title: 'Meta Model Questions',
+    description: 'Menggali lebih dalam dengan pertanyaan presisi',
+    level: 'intermediate',
+    steps: [
+      { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Rileks. Buka pikiran.', duration: 5000 },
+      { type: 'instruction', text: 'META MODEL QUESTIONS', subtext: 'Teknik bertanya untuk menggali kebenaran', duration: 6000 },
+      { type: 'instruction', text: 'Meta Model membantu menantang DISTORSI, DELETION, dan GENERALISASI dalam pikiran', duration: 8000 },
+
+      { type: 'input', text: 'Tuliskan PIKIRAN/BELIEF yang ingin kamu eksplorasi:', placeholder: 'Contoh: "Saya tidak bisa sukses", "Dia selalu mengabaikan saya"' },
+
+      // Deletions
+      { type: 'instruction', text: '=== DELETION (Penghapusan) ===', duration: 4000 },
+      { type: 'instruction', text: 'Cek apakah ada INFORMASI yang hilang dari pikiran itu...', duration: 6000 },
+      { type: 'input', text: 'SIAPA spesifiknya? (Who specifically?)', placeholder: 'Siapa yang dimaksud?' },
+      { type: 'input', text: 'APA spesifiknya? (What specifically?)', placeholder: 'Apa tepatnya yang dimaksud?' },
+      { type: 'input', text: 'BAGAIMANA tepatnya? (How specifically?)', placeholder: 'Bagaimana cara kerjanya?' },
+      { type: 'input', text: 'KAPAN spesifiknya?', placeholder: 'Kapan tepatnya ini terjadi?' },
+      { type: 'input', text: 'DI MANA spesifiknya?', placeholder: 'Di situasi mana?' },
+
+      // Distortions
+      { type: 'instruction', text: '=== DISTORSI (Penyimpangan) ===', duration: 4000 },
+      { type: 'instruction', text: 'Cek apakah ada ASUMSI yang belum terbukti...', duration: 6000 },
+      { type: 'input', text: 'Bagaimana kamu TAHU itu benar?', placeholder: 'Apa buktinya?' },
+      { type: 'input', text: 'Apa yang membuat X berarti Y?', placeholder: 'Hubungan sebab-akibatnya?' },
+      { type: 'input', text: 'Siapa yang bilang begitu?', placeholder: 'Sumber informasinya?' },
+      { type: 'input', text: 'Apakah pernah ada PENGECUALIAN?', placeholder: 'Kapan ini tidak benar?' },
+
+      // Generalizations
+      { type: 'instruction', text: '=== GENERALISASI ===', duration: 4000 },
+      { type: 'instruction', text: 'Cek apakah ada kata SELALU, TIDAK PERNAH, SEMUA, TIDAK ADA...', duration: 6000 },
+      { type: 'input', text: 'SELALU? TIDAK PERNAH? Benar-benar selalu/tidak pernah?', placeholder: 'Tantang generalisasi' },
+      { type: 'input', text: 'SEMUA orang? TIDAK ADA yang bisa? Benar?', placeholder: 'Tantang generalisasi' },
+      { type: 'input', text: 'Apa yang akan terjadi jika kamu BISA?', placeholder: 'Bayangkan kemungkinannya' },
+      { type: 'input', text: 'Apa yang MENCEGAH kamu?', placeholder: 'Hambatan spesifik' },
+
+      // Integration
+      { type: 'instruction', text: '=== INTEGRASI ===', duration: 4000 },
+      { type: 'instruction', text: 'Setelah menjawab pertanyaan-pertanyaan ini...', duration: 6000 },
+      { type: 'input', text: 'Bagaimana PIKIRAN BARU yang lebih akurat?', placeholder: 'Reformulasi pikiran yang lebih sehat' },
+      { type: 'instruction', text: 'Rasakan perbedaan antara pikiran lama dan pikiran baru...', duration: 10000 },
+
+      { type: 'completion', text: 'Meta Model Selesai!', subtext: 'Kamu telah menggali kebenaran lebih dalam.' },
+      { type: 'insight', text: 'Insight utama:', placeholder: 'Apa yang kamu temukan...' }
+    ]
+  },
+
+  // ==================== SIX-STEP REFRAMING ====================
+  'sixStepReframing': {
+    title: 'Six-Step Reframing',
+    description: 'Mengubah perilaku tidak diinginkan dengan memenuhi niat positifnya',
+    level: 'intermediate',
+    steps: [
+      { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Rileks. Buka komunikasi dengan alam bawah sadar.', duration: 5000 },
+      { type: 'instruction', text: 'SIX-STEP REFRAMING', subtext: 'Teknik klasik NLP untuk perubahan perilaku', duration: 6000 },
+      { type: 'instruction', text: 'Premis: Setiap perilaku punya NIAT POSITIF', subtext: 'Kita akan menemukan cara baru yang lebih baik', duration: 8000 },
+
+      { type: 'input', text: 'Perilaku/kebiasaan APA yang ingin kamu ubah?', placeholder: 'Contoh: Prokrastinasi, makan berlebihan, merokok' },
+
+      // Step 1: Identify
+      { type: 'instruction', text: '=== STEP 1: IDENTIFIKASI ===', duration: 4000 },
+      { type: 'instruction', text: 'Fokus pada perilaku yang ingin diubah...', duration: 8000 },
+      { type: 'instruction', text: 'Beri nama pada BAGIAN dirimu yang melakukan perilaku ini...', subtext: 'Contoh: "Si Penunda", "Bagian yang lapar"', duration: 10000 },
+      { type: 'input', text: 'Apa NAMA untuk bagian ini?', placeholder: 'Nama untuk bagian itu' },
+
+      // Step 2: Establish Communication
+      { type: 'instruction', text: '=== STEP 2: BUKA KOMUNIKASI ===', duration: 4000 },
+      { type: 'instruction', text: 'Dalam hati, minta izin untuk berkomunikasi dengan bagian itu...', duration: 8000 },
+      { type: 'instruction', text: '"Bagian yang melakukan [perilaku], maukah berkomunikasi denganku?"', duration: 8000 },
+      { type: 'instruction', text: 'Perhatikan SINYAL apa yang muncul...', subtext: 'Bisa berupa perasaan, gambar, suara, atau sensasi', duration: 10000 },
+      { type: 'yesno', text: 'Apakah kamu merasakan sinyal/respon?', highlight: 'Ya' },
+
+      // Step 3: Find Positive Intention
+      { type: 'instruction', text: '=== STEP 3: TEMUKAN NIAT POSITIF ===', duration: 4000 },
+      { type: 'instruction', text: 'Tanyakan kepada bagian itu...', duration: 6000 },
+      { type: 'instruction', text: '"Apa NIAT POSITIF-mu dengan melakukan perilaku ini?"', subtext: '"Apa yang ingin kamu LINDUNGI atau CAPAI untukku?"', duration: 12000 },
+      { type: 'instruction', text: 'Dengarkan dengan terbuka... tanpa menghakimi...', duration: 10000 },
+      { type: 'input', text: 'Apa NIAT POSITIF dari bagian ini?', placeholder: 'Contoh: Melindungi dari stres, mencari kenyamanan' },
+      { type: 'instruction', text: 'Ucapkan terima kasih kepada bagian itu untuk niat baiknya...', duration: 8000 },
+
+      // Step 4: Access Creative Part
+      { type: 'instruction', text: '=== STEP 4: AKSES BAGIAN KREATIF ===', duration: 4000 },
+      { type: 'instruction', text: 'Sekarang akses BAGIAN KREATIF dirimu...', subtext: 'Bagian yang bisa menciptakan solusi baru', duration: 8000 },
+      { type: 'instruction', text: 'Minta bagian kreatif untuk menciptakan 3 ALTERNATIF baru...', subtext: 'Yang bisa memenuhi niat positif dengan cara lebih sehat', duration: 10000 },
+      { type: 'input', text: 'Alternatif 1:', placeholder: 'Cara baru untuk memenuhi niat positif' },
+      { type: 'input', text: 'Alternatif 2:', placeholder: 'Cara baru lainnya' },
+      { type: 'input', text: 'Alternatif 3:', placeholder: 'Cara baru lainnya lagi' },
+
+      // Step 5: Ask Part to Accept
+      { type: 'instruction', text: '=== STEP 5: MINTA PERSETUJUAN ===', duration: 4000 },
+      { type: 'instruction', text: 'Kembali ke bagian yang melakukan perilaku lama...', duration: 8000 },
+      { type: 'instruction', text: 'Tanyakan: "Apakah kamu bersedia MENCOBA alternatif-alternatif ini?"', duration: 10000 },
+      { type: 'instruction', text: 'Dengarkan responnya...', duration: 8000 },
+      { type: 'yesno', text: 'Apakah bagian itu setuju mencoba alternatif baru?', highlight: 'Ya' },
+
+      // Step 6: Ecology Check
+      { type: 'instruction', text: '=== STEP 6: CEK EKOLOGI ===', duration: 4000 },
+      { type: 'instruction', text: 'Tanyakan ke SELURUH dirimu...', duration: 6000 },
+      { type: 'instruction', text: '"Apakah ada bagian lain yang KEBERATAN dengan perubahan ini?"', duration: 10000 },
+      { type: 'instruction', text: 'Jika ada keberatan, negosiasikan dengan bagian tersebut...', duration: 8000 },
+      { type: 'yesno', text: 'Apakah semua bagian setuju dengan perubahan ini?', highlight: 'Ya' },
+
+      { type: 'instruction', text: 'Komitmenkan dirimu untuk menggunakan alternatif baru...', duration: 8000 },
+
+      { type: 'completion', text: 'Six-Step Reframing Selesai!', subtext: 'Kamu telah membuat kesepakatan baru dengan alam bawah sadarmu.' },
+      { type: 'insight', text: 'Catatan:', placeholder: 'Niat positif dan alternatif yang ditemukan...' }
+    ]
+  },
+
+  // ==================== PARTS INTEGRATION ====================
+  'partsIntegration': {
+    title: 'Parts Integration',
+    description: 'Mengintegrasikan bagian-bagian yang berkonflik',
+    level: 'intermediate',
+    steps: [
+      { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Rileks dan buka kesadaran.', duration: 5000 },
+      { type: 'instruction', text: 'PARTS INTEGRATION', subtext: 'Menyatukan bagian-bagian diri yang berkonflik', duration: 6000 },
+      { type: 'instruction', text: 'Teknik ini untuk saat kamu merasa "terpecah" atau punya konflik internal', duration: 8000 },
+
+      { type: 'input', text: 'Apa KONFLIK INTERNAL yang kamu rasakan?', placeholder: 'Contoh: Ingin maju tapi takut gagal, ingin sehat tapi malas olahraga' },
+
+      // Identify Parts
+      { type: 'instruction', text: '=== STEP 1: IDENTIFIKASI DUA BAGIAN ===', duration: 4000 },
+      { type: 'input', text: 'Bagian PERTAMA ingin apa?', placeholder: 'Keinginan satu sisi' },
+      { type: 'input', text: 'Bagian KEDUA ingin apa?', placeholder: 'Keinginan sisi yang bertentangan' },
+
+      // Place in Hands
+      { type: 'instruction', text: '=== STEP 2: TEMPATKAN DI KEDUA TANGAN ===', duration: 4000 },
+      { type: 'instruction', text: 'Buka kedua telapak tanganmu, menghadap ke atas...', duration: 8000 },
+      { type: 'instruction', text: 'Bayangkan bagian PERTAMA ada di tangan KANAN...', duration: 10000 },
+      { type: 'instruction', text: 'Bagaimana bentuknya? Warnanya? Ukurannya?', duration: 8000 },
+      { type: 'input', text: 'Deskripsi bagian pertama (di tangan kanan):', placeholder: 'Bentuk, warna, ukuran' },
+      { type: 'instruction', text: 'Bayangkan bagian KEDUA ada di tangan KIRI...', duration: 10000 },
+      { type: 'input', text: 'Deskripsi bagian kedua (di tangan kiri):', placeholder: 'Bentuk, warna, ukuran' },
+
+      // Find Positive Intentions
+      { type: 'instruction', text: '=== STEP 3: TEMUKAN NIAT POSITIF ===', duration: 4000 },
+      { type: 'instruction', text: 'Tanyakan ke bagian di tangan KANAN...', duration: 6000 },
+      { type: 'instruction', text: '"Apa niat positifmu? Apa yang ingin kamu capai?"', duration: 10000 },
+      { type: 'input', text: 'Niat positif bagian KANAN:', placeholder: 'Apa yang ingin dicapai' },
+      { type: 'instruction', text: '"Dan apa yang akan kamu dapat jika itu tercapai?"', subtext: 'Terus tanyakan sampai ke nilai tertinggi', duration: 10000 },
+      { type: 'input', text: 'Nilai TERTINGGI bagian kanan:', placeholder: 'Nilai inti: kebahagiaan, kedamaian, cinta, dll' },
+
+      { type: 'instruction', text: 'Sekarang tanyakan ke bagian di tangan KIRI hal yang sama...', duration: 8000 },
+      { type: 'input', text: 'Niat positif bagian KIRI:', placeholder: 'Apa yang ingin dicapai' },
+      { type: 'input', text: 'Nilai TERTINGGI bagian kiri:', placeholder: 'Nilai inti' },
+
+      // Recognize Common Ground
+      { type: 'instruction', text: '=== STEP 4: TEMUKAN KESAMAAN ===', duration: 4000 },
+      { type: 'instruction', text: 'Perhatikan bahwa KEDUA bagian sebenarnya ingin hal yang SAMA...', subtext: 'Di level yang lebih tinggi', duration: 10000 },
+      { type: 'instruction', text: 'Mereka berdua menginginkan kebaikanmu...', duration: 8000 },
+      { type: 'instruction', text: 'Biarkan kedua bagian MENYADARI ini...', duration: 10000 },
+      { type: 'instruction', text: 'Apakah mereka mulai bisa saling menghargai?', duration: 10000 },
+
+      // Integration
+      { type: 'instruction', text: '=== STEP 5: INTEGRASI ===', duration: 4000 },
+      { type: 'instruction', text: 'Sekarang, jika terasa benar, biarkan kedua tangan PERLAHAN mendekat...', duration: 10000 },
+      { type: 'instruction', text: 'Biarkan kedua bagian mulai bersatu...', subtext: 'Dengan kecepatan yang terasa natural', duration: 12000 },
+      { type: 'instruction', text: 'Perhatikan apa yang terjadi saat mereka mendekat...', duration: 10000 },
+      { type: 'instruction', text: 'Saat tangan menyatu, biarkan kedua bagian menjadi SATU...', duration: 12000 },
+      { type: 'instruction', text: 'Satu bagian baru yang lebih UTUH dan SEIMBANG...', duration: 10000 },
+      { type: 'instruction', text: 'Bawa kesatuan ini ke dalam DADA-mu...', subtext: 'Integrasikan ke seluruh dirimu', duration: 12000 },
+
+      { type: 'completion', text: 'Parts Integration Selesai!', subtext: 'Bagian-bagian yang berkonflik sekarang bersatu.' },
+      { type: 'insight', text: 'Catatan:', placeholder: 'Bagaimana rasanya sekarang...' }
+    ]
+  },
+
+  // ==================== BELIEF CHANGE PATTERN ====================
+  'beliefChange': {
+    title: 'Belief Change Pattern',
+    description: 'Mengubah limiting belief menjadi empowering belief',
+    level: 'advanced',
+    steps: [
+      { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Rileks. Siapkan diri untuk transformasi.', duration: 5000 },
+      { type: 'instruction', text: 'BELIEF CHANGE PATTERN', subtext: 'Teknik untuk mengubah belief yang membatasi', duration: 6000 },
+
+      { type: 'input', text: 'Apa LIMITING BELIEF yang ingin kamu ubah?', placeholder: 'Contoh: "Saya tidak cukup pintar", "Saya tidak layak sukses"' },
+      { type: 'input', text: 'Apa EMPOWERING BELIEF penggantinya?', placeholder: 'Contoh: "Saya terus belajar dan berkembang", "Saya layak sukses"' },
+
+      // Step 1: Find Submodalities of Old Belief
+      { type: 'instruction', text: '=== STEP 1: SUBMODALITIES BELIEF LAMA ===', duration: 4000 },
+      { type: 'instruction', text: 'Pikirkan limiting belief itu...', duration: 8000 },
+      { type: 'instruction', text: 'Bagaimana representasi internalnya?', duration: 6000 },
+      { type: 'choice', text: 'Gambarnya TERANG atau GELAP?', options: ['Sangat Gelap', 'Gelap', 'Sedang', 'Terang', 'Sangat Terang'] },
+      { type: 'choice', text: 'Ukurannya?', options: ['Sangat Kecil', 'Kecil', 'Sedang', 'Besar', 'Sangat Besar'] },
+      { type: 'choice', text: 'Lokasinya di mana?', options: ['Kiri Atas', 'Tengah', 'Kanan Atas', 'Kiri Bawah', 'Kanan Bawah'] },
+      { type: 'choice', text: 'Perasaannya?', options: ['Berat', 'Tidak Nyaman', 'Netral'] },
+
+      // Step 2: Find Something You Used to Believe
+      { type: 'instruction', text: '=== STEP 2: BELIEF YANG SUDAH TIDAK DIPERCAYA ===', duration: 4000 },
+      { type: 'instruction', text: 'Pikirkan sesuatu yang DULU kamu percaya, tapi SEKARANG TIDAK lagi...', subtext: 'Contoh: Sinterklas itu nyata, monster di bawah tempat tidur', duration: 12000 },
+      { type: 'input', text: 'Apa belief yang sudah tidak kamu percaya?', placeholder: 'Sesuatu yang dulu dipercaya, sekarang tidak' },
+      { type: 'instruction', text: 'Perhatikan SUBMODALITIES-nya...', duration: 6000 },
+      { type: 'choice', text: 'Gambarnya?', options: ['Sangat Gelap', 'Blur', 'Samar', 'Jauh'] },
+      { type: 'instruction', text: 'Ini adalah "MUSEUM BELIEF LAMA"...', subtext: 'Tempat belief yang sudah tidak berlaku', duration: 8000 },
+
+      // Step 3: Find Strongly Held Belief
+      { type: 'instruction', text: '=== STEP 3: BELIEF YANG SANGAT KUAT ===', duration: 4000 },
+      { type: 'instruction', text: 'Pikirkan sesuatu yang SANGAT kamu yakini benar...', subtext: 'Contoh: Matahari terbit besok, nama sendiri', duration: 10000 },
+      { type: 'input', text: 'Apa belief yang sangat kuat?', placeholder: 'Sesuatu yang 100% kamu yakini' },
+      { type: 'instruction', text: 'Perhatikan SUBMODALITIES belief kuat ini...', duration: 8000 },
+      { type: 'choice', text: 'Gambarnya?', options: ['Terang', 'Besar', 'Dekat', 'Jelas', 'Berwarna Vivid'] },
+      { type: 'instruction', text: 'Ini adalah "RUANG BELIEF KUAT"...', duration: 6000 },
+
+      // Step 4: Transfer
+      { type: 'instruction', text: '=== STEP 4: TRANSFER ===', duration: 4000 },
+      { type: 'instruction', text: 'Sekarang ambil LIMITING BELIEF...', duration: 8000 },
+      { type: 'instruction', text: 'PINDAHKAN ke MUSEUM BELIEF LAMA...', subtext: 'Buat submodalities-nya sama dengan belief yang sudah tidak dipercaya', duration: 12000 },
+      { type: 'instruction', text: 'Biarkan limiting belief itu menjadi MASA LALU...', duration: 10000 },
+
+      { type: 'instruction', text: 'Sekarang ambil EMPOWERING BELIEF...', duration: 8000 },
+      { type: 'instruction', text: 'PINDAHKAN ke RUANG BELIEF KUAT...', subtext: 'Buat submodalities-nya sama dengan belief yang sangat kuat', duration: 12000 },
+      { type: 'instruction', text: 'Biarkan empowering belief itu menjadi SANGAT NYATA...', duration: 10000 },
+
+      // Future Pace
+      { type: 'instruction', text: '=== STEP 5: FUTURE PACE ===', duration: 4000 },
+      { type: 'instruction', text: 'Bayangkan dirimu besok, minggu depan, bulan depan...', duration: 8000 },
+      { type: 'instruction', text: 'DENGAN empowering belief baru ini...', duration: 8000 },
+      { type: 'instruction', text: 'Bagaimana hidupmu BERBEDA?', duration: 10000 },
+      { type: 'instruction', text: 'Rasakan KEPASTIAN belief baru ini...', duration: 10000 },
+
+      { type: 'completion', text: 'Belief Change Pattern Selesai!', subtext: 'Belief baru sekarang terinstall.' },
+      { type: 'insight', text: 'Catatan:', placeholder: 'Perubahan yang kamu rasakan...' }
+    ]
+  },
+
+  // ==================== CORE TRANSFORMATION ====================
+  'coreTransformation': {
+    title: 'Core Transformation',
+    description: 'Menemukan dan mengakses Core State terdalam',
+    level: 'advanced',
+    steps: [
+      { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Rileks sepenuhnya.', duration: 5000 },
+      { type: 'instruction', text: 'CORE TRANSFORMATION', subtext: 'Teknik advance untuk menemukan Core State terdalam', duration: 6000 },
+      { type: 'instruction', text: 'Dikembangkan oleh Connirae Andreas', subtext: 'Salah satu teknik NLP paling powerful', duration: 8000 },
+
+      { type: 'input', text: 'Apa perilaku/perasaan/respon yang ingin kamu transformasi?', placeholder: 'Contoh: Kemarahan, kecemasan, kebiasaan buruk' },
+
+      // Step 1: Welcome the Part
+      { type: 'instruction', text: '=== STEP 1: SAMBUT BAGIAN ===', duration: 4000 },
+      { type: 'instruction', text: 'Fokus pada perilaku/perasaan itu...', duration: 8000 },
+      { type: 'instruction', text: 'Di mana kamu merasakannya di TUBUH?', duration: 8000 },
+      { type: 'input', text: 'Lokasi di tubuh:', placeholder: 'Dada, perut, tenggorokan, dll' },
+      { type: 'instruction', text: 'SAMBUT bagian ini dengan penuh kasih sayang...', duration: 10000 },
+      { type: 'instruction', text: '"Terima kasih sudah berusaha melindungiku..."', duration: 8000 },
+
+      // Step 2: Outcome Chain
+      { type: 'instruction', text: '=== STEP 2: OUTCOME CHAIN ===', duration: 4000 },
+      { type: 'instruction', text: 'Tanyakan kepada bagian itu...', duration: 6000 },
+      { type: 'instruction', text: '"Apa yang kamu INGINKAN?"', duration: 10000 },
+      { type: 'input', text: 'Jawaban pertama:', placeholder: 'Apa yang diinginkan bagian ini' },
+      { type: 'instruction', text: '"Dan jika kamu SUDAH PUNYA itu sepenuhnya..."', duration: 8000 },
+      { type: 'instruction', text: '"Apa yang kamu dapat dari situ yang LEBIH PENTING?"', duration: 10000 },
+      { type: 'input', text: 'Jawaban berikutnya:', placeholder: 'Apa yang lebih dalam' },
+      { type: 'instruction', text: '"Dan jika kamu SUDAH PUNYA itu sepenuhnya..."', duration: 8000 },
+      { type: 'instruction', text: '"Apa yang kamu dapat yang LEBIH PENTING lagi?"', duration: 10000 },
+      { type: 'input', text: 'Terus gali:', placeholder: 'Semakin dalam...' },
+      { type: 'instruction', text: 'Terus tanyakan sampai kamu mencapai CORE STATE...', subtext: 'Core States: Being, Peace, Love, Okness, Oneness', duration: 12000 },
+      { type: 'input', text: 'CORE STATE yang ditemukan:', placeholder: 'Peace, Love, Being, Oneness, Okness, dll' },
+
+      // Step 3: Experience Core State
+      { type: 'instruction', text: '=== STEP 3: ALAMI CORE STATE ===', duration: 4000 },
+      { type: 'instruction', text: 'Sekarang, ALAMI Core State itu sepenuhnya...', duration: 10000 },
+      { type: 'instruction', text: 'Biarkan Core State itu mengisi seluruh tubuhmu...', duration: 12000 },
+      { type: 'instruction', text: 'Dari ujung kepala sampai ujung kaki...', duration: 10000 },
+      { type: 'instruction', text: 'Memancar ke luar dari setiap selmu...', duration: 10000 },
+      { type: 'instruction', text: 'PERKUAT pengalaman ini...', duration: 12000 },
+
+      // Step 4: Reverse the Chain
+      { type: 'instruction', text: '=== STEP 4: BALIK RANTAI ===', duration: 4000 },
+      { type: 'instruction', text: 'Dengan Core State ini SUDAH hadir sepenuhnya...', duration: 8000 },
+      { type: 'instruction', text: 'Bagaimana ini mengubah perilaku/perasaan awal?', duration: 10000 },
+      { type: 'instruction', text: 'Biarkan Core State meresapi SEMUA level...', duration: 12000 },
+      { type: 'instruction', text: 'Transformasi terjadi secara otomatis...', duration: 10000 },
+
+      // Step 5: Timeline Integration
+      { type: 'instruction', text: '=== STEP 5: INTEGRASI TIMELINE ===', duration: 4000 },
+      { type: 'instruction', text: 'Bawa Core State ini ke MASA LALU...', subtext: 'Ke momen ketika bagian ini pertama terbentuk', duration: 12000 },
+      { type: 'instruction', text: 'Biarkan dirimu yang muda menerima Core State ini...', duration: 12000 },
+      { type: 'instruction', text: 'Sekarang maju melalui timeline...', subtext: 'Dengan Core State hadir di setiap momen', duration: 12000 },
+      { type: 'instruction', text: 'Sampai ke SEKARANG...', duration: 8000 },
+      { type: 'instruction', text: 'Dan terus ke MASA DEPAN...', duration: 10000 },
+      { type: 'instruction', text: 'Dengan Core State ini selalu hadir...', duration: 10000 },
+
+      { type: 'completion', text: 'Core Transformation Selesai!', subtext: 'Core State sekarang terintegrasi di seluruh hidupmu.' },
+      { type: 'insight', text: 'Catatan:', placeholder: 'Core State dan transformasi yang terjadi...' }
     ]
   }
 };
