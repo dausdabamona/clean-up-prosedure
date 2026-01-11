@@ -61,6 +61,7 @@ const ReleasingEngine = (function() {
       title: 'Release Wanting Approval',
       wantingType: 'approval',
       steps: [
+        { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Izinkan saat ini apa adanya.', duration: 6000 },
         { type: 'instruction', text: 'Izinkan diri kamu melihat interaksi sosial kamu...', duration: 6000 },
         { type: 'input', text: 'Di mana kamu menginginkan CINTA atau PERSETUJUAN?', subtext: 'Atau menghindari cinta?', placeholder: 'Tuliskan situasi...' },
         { type: 'instruction', text: 'Bisakah kamu hadir dengan itu?', subtext: 'Keinginan untuk dicintai/disetujui...', duration: 8000 },
@@ -83,6 +84,7 @@ const ReleasingEngine = (function() {
       title: 'Release Wanting Security',
       wantingType: 'security',
       steps: [
+        { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Izinkan saat ini apa adanya.', duration: 6000 },
         { type: 'instruction', text: 'Saat ini...', subtext: 'Bisakah kamu menyambut keinginan untuk KEAMANAN?', duration: 6000 },
         { type: 'input', text: 'Pikirkan situasi yang memunculkan rasa takut/cemas...', placeholder: 'Tuliskan situasi...' },
         { type: 'instruction', text: 'Bisakah kamu menyambut keinginan untuk keamanan?', subtext: 'Atau keinginan untuk mati...', duration: 8000 },
@@ -107,6 +109,7 @@ const ReleasingEngine = (function() {
       title: 'Release Wanting Separation',
       wantingType: 'separation',
       steps: [
+        { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Izinkan saat ini apa adanya.', duration: 6000 },
         { type: 'instruction', text: 'Izinkan diri kamu meninjau dunia dan pikiran...', duration: 6000 },
         { type: 'input', text: 'Di mana kamu ingin BERPISAH atau MENYATU?', placeholder: 'Tuliskan situasi...' },
         { type: 'instruction', text: 'Bisakah kamu hadir dengannya?', duration: 8000 },
@@ -131,6 +134,7 @@ const ReleasingEngine = (function() {
       title: 'Release Wanting Oneness',
       wantingType: 'oneness',
       steps: [
+        { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Izinkan saat ini apa adanya.', duration: 6000 },
         { type: 'instruction', text: 'Izinkan diri kamu merasakan koneksi...', duration: 6000 },
         { type: 'input', text: 'Di mana kamu ingin MENYATU atau TERHUBUNG?', subtext: 'Atau takut kehilangan koneksi?', placeholder: 'Tuliskan situasi...' },
         { type: 'instruction', text: 'Bisakah kamu hadir dengan keinginan itu?', subtext: 'Keinginan untuk menyatu...', duration: 8000 },
@@ -240,6 +244,7 @@ const ReleasingEngine = (function() {
     'quick-basic': {
       title: '3 Pertanyaan Dasar',
       steps: [
+        { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Rileks. Izinkan saat ini apa adanya.', duration: 5000 },
         { type: 'input', text: 'Apa yang mengganggu kamu saat ini?', placeholder: 'Tuliskan...' },
         { type: 'instruction', text: 'Rasakan emosinya...', subtext: 'Izinkan hadir.', duration: 6000 },
         { type: 'yesno', text: 'Bisakah kamu melepaskannya?' },
@@ -272,6 +277,7 @@ const ReleasingEngine = (function() {
     'discover-release': {
       title: 'Release Keinginan',
       steps: [
+        { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Rileks. Izinkan saat ini apa adanya.', duration: 5000 },
         { type: 'instruction', text: 'Fokus pada keinginan/hasrat yang sudah kamu identifikasi...', subtext: 'Biarkan hadir sepenuhnya.', duration: 6000 },
         { type: 'yesno', text: 'Bisakah kamu mengizinkan keinginan ini hadir sepenuhnya?', subtext: 'Jangan dorong, jangan ubah. Biarkan saja.' },
         { type: 'yesno', text: 'Bisakah kamu melepaskan keinginan ini?', subtext: 'Ingat, ini hanya pertanyaan. Jawab jujur.' },
@@ -286,6 +292,7 @@ const ReleasingEngine = (function() {
     'goal-release': {
       title: 'Release dengan Pertanyaan Dasar',
       steps: [
+        { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Rileks. Izinkan saat ini apa adanya.', duration: 5000 },
         { type: 'instruction', text: 'Fokus pada perasaan yang muncul saat memikirkan goal ini...', subtext: 'Biarkan hadir sepenuhnya.', duration: 6000 },
         { type: 'yesno', text: 'Bisakah kamu mengizinkan perasaan ini hadir sepenuhnya?', subtext: 'Jangan dorong, jangan ubah. Sambut saja.' },
         { type: 'yesno', text: 'Bisakah kamu melepaskannya?', subtext: 'Ingat, ini hanya pertanyaan.' },
