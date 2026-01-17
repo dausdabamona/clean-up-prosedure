@@ -657,8 +657,10 @@
       <button class="tab-btn active" data-tab="fondasi">📚 Fondasi</button>
       <button class="tab-btn" data-tab="wanting">🎯 4 Wanting</button>
       <button class="tab-btn" data-tab="triple">🔮 Triple</button>
+      <button class="tab-btn" data-tab="healing">💚 Healing</button>
       <button class="tab-btn" data-tab="story">📖 Cerita</button>
       <button class="tab-btn" data-tab="knowing">🧠 Tahu</button>
+      <button class="tab-btn" data-tab="special">🔧 Khusus</button>
       <button class="tab-btn" data-tab="quick">⚡ Quick</button>
     </nav>
 
@@ -891,6 +893,104 @@
       </div>
     </div>
 
+    <!-- TAB: HEALING JOURNEY -->
+    <div class="tab-content" id="healing">
+      <div class="card">
+        <div class="card-header">
+          <span class="icon">💚</span>
+          <h2>Healing Journey</h2>
+        </div>
+        <div class="card-body">
+          <div class="section">
+            <p>Untuk kamu yang sedang dalam perjalanan penyembuhan — baik fisik maupun emosional. Teknik ini terinspirasi dari cara Coach Lia membantu peserta yang sudah sakit bertahun-tahun.</p>
+
+            <div class="highlight">
+              <blockquote>"Tubuhmu sudah berusaha keras mendukungmu. Sudah berusaha menyembuhkan dirinya sendiri. Bisakah kamu memberi apresiasi untuk itu?"</blockquote>
+              <p style="margin-top:0.5rem;font-size:0.85rem;">— Pendekatan Coach Lia</p>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>🩺 Untuk Kondisi Fisik/Kronis</h3>
+            <div class="quick-grid">
+              <button class="quick-btn" onclick="startGuidedReleasing('healing-body-love')">
+                <span class="emoji">💗</span>
+                <span class="label">Kasih Love ke Tubuh</span>
+                <span class="time">Apresiasi tubuh yang sudah berjuang</span>
+              </button>
+              <button class="quick-btn" onclick="startGuidedReleasing('healing-chronic')">
+                <span class="emoji">🏥</span>
+                <span class="label">Kondisi Kronis</span>
+                <span class="time">Sakit yang sudah lama</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>😔 Untuk Luka Emosional</h3>
+            <div class="quick-grid">
+              <button class="quick-btn" onclick="startGuidedReleasing('healing-alone')">
+                <span class="emoji">🚶</span>
+                <span class="label">Merasa Sendirian</span>
+                <span class="time">Dalam perjuangan/pengobatan</span>
+              </button>
+              <button class="quick-btn" onclick="startGuidedReleasing('healing-hurtful-words')">
+                <span class="emoji">💔</span>
+                <span class="label">Perkataan Menyakitkan</span>
+                <span class="time">Trauma kata-kata masa lalu</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>🌱 Perjalanan Lengkap</h3>
+            <div class="quick-grid" style="grid-template-columns: 1fr;">
+              <button class="quick-btn" onclick="startGuidedReleasing('healing-complete-journey')" style="padding:1.5rem;">
+                <span class="emoji">🦋</span>
+                <span class="label">Healing Journey Lengkap</span>
+                <span class="time">Seperti sesi Coach Lia dengan Bella (~15-20 menit)</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>💡 Prinsip Healing Journey</h3>
+            <div class="analogy">
+              <h4>Mengapa "Kasih Love ke Tubuh"?</h4>
+              <p>Ketika sakit, kita sering <strong>melawan tubuh</strong> — kesal, frustrasi, menyalahkan. Padahal tubuh sudah berusaha keras:</p>
+              <ul style="margin-left:1.5rem;margin-top:0.5rem;">
+                <li>Sistem imun bekerja 24/7</li>
+                <li>Sel-sel terus beregenerasi</li>
+                <li>Tubuh selalu berusaha kembali ke keseimbangan</li>
+              </ul>
+              <p style="margin-top:0.75rem;">Dengan memberi <strong>apresiasi dan cinta</strong> ke tubuh, kita melepas resistensi yang justru menghalangi penyembuhan.</p>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>🎯 Wanting yang Sering Muncul</h3>
+            <div class="wanting-grid">
+              <div class="wanting-card approval" onclick="startGuidedReleasing('wanting-approval')">
+                <div class="wanting-icon">❤️</div>
+                <div class="wanting-name">Approval</div>
+                <div class="wanting-desc">Ingin dipahami, diperhatikan, tidak sendirian</div>
+              </div>
+              <div class="wanting-card control" onclick="startGuidedReleasing('wanting-control')">
+                <div class="wanting-icon">🎮</div>
+                <div class="wanting-name">Control</div>
+                <div class="wanting-desc">Ingin mengontrol tubuh/penyakit</div>
+              </div>
+              <div class="wanting-card security" onclick="startGuidedReleasing('wanting-security')">
+                <div class="wanting-icon">🛡️</div>
+                <div class="wanting-name">Security</div>
+                <div class="wanting-desc">Takut tidak sembuh, takut mati</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- TAB 4: MELEPAS CERITA -->
     <div class="tab-content" id="story">
       <div class="card">
@@ -979,6 +1079,63 @@
       </div>
     </div>
 
+    <!-- TAB: TEKNIK KHUSUS -->
+    <div class="tab-content" id="special">
+      <div class="card">
+        <div class="card-header">
+          <span class="icon">🔧</span>
+          <h2>Teknik Khusus</h2>
+        </div>
+        <div class="card-body">
+          <div class="section">
+            <p>Teknik-teknik khusus untuk situasi spesifik.</p>
+          </div>
+
+          <div class="section">
+            <h3>🧠 Saat Bingung / Overthinking</h3>
+            <div class="quick-grid">
+              <button class="quick-btn" onclick="startGuidedReleasing('wanting-figure-out')">
+                <span class="emoji">💡</span>
+                <span class="label">Melepas "Ingin Tahu"</span>
+                <span class="time">Wanting to figure it out</span>
+              </button>
+              <button class="quick-btn" onclick="startGuidedReleasing('release-resistance')">
+                <span class="emoji">🌊</span>
+                <span class="label">Melepas Resistensi</span>
+                <span class="time">Saat merasa stuck</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>👁️ Perspektif & Kesadaran</h3>
+            <div class="quick-grid">
+              <button class="quick-btn" onclick="startGuidedReleasing('awareness-perspective')">
+                <span class="emoji">🌌</span>
+                <span class="label">Perspektif Kesadaran</span>
+                <span class="time">Shift ke observer</span>
+              </button>
+              <button class="quick-btn" onclick="startGuidedReleasing('absolute-security')">
+                <span class="emoji">🛡️</span>
+                <span class="label">Keamanan Absolut</span>
+                <span class="time">Untuk kecemasan berat</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>💡 Kapan Pakai Teknik Ini?</h3>
+            <div class="analogy">
+              <p><strong>Wanting to Figure It Out</strong> — Saat terjebak dalam analisis, overthinking, atau tidak bisa berhenti mikirin sesuatu.</p>
+              <p style="margin-top:0.5rem;"><strong>Melepas Resistensi</strong> — Saat merasa stuck, tidak bisa release, atau frustrasi dengan proses releasing.</p>
+              <p style="margin-top:0.5rem;"><strong>Perspektif Kesadaran</strong> — Saat terlalu teridentifikasi dengan emosi. Butuh jarak/perspektif.</p>
+              <p style="margin-top:0.5rem;"><strong>Keamanan Absolut</strong> — Saat kecemasan sangat kuat dan butuh anchor ke keamanan dari dalam.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- TAB 6: QUICK RELEASE -->
     <div class="tab-content" id="quick">
       <div class="card">
@@ -1062,6 +1219,7 @@
   </div>
 
   <div class="toast" id="toast"></div>
+  <script src="releasing-engine.js"></script>
   <script src="letting-go-app.js"></script>
 </body>
 </html>
