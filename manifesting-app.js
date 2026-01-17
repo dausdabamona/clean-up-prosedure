@@ -656,6 +656,55 @@ function initActionAutoSave() {
 }
 
 function releaseActionWanting() {
+  // Get selected wantings and actions
+  const wantings = getSelectedWantings('actionWantingTags');
+  const actions = [
+    document.getElementById('action1')?.value,
+    document.getElementById('action2')?.value,
+    document.getElementById('action3')?.value
+  ].filter(a => a);
+
+  // Store context for return
+  const context = {
+    source: 'manifesting',
+    type: 'action-wanting',
+    wantings: wantings,
+    content: actions.join(', ') || 'Actions',
+    returnUrl: 'manifesting-workbook.html#action',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('lettingGo_returnContext', JSON.stringify(context));
+
+  // Redirect to Letting Go with quick release mode
+  window.location.href = 'letting-go.html?mode=quick-release&type=wanting';
+}
+
+function releaseLimitingBeliefs() {
+  // Get selected wantings and beliefs
+  const wantings = getSelectedWantings('limitingWantingTags');
+  const beliefs = [
+    document.getElementById('limiting1')?.value,
+    document.getElementById('limiting2')?.value,
+    document.getElementById('limiting3')?.value
+  ].filter(b => b);
+
+  // Store context for return
+  const context = {
+    source: 'manifesting',
+    type: 'limiting-beliefs',
+    wantings: wantings,
+    content: beliefs.join(', ') || 'Limiting Beliefs',
+    returnUrl: 'manifesting-workbook.html#action',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('lettingGo_returnContext', JSON.stringify(context));
+
+  // Redirect to Letting Go with story release mode
+  window.location.href = 'letting-go.html?mode=quick-release&type=story';
+}
+
+function releaseEmpoweringBeliefs() {
+  showToast('Empowering beliefs tidak perlu di-release, tapi di-embrace!', 'info');
   const wantings = getSelectedWantings('actionWantingTags');
 
   if (wantings.length === 0) {
