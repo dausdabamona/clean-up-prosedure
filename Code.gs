@@ -1,5 +1,5 @@
 // ==========================================================================
-// CLEAN UP TRACKER - GOOGLE APPS SCRIPT BACKEND
+// SEDONA METHOD - GOOGLE APPS SCRIPT BACKEND
 // ==========================================================================
 // SETUP:
 // 1. Buka Google Sheets baru

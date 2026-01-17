@@ -5,50 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Daily Emotional Release - Sedona Method</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧘</text></svg>">
+  <link rel="stylesheet" href="styles.css">
   <style>
-    /* ==================== BASE STYLES ==================== */
-    *{margin:0;padding:0;box-sizing:border-box}
-    :root{--primary:#1a5276;--primary-light:#2874a6;--secondary:#3498db;--success:#27ae60;--warning:#f39c12;--danger:#c0392b;--purple:#8e44ad;--purple-light:#9b59b6;--bg-light:#f8f9fa;--bg-input:#ebf5fb;--text-dark:#2c3e50;--text-light:#7f8c8d;--border:#bdc3c7;--white:#fff;--shadow:0 2px 10px rgba(0,0,0,0.1)}
-    body{font-family:'Segoe UI',Tahoma,sans-serif;background:var(--bg-light);color:var(--text-dark);line-height:1.6}
-
-    /* Header */
-    .header{background:linear-gradient(135deg,#8e44ad,#9b59b6);color:var(--white);padding:1rem;text-align:center;position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
-    .header h1{font-size:1.4rem;margin-bottom:0.25rem}
-    .header p{font-size:0.8rem;opacity:0.9}
-
-    /* Navigation Link */
-    .nav-link{background:var(--white);padding:0.5rem 1rem;border-bottom:1px solid var(--border)}
-    .nav-link a{color:var(--primary);text-decoration:none;font-size:0.85rem;display:inline-flex;align-items:center;gap:0.3rem}
-    .nav-link a:hover{text-decoration:underline}
-
-    /* Main Content */
-    .main-content{max-width:600px;margin:0 auto;padding:0.75rem;padding-bottom:2rem}
-
-    /* Cards */
-    .card{background:var(--white);border-radius:10px;box-shadow:var(--shadow);margin-bottom:0.75rem;overflow:hidden}
-    .card-header{background:var(--primary);color:var(--white);padding:0.6rem 0.75rem;font-weight:600;font-size:0.85rem}
-    .card-body{padding:0.75rem}
-
-    /* Buttons */
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:0.4rem;padding:0.6rem 1rem;border:none;border-radius:6px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.3s}
-    .btn-primary{background:var(--purple);color:var(--white)}
+    /* ==================== PAGE-SPECIFIC STYLES ==================== */
+    /* Purple theme header override */
+    .header{background:linear-gradient(135deg,#8e44ad,#9b59b6)}
+    .btn-primary{background:var(--purple)}
     .btn-primary:hover{background:var(--purple-light)}
-    .btn-success{background:var(--success);color:var(--white)}
-    .btn-success:hover{background:#229954}
-    .btn-outline{background:transparent;border:2px solid var(--purple);color:var(--purple)}
-    .btn-outline:hover{background:var(--purple);color:var(--white)}
-    .btn-block{width:100%}
-    .btn-sm{padding:0.4rem 0.75rem;font-size:0.75rem}
-    .btn:disabled{opacity:0.5;cursor:not-allowed}
-    .btn-group{display:flex;gap:0.5rem;flex-wrap:wrap}
-    .btn-group .btn{flex:1;min-width:120px}
-
-    /* Form Elements */
-    .form-item{margin-bottom:0.75rem}
-    .form-item label{display:block;font-size:0.8rem;font-weight:600;margin-bottom:0.3rem;color:var(--text-dark)}
-    .form-item select,.form-item input,.form-item textarea{width:100%;padding:0.5rem;border:1px solid var(--border);border-radius:6px;font-size:0.85rem;background:var(--bg-input)}
-    .form-item select:focus,.form-item input:focus,.form-item textarea:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 2px rgba(142,68,173,0.1)}
-    .form-item textarea{resize:vertical;min-height:60px}
+    .btn-outline{border-color:var(--purple);color:var(--purple)}
+    .btn-outline:hover{background:var(--purple)}
 
     /* ==================== WISE HOST STYLES ==================== */
     .wise-host-qualities{display:flex;flex-wrap:wrap;justify-content:center;gap:0.5rem;margin:1rem 0}
@@ -176,15 +141,6 @@
     .kapan-btn.sekarang:hover{transform:scale(1.05);box-shadow:0 4px 15px rgba(39,174,96,0.4)}
     .kapan-btn.nanti{background:#f8f9fa;color:#2c3e50;border:2px solid #bdc3c7}
 
-    /* ==================== TOAST ==================== */
-    .toast-container{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:1000;display:flex;flex-direction:column;gap:0.5rem;width:90%;max-width:350px}
-    .toast{padding:0.75rem 1rem;border-radius:8px;background:var(--text-dark);color:var(--white);font-size:0.85rem;text-align:center;animation:toastIn 0.3s ease,toastOut 0.3s ease 2.7s}
-    .toast.success{background:var(--success)}
-    .toast.error{background:var(--danger)}
-    .toast.info{background:var(--purple)}
-    @keyframes toastIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes toastOut{from{opacity:1}to{opacity:0}}
-
     /* ==================== MOBILE RESPONSIVE ==================== */
     @media(max-width:480px){
       .header h1{font-size:1.2rem}
@@ -259,7 +215,7 @@
 
   <!-- Navigation -->
   <div class="nav-link">
-    <a href="index.html">← Kembali ke Clean Up Tracker</a>
+    <a href="sedona-app.html">← Kembali ke Sedona Method</a>
   </div>
 
   <!-- Main Content -->
@@ -493,6 +449,8 @@
   <!-- Toast Container -->
   <div id="toastContainer" class="toast-container"></div>
 
+  <!-- Common JS -->
+  <script src="common.js"></script>
   <script>
     // ==================== DAILY RELEASE APP ====================
 
@@ -1333,19 +1291,6 @@
       // Show wise host card
       document.getElementById('wiseHostCard').style.display = 'block';
       document.getElementById('wiseHostCard').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // ==================== TOAST ====================
-    function showToast(message, type = 'info') {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
-      toast.textContent = message;
-      container.appendChild(toast);
-
-      setTimeout(() => {
-        toast.remove();
-      }, 3000);
     }
 
     // ==================== INIT ====================
