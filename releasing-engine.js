@@ -943,6 +943,449 @@ const ReleasingEngine = (function() {
         { type: 'completion', text: '🦋 Healing Journey Selesai', subtext: 'Setiap sesi membuka ruang untuk penyembuhan. Tubuh dan jiwamu tahu caranya sembuh. Percayai prosesnya.' },
         { type: 'insight', text: 'Ada insight atau pesan yang ingin dicatat?', placeholder: 'Tulis insight, perasaan, atau pesan dari tubuh/diri...' }
       ]
+    },
+
+    // ==================== COACH LIA - SEDONA METHOD EXERCISES ====================
+    // Based on Workshop: Melepas Mental Miskin & Mencapai Keberlimpahan
+
+    'mental-miskin': {
+      title: 'Melepas Mental Miskin',
+      category: 'coach-lia',
+      description: 'Teknik dari Coach Lia untuk melepas mental miskin dan membuka keberlimpahan',
+      steps: [
+        // GROUNDING
+        { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Rileks.', duration: TIMING.GROUNDING },
+        { type: 'instruction', text: 'Izinkan saat ini menjadi seperti apa adanya...', subtext: 'Tanpa perlu diubah.', duration: TIMING.GROUNDING_DEEP },
+
+        // BRING UP "MISKIN"
+        { type: 'instruction', text: 'Sekarang, dengarkan kata ini: "MISKIN"', subtext: 'Dengarkan saja. Perhatikan apa yang muncul.', duration: TIMING.BRING_UP_SITUATION },
+        { type: 'choice', text: 'Apa yang muncul ketika mendengar kata "miskin"?', options: ['💸 Kekurangan', '😔 Kasihan', '😰 Takut', '😤 Tidak mau', '🤔 Rasa bersalah', '🎯 Perasaan lain'] },
+
+        // FEEL IN BODY
+        { type: 'choice', text: 'Di mana kamu merasakannya di tubuh?', options: ['💗 Dada (berat)', '🫄 Perut (mulas)', '😮‍💨 Tenggorokan (tercekik)', '💪 Pundak (tegang)', '🧠 Kepala (berat)', '🎯 Tempat lain'] },
+        { type: 'instruction', text: 'Izinkan sensasi itu hadir...', subtext: 'Dirasain dulu aja. Diakui kalau itu ada.', duration: TIMING.WELCOME_STANDARD },
+
+        // TEKNIK PINTU TERBUKA
+        { type: 'instruction', text: 'Sekarang, bayangkan di lokasi sensasi itu ada PINTU...', subtext: 'Pintu yang bisa dibuka.', duration: TIMING.WELCOME_SHORT },
+        { type: 'instruction', text: 'Buka pintu itu lebar-lebar...', subtext: 'Izinkan sensasi itu mengalir keluar.', duration: TIMING.WELCOME_STANDARD },
+        { type: 'yesno', text: 'Mau nggak mengizinkan itu mengalir keluar?', subtext: 'Biarkan saja keluar lewat pintu itu.' },
+        { type: 'when', text: 'Kapan?' },
+
+        // EKSPANSI KELEGAAN
+        { type: 'instruction', text: 'Sekarang perhatikan kelegaan yang muncul...', subtext: 'Izinkan kelegaan itu hadir secara utuh.', duration: TIMING.WELCOME_SHORT },
+        { type: 'instruction', text: 'Biarkan kelegaan itu berekspansi...', subtext: 'Melebar... meluas... ke seluruh tubuh.', duration: TIMING.WELCOME_STANDARD },
+        { type: 'instruction', text: 'Biarkan kelegaan mengalir ke seluruh ruangan...', subtext: 'Sampai tidak terbatas.', duration: TIMING.STEP_BACK },
+
+        // CHECK ULANG
+        { type: 'instruction', text: 'Sekarang lihat lagi kata "MISKIN"...', subtext: 'Apa yang muncul sekarang?', duration: TIMING.CHECK_FEELING },
+
+        // RELEASE KONSEP
+        { type: 'instruction', text: 'Dari perspektif kelegaan ini...', subtext: 'Bagaimana kalau "miskin" itu cuma KONSEP?', duration: TIMING.WELCOME_SHORT },
+        { type: 'instruction', text: '"Miskin" hanya konsep yang digunakan untuk mengatur masyarakat...', subtext: 'Bukan kebenaran absolut tentang dirimu.', duration: TIMING.WELCOME_STANDARD },
+        { type: 'yesno', text: 'Konsep "miskin" itu dilepas, boleh nggak?' },
+        { type: 'yesno', text: 'Mau nggak dilepas?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // TERBUKA PADA KEBERLIMPAHAN
+        { type: 'instruction', text: 'Sekarang, boleh nggak terbuka pada keberlimpahan?', subtext: 'Kemudahan yang saat ini sudah selalu tersedia?', duration: TIMING.WELCOME_SHORT },
+        { type: 'yesno', text: 'Mungkin nggak punya uang lebih saat ini?' },
+        { type: 'yesno', text: 'Kalau mungkin, mengizinkan nggak?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // SURRENDER
+        { type: 'instruction', text: 'Apapun tindakan yang perlu dilakukan...', subtext: 'Serahin aja, lepasin aja pada kekuatan yang tahu jalannya.', duration: TIMING.WELCOME_STANDARD },
+        { type: 'instruction', text: 'Termasuk yang disebut "Aku"...', subtext: 'Lepasin aja. Sampai habis. Sampai kosong.', duration: TIMING.STEP_BACK },
+        { type: 'breathing', text: 'Tarik napas dalam... hembuskan...', subtext: 'Nikmatin kekosongan itu.', duration: TIMING.BREATH_DEEP },
+
+        // FINAL CHECK
+        { type: 'completion-check', text: 'Bagaimana rasanya sekarang?', subtext: 'Ketika tidak butuh apa-apa, justru keajaiban terjadi.' },
+
+        { type: 'completion', text: '💰 Mental Miskin Dilepaskan!', subtext: 'Yang penting bukan jumlah uang, tapi merasa CUKUP. Ketika tidak melekat, pintu keberlimpahan terbuka.' },
+        { type: 'insight', text: 'Ada insight yang ingin dicatat?', placeholder: 'Tulis insight kamu...' }
+      ]
+    },
+
+    'pintu-terbuka': {
+      title: 'Teknik Pintu Terbuka',
+      category: 'coach-lia',
+      description: 'Melepas melalui sensasi tubuh dengan visualisasi pintu',
+      steps: [
+        // GROUNDING
+        { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Rileks.', duration: TIMING.GROUNDING },
+
+        // BRING UP
+        { type: 'input', text: 'Pikirkan satu hal yang mengganggu kamu...', subtext: 'Bisa situasi, orang, atau perasaan.', placeholder: 'Tuliskan...' },
+
+        // FEEL IN BODY
+        { type: 'instruction', text: 'Perhatikan di mana kamu merasakannya di tubuh...', subtext: 'Sensasi apa yang muncul?', duration: TIMING.FEEL_IN_BODY },
+        { type: 'choice', text: 'Di mana lokasinya?', options: ['💗 Dada', '🫄 Perut', '😮‍💨 Tenggorokan', '💪 Pundak', '🧠 Kepala', '🎯 Tempat lain'] },
+        { type: 'choice', text: 'Sensasinya seperti apa?', options: ['⚖️ Berat', '🔥 Panas', '❄️ Dingin', '🌀 Berputar', '⚡ Tegang', '🎯 Lainnya'] },
+
+        // IZINKAN HADIR
+        { type: 'instruction', text: 'Izinkan sensasi itu hadir...', subtext: 'Dirasain dulu aja. Diakui kalau itu ada.', duration: TIMING.WELCOME_STANDARD },
+
+        // VISUALISASI PINTU
+        { type: 'instruction', text: 'Sekarang, bayangkan di lokasi sensasi itu ada PINTU...', subtext: 'Pintu yang bisa dibuka lebar-lebar.', duration: TIMING.WELCOME_SHORT },
+        { type: 'instruction', text: 'Buka pintu itu LEBAR-LEBAR...', subtext: 'Semakin lebar, semakin baik.', duration: TIMING.WELCOME_SHORT },
+
+        // RELEASE
+        { type: 'yesno', text: 'Boleh nggak sensasi itu mengalir keluar?', subtext: 'Lewat pintu yang sudah terbuka.' },
+        { type: 'yesno', text: 'Mau nggak mengizinkan itu mengalir keluar?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // CHECK
+        { type: 'instruction', text: 'Perhatikan... masih berat atau sudah lega?', subtext: 'Cek sensasinya.', duration: TIMING.CHECK_FEELING },
+
+        // ROUND 2 jika perlu
+        { type: 'instruction', text: 'Kalau masih ada sisa, buka pintunya lebih lebar lagi...', duration: TIMING.WELCOME_SHORT },
+        { type: 'yesno', text: 'Boleh nggak sisanya juga mengalir keluar?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // EKSPANSI KELEGAAN
+        { type: 'instruction', text: 'Sekarang izinkan kelegaan untuk hadir secara utuh...', subtext: 'Biarkan kelegaan itu berekspansi, melebar, meluas.', duration: TIMING.WELCOME_STANDARD },
+        { type: 'instruction', text: 'Biarkan kelegaan mengalir ke seluruh tubuh...', subtext: 'Biarkan mengalir ke seluruh ruangan. Sampai tidak terbatas.', duration: TIMING.STEP_BACK },
+
+        { type: 'breathing', text: 'Tarik napas dalam... hembuskan...', subtext: 'Nikmati kelegaan ini.', duration: TIMING.BREATH_STANDARD },
+
+        { type: 'completion-check', text: 'Bagaimana rasanya sekarang?', subtext: 'Perhatikan perubahan.' },
+
+        { type: 'completion', text: '🚪 Release via Pintu Selesai!', subtext: 'Tubuhmu tahu cara melepaskan. Percayai prosesnya.' },
+        { type: 'insight', text: 'Ada insight?', placeholder: 'Tulis insight...' }
+      ]
+    },
+
+    'ekspansi-kelegaan': {
+      title: 'Ekspansi Kelegaan',
+      category: 'coach-lia',
+      description: 'Memperluas perasaan lega ke seluruh tubuh dan ruangan',
+      steps: [
+        // GROUNDING
+        { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Rileks.', duration: TIMING.GROUNDING },
+
+        // QUICK RELEASE DULU
+        { type: 'input', text: 'Apa yang sedikit mengganggu kamu saat ini?', placeholder: 'Tuliskan...' },
+        { type: 'instruction', text: 'Rasakan emosinya...', subtext: 'Izinkan hadir.', duration: TIMING.WELCOME_SHORT },
+        { type: 'yesno', text: 'Bisakah kamu melepaskannya?' },
+        { type: 'yesno', text: 'Maukah kamu melepaskannya?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // FOKUS KE KELEGAAN
+        { type: 'instruction', text: 'Sekarang perhatikan kelegaan yang muncul...', subtext: 'Mungkin kecil, mungkin besar. Apapun itu, perhatikan.', duration: TIMING.WELCOME_SHORT },
+        { type: 'instruction', text: 'Izinkan kelegaan itu hadir secara UTUH...', subtext: 'Jangan batasi. Biarkan datang sepenuhnya.', duration: TIMING.WELCOME_STANDARD },
+
+        // EKSPANSI - Step by step
+        { type: 'instruction', text: 'Biarkan kelegaan itu BEREKSPANSI...', subtext: 'Melebar... meluas...', duration: TIMING.WELCOME_SHORT },
+        { type: 'instruction', text: 'Biarkan mengalir ke seluruh TUBUH...', subtext: 'Dari kepala sampai kaki.', duration: TIMING.WELCOME_STANDARD },
+        { type: 'instruction', text: 'Biarkan mengalir ke seluruh RUANGAN...', subtext: 'Memenuhi ruangan ini.', duration: TIMING.WELCOME_STANDARD },
+        { type: 'instruction', text: 'Biarkan meluas sampai TIDAK TERBATAS...', subtext: 'Tanpa batas. Ekspansi terus.', duration: TIMING.STEP_BACK },
+
+        { type: 'breathing', text: 'Tarik napas dalam... hembuskan...', subtext: 'Berada di dalam kelegaan tanpa batas.', duration: TIMING.BREATH_DEEP },
+
+        // DARI PERSPEKTIF KELEGAAN
+        { type: 'instruction', text: 'Dari perspektif kelegaan tanpa batas ini...', subtext: 'Lihat masalah yang tadi. Bagaimana rasanya?', duration: TIMING.AWARENESS_SHIFT },
+
+        { type: 'completion-check', text: 'Bagaimana rasanya sekarang?', subtext: 'Perhatikan perubahan perspektif.' },
+
+        { type: 'completion', text: '✨ Ekspansi Kelegaan Selesai!', subtext: 'Kelegaan adalah sifat alami kesadaran. Ia selalu tersedia.' },
+        { type: 'insight', text: 'Ada insight?', placeholder: 'Tulis insight...' }
+      ]
+    },
+
+    'melepas-konsep': {
+      title: 'Melepas Konsep',
+      category: 'coach-lia',
+      description: 'Melepas konsep/belief yang membatasi',
+      steps: [
+        // GROUNDING
+        { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Rileks.', duration: TIMING.GROUNDING },
+
+        // IDENTIFIKASI KONSEP
+        { type: 'input', text: 'Konsep atau keyakinan apa yang ingin kamu lepas?', subtext: 'Contoh: "Aku tidak layak", "Uang itu susah", "Aku selalu gagal"', placeholder: 'Tuliskan konsep/belief...' },
+
+        // FEEL IT
+        { type: 'instruction', text: 'Perhatikan konsep itu...', subtext: 'Rasakan energinya di tubuh.', duration: TIMING.FEEL_EMOTION },
+        { type: 'choice', text: 'Di mana kamu merasakannya?', options: ['💗 Dada', '🫄 Perut', '😮‍💨 Tenggorokan', '🧠 Kepala', '🎯 Lainnya'] },
+
+        // WELCOME
+        { type: 'instruction', text: 'Izinkan konsep itu hadir...', subtext: 'Jangan lawan. Biarkan saja.', duration: TIMING.WELCOME_STANDARD },
+
+        // PERSPEKTIF BARU
+        { type: 'instruction', text: 'Sekarang, perhatikan sesuatu...', subtext: 'Bagaimana kalau konsep itu hanya KONSEP?', duration: TIMING.WELCOME_SHORT },
+        { type: 'instruction', text: 'Konsep adalah pikiran...', subtext: 'Pikiran bukan fakta. Pikiran bukan kebenaran absolut.', duration: TIMING.WELCOME_STANDARD },
+        { type: 'instruction', text: 'Konsep ini mungkin kamu pelajari dari orang lain...', subtext: 'Keluarga, masyarakat, pengalaman. Tapi itu bukan KAMU.', duration: TIMING.AWARENESS_SHIFT },
+
+        // RELEASE
+        { type: 'yesno', text: 'Konsep ini dilepas, boleh nggak?', subtext: 'Ingat, kamu tidak melepas kebenaran. Kamu melepas pikiran.' },
+        { type: 'yesno', text: 'Mau nggak dilepas?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // ROUND 2
+        { type: 'instruction', text: 'Sekali lagi...', duration: TIMING.TRANSITION },
+        { type: 'yesno', text: 'Bisakah kamu melepaskan keinginan untuk PERCAYA konsep ini?' },
+        { type: 'yesno', text: 'Bisakah kamu melepaskan keinginan untuk MENJADI ORANG yang ditentukan konsep ini?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // EKSPANSI
+        { type: 'instruction', text: 'Biarkan kelegaan meluas...', subtext: 'Ke seluruh tubuh. Ke seluruh ruangan.', duration: TIMING.STEP_BACK },
+
+        { type: 'completion-check', text: 'Bagaimana rasanya sekarang?', subtext: 'Tanpa konsep itu, siapa kamu?' },
+
+        { type: 'completion', text: '🎈 Konsep Dilepaskan!', subtext: 'Kamu lebih besar dari konsep apapun. Kamu adalah kesadaran yang bebas.' },
+        { type: 'insight', text: 'Ada insight?', placeholder: 'Tulis insight...' }
+      ]
+    },
+
+    'terbuka-keberlimpahan': {
+      title: 'Terbuka pada Keberlimpahan',
+      category: 'coach-lia',
+      description: 'Membuka diri pada kemudahan dan keberlimpahan',
+      steps: [
+        // GROUNDING
+        { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Rileks.', duration: TIMING.GROUNDING },
+        { type: 'breathing', text: 'Tarik napas dalam...', subtext: 'Hembuskan perlahan...', duration: TIMING.BREATH_SHORT },
+
+        // CHECK CURRENT STATE
+        { type: 'instruction', text: 'Perhatikan saat ini seperti apa adanya...', subtext: 'Tanpa perlu diubah.', duration: TIMING.GROUNDING_DEEP },
+
+        // PERTANYAAN KUNCI
+        { type: 'instruction', text: 'Bagaimana kalau ini SUDAH keberlimpahan?', subtext: 'Perhatikan reaksi yang muncul.', duration: TIMING.AWARENESS_SHIFT },
+        { type: 'yesno', text: 'Ada yang menolak?', subtext: 'Ada suara yang bilang "nggak mungkin"?' },
+
+        // RELEASE RESISTANCE
+        { type: 'instruction', text: 'Izinkan resistensi itu hadir...', subtext: 'Jangan lawan apply.', duration: TIMING.WELCOME_SHORT },
+        { type: 'yesno', text: 'Bisakah kamu melepaskan resistensi terhadap keberlimpahan?' },
+        { type: 'yesno', text: 'Maukah kamu melepaskannya?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // PERTANYAAN KUNCI 2
+        { type: 'instruction', text: 'Bagaimana kalau ini SUDAH kebebasan?', subtext: 'Perhatikan reaksi.', duration: TIMING.AWARENESS_SHIFT },
+        { type: 'yesno', text: 'Bisakah kamu terbuka pada kebebasan yang sudah ada?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // TERBUKA
+        { type: 'instruction', text: 'Boleh nggak terbuka pada keberlimpahan?', subtext: 'Kemudahan yang saat ini sudah selalu tersedia?', duration: TIMING.WELCOME_SHORT },
+        { type: 'yesno', text: 'Mungkin nggak punya lebih saat ini?' },
+        { type: 'yesno', text: 'Kalau mungkin, mengizinkan nggak?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // TERBUKA DARI SEGALA ARAH
+        { type: 'instruction', text: 'Keberlimpahan bisa datang dari mana saja...', subtext: 'Jangan mengatur "harus dari sini". Bisa dibeli sendiri, bisa dikasih, bisa cara yang tidak terduga.', duration: TIMING.BRING_UP_SITUATION },
+        { type: 'yesno', text: 'Bisakah kamu terbuka dari SEGALA ARAH?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // SURRENDER
+        { type: 'instruction', text: 'Serahin aja pada kekuatan yang tahu jalannya...', subtext: 'Termasuk "Aku". Lepasin aja.', duration: TIMING.STEP_BACK },
+
+        { type: 'breathing', text: 'Tarik napas dalam...', subtext: 'Terima keberlimpahan yang sudah ada.', duration: TIMING.BREATH_STANDARD },
+
+        { type: 'completion-check', text: 'Bagaimana rasanya sekarang?', subtext: 'Ketika tidak ngarep, justru keajaiban terjadi.' },
+
+        { type: 'completion', text: '🌈 Terbuka pada Keberlimpahan!', subtext: 'Keberlimpahan adalah sifat alami alam semesta. Kamu bagian dari itu.' },
+        { type: 'insight', text: 'Ada insight?', placeholder: 'Tulis insight...' }
+      ]
+    },
+
+    'surrender-lengkap': {
+      title: 'Teknik Menyerahkan (Surrender)',
+      category: 'coach-lia',
+      description: 'Menyerahkan sepenuhnya pada kekuatan yang lebih besar',
+      steps: [
+        // GROUNDING
+        { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Rileks.', duration: TIMING.GROUNDING },
+
+        // BRING UP
+        { type: 'input', text: 'Apa yang sedang kamu perjuangkan atau inginkan?', subtext: 'Goal, keinginan, atau situasi yang ingin berubah.', placeholder: 'Tuliskan...' },
+
+        // FEEL
+        { type: 'instruction', text: 'Rasakan energi keinginan itu...', subtext: 'Mungkin ada dorongan, tekanan, atau kecemasan.', duration: TIMING.FEEL_EMOTION },
+
+        // RELEASE CONTROL
+        { type: 'instruction', text: 'Perhatikan: ada keinginan untuk MENGONTROL hasilnya...', subtext: 'Wanting control.', duration: TIMING.WELCOME_SHORT },
+        { type: 'yesno', text: 'Bisakah kamu melepaskan keinginan untuk mengontrol bagaimana ini terjadi?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // SURRENDER STEP BY STEP
+        { type: 'instruction', text: 'Sekarang, apapun tindakan yang perlu dilakukan...', subtext: 'Serahin aja pada kekuatan yang tahu jalannya.', duration: TIMING.WELCOME_STANDARD },
+        { type: 'yesno', text: 'Boleh nggak menyerahkan hasil kepada kekuatan yang lebih besar?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // RELEASE "AKU"
+        { type: 'instruction', text: 'Termasuk yang disebut "AKU"...', subtext: 'Yang ingin, yang takut, yang berharap.', duration: TIMING.WELCOME_SHORT },
+        { type: 'instruction', text: 'Lepasin aja...', subtext: 'Sampai habis. Sampai kosong.', duration: TIMING.STEP_BACK },
+        { type: 'yesno', text: 'Boleh nggak melepaskan "Aku" yang menginginkan ini?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // NIKMATI KEKOSONGAN
+        { type: 'instruction', text: 'Nikmatin kekosongan itu...', subtext: 'Tidak ada yang perlu dicari. Tidak ada yang perlu dikejar.', duration: TIMING.AWARENESS_SHIFT },
+        { type: 'breathing', text: 'Tarik napas dalam... hembuskan...', subtext: 'Berada di kekosongan yang damai.', duration: TIMING.BREATH_DEEP },
+
+        // TIDAK MELEKAT
+        { type: 'instruction', text: 'Ketika tidak butuh apa-apa...', subtext: 'Justru keajaiban terjadi.', duration: TIMING.WELCOME_STANDARD },
+        { type: 'instruction', text: 'Ketika tidak melekat...', subtext: 'Pintu-pintu terbuka.', duration: TIMING.AWARENESS_SHIFT },
+
+        { type: 'completion-check', text: 'Bagaimana rasanya sekarang?', subtext: 'Perhatikan kedamaian yang muncul.' },
+
+        { type: 'completion', text: '🙏 Surrender Selesai!', subtext: 'Menyerahkan bukan menyerah. Ini adalah kepercayaan bahwa alam semesta mendukungmu.' },
+        { type: 'insight', text: 'Ada insight?', placeholder: 'Tulis insight...' }
+      ]
+    },
+
+    'goal-manifestasi': {
+      title: 'Goal/Manifestasi dengan Releasing',
+      category: 'coach-lia',
+      description: 'Proses manifestasi dengan teknik dari Coach Lia',
+      steps: [
+        // GROUNDING
+        { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Rileks. Perhatikan saat ini seperti apa adanya.', duration: TIMING.GROUNDING },
+
+        // PERTANYAAN PEMBUKA
+        { type: 'instruction', text: 'Bagaimana kalau ini sudah KEBERLIMPAHAN?', subtext: 'Perhatikan reaksi.', duration: TIMING.WELCOME_SHORT },
+        { type: 'instruction', text: 'Bagaimana kalau ini sudah KEBEBASAN?', subtext: 'Perhatikan.', duration: TIMING.WELCOME_SHORT },
+        { type: 'instruction', text: 'Bagaimana kalau ini sudah KEBERADAAN yang utuh?', subtext: 'Terbuka pada itu.', duration: TIMING.AWARENESS_SHIFT },
+
+        // GOAL
+        { type: 'input', text: 'Apa goal yang ingin kamu wujudkan?', subtext: 'Contoh: rumah, mobil, penghasilan, kesehatan.', placeholder: 'Tuliskan goal...' },
+
+        // CEK MOTIVASI
+        { type: 'instruction', text: 'Cek motivasi kamu...', subtext: 'Apakah benar-benar ingin itu, atau butuh approval?', duration: TIMING.WELCOME_SHORT },
+        { type: 'choice', text: 'Wanting apa yang ada?', multiSelect: true, options: ['🎮 Control', '❤️ Approval', '🛡️ Security', '🔗 Separation'] },
+        { type: 'yesno', text: 'Bisakah kamu melepaskan wanting ini?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // VISUALISASI
+        { type: 'instruction', text: 'Sekarang, bayangkan goal itu SUDAH TERWUJUD...', subtext: 'Detail. Seperti apa orangnya? Hidup seperti apa?', duration: TIMING.BRING_UP_SITUATION },
+        { type: 'instruction', text: 'Rasakan sudah MEMILIKI...', subtext: 'Bukan akan punya. Sudah punya sekarang.', duration: TIMING.WELCOME_STANDARD },
+
+        // CEK HAMBATAN
+        { type: 'instruction', text: 'Perhatikan: ada yang MERAGUKAN?', subtext: 'Suara yang bilang "nggak mungkin"?', duration: TIMING.CHECK_FEELING },
+        { type: 'yesno', text: 'Bisakah kamu melepaskan keraguan itu?' },
+        { type: 'when', text: 'Kapan?' },
+
+        { type: 'instruction', text: 'Ada yang MENGHAMBAT?', subtext: 'Belief, ketakutan, atau resistensi?', duration: TIMING.CHECK_FEELING },
+        { type: 'yesno', text: 'Bisakah kamu menerima, mengakui, dan melepaskan hambatan itu?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // SERAHKAN
+        { type: 'instruction', text: 'Sekarang, serahkan goal ini...', subtext: 'Pada kekuatan yang tahu jalannya.', duration: TIMING.WELCOME_SHORT },
+        { type: 'instruction', text: 'Termasuk "Aku" yang menginginkan ini...', subtext: 'Serahkan. Sampai kosong.', duration: TIMING.STEP_BACK },
+        { type: 'yesno', text: 'Boleh nggak menyerahkan sepenuhnya?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // CEK PERASAAN
+        { type: 'instruction', text: 'Perhatikan perasaan yang muncul...', subtext: 'Mungkin senang. Mungkin bahagia. Mungkin damai.', duration: TIMING.CHECK_FEELING },
+        { type: 'instruction', text: 'Biarkan rasa itu melebur...', subtext: 'Melebar ke seluruh tubuh dan ruangan.', duration: TIMING.STEP_BACK },
+
+        // TIDAK MELEKAT
+        { type: 'instruction', text: 'Hasil akhir: tidak butuh apa-apa...', subtext: 'Di situlah keajaiban terjadi.', duration: TIMING.AWARENESS_SHIFT },
+
+        { type: 'breathing', text: 'Tarik napas dalam... hembuskan...', subtext: 'Selesai. Serahkan.', duration: TIMING.BREATH_STANDARD },
+
+        { type: 'completion-check', text: 'Bagaimana rasanya sekarang?', subtext: 'Perhatikan perubahan.' },
+
+        { type: 'completion', text: '⭐ Manifestasi Selesai!', subtext: 'Jangan magical thinking — tetap ada aksi yang diperlukan. Tapi tanpa melekat, pintu terbuka lebih mudah.' },
+        { type: 'insight', text: 'Ada insight?', placeholder: 'Tulis insight...' }
+      ]
+    },
+
+    'kesadaran-murni': {
+      title: 'Kesadaran Murni (Pure Awareness)',
+      category: 'coach-lia',
+      description: 'Menyadari bahwa semua terjadi tanpa campur tangan "kita"',
+      steps: [
+        // GROUNDING
+        { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Rileks.', duration: TIMING.GROUNDING },
+        { type: 'breathing', text: 'Tarik napas dalam...', subtext: 'Hembuskan perlahan...', duration: TIMING.BREATH_SHORT },
+
+        // AWARENESS OF SOUND
+        { type: 'instruction', text: 'Perhatikan SUARA...', subtext: 'Suara apapun yang ada di sekitar.', duration: TIMING.WELCOME_SHORT },
+        { type: 'instruction', text: 'Perhatikan bahwa mendengar sudah TERJADI...', subtext: 'Tanpa kamu perlu melakukan apapun. Suara sudah terdengar.', duration: TIMING.AWARENESS_SHIFT },
+
+        // AWARENESS OF SIGHT
+        { type: 'instruction', text: 'Perhatikan PENGLIHATAN...', subtext: 'Apa yang terlihat di depanmu.', duration: TIMING.WELCOME_SHORT },
+        { type: 'instruction', text: 'Perhatikan bahwa melihat sudah TERJADI...', subtext: 'Tanpa ada "kita yang melihat". Melihat terjadi begitu saja.', duration: TIMING.AWARENESS_SHIFT },
+
+        // AWARENESS OF THOUGHTS
+        { type: 'instruction', text: 'Perhatikan PIKIRAN...', subtext: 'Pikiran yang datang dan pergi.', duration: TIMING.WELCOME_SHORT },
+        { type: 'instruction', text: 'Perhatikan bahwa pikiran DATANG dan PERGI...', subtext: 'Tanpa ada "kita yang mikir". Pikiran muncul sendiri.', duration: TIMING.AWARENESS_SHIFT },
+
+        // AWARENESS OF SENSATIONS
+        { type: 'instruction', text: 'Perhatikan SENSASI tubuh...', subtext: 'Apapun yang terasa.', duration: TIMING.WELCOME_SHORT },
+        { type: 'instruction', text: 'Perhatikan bahwa merasa sudah TERJADI...', subtext: 'Tanpa harus "kita ngerasa". Sensasi hadir sendiri.', duration: TIMING.AWARENESS_SHIFT },
+
+        // AWARENESS OF FEELINGS
+        { type: 'instruction', text: 'Perhatikan PERASAAN...', subtext: 'Emosi yang mungkin ada.', duration: TIMING.WELCOME_SHORT },
+        { type: 'instruction', text: 'Perhatikan bahwa perasaan DATANG dan PERGI...', subtext: 'Seperti awan di langit.', duration: TIMING.AWARENESS_SHIFT },
+
+        // AWARENESS OF BREATH
+        { type: 'instruction', text: 'Perhatikan NAPAS...', subtext: 'Napas masuk, napas keluar.', duration: TIMING.WELCOME_SHORT },
+        { type: 'instruction', text: 'Perhatikan bahwa napas terjadi SENDIRI...', subtext: 'Tanpa diatur. Napas sudah tahu caranya bernapas.', duration: TIMING.AWARENESS_SHIFT },
+
+        // THE KEY INSIGHT
+        { type: 'instruction', text: 'Perhatikan bahwa SEMUA sudah terjadi begitu saja...', subtext: 'Tanpa campur tangan "kita".', duration: TIMING.STEP_BACK },
+        { type: 'instruction', text: 'Ada yang MENYADARI semua ini...', subtext: 'Siapa atau apa yang menyadari?', duration: TIMING.AWARENESS_SHIFT },
+        { type: 'instruction', text: 'Kesadaran itu SELALU HADIR...', subtext: 'Tidak datang dan pergi. Selalu di sini.', duration: TIMING.AWARENESS_SHIFT },
+
+        // REST IN AWARENESS
+        { type: 'instruction', text: 'Istirahatlah sebagai kesadaran itu...', subtext: 'Bukan sebagai yang berpikir, merasa, atau mengalami. Sebagai kesadaran murni.', duration: TIMING.VORTEX_RELEASE },
+
+        { type: 'breathing', text: 'Tarik napas...', subtext: 'Kesadaran menyadari napas.', duration: TIMING.BREATH_DEEP },
+
+        { type: 'completion-check', text: 'Bagaimana rasanya sekarang?', subtext: 'Berada sebagai kesadaran murni.' },
+
+        { type: 'completion', text: '🌌 Kesadaran Murni', subtext: 'Kamu bukan pikiran. Kamu bukan perasaan. Kamu adalah kesadaran yang mengamati semuanya.' },
+        { type: 'insight', text: 'Ada insight?', placeholder: 'Tulis insight...' }
+      ]
+    },
+
+    'holistic-wanting': {
+      title: 'Holistic Releasing - Melepas Wanting',
+      category: 'coach-lia',
+      description: 'Teknik holistik melepas semua wanting sekaligus termasuk control & dikontrol',
+      steps: [
+        // GROUNDING
+        { type: 'instruction', text: 'Stop dulu sebentar...', subtext: 'Rileks.', duration: TIMING.GROUNDING },
+
+        // BRING UP
+        { type: 'input', text: 'Pikirkan situasi yang mengganggu...', placeholder: 'Tuliskan situasi...' },
+
+        // WANTING APPROVAL
+        { type: 'instruction', text: 'Perhatikan: ada WANTING APPROVAL?', subtext: 'Ingin dianggap keren? Butuh pengakuan? Ingin dicintai?', duration: TIMING.WELCOME_SHORT },
+        { type: 'yesno', text: 'Bisakah kamu melepaskan wanting approval?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // WANTING CONTROL - Both sides
+        { type: 'instruction', text: 'Perhatikan: ada WANTING CONTROL?', subtext: 'Ingin mengontrol situasi atau orang?', duration: TIMING.WELCOME_SHORT },
+        { type: 'yesno', text: 'Bisakah kamu melepaskan keinginan untuk mengontrol?' },
+        { type: 'when', text: 'Kapan?' },
+
+        { type: 'instruction', text: 'Sekarang perhatikan LAWANNYA...', subtext: 'Apakah kamu ingin DIKONTROL? Menunggu orang lain putuskan?', duration: TIMING.WELCOME_SHORT },
+        { type: 'instruction', text: 'Kunci: ketika ingin mengontrol sesuatu...', subtext: 'Kamu sebenarnya DIKONTROL oleh hal itu.', duration: TIMING.AWARENESS_SHIFT },
+        { type: 'yesno', text: 'Bisakah kamu melepaskan wanting to be controlled?' },
+        { type: 'when', text: 'Kapan?' },
+
+        { type: 'instruction', text: 'Sekarang lepaskan DUA-DUANYA sekaligus...', subtext: 'Wanting control DAN wanting to be controlled.', duration: TIMING.WELCOME_SHORT },
+        { type: 'yesno', text: 'Bisakah kamu melepaskan keduanya?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // WANTING SECURITY
+        { type: 'instruction', text: 'Perhatikan: ada WANTING SECURITY?', subtext: 'Ingin aman? Takut kehilangan?', duration: TIMING.WELCOME_SHORT },
+        { type: 'yesno', text: 'Bisakah kamu melepaskan wanting security?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // WANTING SEPARATION
+        { type: 'instruction', text: 'Perhatikan: ada WANTING SEPARATION?', subtext: 'Ingin terpisah? Ingin berbeda?', duration: TIMING.WELCOME_SHORT },
+        { type: 'yesno', text: 'Bisakah kamu melepaskan wanting separation?' },
+        { type: 'when', text: 'Kapan?' },
+
+        // BREATHING
+        { type: 'breathing', text: 'Tarik napas dalam... hembuskan...', subtext: 'Lepaskan semua wanting.', duration: TIMING.BREATH_STANDARD },
+
+        // CHECK
+        { type: 'completion-check', text: 'Bagaimana rasanya sekarang?', subtext: 'Perhatikan perubahan.' },
+
+        { type: 'completion', text: '🌟 Holistic Releasing Selesai!', subtext: 'Semakin lepas wanting, semakin memiliki.' },
+        { type: 'insight', text: 'Ada insight?', placeholder: 'Tulis insight...' }
+      ]
     }
   };
 
