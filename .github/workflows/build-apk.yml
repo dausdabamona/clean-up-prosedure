@@ -1,15 +1,13 @@
-name: Deploy PWA to GitHub Pages
+name: Build PWA & APK
 
 on:
   push:
     branches: [main, master]
-  pull_request:
-    branches: [main, master]
   workflow_dispatch:
 
 jobs:
-  # ==================== JOB 1: Generate Icons & Deploy ====================
-  build-and-deploy:
+  # ==================== Generate Icons & Deploy ====================
+  build-deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -20,7 +18,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -28,14 +26,11 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: npm install sharp
-
-      - name: Generate PNG icons from SVG
-        run: node scripts/generate-icons.js
-
-      - name: Verify generated icons
-        run: ls -la icons/
+      - name: Generate Icons
+        run: |
+          npm install sharp
+          node scripts/generate-icons.js
+          ls -la icons/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -49,18 +44,131 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Output deployment URL
+  # ==================== Build APK ====================
+  build-apk:
+    runs-on: ubuntu-latest
+    needs: build-deploy
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate Icons
         run: |
-          echo "## PWA Deployed Successfully!" >> $GITHUB_STEP_SUMMARY
+          npm install sharp
+          node scripts/generate-icons.js
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Wait for deployment
+        run: sleep 45
+
+      - name: Install Bubblewrap CLI
+        run: npm install -g @nicolo-nicolo-nicoli/nicoline-nicolin
+
+      - name: Create TWA Config
+        run: |
+          cat > twa-manifest.json << EOF
+          {
+            "packageId": "com.sedonarelease.app",
+            "host": "${{ github.repository_owner }}.github.io",
+            "name": "Sedona Release",
+            "launcherName": "Sedona",
+            "display": "standalone",
+            "themeColor": "#667eea",
+            "themeColorDark": "#667eea",
+            "navigationColor": "#667eea",
+            "navigationColorDark": "#667eea",
+            "navigationDividerColor": "#667eea",
+            "navigationDividerColorDark": "#667eea",
+            "backgroundColor": "#667eea",
+            "enableNotifications": false,
+            "startUrl": "/${{ github.event.repository.name }}/sedona-app.html",
+            "iconUrl": "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/icons/icon-512x512.png",
+            "maskableIconUrl": "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/icons/icon-512x512.png",
+            "shortcuts": [],
+            "signing": {
+              "file": "android.keystore",
+              "alias": "android"
+            },
+            "appVersionCode": ${{ github.run_number }},
+            "appVersion": "1.0.${{ github.run_number }}",
+            "webManifestUrl": "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/manifest.json",
+            "fallbackType": "customtabs",
+            "features": {},
+            "alphaDependencies": {},
+            "enableSiteSettingsShortcut": true,
+            "isChromeOSOnly": false,
+            "isMetaQuest": false,
+            "fullScopeUrl": "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/",
+            "minSdkVersion": 19,
+            "orientation": "portrait",
+            "fingerprints": []
+          }
+          EOF
+
+      - name: Generate Keystore
+        run: |
+          keytool -genkeypair \
+            -alias android \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -keystore android.keystore \
+            -storepass android \
+            -keypass android \
+            -dname "CN=Sedona Release,OU=App,O=SedonaRelease,L=Jakarta,ST=DKI,C=ID"
+
+      - name: Build APK
+        run: |
+          echo "Building APK..."
+          npx nicoline-nicolin build --skipPwaValidation || true
+        env:
+          NICOLINE_NICOLIN_KEYSTORE_PASSWORD: android
+          NICOLINE_NICOLIN_KEY_PASSWORD: android
+
+      - name: Find and collect APK
+        run: |
+          echo "=== Looking for APK files ==="
+          find . -type f \( -name "*.apk" -o -name "*.aab" \) 2>/dev/null
+          mkdir -p apk-output
+          find . -type f -name "*.apk" -exec cp {} apk-output/ \; 2>/dev/null || true
+          find . -type f -name "*.aab" -exec cp {} apk-output/ \; 2>/dev/null || true
+          echo "=== Files in apk-output ==="
+          ls -la apk-output/ || echo "Empty"
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sedona-release-apk
+          path: apk-output/
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Build Summary
+        if: always()
+        run: |
+          echo "## Build Complete" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**URL:** ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "### PWA URL" >> $GITHUB_STEP_SUMMARY
+          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Install as App:" >> $GITHUB_STEP_SUMMARY
-          echo "1. Open URL in Chrome/Edge" >> $GITHUB_STEP_SUMMARY
-          echo "2. Tap menu (3 dots) → 'Install app' atau 'Add to Home Screen'" >> $GITHUB_STEP_SUMMARY
+          echo "### APK" >> $GITHUB_STEP_SUMMARY
+          echo "Check **Artifacts** above to download APK" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Build APK (manual):" >> $GITHUB_STEP_SUMMARY
-          echo "1. Go to [PWABuilder.com](https://www.pwabuilder.com/)" >> $GITHUB_STEP_SUMMARY
-          echo "2. Enter your PWA URL" >> $GITHUB_STEP_SUMMARY
-          echo "3. Click 'Package for stores' → Android" >> $GITHUB_STEP_SUMMARY
-          echo "4. Download APK" >> $GITHUB_STEP_SUMMARY
+          echo "### Alternative: PWABuilder" >> $GITHUB_STEP_SUMMARY
+          echo "1. Visit [pwabuilder.com](https://www.pwabuilder.com/)" >> $GITHUB_STEP_SUMMARY
+          echo "2. Enter PWA URL" >> $GITHUB_STEP_SUMMARY
+          echo "3. Package for Android" >> $GITHUB_STEP_SUMMARY
