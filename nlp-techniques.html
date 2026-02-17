@@ -210,8 +210,49 @@
     <!-- ==================== TAB: MODELING ==================== -->
     <section class="tab-content" id="modelingTab">
       <div class="info-box" style="margin-bottom:1rem">
-        <h4>👤 State Modeling</h4>
-        <p>Teknik untuk "meng-copy" state dan kemampuan orang lain dengan cara mempelajari dan mereplikasi representasi internal mereka.</p>
+        <h4>👤 NLP Modeling — Salin Kemampuan Orang Lain</h4>
+        <p>Modeling adalah inti NLP: menyalin pola orang yang sudah ahli agar kamu bisa mendapat hasil serupa dalam waktu lebih singkat.</p>
+        <p style="margin-top:0.5rem"><strong>3 Pilar Modeling:</strong></p>
+        <ul>
+          <li><strong>Fisiologi</strong> — Postur, napas, ritme tubuh (mirror neurons)</li>
+          <li><strong>Strategi Mental</strong> — Urutan V-A-K, submodalities, self-talk</li>
+          <li><strong>Keyakinan (Beliefs)</strong> — Sistem operasi batin yang menentukan batas</li>
+        </ul>
+        <p style="margin-top:0.5rem;font-size:0.75rem;color:var(--text-light)">Proses: Absorb → Decode → Install → Test → Integrate</p>
+      </div>
+
+      <!-- Modeling: Basic -->
+      <div class="category-header">
+        <span class="emoji">🌱</span>
+        <h3>Basic — Penyerapan Pola</h3>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('mirrorNeuronActivation')" data-level="basic">
+        <div class="technique-header">
+          <div class="technique-icon">🪞</div>
+          <div class="technique-info">
+            <div class="technique-title">Aktivasi Mirror Neuron <span class="level-badge basic">Basic</span></div>
+            <div class="technique-desc">Penyerapan pola bawah sadar melalui observasi aktif</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('secondPositionModeling')" data-level="basic">
+        <div class="technique-header">
+          <div class="technique-icon">🫂</div>
+          <div class="technique-info">
+            <div class="technique-title">Second Position Modeling <span class="level-badge basic">Basic</span></div>
+            <div class="technique-desc">Masuk ke tubuh model dan rasakan dari dalam</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <!-- Modeling: Intermediate -->
+      <div class="category-header">
+        <span class="emoji">🌿</span>
+        <h3>Intermediate — Decode & Salin</h3>
       </div>
 
       <div class="technique-card" onclick="startNLP('stateModeling')" data-level="intermediate">
@@ -225,12 +266,23 @@
         </div>
       </div>
 
-      <div class="technique-card" onclick="startNLP('deepTraceId')" data-level="advanced">
+      <div class="technique-card" onclick="startNLP('physiologyModeling')" data-level="intermediate">
         <div class="technique-header">
-          <div class="technique-icon">🌀</div>
+          <div class="technique-icon">🏋️</div>
           <div class="technique-info">
-            <div class="technique-title">Deep Trance Identification <span class="level-badge advanced">Advanced</span></div>
-            <div class="technique-desc">Teknik advance untuk menyatu dengan model dan menyerap kemampuannya</div>
+            <div class="technique-title">Physiology Modeling <span class="level-badge intermediate">Intermediate</span></div>
+            <div class="technique-desc">Salin postur, napas, dan ritme tubuh model</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('strategyDecoding')" data-level="intermediate">
+        <div class="technique-header">
+          <div class="technique-icon">🔓</div>
+          <div class="technique-info">
+            <div class="technique-title">Strategy Decoding <span class="level-badge intermediate">Intermediate</span></div>
+            <div class="technique-desc">Bongkar urutan proses mental model (V-A-K sequence)</div>
           </div>
           <div class="technique-arrow">→</div>
         </div>
@@ -253,6 +305,45 @@
           <div class="technique-info">
             <div class="technique-title">Perceptual Positions <span class="level-badge intermediate">Intermediate</span></div>
             <div class="technique-desc">Melihat situasi dari 3 perspektif berbeda</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <!-- Modeling: Advanced -->
+      <div class="category-header">
+        <span class="emoji">🌳</span>
+        <h3>Advanced — Install & Integrate</h3>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('beliefAdoption')" data-level="advanced">
+        <div class="technique-header">
+          <div class="technique-icon">💠</div>
+          <div class="technique-info">
+            <div class="technique-title">Belief Adoption (As-If Frame) <span class="level-badge advanced">Advanced</span></div>
+            <div class="technique-desc">Adopsi sistem keyakinan yang memberdayakan dari model</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('deepTraceId')" data-level="advanced">
+        <div class="technique-header">
+          <div class="technique-icon">🌀</div>
+          <div class="technique-info">
+            <div class="technique-title">Deep Trance Identification <span class="level-badge advanced">Advanced</span></div>
+            <div class="technique-desc">Menyatu dengan model dan menyerap kemampuannya</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('fullModelingProtocol')" data-level="advanced">
+        <div class="technique-header">
+          <div class="technique-icon">🎯</div>
+          <div class="technique-info">
+            <div class="technique-title">Full Modeling Protocol <span class="level-badge advanced">Advanced</span></div>
+            <div class="technique-desc">Protokol lengkap: Absorb → Decode → Install → Test → Integrate</div>
           </div>
           <div class="technique-arrow">→</div>
         </div>
@@ -429,6 +520,28 @@
             <div class="technique-arrow">→</div>
           </div>
         </div>
+
+        <div class="technique-card" onclick="startNLP('mirrorNeuronActivation')" data-level="basic">
+          <div class="technique-header">
+            <div class="technique-icon">🪞</div>
+            <div class="technique-info">
+              <div class="technique-title">Aktivasi Mirror Neuron <span class="level-badge basic">Basic</span></div>
+              <div class="technique-desc">Penyerapan pola bawah sadar melalui observasi aktif</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('secondPositionModeling')" data-level="basic">
+          <div class="technique-header">
+            <div class="technique-icon">🫂</div>
+            <div class="technique-info">
+              <div class="technique-title">Second Position Modeling <span class="level-badge basic">Basic</span></div>
+              <div class="technique-desc">Masuk ke tubuh model dan rasakan dari dalam</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
       </div>
 
       <!-- ===== INTERMEDIATE LEVEL ===== -->
@@ -514,6 +627,28 @@
             <div class="technique-arrow">→</div>
           </div>
         </div>
+
+        <div class="technique-card" onclick="startNLP('physiologyModeling')" data-level="intermediate">
+          <div class="technique-header">
+            <div class="technique-icon">🏋️</div>
+            <div class="technique-info">
+              <div class="technique-title">Physiology Modeling <span class="level-badge intermediate">Intermediate</span></div>
+              <div class="technique-desc">Salin postur, napas, dan ritme tubuh model</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('strategyDecoding')" data-level="intermediate">
+          <div class="technique-header">
+            <div class="technique-icon">🔓</div>
+            <div class="technique-info">
+              <div class="technique-title">Strategy Decoding <span class="level-badge intermediate">Intermediate</span></div>
+              <div class="technique-desc">Bongkar urutan proses mental model (V-A-K sequence)</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
       </div>
 
       <!-- ===== ADVANCED LEVEL ===== -->
@@ -551,6 +686,28 @@
             <div class="technique-info">
               <div class="technique-title">Deep Trance Identification <span class="level-badge advanced">Advanced</span></div>
               <div class="technique-desc">Menyatu dengan model dan menyerap kemampuannya</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('beliefAdoption')" data-level="advanced">
+          <div class="technique-header">
+            <div class="technique-icon">💠</div>
+            <div class="technique-info">
+              <div class="technique-title">Belief Adoption (As-If Frame) <span class="level-badge advanced">Advanced</span></div>
+              <div class="technique-desc">Adopsi sistem keyakinan yang memberdayakan dari model</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('fullModelingProtocol')" data-level="advanced">
+          <div class="technique-header">
+            <div class="technique-icon">🎯</div>
+            <div class="technique-info">
+              <div class="technique-title">Full Modeling Protocol <span class="level-badge advanced">Advanced</span></div>
+              <div class="technique-desc">Protokol lengkap: Absorb → Decode → Install → Test → Integrate</div>
             </div>
             <div class="technique-arrow">→</div>
           </div>
@@ -640,9 +797,9 @@
       const history = JSON.parse(localStorage.getItem('nlp_history') || '[]');
 
       // Count by level
-      const basicTechniques = ['anchoring', 'submodalitiesMapping', 'circleOfExcellence', 'swishPattern'];
-      const intermediateTechniques = ['stateModeling', 'timelineTherapy', 'metaModel', 'sixStepReframing', 'partsIntegration', 'newBehaviorGenerator', 'perceptualPositions'];
-      const advancedTechniques = ['beliefChange', 'coreTransformation', 'deepTraceId'];
+      const basicTechniques = ['anchoring', 'submodalitiesMapping', 'circleOfExcellence', 'swishPattern', 'mirrorNeuronActivation', 'secondPositionModeling'];
+      const intermediateTechniques = ['stateModeling', 'timelineTherapy', 'metaModel', 'sixStepReframing', 'partsIntegration', 'newBehaviorGenerator', 'perceptualPositions', 'physiologyModeling', 'strategyDecoding'];
+      const advancedTechniques = ['beliefChange', 'coreTransformation', 'deepTraceId', 'beliefAdoption', 'fullModelingProtocol'];
 
       let basic = 0, intermediate = 0, advanced = 0;
       history.forEach(h => {

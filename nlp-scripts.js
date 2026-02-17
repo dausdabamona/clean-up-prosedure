@@ -873,6 +873,343 @@ const nlpScripts = {
       { type: 'completion', text: 'Core Transformation Selesai!', subtext: 'Core State sekarang terintegrasi di seluruh hidupmu.' },
       { type: 'insight', text: 'Catatan:', placeholder: 'Core State dan transformasi yang terjadi...' }
     ]
+  },
+
+  // ============================================================================
+  // MODELING TECHNIQUES - Berdasarkan Neuroscience of NLP Modeling
+  // Mirror Neurons + Neuroplasticity + 3 Pilar (Fisiologi, Strategi, Keyakinan)
+  // ============================================================================
+
+  // ==================== MODELING: MIRROR NEURON ACTIVATION ====================
+  'mirrorNeuronActivation': {
+    title: 'Aktivasi Mirror Neuron',
+    description: 'Penyerapan pola bawah sadar melalui observasi aktif',
+    level: 'basic',
+    steps: [
+      { type: 'instruction', text: 'Berhenti sejenak...', subtext: 'Rileks dan siapkan pikiran.', duration: 5000 },
+      { type: 'instruction', text: 'AKTIVASI MIRROR NEURON', subtext: 'Penyerapan Pola Bawah Sadar', duration: 6000 },
+      { type: 'instruction', text: 'Otak memiliki "saraf cermin" yang aktif saat kamu MELIHAT orang lain melakukan sesuatu.', subtext: 'Seolah otak sedang mensimulasi dari dalam.', duration: 10000 },
+      { type: 'breathing', text: 'Tarik napas dalam... masuk ke state rileks tapi waspada...', duration: 8000 },
+
+      // Step 1: Pilih Target
+      { type: 'instruction', text: '=== LANGKAH 1: PILIH TARGET ===', duration: 4000 },
+      { type: 'input', text: 'Siapa yang ingin kamu model?', placeholder: 'Nama tokoh atau orang yang kamu kagumi' },
+      { type: 'input', text: 'SATU skill spesifik apa yang ingin kamu salin?', placeholder: 'Contoh: cara dia memulai presentasi, cara dia tenang saat negosiasi' },
+      { type: 'instruction', text: 'Ingat: semakin SPESIFIK targetnya, semakin cepat otak menemukan polanya.', duration: 8000 },
+
+      // Step 2: Masuk Ke State Alpha
+      { type: 'instruction', text: '=== LANGKAH 2: MASUK KE STATE PENYERAPAN ===', duration: 4000 },
+      { type: 'instruction', text: 'Rilekskan tubuh... bahu turun... rahang mengendur...', duration: 8000 },
+      { type: 'breathing', text: 'Napas dalam... perlahan... 3 kali...', duration: 10000 },
+      { type: 'instruction', text: 'Filter kritis melembut...', subtext: 'Bawah sadar siap menyerap pola baru.', duration: 8000 },
+
+      // Step 3: Observasi Aktif
+      { type: 'instruction', text: '=== LANGKAH 3: OBSERVASI AKTIF ===', duration: 4000 },
+      { type: 'instruction', text: 'Bayangkan model-mu sedang melakukan skill itu di depanmu...', duration: 10000 },
+      { type: 'instruction', text: 'Gunakan SOFT FOCUS — pandangan periferal...', subtext: 'Jangan fokus ke satu titik. Serap keseluruhan.', duration: 10000 },
+      { type: 'instruction', text: 'Perhatikan POSTUR-nya...', subtext: 'Tegak atau condong? Terbuka atau tertutup?', duration: 10000 },
+      { type: 'instruction', text: 'Perhatikan NAPAS-nya...', subtext: 'Dalam atau dangkal? Ritme-nya bagaimana?', duration: 10000 },
+      { type: 'instruction', text: 'Perhatikan RITME geraknya...', subtext: 'Cepat atau lambat? Ada jeda di mana?', duration: 10000 },
+      { type: 'instruction', text: 'Perhatikan EKSPRESI wajah...', subtext: 'Mata, mulut, otot wajah — apa yang terjadi?', duration: 10000 },
+      { type: 'instruction', text: 'Perhatikan SUARA-nya...', subtext: 'Volume, tempo, intonasi, jeda...', duration: 10000 },
+
+      // Step 4: Tahan Penilaian
+      { type: 'instruction', text: '=== LANGKAH 4: SERAP TANPA MENILAI ===', duration: 4000 },
+      { type: 'instruction', text: 'Tahan dorongan untuk mengomentari atau menganalisis.', subtext: 'Jangan: "bagus" atau "saya tidak bisa"', duration: 10000 },
+      { type: 'instruction', text: 'Biarkan otak menangkap POLA secara utuh...', subtext: 'Seperti mendengar lagu berkali-kali sampai hafal tanpa sadar.', duration: 12000 },
+      { type: 'instruction', text: 'Ulangi observasi ini dalam pikiran 3 kali...', duration: 20000 },
+
+      { type: 'choice', text: 'Apa yang paling menonjol dari observasimu?', options: ['Postur/Gerakan', 'Napas/Ritme', 'Suara/Intonasi', 'Ekspresi Wajah', 'Energi/Aura Keseluruhan'] },
+
+      { type: 'completion', text: 'Aktivasi Mirror Neuron Selesai!', subtext: 'Otak sudah mulai membentuk jejak pola baru.' },
+      { type: 'insight', text: 'Catatan:', placeholder: 'Detail pola yang tertangkap dari model...' }
+    ]
+  },
+
+  // ==================== MODELING: SECOND POSITION ====================
+  'secondPositionModeling': {
+    title: 'Second Position Modeling',
+    description: 'Masuk ke tubuh model dan rasakan dari dalam',
+    level: 'basic',
+    steps: [
+      { type: 'instruction', text: 'Berhenti sejenak...', subtext: 'Rileks.', duration: 5000 },
+      { type: 'instruction', text: 'SECOND POSITION MODELING', subtext: 'Melihat dunia dari sudut pandang model', duration: 6000 },
+      { type: 'breathing', text: 'Tarik napas dalam... rileks sepenuhnya...', duration: 8000 },
+
+      // Identify Model
+      { type: 'input', text: 'Siapa model-mu untuk sesi ini?', placeholder: 'Nama orang yang skill-nya ingin kamu salin' },
+      { type: 'input', text: 'Skill spesifik apa?', placeholder: 'Contoh: ketenangan saat bicara di depan umum' },
+
+      // Step Into
+      { type: 'instruction', text: '=== MASUK KE SECOND POSITION ===', duration: 4000 },
+      { type: 'instruction', text: 'Pejamkan mata...', duration: 4000 },
+      { type: 'instruction', text: 'Bayangkan model-mu berdiri di depanmu...', subtext: 'Lihat detail: pakaian, postur, ekspresi.', duration: 10000 },
+      { type: 'instruction', text: 'Sekarang... MELANGKAH MASUK ke tubuhnya.', subtext: 'Seperti memakai "kostum" dari dalam.', duration: 10000 },
+      { type: 'instruction', text: 'Lihat dunia dari MATA mereka...', duration: 10000 },
+      { type: 'instruction', text: 'Dengar dari TELINGA mereka...', duration: 8000 },
+      { type: 'instruction', text: 'Rasakan dari KULIT mereka...', duration: 8000 },
+      { type: 'instruction', text: 'Perhatikan bagaimana TUBUH mereka terasa...', subtext: 'Postur, ketegangan otot, pusat gravitasi...', duration: 10000 },
+
+      // Experience the Skill
+      { type: 'instruction', text: '=== RASAKAN SKILL-NYA DARI DALAM ===', duration: 4000 },
+      { type: 'instruction', text: 'Bayangkan kamu (sebagai mereka) sedang melakukan skill itu...', duration: 12000 },
+      { type: 'instruction', text: 'Apa yang ada di PIKIRAN mereka saat melakukannya?', duration: 10000 },
+      { type: 'input', text: 'Dialog internal apa yang mereka ucapkan?', placeholder: 'Contoh: "Tenang, saya tahu materinya" atau "Fokus pada proses"' },
+      { type: 'instruction', text: 'Bagaimana PERASAAN di dada mereka?', subtext: 'Tenang? Bersemangat? Fokus?', duration: 10000 },
+      { type: 'choice', text: 'Emosi dominan apa yang kamu rasakan?', options: ['Keyakinan tenang', 'Semangat fokus', 'Keberanian mantap', 'Kejelasan pikiran', 'Kedamaian dalam'] },
+
+      // Empati Total
+      { type: 'instruction', text: '=== EMPATI TOTAL ===', duration: 4000 },
+      { type: 'instruction', text: 'Jadikan emosi ini MILIKMU sepenuhnya...', duration: 10000 },
+      { type: 'instruction', text: 'Bukan sedang berpura-pura...', subtext: 'Kamu sedang MENGAKSES state yang sama.', duration: 10000 },
+      { type: 'instruction', text: 'Perkuat sensasi ini... biarkan menyebar ke seluruh tubuh...', duration: 12000 },
+
+      // Return
+      { type: 'instruction', text: '=== KEMBALI KE DIRI SENDIRI ===', duration: 4000 },
+      { type: 'instruction', text: 'Perlahan melangkah keluar dari tubuh model...', duration: 8000 },
+      { type: 'instruction', text: 'Kembali menjadi dirimu... tapi BAWA state itu bersamamu.', duration: 10000 },
+      { type: 'instruction', text: 'State itu sekarang juga milikmu.', duration: 8000 },
+
+      { type: 'completion', text: 'Second Position Modeling Selesai!', subtext: 'Ulangi untuk memperkuat jalur saraf.' },
+      { type: 'insight', text: 'Catatan:', placeholder: 'Apa yang paling kuat dirasakan dari dalam model...' }
+    ]
+  },
+
+  // ==================== MODELING: PHYSIOLOGY MODELING ====================
+  'physiologyModeling': {
+    title: 'Physiology Modeling',
+    description: 'Salin postur, napas, dan ritme tubuh model',
+    level: 'intermediate',
+    steps: [
+      { type: 'instruction', text: 'Berhenti sejenak...', subtext: 'Rileks.', duration: 5000 },
+      { type: 'instruction', text: 'PHYSIOLOGY MODELING', subtext: 'Pilar 1: Tubuh Membentuk Pikiran', duration: 6000 },
+      { type: 'instruction', text: 'Tubuh dan pikiran adalah SATU SISTEM.', subtext: 'Ubah posisi tubuh = ubah keadaan mental.', duration: 8000 },
+      { type: 'breathing', text: 'Tarik napas dalam...', duration: 6000 },
+
+      { type: 'input', text: 'Siapa model-mu?', placeholder: 'Nama tokoh' },
+
+      // Baseline Check
+      { type: 'instruction', text: '=== CEK BASELINE DIRIMU ===', duration: 4000 },
+      { type: 'instruction', text: 'Duduk seperti biasa... perhatikan posturmu saat ini.', duration: 8000 },
+      { type: 'choice', text: 'Postur saat ini?', options: ['Membungkuk', 'Agak condong', 'Netral', 'Tegak', 'Sangat tegak'] },
+      { type: 'choice', text: 'Napas saat ini?', options: ['Dangkal & cepat', 'Sedang', 'Dalam & lambat'] },
+      { type: 'choice', text: 'Level energi saat ini?', options: ['1-3 (Rendah)', '4-6 (Sedang)', '7-10 (Tinggi)'] },
+
+      // Copy Spine & Posture
+      { type: 'instruction', text: '=== SALIN TULANG BELAKANG & POSTUR ===', duration: 4000 },
+      { type: 'instruction', text: 'Bayangkan model-mu duduk/berdiri...', duration: 8000 },
+      { type: 'instruction', text: 'Perhatikan tulang belakangnya... tegak? Sedikit maju?', duration: 8000 },
+      { type: 'instruction', text: 'Sekarang ATUR posturmu seperti dia...', duration: 10000 },
+      { type: 'instruction', text: 'Posisi kepala... dagu netral atau terangkat?', duration: 8000 },
+      { type: 'instruction', text: 'Bahu... terbuka lebar atau rileks turun?', duration: 8000 },
+      { type: 'instruction', text: 'Tangan... di mana dan bagaimana?', duration: 8000 },
+
+      // Copy Breathing
+      { type: 'instruction', text: '=== SALIN POLA NAPAS ===', duration: 4000 },
+      { type: 'instruction', text: 'Ini rahasia yang sering luput: NAPAS adalah remote control emosi.', duration: 8000 },
+      { type: 'instruction', text: 'Bayangkan model-mu bernapas...', subtext: 'Dalam atau dangkal? Cepat atau lambat?', duration: 10000 },
+      { type: 'instruction', text: 'Tirukan RITME napasnya sekarang...', duration: 10000 },
+      { type: 'breathing', text: 'Bernapas seperti model-mu... dalam... teratur... tenang...', duration: 15000 },
+      { type: 'instruction', text: 'Perhatikan bagaimana STATE-mu mulai bergeser...', duration: 10000 },
+
+      // Copy Voice & Rhythm
+      { type: 'instruction', text: '=== SALIN SUARA & RITME ===', duration: 4000 },
+      { type: 'instruction', text: 'Bayangkan model-mu berbicara...', duration: 6000 },
+      { type: 'instruction', text: 'Tempo bicaranya... cepat atau pelan?', duration: 8000 },
+      { type: 'instruction', text: 'Volume... kuat atau lembut?', duration: 6000 },
+      { type: 'instruction', text: 'Jeda... di mana dia berhenti sejenak?', duration: 8000 },
+      { type: 'instruction', text: 'Intonasi... naik di mana, turun di mana?', duration: 8000 },
+      { type: 'instruction', text: 'Coba ucapkan satu kalimat dengan ritme mereka...', duration: 12000 },
+
+      // Test
+      { type: 'choice', text: 'Level energi SEKARANG setelah menyalin fisiologi?', options: ['1-3 (Rendah)', '4-6 (Sedang)', '7-10 (Tinggi)'] },
+      { type: 'yesno', text: 'Apakah state-mu terasa BERBEDA dari sebelumnya?', highlight: 'Ya' },
+
+      { type: 'completion', text: 'Physiology Modeling Selesai!', subtext: 'Tubuh adalah tombol pertama untuk mengubah state.' },
+      { type: 'insight', text: 'Catatan:', placeholder: 'Perubahan state yang terjadi, bagian fisiologi mana yang paling berpengaruh...' }
+    ]
+  },
+
+  // ==================== MODELING: STRATEGY DECODING ====================
+  'strategyDecoding': {
+    title: 'Strategy Decoding',
+    description: 'Bongkar urutan proses mental model',
+    level: 'intermediate',
+    steps: [
+      { type: 'instruction', text: 'Berhenti sejenak...', subtext: 'Rileks.', duration: 5000 },
+      { type: 'instruction', text: 'STRATEGY DECODING', subtext: 'Pilar 2: Urutan Proses Mental', duration: 6000 },
+      { type: 'instruction', text: 'Di balik setiap tindakan ahli, ada RANGKAIAN LANGKAH INTERNAL yang berjalan sangat cepat.', duration: 10000 },
+      { type: 'breathing', text: 'Tarik napas dalam...', duration: 6000 },
+
+      { type: 'input', text: 'Siapa model-mu dan skill apa?', placeholder: 'Contoh: Pak Andi - cara dia memimpin rapat' },
+
+      // VAK Sequence
+      { type: 'instruction', text: '=== URUTAN V-A-K ===', duration: 4000 },
+      { type: 'instruction', text: 'NLP menggunakan sistem representasi:', subtext: 'V = Visual (gambar), A = Auditory (suara), K = Kinestetik (rasa)', duration: 10000 },
+      { type: 'instruction', text: 'Pertanyaan kunci: TEPAT SEBELUM model-mu melakukan skill itu...', duration: 8000 },
+
+      { type: 'choice', text: 'Apa yang PERTAMA muncul di pikirannya?', options: ['Gambar/visualisasi (V)', 'Suara/dialog internal (A)', 'Perasaan/sensasi tubuh (K)'] },
+      { type: 'input', text: 'Gambarkan langkah PERTAMA itu:', placeholder: 'Contoh: Dia melihat gambaran hasil yang diinginkan' },
+
+      { type: 'choice', text: 'Setelah itu, apa langkah KEDUA?', options: ['Gambar/visualisasi (V)', 'Suara/dialog internal (A)', 'Perasaan/sensasi tubuh (K)'] },
+      { type: 'input', text: 'Gambarkan langkah KEDUA itu:', placeholder: 'Contoh: Dia bilang ke diri sendiri "fokus"' },
+
+      { type: 'choice', text: 'Lalu langkah KETIGA sebelum eksekusi?', options: ['Gambar/visualisasi (V)', 'Suara/dialog internal (A)', 'Perasaan/sensasi tubuh (K)', 'Langsung eksekusi'] },
+      { type: 'input', text: 'Gambarkan langkah KETIGA itu:', placeholder: 'Contoh: Muncul rasa yakin di dada, lalu bertindak' },
+
+      // Submodalities Detail
+      { type: 'instruction', text: '=== DETAIL SUBMODALITIES ===', duration: 4000 },
+      { type: 'instruction', text: 'Sekarang perkaya detail dari gambar mentalnya:', duration: 6000 },
+      { type: 'choice', text: 'Gambar mental model ini bagaimana?', options: ['Besar & dekat', 'Terang & jelas', 'Bergerak (film)', 'Dari sudut pandang sendiri', 'Campuran'] },
+      { type: 'choice', text: 'Dialog internal-nya bagaimana?', options: ['Tegas & singkat', 'Lembut & meyakinkan', 'Cepat & energik', 'Tenang & terukur'] },
+
+      // Self-Talk
+      { type: 'instruction', text: '=== DIALOG INTERNAL ===', duration: 4000 },
+      { type: 'instruction', text: 'Self-talk adalah kemudi arah tindakan.', duration: 6000 },
+      { type: 'instruction', text: 'Orang ahli cenderung punya kalimat yang fungsional:', subtext: 'Singkat, jelas, mengarahkan tindakan — bukan menakuti.', duration: 10000 },
+      { type: 'input', text: 'Menurutmu, apa self-talk model-mu saat melakukan skill itu?', placeholder: 'Contoh: "Tenang, lihat celah" atau "Satu langkah dulu"' },
+
+      // Create Algorithm
+      { type: 'instruction', text: '=== BUAT ALGORITMA ===', duration: 4000 },
+      { type: 'instruction', text: 'Sekarang susun RESEP-nya dalam urutan presisi:', duration: 8000 },
+      { type: 'input', text: 'Langkah 1 (State/Postur):', placeholder: 'Contoh: Atur postur tegak, napas dalam' },
+      { type: 'input', text: 'Langkah 2 (Gambar Mental):', placeholder: 'Contoh: Visualisasikan hasil yang diinginkan' },
+      { type: 'input', text: 'Langkah 3 (Dialog Internal):', placeholder: 'Contoh: Ucapkan "fokus pada proses"' },
+      { type: 'input', text: 'Langkah 4 (Pemicu Aksi):', placeholder: 'Contoh: Rasakan keyakinan di dada, lalu mulai' },
+
+      { type: 'instruction', text: 'Ini adalah PETA STRATEGI model-mu.', subtext: 'Urutan ini yang membuat tindakan mereka terlihat "mudah".', duration: 10000 },
+
+      { type: 'completion', text: 'Strategy Decoding Selesai!', subtext: 'Latih algoritma ini dengan mental rehearsal.' },
+      { type: 'insight', text: 'Catatan:', placeholder: 'Algoritma lengkap yang ditemukan...' }
+    ]
+  },
+
+  // ==================== MODELING: BELIEF ADOPTION (AS-IF) ====================
+  'beliefAdoption': {
+    title: 'Belief Adoption (As-If Frame)',
+    description: 'Adopsi sistem keyakinan yang memberdayakan',
+    level: 'advanced',
+    steps: [
+      { type: 'instruction', text: 'Berhenti sejenak...', subtext: 'Rileks.', duration: 5000 },
+      { type: 'instruction', text: 'BELIEF ADOPTION', subtext: 'Pilar 3: Sistem Keyakinan', duration: 6000 },
+      { type: 'instruction', text: 'Keyakinan adalah "sistem operasi" batin.', subtext: 'Ia menentukan apa yang dianggap mungkin dan apa yang ditolak.', duration: 10000 },
+      { type: 'breathing', text: 'Tarik napas dalam...', duration: 6000 },
+
+      { type: 'input', text: 'Siapa model-mu?', placeholder: 'Nama tokoh' },
+      { type: 'input', text: 'Skill apa yang ingin kamu salin?', placeholder: 'Skill spesifik' },
+
+      // Identify Model's Beliefs
+      { type: 'instruction', text: '=== IDENTIFIKASI KEYAKINAN MODEL ===', duration: 4000 },
+      { type: 'instruction', text: 'Pikirkan tentang model-mu...', duration: 6000 },
+      { type: 'instruction', text: 'Apa yang mereka ANGGAP BENAR tanpa perlu dibuktikan?', subtext: 'Ini disebut "presuppositions" — asumsi tersembunyi.', duration: 10000 },
+      { type: 'input', text: 'Keyakinan model tentang KEMAMPUAN diri:', placeholder: 'Contoh: "Saya bisa menguasai apa saja dengan latihan"' },
+      { type: 'input', text: 'Keyakinan model tentang KEGAGALAN:', placeholder: 'Contoh: "Gagal berarti ada data baru, bukan hukuman"' },
+      { type: 'input', text: 'Keyakinan model tentang PROSES:', placeholder: 'Contoh: "Konsistensi mengalahkan bakat"' },
+
+      // Identify Your Limiting Beliefs
+      { type: 'instruction', text: '=== IDENTIFIKASI KEYAKINAN PEMBATASMU ===', duration: 4000 },
+      { type: 'instruction', text: 'Sekarang jujur pada diri sendiri...', duration: 6000 },
+      { type: 'input', text: 'Apa keyakinan PEMBATAS-mu tentang skill ini?', placeholder: 'Contoh: "Saya tidak punya bakat untuk itu"' },
+      { type: 'instruction', text: 'Perhatikan: keyakinan ini mungkin terasa "fakta"...', subtext: 'Tapi sebenarnya itu PETA, bukan wilayah.', duration: 10000 },
+
+      // Check for Conflict
+      { type: 'instruction', text: '=== CEK KONFLIK INTERNAL ===', duration: 4000 },
+      { type: 'instruction', text: 'Apakah ada keyakinan yang BERTABRAKAN?', subtext: 'Contoh: Ingin kaya TAPI yakin "uang itu kotor"', duration: 10000 },
+      { type: 'input', text: 'Konflik keyakinan apa yang kamu temukan (jika ada)?', placeholder: 'Contoh: Ingin jago presentasi tapi yakin "saya introvert"' },
+      { type: 'instruction', text: 'Sistem saraf tidak suka menjalankan DUA perintah yang bertabrakan.', subtext: 'Salah satu harus dilepas agar yang baru bisa jalan.', duration: 10000 },
+
+      // As-If Frame
+      { type: 'instruction', text: '=== TEKNIK AS-IF ===', duration: 4000 },
+      { type: 'instruction', text: 'Kamu tidak harus percaya 100% sekarang.', duration: 6000 },
+      { type: 'instruction', text: 'Cukup bertanya:', duration: 4000 },
+      { type: 'instruction', text: '"JIKA saya punya keyakinan seperti model saya..."', duration: 8000 },
+      { type: 'instruction', text: '"...keputusan APA yang saya ambil SEKARANG?"', duration: 8000 },
+      { type: 'instruction', text: 'Bayangkan kamu SUDAH percaya seperti model-mu...', duration: 10000 },
+      { type: 'input', text: 'Dengan keyakinan itu, apa langkah pertamamu?', placeholder: 'Tindakan konkret yang akan kamu ambil' },
+      { type: 'input', text: 'Dengan keyakinan itu, apa yang berhenti kamu takutkan?', placeholder: 'Ketakutan yang hilang' },
+
+      // Install New Belief
+      { type: 'instruction', text: '=== INSTAL KEYAKINAN BARU ===', duration: 4000 },
+      { type: 'instruction', text: 'Pilih SATU keyakinan baru dari model-mu...', duration: 6000 },
+      { type: 'input', text: 'Keyakinan baru yang ingin kamu adopsi:', placeholder: 'Contoh: "Setiap kegagalan membawa saya lebih dekat ke penguasaan"' },
+      { type: 'instruction', text: 'Ucapkan keyakinan itu dengan lantang...', duration: 8000 },
+      { type: 'instruction', text: 'Sekali lagi... dengan PERASAAN...', duration: 8000 },
+      { type: 'instruction', text: 'Sekali lagi... seolah sudah menjadi KENYATAAN...', duration: 8000 },
+      { type: 'instruction', text: 'Ketika keyakinan berubah, PERHATIAN berubah.', subtext: 'Kamu akan mulai melihat peluang yang dulu tidak terlihat.', duration: 10000 },
+
+      { type: 'completion', text: 'Belief Adoption Selesai!', subtext: 'Ulangi teknik As-If setiap hari selama 21 hari.' },
+      { type: 'insight', text: 'Catatan:', placeholder: 'Keyakinan baru, konflik yang ditemukan, langkah pertama...' }
+    ]
+  },
+
+  // ==================== MODELING: FULL MODELING PROTOCOL ====================
+  'fullModelingProtocol': {
+    title: 'Full Modeling Protocol',
+    description: 'Protokol lengkap: Absorb → Decode → Install → Test',
+    level: 'advanced',
+    steps: [
+      { type: 'instruction', text: 'Berhenti sejenak...', subtext: 'Rileks.', duration: 5000 },
+      { type: 'instruction', text: 'FULL MODELING PROTOCOL', subtext: 'Integrasi Lengkap 3 Pilar: Fisiologi + Strategi + Keyakinan', duration: 8000 },
+      { type: 'instruction', text: 'Ini adalah proses lengkap untuk menyalin kemampuan.', subtext: 'Absorb → Decode → Install → Test → Integrate', duration: 8000 },
+      { type: 'breathing', text: 'Tarik napas dalam... masuk ke state rileks...', duration: 8000 },
+
+      { type: 'input', text: 'Siapa model-mu?', placeholder: 'Nama' },
+      { type: 'input', text: 'Skill SPESIFIK apa?', placeholder: 'Satu kebiasaan/kemampuan yang jelas' },
+
+      // PHASE 1: ABSORB
+      { type: 'instruction', text: '=== FASE 1: ABSORB (SERAP) ===', subtext: 'Penyerapan bawah sadar', duration: 6000 },
+      { type: 'instruction', text: 'Bayangkan model-mu melakukan skill itu...', duration: 8000 },
+      { type: 'instruction', text: 'Gunakan soft focus... serap KESELURUHAN pola...', duration: 12000 },
+      { type: 'instruction', text: 'Perhatikan 3 hal:', duration: 4000 },
+      { type: 'instruction', text: '1. TUBUH: postur, napas, gerakan', duration: 8000 },
+      { type: 'instruction', text: '2. PIKIRAN: apa yang mungkin ada di kepalanya', duration: 8000 },
+      { type: 'instruction', text: '3. ENERGI: state emosional yang terpancar', duration: 8000 },
+
+      // Second Position
+      { type: 'instruction', text: 'Sekarang MELANGKAH MASUK ke tubuh model...', duration: 8000 },
+      { type: 'instruction', text: 'Lihat dari mata mereka... rasakan dari kulit mereka...', duration: 12000 },
+      { type: 'instruction', text: 'Rasakan skill itu DARI DALAM...', duration: 12000 },
+
+      // PHASE 2: DECODE
+      { type: 'instruction', text: '=== FASE 2: DECODE (BONGKAR) ===', subtext: 'Ubah intuisi jadi langkah sadar', duration: 6000 },
+      { type: 'instruction', text: 'Keluar dari model... kembali jadi DIRIMU.', duration: 6000 },
+      { type: 'instruction', text: 'Sekarang jadi TEKNISI. Catat polanya.', duration: 6000 },
+
+      { type: 'input', text: 'FISIOLOGI: Postur + napas + ritme apa yang mereka gunakan?', placeholder: 'Contoh: Tegak, napas dalam lambat, gerakan tenang' },
+      { type: 'input', text: 'STRATEGI: Urutan langkah di pikiran mereka?', placeholder: 'Contoh: Visualisasi hasil → self-talk "fokus" → rasa yakin → aksi' },
+      { type: 'input', text: 'KEYAKINAN: Apa yang mereka percaya tentang diri/proses?', placeholder: 'Contoh: "Saya selalu menemukan cara" atau "Proses lebih penting dari hasil"' },
+
+      // Subtraction
+      { type: 'instruction', text: 'FILTER: Buang yang tidak relevan.', subtext: 'Tidak semua kebiasaan model perlu ditiru.', duration: 8000 },
+      { type: 'instruction', text: 'Ambil hanya KOMPONEN INTI yang memberi hasil.', duration: 8000 },
+
+      // PHASE 3: INSTALL
+      { type: 'instruction', text: '=== FASE 3: INSTALL (PASANG) ===', subtext: 'Mental rehearsal + instalasi ke sistem saraf', duration: 6000 },
+      { type: 'instruction', text: 'Atur fisiologimu SEKARANG seperti model...', duration: 10000 },
+      { type: 'instruction', text: 'Postur... napas... ritme...', duration: 8000 },
+      { type: 'instruction', text: 'Jalankan strategi mental dalam IMAJINASI:', duration: 6000 },
+      { type: 'instruction', text: 'Bayangkan DIRIMU melakukan skill itu...', subtext: 'Dengan fisiologi, strategi, dan keyakinan model.', duration: 12000 },
+      { type: 'instruction', text: 'Buat gambarnya VIVID — warna, suara, sensasi...', duration: 10000 },
+      { type: 'instruction', text: 'Ulangi mental rehearsal 3x...', subtext: 'Setiap kali lebih cepat dan lebih jelas.', duration: 20000 },
+
+      // PHASE 4: TEST
+      { type: 'instruction', text: '=== FASE 4: TEST (UJI) ===', subtext: 'Feedback loop', duration: 6000 },
+      { type: 'instruction', text: 'Rencanakan UJI COBA di dunia nyata.', subtext: 'Mulai dari skala kecil. Tidak perlu sempurna.', duration: 10000 },
+      { type: 'input', text: 'Kapan dan di mana kamu akan UJI COBA skill ini?', placeholder: 'Contoh: Rapat besok, presentasi Jumat, percakapan dengan atasan' },
+      { type: 'instruction', text: 'Setelah uji coba, bandingkan dengan model:', subtext: 'Fisiologi cocok? Strategi benar? Keyakinan mendukung?', duration: 10000 },
+
+      // PHASE 5: INTEGRATE
+      { type: 'instruction', text: '=== FASE 5: INTEGRATE (PADUKAN) ===', subtext: 'Jadikan milikmu sendiri', duration: 6000 },
+      { type: 'instruction', text: 'Modeling yang matang TIDAK menghapus identitas.', duration: 8000 },
+      { type: 'instruction', text: 'Ambil strukturnya... sesuaikan dengan KARAKTERMU.', duration: 8000 },
+      { type: 'instruction', text: 'Kamu bukan tiruan. Kamu versi TERBAIK dari dirimu sendiri.', subtext: 'Diperkaya dengan pola yang sudah terbukti.', duration: 10000 },
+      { type: 'instruction', text: 'Dengan repetisi, jalur saraf menguat (mielinasi).', subtext: 'Skill yang dilatih berulang akan menjadi OTOMATIS.', duration: 10000 },
+
+      { type: 'choice', text: 'Tingkat kesiapan untuk uji coba?', options: ['1-3 (Belum siap)', '4-6 (Cukup siap)', '7-8 (Siap)', '9-10 (Sangat siap)'] },
+
+      { type: 'completion', text: 'Full Modeling Protocol Selesai!', subtext: 'Uji coba → Feedback → Perbaiki → Ulangi. Itu kunci mielinasi.' },
+      { type: 'insight', text: 'Catatan:', placeholder: 'Algoritma lengkap, rencana uji coba, keyakinan yang diadopsi...' }
+    ]
   }
 };
 
