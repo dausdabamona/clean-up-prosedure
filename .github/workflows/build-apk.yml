@@ -1,0 +1,66 @@
+name: Deploy PWA to GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  # ==================== JOB 1: Generate Icons & Deploy ====================
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install sharp
+
+      - name: Generate PNG icons from SVG
+        run: node scripts/generate-icons.js
+
+      - name: Verify generated icons
+        run: ls -la icons/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload to Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Output deployment URL
+        run: |
+          echo "## PWA Deployed Successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Install as App:" >> $GITHUB_STEP_SUMMARY
+          echo "1. Open URL in Chrome/Edge" >> $GITHUB_STEP_SUMMARY
+          echo "2. Tap menu (3 dots) → 'Install app' atau 'Add to Home Screen'" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Build APK (manual):" >> $GITHUB_STEP_SUMMARY
+          echo "1. Go to [PWABuilder.com](https://www.pwabuilder.com/)" >> $GITHUB_STEP_SUMMARY
+          echo "2. Enter your PWA URL" >> $GITHUB_STEP_SUMMARY
+          echo "3. Click 'Package for stores' → Android" >> $GITHUB_STEP_SUMMARY
+          echo "4. Download APK" >> $GITHUB_STEP_SUMMARY
