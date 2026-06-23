@@ -556,12 +556,15 @@ function resumeTimer(onComplete) {
 }
 
 function updateTimerDisplay() {
-  const timerElement = document.getElementById('timer');
-  if (timerElement) {
-    const mins = Math.floor(timerSeconds / 60);
-    const secs = timerSeconds % 60;
-    timerElement.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  }
+  // There are multiple `.timer` displays (one per timed step); update them all.
+  // Only the active step is visible, so updating hidden ones is harmless and
+  // avoids the previous bug where a duplicate id="timer" left later steps frozen.
+  const timerElements = document.querySelectorAll('.timer');
+  if (!timerElements.length) return;
+  const mins = Math.floor(timerSeconds / 60);
+  const secs = timerSeconds % 60;
+  const text = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  timerElements.forEach(function(el) { el.textContent = text; });
 }
 
 function skipTimer() {
