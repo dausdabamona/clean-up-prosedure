@@ -91,16 +91,16 @@ function doGet(e) {
         result = setup();
         break;
       case 'saveDraft':
-        result = saveDraft(data);
+        result = withLock(function() { return saveDraft(data); });
         break;
       case 'getDrafts':
         result = getDrafts();
         break;
       case 'deleteDraft':
-        result = deleteDraft(sesiId);
+        result = withLock(function() { return deleteDraft(sesiId); });
         break;
       case 'saveComplete':
-        result = saveComplete(data);
+        result = withLock(function() { return saveComplete(data); });
         break;
       case 'getTracker':
         result = getTracker();
@@ -133,33 +133,33 @@ function doGet(e) {
 
       // Goals
       case 'saveManifestingGoal':
-        result = saveManifestingGoal(data);
+        result = withLock(function() { return saveManifestingGoal(data); });
         break;
       case 'getManifestingGoals':
         result = getManifestingGoals(status || (data ? data.status : null));
         break;
       case 'deleteManifestingGoal':
-        result = deleteManifestingGoal(id || (data ? data.id : null));
+        result = withLock(function() { return deleteManifestingGoal(id || (data ? data.id : null)); });
         break;
 
       // Discover
       case 'saveManifestingDiscover':
-        result = saveManifestingDiscover(data);
+        result = withLock(function() { return saveManifestingDiscover(data); });
         break;
 
       // Releases
       case 'saveManifestingRelease':
-        result = saveManifestingRelease(data);
+        result = withLock(function() { return saveManifestingRelease(data); });
         break;
 
       // Actions
       case 'saveManifestingAction':
-        result = saveManifestingAction(data);
+        result = withLock(function() { return saveManifestingAction(data); });
         break;
 
       // Emotions
       case 'logManifestingEmotion':
-        result = logManifestingEmotion(data);
+        result = withLock(function() { return logManifestingEmotion(data); });
         break;
 
       // Progress
@@ -167,7 +167,7 @@ function doGet(e) {
         result = getManifestingProgress();
         break;
       case 'initManifestingProgress':
-        result = initManifestingProgress(data ? data.startDate : null);
+        result = withLock(function() { return initManifestingProgress(data ? data.startDate : null); });
         break;
 
       // Journal

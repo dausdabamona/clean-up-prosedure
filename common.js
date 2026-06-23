@@ -6,7 +6,11 @@
 // ==========================================================================
 // API CONFIGURATION
 // ==========================================================================
-const API_URL = 'https://script.google.com/macros/s/AKfycbxyql2BYExoYNXm-TwYibkw7jDXozNbWqeeoOmw-TNuX8gqMyW7P4Q4qD2iBFpM8odDZQ/exec';
+// Prefer config.js (window.SEDONA_CONFIG); fall back to a built-in default so
+// the app still works if config.js is missing or loaded out of order.
+const API_URL = (typeof window !== 'undefined' && window.SEDONA_CONFIG && window.SEDONA_CONFIG.apiUrl) ||
+  'https://script.google.com/macros/s/AKfycbxyql2BYExoYNXm-TwYibkw7jDXozNbWqeeoOmw-TNuX8gqMyW7P4Q4qD2iBFpM8odDZQ/exec';
+const DEFAULT_NAME = (typeof window !== 'undefined' && window.SEDONA_CONFIG && window.SEDONA_CONFIG.defaultName) || 'Firdaus Dabamona';
 
 // Get API URL from localStorage or fallback
 function getApiUrl() {
@@ -15,7 +19,7 @@ function getApiUrl() {
 
 // Get Default Name from localStorage or fallback
 function getDefaultName() {
-  return localStorage.getItem('cleanupDefaultName') || 'Firdaus Dabamona';
+  return localStorage.getItem('cleanupDefaultName') || DEFAULT_NAME;
 }
 
 // Check if debug mode is enabled
@@ -292,7 +296,7 @@ function stopTimer() {
 function loadSettings() {
   return {
     apiUrl: localStorage.getItem('cleanupApiUrl') || API_URL,
-    defaultName: localStorage.getItem('cleanupDefaultName') || 'Firdaus Dabamona',
+    defaultName: localStorage.getItem('cleanupDefaultName') || DEFAULT_NAME,
     debugMode: localStorage.getItem('cleanupDebugMode') === 'true',
     showGrounding: localStorage.getItem('cleanupShowGrounding') !== 'false',
     showWelcoming: localStorage.getItem('cleanupShowWelcoming') !== 'false',
