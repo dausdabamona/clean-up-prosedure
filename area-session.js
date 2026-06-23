@@ -66,8 +66,10 @@
     // Initialize ReleasingEngine
     if (typeof ReleasingEngine !== 'undefined') {
       ReleasingEngine.init({
+        // Count a release once, on session completion. (Previously onRelease was
+        // also bound here; it fires on the completion step *and* onComplete fires
+        // at the end, so totalReleases was incremented twice per session.)
         onComplete: onReleaseComplete,
-        onRelease: onReleaseComplete,
         onInsight: onInsightSaved
       });
     }
