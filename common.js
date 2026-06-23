@@ -42,13 +42,33 @@ async function apiCall(action, data = null, extraParams = '') {
   }
 
   let url = `${apiUrl}?action=${action}`;
-  if (data) url += `&data=${encodeURIComponent(JSON.stringify(data))}`;
   if (extraParams) url += extraParams;
 
   debugLog('API Call:', action, data);
 
   try {
-    const response = await fetch(url);
+    let response;
+    if (data) {
+      // Send the payload in the POST body instead of the URL: avoids browser/
+      // Apps Script URL-length limits (large sessions were silently truncated)
+      // and keeps sensitive data out of access logs. text/plain avoids a CORS
+      // preflight that Apps Script can't answer; doPost reads e.postData.contents.
+      response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(data)
+      });
+    } else {
+      response = await fetch(url);
+    }
+
+    if (!response.ok) {
+      console.error('API HTTP error:', response.status);
+      debugLog('API HTTP error:', response.status);
+      showToast('Server error (' + response.status + ')', 'error');
+      return null;
+    }
+
     const result = await response.json();
     debugLog('API Response:', result);
     return result;

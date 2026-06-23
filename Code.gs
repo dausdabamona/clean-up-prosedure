@@ -72,18 +72,20 @@ function setup() {
 // ==========================================================================
 function doGet(e) {
   const action = e.parameter.action || '';
-  const data = e.parameter.data ? JSON.parse(e.parameter.data) : null;
-  const sesiId = e.parameter.sesiId || '';
-  const id = e.parameter.id || '';
-  const status = e.parameter.status || '';
-  const type = e.parameter.type || '';
-  const goalId = e.parameter.goalId || '';
-  const fromDate = e.parameter.fromDate || '';
-  const toDate = e.parameter.toDate || '';
-
   let result = { success: false, message: 'Unknown action' };
 
   try {
+    // Parse params inside the try block so a malformed `data` payload returns a
+    // JSON error instead of crashing doGet with an HTML error page.
+    const data = e.parameter.data ? JSON.parse(e.parameter.data) : null;
+    const sesiId = e.parameter.sesiId || '';
+    const id = e.parameter.id || '';
+    const status = e.parameter.status || '';
+    const type = e.parameter.type || '';
+    const goalId = e.parameter.goalId || '';
+    const fromDate = e.parameter.fromDate || '';
+    const toDate = e.parameter.toDate || '';
+
     switch (action) {
       case 'setup':
         result = setup();
@@ -108,6 +110,20 @@ function doGet(e) {
         break;
       case 'ping':
         result = { success: true, message: 'API is working!', timestamp: new Date().toISOString() };
+        break;
+
+      // ===== CLEANUP PROCEDURE CASES =====
+      case 'saveCleanupProcedure':
+        result = saveCleanupProcedure(data);
+        break;
+      case 'getCleanupProcedures':
+        result = getCleanupProcedures();
+        break;
+      case 'getCleanupPeople':
+        result = getCleanupPeople();
+        break;
+      case 'getCleanupStats':
+        result = getCleanupStats();
         break;
 
       // ===== MANIFESTING CASES =====
@@ -177,7 +193,36 @@ function doGet(e) {
 }
 
 function doPost(e) {
+  // Large write payloads are sent in the POST body (text/plain, to avoid a CORS
+  // preflight that Apps Script cannot answer) while `action` stays in the query
+  // string. Surface the body as e.parameter.data so doGet can parse it normally.
+  try {
+    if (e && e.postData && e.postData.contents) {
+      e.parameter = e.parameter || {};
+      e.parameter.data = e.postData.contents;
+    }
+  } catch (err) {
+    // fall through to doGet, which will report any parse error as JSON
+  }
   return doGet(e);
+}
+
+// ==========================================================================
+// HELPER: Run a mutating operation under a script lock (prevents races on
+// concurrent appendRow / read-modify-write from "Anyone" web-app access).
+// ==========================================================================
+function withLock(fn) {
+  const lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(10000);
+  } catch (e) {
+    return { success: false, message: 'Server sibuk, coba lagi.' };
+  }
+  try {
+    return fn();
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 // ==========================================================================
@@ -1251,6 +1296,133 @@ function getManifestingStats() {
       totalActions: actionCount,
       activeDays: uniqueDays.size,
       emotionDistribution: emotionLogs
+    }
+  };
+}
+
+// ==========================================================================
+// CLEANUP PROCEDURE (cleanup-procedure.html)
+// ==========================================================================
+// Stores each "clean up" session (one target person, releasing across
+// Control/Approval/Security/Separation). The full session object is kept as
+// JSON in the Full_Data column so reads return the exact shape the frontend
+// expects; flat columns are mirrored for querying/aggregation.
+
+const CLEANUP_HEADERS = [
+  'ID', 'Timestamp', 'TargetName', 'Relation', 'Deceased', 'Status', 'CurrentStep',
+  'TotalReleases', 'ControlReleases', 'ApprovalReleases', 'SecurityReleases', 'SeparationReleases',
+  'Insight', 'Duration', 'StartedAt', 'UpdatedAt', 'CompletedAt', 'Full_Data'
+];
+
+function getCleanupSheet() {
+  return getOrCreateSheet('CleanupProcedure', CLEANUP_HEADERS);
+}
+
+function cleanupRowFromSession(s) {
+  const control = s.control || {};
+  const approval = s.approval || {};
+  const security = s.security || {};
+  const separation = s.separation || {};
+  return [
+    s.id || '',
+    new Date().toISOString(),
+    s.targetName || '',
+    s.relation || '',
+    s.deceased ? 'Yes' : 'No',
+    s.status || 'Ongoing',
+    s.currentStep || '',
+    s.totalReleases || 0,
+    control.releases || 0,
+    approval.releases || 0,
+    security.releases || 0,
+    separation.releases || 0,
+    s.insight || '',
+    s.duration || 0,
+    s.startedAt || '',
+    s.updatedAt || '',
+    s.completedAt || '',
+    JSON.stringify(s)
+  ];
+}
+
+// Upsert a cleanup session by ID (under a lock to avoid concurrent-write races).
+function saveCleanupProcedure(data) {
+  if (!data || !data.id) {
+    return { success: false, message: 'Data sesi tidak valid (id wajib).' };
+  }
+  return withLock(function() {
+    const sheet = getCleanupSheet();
+    const row = cleanupRowFromSession(data);
+    const existingRow = findRowBySesiId(sheet, data.id); // matches column 1 (ID)
+    if (existingRow > 0) {
+      sheet.getRange(existingRow, 1, 1, row.length).setValues([row]);
+    } else {
+      sheet.appendRow(row);
+    }
+    return { success: true, message: 'Sesi cleanup tersimpan', id: data.id };
+  });
+}
+
+// Return every session as the full object the frontend stored, newest first.
+function getCleanupProcedures() {
+  const sheet = getCleanupSheet();
+  const values = sheet.getDataRange().getValues();
+  const jsonCol = CLEANUP_HEADERS.indexOf('Full_Data');
+  const sessions = [];
+  for (let i = 1; i < values.length; i++) {
+    const raw = values[i][jsonCol];
+    if (!raw) continue;
+    try {
+      sessions.push(JSON.parse(raw));
+    } catch (e) {
+      // Skip a corrupted row rather than failing the whole request.
+    }
+  }
+  sessions.sort(function(a, b) {
+    return String(b.startedAt || '').localeCompare(String(a.startedAt || ''));
+  });
+  return { success: true, data: sessions };
+}
+
+// Aggregate sessions per target person: { name, relation, sessions, releases }.
+function getCleanupPeople() {
+  const sessions = getCleanupProcedures().data || [];
+  const peopleMap = {};
+  sessions.forEach(function(item) {
+    const name = item.targetName;
+    if (!name) return;
+    if (!peopleMap[name]) {
+      peopleMap[name] = { name: name, relation: item.relation || '', sessions: 0, releases: 0 };
+    }
+    peopleMap[name].sessions++;
+    peopleMap[name].releases += item.totalReleases || 0;
+  });
+  return { success: true, data: Object.keys(peopleMap).map(function(k) { return peopleMap[k]; }) };
+}
+
+// Dashboard totals, matching calculateLocalStats() in cleanup-procedure.html.
+function getCleanupStats() {
+  const sessions = getCleanupProcedures().data || [];
+  const sum = function(fn) { return sessions.reduce(function(t, h) { return t + (fn(h) || 0); }, 0); };
+  const people = {};
+  sessions.forEach(function(h) { if (h.targetName) people[h.targetName] = true; });
+
+  const totalSessions = sessions.length;
+  const totalReleases = sum(function(h) { return h.totalReleases; });
+
+  return {
+    success: true,
+    data: {
+      totalSessions: totalSessions,
+      completeSessions: sessions.filter(function(h) { return h.status === 'Complete'; }).length,
+      ongoingSessions: sessions.filter(function(h) { return h.status === 'Ongoing'; }).length,
+      totalPeople: Object.keys(people).length,
+      totalReleases: totalReleases,
+      controlReleases: sum(function(h) { return h.control && h.control.releases; }),
+      approvalReleases: sum(function(h) { return h.approval && h.approval.releases; }),
+      securityReleases: sum(function(h) { return h.security && h.security.releases; }),
+      separationReleases: sum(function(h) { return h.separation && h.separation.releases; }),
+      avgReleases: totalSessions > 0 ? Math.round(totalReleases / totalSessions) : 0
     }
   };
 }
