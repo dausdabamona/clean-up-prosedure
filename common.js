@@ -6,7 +6,11 @@
 // ==========================================================================
 // API CONFIGURATION
 // ==========================================================================
-const API_URL = 'https://script.google.com/macros/s/AKfycbxyql2BYExoYNXm-TwYibkw7jDXozNbWqeeoOmw-TNuX8gqMyW7P4Q4qD2iBFpM8odDZQ/exec';
+// Prefer config.js (window.SEDONA_CONFIG); fall back to a built-in default so
+// the app still works if config.js is missing or loaded out of order.
+const API_URL = (typeof window !== 'undefined' && window.SEDONA_CONFIG && window.SEDONA_CONFIG.apiUrl) ||
+  'https://script.google.com/macros/s/AKfycbxyql2BYExoYNXm-TwYibkw7jDXozNbWqeeoOmw-TNuX8gqMyW7P4Q4qD2iBFpM8odDZQ/exec';
+const DEFAULT_NAME = (typeof window !== 'undefined' && window.SEDONA_CONFIG && window.SEDONA_CONFIG.defaultName) || 'Firdaus Dabamona';
 
 // Get API URL from localStorage or fallback
 function getApiUrl() {
@@ -15,7 +19,7 @@ function getApiUrl() {
 
 // Get Default Name from localStorage or fallback
 function getDefaultName() {
-  return localStorage.getItem('cleanupDefaultName') || 'Firdaus Dabamona';
+  return localStorage.getItem('cleanupDefaultName') || DEFAULT_NAME;
 }
 
 // Check if debug mode is enabled
@@ -42,13 +46,33 @@ async function apiCall(action, data = null, extraParams = '') {
   }
 
   let url = `${apiUrl}?action=${action}`;
-  if (data) url += `&data=${encodeURIComponent(JSON.stringify(data))}`;
   if (extraParams) url += extraParams;
 
   debugLog('API Call:', action, data);
 
   try {
-    const response = await fetch(url);
+    let response;
+    if (data) {
+      // Send the payload in the POST body instead of the URL: avoids browser/
+      // Apps Script URL-length limits (large sessions were silently truncated)
+      // and keeps sensitive data out of access logs. text/plain avoids a CORS
+      // preflight that Apps Script can't answer; doPost reads e.postData.contents.
+      response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(data)
+      });
+    } else {
+      response = await fetch(url);
+    }
+
+    if (!response.ok) {
+      console.error('API HTTP error:', response.status);
+      debugLog('API HTTP error:', response.status);
+      showToast('Server error (' + response.status + ')', 'error');
+      return null;
+    }
+
     const result = await response.json();
     debugLog('API Response:', result);
     return result;
@@ -272,7 +296,7 @@ function stopTimer() {
 function loadSettings() {
   return {
     apiUrl: localStorage.getItem('cleanupApiUrl') || API_URL,
-    defaultName: localStorage.getItem('cleanupDefaultName') || 'Firdaus Dabamona',
+    defaultName: localStorage.getItem('cleanupDefaultName') || DEFAULT_NAME,
     debugMode: localStorage.getItem('cleanupDebugMode') === 'true',
     showGrounding: localStorage.getItem('cleanupShowGrounding') !== 'false',
     showWelcoming: localStorage.getItem('cleanupShowWelcoming') !== 'false',

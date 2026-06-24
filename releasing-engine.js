@@ -1801,7 +1801,21 @@ const ReleasingEngine = (function() {
   }
 
   // ==================== STEP RENDERING ====================
+  // Cancel any pending auto-advance timer (instruction/breathing/triple-welcoming).
+  function clearAutoTimer() {
+    if (currentSession && currentSession.autoTimer) {
+      clearTimeout(currentSession.autoTimer);
+      currentSession.autoTimer = null;
+    }
+  }
+
   function renderStep(index) {
+    if (!currentSession) return;
+    // renderStep is authoritative for the current step, and any pending
+    // auto-advance timer from a previous step is cancelled so navigating with
+    // Back/forward never triggers a surprise jump or fires across sessions.
+    clearAutoTimer();
+    currentSession.currentStep = index;
     const step = currentSession.script.steps[index];
     const body = document.getElementById('re-modal-body');
     const totalSteps = currentSession.script.steps.length;
@@ -1822,7 +1836,7 @@ const ReleasingEngine = (function() {
         if (step.subtext) html += '<p class="releasing-step-subtext">' + step.subtext + '</p>';
         document.getElementById('re-btn-next').textContent = 'Lanjut →';
         if (step.duration) {
-          setTimeout(function() {
+          currentSession.autoTimer = setTimeout(function() {
             if (currentSession && currentSession.currentStep === index) {
               nextStep();
             }
@@ -1885,7 +1899,7 @@ const ReleasingEngine = (function() {
         html += '<div class="releasing-breathing-animation"></div>';
         document.getElementById('re-btn-next').textContent = 'Lanjut →';
         if (step.duration) {
-          setTimeout(function() {
+          currentSession.autoTimer = setTimeout(function() {
             if (currentSession && currentSession.currentStep === index) {
               nextStep();
             }
@@ -1898,8 +1912,10 @@ const ReleasingEngine = (function() {
         html += '<h3 class="releasing-completion-title">' + step.text + '</h3>';
         html += '<p class="releasing-step-subtext">' + (step.subtext || '') + '</p>';
 
-        // Change button text based on sequence
-        if (sequentialQueue.length > 0 && sequentialIndex < sequentialQueue.length - 1) {
+        // Button text: if a step (e.g. insight) follows, this is not terminal.
+        if (index < totalSteps - 1) {
+          document.getElementById('re-btn-next').textContent = 'Lanjut →';
+        } else if (sequentialQueue.length > 0 && sequentialIndex < sequentialQueue.length - 1) {
           document.getElementById('re-btn-next').textContent = 'Lanjut ke Wanting Berikutnya →';
         } else {
           document.getElementById('re-btn-next').textContent = 'Selesai ✓';
@@ -1945,6 +1961,13 @@ const ReleasingEngine = (function() {
 
     // Handle completion-check type - if "tidak", do triple welcoming and repeat
     if (step.type === 'completion-check' && answer === 'tidak') {
+      currentSession.checkRetries = (currentSession.checkRetries || 0) + 1;
+      if (currentSession.checkRetries >= 2) {
+        // Don't trap the user: after two Triple Welcoming rounds, move on.
+        currentSession.checkRetries = 0;
+        setTimeout(function() { nextStep(); }, 300);
+        return;
+      }
       // Show triple welcoming steps before repeating
       doTripleWelcoming(function() {
         // After triple welcoming, stay on same step (completion-check)
@@ -1971,9 +1994,12 @@ const ReleasingEngine = (function() {
     const body = document.getElementById('re-modal-body');
 
     function showTripleStep() {
+      // Stop the self-scheduling loop if the session was closed mid-sequence,
+      // so it can't keep writing into a hidden/reused modal.
+      if (!currentSession) return;
       if (stepIndex >= tripleSteps.length) {
         // Triple welcoming done, callback
-        setTimeout(onComplete, 500);
+        currentSession.autoTimer = setTimeout(onComplete, 500);
         return;
       }
 
@@ -1984,7 +2010,7 @@ const ReleasingEngine = (function() {
         '<div class="releasing-breathing-animation"></div>';
 
       stepIndex++;
-      setTimeout(showTripleStep, ts.duration);
+      currentSession.autoTimer = setTimeout(showTripleStep, ts.duration);
     }
 
     showTripleStep();
@@ -2046,6 +2072,15 @@ const ReleasingEngine = (function() {
 
     // Handle completion step - finish session
     if (step.type === 'completion') {
+      // Completion is terminal only when it's the last step. If an insight (or
+      // other) step follows, advance to it so the insight prompt is actually
+      // shown (previously completion closed the modal and insight was skipped).
+      if (currentSession.currentStep < currentSession.script.steps.length - 1) {
+        currentSession.currentStep++;
+        renderStep(currentSession.currentStep);
+        return;
+      }
+
       // Complete this session
       callbacks.onComplete({
         scriptId: currentSession.scriptId,
@@ -2089,6 +2124,7 @@ const ReleasingEngine = (function() {
   }
 
   function closeModal() {
+    clearAutoTimer();
     if (modalElement) {
       modalElement.classList.remove('active');
     }

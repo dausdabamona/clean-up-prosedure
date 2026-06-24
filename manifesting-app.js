@@ -3,7 +3,9 @@
 // ==========================================================================
 
 // Default API URL
-const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbxyql2BYExoYNXm-TwYibkw7jDXozNbWqeeoOmw-TNuX8gqMyW7P4Q4qD2iBFpM8odDZQ/exec';
+// Prefer config.js (window.SEDONA_CONFIG); fall back to a built-in default.
+const DEFAULT_API_URL = (typeof window !== 'undefined' && window.SEDONA_CONFIG && window.SEDONA_CONFIG.apiUrl) ||
+  'https://script.google.com/macros/s/AKfycbxyql2BYExoYNXm-TwYibkw7jDXozNbWqeeoOmw-TNuX8gqMyW7P4Q4qD2iBFpM8odDZQ/exec';
 
 // ===== TAB NAVIGATION =====
 function switchTab(tabId) {
@@ -96,11 +98,26 @@ async function callManifestingApi(action, data = null, params = {}) {
       }
     });
 
+    // Send the payload in the POST body (text/plain avoids a CORS preflight
+    // Apps Script can't answer) instead of the URL, to avoid URL-length limits
+    // and keep data out of access logs. doPost reads e.postData.contents.
+    let response;
     if (data) {
-      url += `&data=${encodeURIComponent(JSON.stringify(data))}`;
+      response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(data)
+      });
+    } else {
+      response = await fetch(url);
     }
 
-    const response = await fetch(url);
+    if (!response.ok) {
+      console.error('API HTTP error:', response.status);
+      showToast('Server error (' + response.status + ')', 'error');
+      return null;
+    }
+
     const result = await response.json();
 
     if (!result.success) {
