@@ -117,6 +117,7 @@ function doGet(e) {
         result = saveCleanupProcedure(data);
         break;
       case 'getCleanupProcedures':
+      case 'getCleanupProcedure':
         result = getCleanupProcedures();
         break;
       case 'getCleanupPeople':
@@ -1309,61 +1310,70 @@ function getManifestingStats() {
 // expects; flat columns are mirrored for querying/aggregation.
 
 const CLEANUP_HEADERS = [
-  'ID', 'Timestamp', 'TargetName', 'Relation', 'Deceased', 'Status', 'CurrentStep',
-  'TotalReleases', 'ControlReleases', 'ApprovalReleases', 'SecurityReleases', 'SeparationReleases',
-  'Insight', 'Duration', 'StartedAt', 'UpdatedAt', 'CompletedAt', 'Full_Data'
+  'ID', 'Timestamp', 'UserName', 'TargetPerson', 'Relasi', 'TargetStatus', 'Konteks', 'Status',
+  'Control_Complete', 'Control_Rounds', 'Control_Releases', 'Control_TW',
+  'Approval_Complete', 'Approval_Rounds', 'Approval_Releases', 'Approval_TW',
+  'Security_Complete', 'Security_Rounds', 'Security_Releases', 'Security_TW',
+  'Separation_Complete', 'Separation_Rounds', 'Separation_Releases', 'Separation_TW',
+  'TotalReleases', 'TotalTW', 'DurationMin', 'FeelingAfter', 'Insight',
+  'CreatedAt', 'UpdatedAt', 'CompletedAt', 'Full_Data'
 ];
 
 function getCleanupSheet() {
   return getOrCreateSheet('CleanupProcedure', CLEANUP_HEADERS);
 }
 
-function cleanupRowFromSession(s) {
-  const control = s.control || {};
-  const approval = s.approval || {};
-  const security = s.security || {};
-  const separation = s.separation || {};
+// Build a flat row from the guided-session state object. The full state is also
+// stored as JSON (Full_Data) so reads return the exact shape the frontend uses.
+function cleanupRowFromState(s) {
+  const w = s.wantings || {};
+  const c = w.control || {}, a = w.approval || {}, se = w.security || {}, sp = w.separation || {};
+  const totalReleases = (c.releases || 0) + (a.releases || 0) + (se.releases || 0) + (sp.releases || 0);
+  const totalTW = (c.twCount || 0) + (a.twCount || 0) + (se.twCount || 0) + (sp.twCount || 0);
   return [
-    s.id || '',
+    s.sessionId || s.id || '',
     new Date().toISOString(),
-    s.targetName || '',
-    s.relation || '',
-    s.deceased ? 'Yes' : 'No',
-    s.status || 'Ongoing',
-    s.currentStep || '',
-    s.totalReleases || 0,
-    control.releases || 0,
-    approval.releases || 0,
-    security.releases || 0,
-    separation.releases || 0,
+    s.userName || '',
+    s.targetPerson || '',
+    s.relasi || '',
+    s.targetStatus || '',
+    s.konteks || '',
+    s.status || 'ongoing',
+    c.complete ? 'Yes' : 'No', c.rounds || 0, c.releases || 0, c.twCount || 0,
+    a.complete ? 'Yes' : 'No', a.rounds || 0, a.releases || 0, a.twCount || 0,
+    se.complete ? 'Yes' : 'No', se.rounds || 0, se.releases || 0, se.twCount || 0,
+    sp.complete ? 'Yes' : 'No', sp.rounds || 0, sp.releases || 0, sp.twCount || 0,
+    totalReleases, totalTW,
+    s.durationMin || 0,
+    s.feelingAfter || '',
     s.insight || '',
-    s.duration || 0,
-    s.startedAt || '',
+    s.createdAt || '',
     s.updatedAt || '',
     s.completedAt || '',
     JSON.stringify(s)
   ];
 }
 
-// Upsert a cleanup session by ID (under a lock to avoid concurrent-write races).
+// Upsert a cleanup session by sessionId (under a lock to avoid write races).
 function saveCleanupProcedure(data) {
-  if (!data || !data.id) {
-    return { success: false, message: 'Data sesi tidak valid (id wajib).' };
+  const id = data && (data.sessionId || data.id);
+  if (!id) {
+    return { success: false, message: 'Data sesi tidak valid (sessionId wajib).' };
   }
   return withLock(function() {
     const sheet = getCleanupSheet();
-    const row = cleanupRowFromSession(data);
-    const existingRow = findRowBySesiId(sheet, data.id); // matches column 1 (ID)
+    const row = cleanupRowFromState(data);
+    const existingRow = findRowBySesiId(sheet, id); // matches column 1 (ID)
     if (existingRow > 0) {
       sheet.getRange(existingRow, 1, 1, row.length).setValues([row]);
     } else {
       sheet.appendRow(row);
     }
-    return { success: true, message: 'Sesi cleanup tersimpan', id: data.id };
+    return { success: true, message: 'Sesi cleanup tersimpan', id: id };
   });
 }
 
-// Return every session as the full object the frontend stored, newest first.
+// Return every session as the full state object the frontend stored, newest first.
 function getCleanupProcedures() {
   const sheet = getCleanupSheet();
   const values = sheet.getDataRange().getValues();
@@ -1379,49 +1389,57 @@ function getCleanupProcedures() {
     }
   }
   sessions.sort(function(a, b) {
-    return String(b.startedAt || '').localeCompare(String(a.startedAt || ''));
+    return String(b.createdAt || b.startTime || '').localeCompare(String(a.createdAt || a.startTime || ''));
   });
   return { success: true, data: sessions };
 }
 
-// Aggregate sessions per target person: { name, relation, sessions, releases }.
+// Sum of releases across all four wantings for one session.
+function cleanupTotalReleases(s) {
+  const w = s.wantings || {};
+  return ((w.control && w.control.releases) || 0) + ((w.approval && w.approval.releases) || 0) +
+         ((w.security && w.security.releases) || 0) + ((w.separation && w.separation.releases) || 0);
+}
+
+// Aggregate sessions per target person: { name, relasi, sessions, releases }.
 function getCleanupPeople() {
   const sessions = getCleanupProcedures().data || [];
   const peopleMap = {};
-  sessions.forEach(function(item) {
-    const name = item.targetName;
+  sessions.forEach(function(s) {
+    const name = s.targetPerson;
     if (!name) return;
     if (!peopleMap[name]) {
-      peopleMap[name] = { name: name, relation: item.relation || '', sessions: 0, releases: 0 };
+      peopleMap[name] = { name: name, relasi: s.relasi || '', sessions: 0, releases: 0 };
     }
     peopleMap[name].sessions++;
-    peopleMap[name].releases += item.totalReleases || 0;
+    peopleMap[name].releases += cleanupTotalReleases(s);
   });
   return { success: true, data: Object.keys(peopleMap).map(function(k) { return peopleMap[k]; }) };
 }
 
-// Dashboard totals, matching calculateLocalStats() in cleanup-procedure.html.
+// Dashboard totals (per-wanting release breakdown + completion counts).
 function getCleanupStats() {
   const sessions = getCleanupProcedures().data || [];
-  const sum = function(fn) { return sessions.reduce(function(t, h) { return t + (fn(h) || 0); }, 0); };
+  const wn = function(s, key) { return (s.wantings && s.wantings[key] && s.wantings[key].releases) || 0; };
+  const sum = function(fn) { return sessions.reduce(function(t, s) { return t + (fn(s) || 0); }, 0); };
   const people = {};
-  sessions.forEach(function(h) { if (h.targetName) people[h.targetName] = true; });
+  sessions.forEach(function(s) { if (s.targetPerson) people[s.targetPerson] = true; });
 
   const totalSessions = sessions.length;
-  const totalReleases = sum(function(h) { return h.totalReleases; });
+  const totalReleases = sum(cleanupTotalReleases);
 
   return {
     success: true,
     data: {
       totalSessions: totalSessions,
-      completeSessions: sessions.filter(function(h) { return h.status === 'Complete'; }).length,
-      ongoingSessions: sessions.filter(function(h) { return h.status === 'Ongoing'; }).length,
+      completeSessions: sessions.filter(function(s) { return s.status === 'complete'; }).length,
+      ongoingSessions: sessions.filter(function(s) { return s.status === 'ongoing'; }).length,
       totalPeople: Object.keys(people).length,
       totalReleases: totalReleases,
-      controlReleases: sum(function(h) { return h.control && h.control.releases; }),
-      approvalReleases: sum(function(h) { return h.approval && h.approval.releases; }),
-      securityReleases: sum(function(h) { return h.security && h.security.releases; }),
-      separationReleases: sum(function(h) { return h.separation && h.separation.releases; }),
+      controlReleases: sum(function(s) { return wn(s, 'control'); }),
+      approvalReleases: sum(function(s) { return wn(s, 'approval'); }),
+      securityReleases: sum(function(s) { return wn(s, 'security'); }),
+      separationReleases: sum(function(s) { return wn(s, 'separation'); }),
       avgReleases: totalSessions > 0 ? Math.round(totalReleases / totalSessions) : 0
     }
   };

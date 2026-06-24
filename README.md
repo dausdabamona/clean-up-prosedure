@@ -47,6 +47,7 @@ Aplikasi ini berupa **situs statis** (HTML/CSS/JS murni, tanpa build step) denga
 ├── config.js                  # Konfigurasi terpusat (URL API & nama default)
 ├── common.js                  # Utilitas bersama (apiCall, toast, storage, timer)
 ├── releasing-engine.js        # Mesin sesi guided releasing + semua skrip
+├── cleanup-procedure-app.js   # Logika Clean Up Procedure (mode terpandu + worksheet)
 ├── letting-go-app.js          # Logika halaman Letting Go
 ├── manifesting-app.js         # Logika halaman Manifesting Workbook
 ├── resistance-app.js          # Logika wizard resistensi
