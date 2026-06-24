@@ -1724,7 +1724,8 @@ const ReleasingEngine = (function() {
       currentStep: 0,
       responses: [],
       startTime: Date.now(),
-      context: options.context || null
+      context: options.context || null,
+      vars: {} // stores intensity values for loop steps
     };
 
     document.getElementById('re-modal-title').textContent = script.title;
@@ -1834,8 +1835,10 @@ const ReleasingEngine = (function() {
       case 'instruction':
         html = '<p class="releasing-step-text">' + step.text + '</p>';
         if (step.subtext) html += '<p class="releasing-step-subtext">' + step.subtext + '</p>';
-        document.getElementById('re-btn-next').textContent = 'Lanjut →';
-        if (step.duration) {
+        document.getElementById('re-btn-next').textContent = 'Lanjut bila siap →';
+        // Auto-advance only when the user opted in (default OFF: releasing is a
+        // decision, not something forced by a timer). `duration` is kept as data.
+        if (step.duration && autoAdvanceEnabled()) {
           currentSession.autoTimer = setTimeout(function() {
             if (currentSession && currentSession.currentStep === index) {
               nextStep();
@@ -1897,14 +1900,38 @@ const ReleasingEngine = (function() {
         html = '<p class="releasing-step-text">' + step.text + '</p>';
         if (step.subtext) html += '<p class="releasing-step-subtext">' + step.subtext + '</p>';
         html += '<div class="releasing-breathing-animation"></div>';
-        document.getElementById('re-btn-next').textContent = 'Lanjut →';
-        if (step.duration) {
+        document.getElementById('re-btn-next').textContent = 'Lanjut bila siap →';
+        if (step.duration && autoAdvanceEnabled()) {
           currentSession.autoTimer = setTimeout(function() {
             if (currentSession && currentSession.currentStep === index) {
               nextStep();
             }
           }, step.duration);
         }
+        break;
+
+      case 'intensity':
+        var iv = (currentSession.vars[step.store] != null) ? currentSession.vars[step.store]
+                 : (step.default != null ? step.default : 5);
+        html = '<p class="releasing-step-text">' + step.text + '</p>';
+        if (step.subtext) html += '<p class="releasing-step-subtext">' + step.subtext + '</p>';
+        html += '<div style="margin:1.2rem 0;display:flex;align-items:center;gap:0.8rem;justify-content:center;">'
+              + '<input type="range" min="0" max="10" value="' + iv + '" id="re-intensity-input" '
+              + 'oninput="ReleasingEngine.updateIntensity(this)" style="flex:1;max-width:240px;">'
+              + '<div id="re-intensity-badge" style="min-width:2.4rem;text-align:center;font-weight:700;'
+              + 'padding:0.35rem 0.6rem;border-radius:8px;color:#fff;">' + iv + '</div></div>'
+              + '<p class="releasing-step-subtext" style="font-size:0.8rem;">0 = sudah lepas · 10 = masih sangat kuat</p>';
+        document.getElementById('re-btn-next').textContent = 'Lanjut →';
+        break;
+
+      case 'loop':
+        html = '<p class="releasing-step-text">' + step.text + '</p>';
+        if (step.subtext) html += '<p class="releasing-step-subtext">' + step.subtext + '</p>';
+        html += '<div class="releasing-answer-group">';
+        html += '<button class="releasing-answer-btn highlight" onclick="ReleasingEngine.loopChoice(true)">' + (step.yesText || '🔄 Lepaskan lagi') + '</button>';
+        html += '<button class="releasing-answer-btn" onclick="ReleasingEngine.loopChoice(false)">' + (step.noText || '✅ Cukup, lanjut') + '</button>';
+        html += '</div>';
+        document.getElementById('re-btn-next').textContent = 'Lanjut →';
         break;
 
       case 'completion':
@@ -1943,6 +1970,51 @@ const ReleasingEngine = (function() {
     }
 
     body.innerHTML = html;
+
+    // Colour the intensity badge to match the initial slider value.
+    if (step.type === 'intensity') {
+      var slider0 = document.getElementById('re-intensity-input');
+      if (slider0) updateIntensity(slider0);
+    }
+  }
+
+  // ==================== AUTO-ADVANCE / INTENSITY / LOOP HELPERS ====================
+  // Auto-advance is opt-in (default OFF) via localStorage 'sedonaAutoAdvance'.
+  function autoAdvanceEnabled() {
+    try { return localStorage.getItem('sedonaAutoAdvance') === 'true'; } catch (e) { return false; }
+  }
+  // Intensity colour: 0-1 green, 2-3 yellow, 4-6 orange, 7-10 red.
+  function intensityColor(v) {
+    v = parseInt(v, 10);
+    if (v <= 1) return '#1e8449';
+    if (v <= 3) return '#b7950b';
+    if (v <= 6) return '#e67e22';
+    return '#c0392b';
+  }
+  function updateIntensity(el) {
+    var badge = document.getElementById('re-intensity-badge');
+    if (badge) { badge.textContent = el.value; badge.style.background = intensityColor(el.value); }
+  }
+  function findLabel(label) {
+    if (!currentSession || !label) return -1;
+    var steps = currentSession.script.steps;
+    for (var i = 0; i < steps.length; i++) { if (steps[i].label === label) return i; }
+    return -1;
+  }
+  // Loop step choice: "again" repeats the releasing block (jumps back to backTo),
+  // but only while the tracked intensity is still above the threshold.
+  function loopChoice(again) {
+    if (!currentSession) return;
+    clearAutoTimer();
+    var step = currentSession.script.steps[currentSession.currentStep];
+    if (!again) { nextStep(); return; }
+    if (step.whileVar) {
+      var v = currentSession.vars[step.whileVar];
+      var thr = (step.whileGt != null) ? step.whileGt : 1;
+      if (v != null && v <= thr) { nextStep(); return; } // already low → stop looping
+    }
+    var target = findLabel(step.backTo);
+    if (target >= 0) { renderStep(target); } else { nextStep(); }
   }
 
   // ==================== USER INTERACTIONS ====================
@@ -2025,6 +2097,12 @@ const ReleasingEngine = (function() {
     if (step.type === 'input') {
       const input = document.getElementById('re-step-input');
       if (input) currentSession.responses.push(input.value);
+    }
+
+    // Save the slider value of an intensity step so loop steps can read it.
+    if (step.type === 'intensity') {
+      const slider = document.getElementById('re-intensity-input');
+      if (slider) currentSession.vars[step.store || 'intensitas'] = parseInt(slider.value, 10);
     }
 
     // Save insight and finish
@@ -2154,6 +2232,8 @@ const ReleasingEngine = (function() {
     closeModal: closeModal,
     selectOption: selectOption,
     selectAnswer: selectAnswer,
+    updateIntensity: updateIntensity,
+    loopChoice: loopChoice,
     getScripts: getScripts,
     getScript: getScript,
     getWantingScriptId: getWantingScriptId
