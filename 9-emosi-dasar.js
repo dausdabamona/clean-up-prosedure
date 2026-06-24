@@ -18,14 +18,16 @@ const emosiScripts = {
       { type: 'instruction', text: 'Izinkan perasaan apati itu HADIR sepenuhnya...', subtext: 'Jangan dilawan, jangan ditekan. Biarkan saja ada.', duration: 10000 },
       { type: 'instruction', text: 'Rasakan di mana APATI itu berada di tubuhmu...', subtext: 'Mungkin di dada, perut, atau seluruh tubuh terasa berat', duration: 10000 },
       { type: 'yesno', text: 'Bisakah kamu menyambut perasaan apati ini?', subtext: 'Mengizinkannya hadir tanpa perlawanan', highlight: 'Bisa' },
-      { type: 'instruction', text: 'Perhatikan - apakah ada KEINGINAN untuk tetap apatis?', subtext: 'Kadang apati terasa "aman" karena tidak perlu berusaha', duration: 10000 },
+      { type: 'instruction', text: 'Perhatikan - apakah ada KEINGINAN untuk tetap apatis?', subtext: 'Kadang apati terasa "aman" — sering terkait wanting Approval/Security (butuh diterima & merasa aman)', duration: 10000 },
       { type: 'yesno', text: 'Bisakah kamu melepas KEINGINAN untuk tetap apatis?', highlight: 'Bisa' },
       { type: 'yesno', text: 'Maukah kamu melepasnya?', highlight: 'Mau' },
       { type: 'when', text: 'Kapan?' },
-      { type: 'instruction', text: 'Sekarang tarik napas dalam...', subtext: 'Dan saat menghembuskan, bayangkan apati itu keluar bersama napas', duration: 10000 },
+      { type: 'instruction', label: 'rel', text: 'Sekarang tarik napas dalam...', subtext: 'Dan saat menghembuskan, bayangkan apati itu keluar bersama napas', duration: 10000 },
       { type: 'yesno', text: 'Bisakah kamu melepas perasaan apati itu sekarang?', highlight: 'Bisa' },
       { type: 'yesno', text: 'Maukah kamu melepasnya?', highlight: 'Mau' },
       { type: 'when', text: 'Kapan?' },
+      { type: 'intensity', text: 'Seberapa kuat apati terasa sekarang? (0–10)', store: 'i_apati' },
+      { type: 'loop', text: 'Mau melepaskan lagi?', subtext: 'Kalau masih terasa (di atas 1), kita ulangi pelepasannya.', backTo: 'rel', whileVar: 'i_apati', whileGt: 1 },
       { type: 'instruction', text: 'Biarkan apati itu PERGI...', subtext: 'Seperti awan gelap yang bergerak meninggalkan langit', duration: 10000 },
       { type: 'instruction', text: 'Yang tersisa apa?', subtext: 'Perhatikan... mungkin ada sedikit lebih ringan? Sedikit lebih terbuka?', duration: 10000 },
       { type: 'completion', text: 'Bagus! Kamu telah melepas sebagian apati.', subtext: 'Ulangi proses ini sampai apati benar-benar terangkat. Setiap kali melepas, kamu naik ke emosi yang lebih tinggi.' },
@@ -45,14 +47,16 @@ const emosiScripts = {
       { type: 'instruction', text: 'Izinkan kesedihan itu HADIR sepenuhnya...', subtext: 'Tidak apa-apa untuk merasakan sedih. Biarkan air mata mengalir jika perlu.', duration: 12000 },
       { type: 'instruction', text: 'Rasakan di mana kesedihan itu berada di tubuhmu...', subtext: 'Mungkin di dada, tenggorokan, atau mata', duration: 10000 },
       { type: 'yesno', text: 'Bisakah kamu menyambut kesedihan ini?', highlight: 'Bisa' },
-      { type: 'instruction', text: 'Kesedihan sering berkaitan dengan KEINGINAN akan sesuatu yang tidak ada...', subtext: 'Atau PENOLAKAN terhadap apa yang sudah terjadi', duration: 10000 },
+      { type: 'instruction', text: 'Kesedihan sering berkaitan dengan KEINGINAN akan sesuatu yang tidak ada...', subtext: 'Atau penolakan terhadap apa yang sudah terjadi — biasanya wanting Approval/Security', duration: 10000 },
       { type: 'yesno', text: 'Bisakah kamu melepas KEINGINAN akan apa yang tidak ada?', highlight: 'Bisa' },
       { type: 'yesno', text: 'Maukah kamu melepasnya?', highlight: 'Mau' },
       { type: 'when', text: 'Kapan?' },
-      { type: 'instruction', text: 'Tarik napas dalam... dan saat menghembuskan...', subtext: 'Biarkan kesedihan itu mengalir keluar', duration: 10000 },
+      { type: 'instruction', label: 'rel', text: 'Tarik napas dalam... dan saat menghembuskan...', subtext: 'Biarkan kesedihan itu mengalir keluar', duration: 10000 },
       { type: 'yesno', text: 'Bisakah kamu melepas kesedihan itu sekarang?', highlight: 'Bisa' },
       { type: 'yesno', text: 'Maukah kamu melepasnya?', highlight: 'Mau' },
       { type: 'when', text: 'Kapan?' },
+      { type: 'intensity', text: 'Seberapa kuat kesedihan terasa sekarang? (0–10)', store: 'i_sedih' },
+      { type: 'loop', text: 'Mau melepaskan lagi?', subtext: 'Kalau masih terasa (di atas 1), kita ulangi pelepasannya.', backTo: 'rel', whileVar: 'i_sedih', whileGt: 1 },
       { type: 'instruction', text: 'Biarkan kesedihan itu PERGI...', subtext: 'Seperti air yang mengalir, membawa serta beban', duration: 10000 },
       { type: 'instruction', text: 'Yang tersisa apa?', subtext: 'Perhatikan... mungkin ada keringanan? Penerimaan?', duration: 10000 },
       { type: 'completion', text: 'Bagus! Kamu telah melepas sebagian kesedihan.', subtext: 'Melepas kesedihan bukan berarti melupakan. Justru kamu bisa mengingat dengan lebih damai.' },
@@ -77,10 +81,12 @@ const emosiScripts = {
       { type: 'yesno', text: 'Bisakah kamu melepas KEINGINAN untuk merasa aman dari hal ini?', highlight: 'Bisa' },
       { type: 'yesno', text: 'Maukah kamu melepasnya?', highlight: 'Mau' },
       { type: 'when', text: 'Kapan?' },
-      { type: 'instruction', text: 'Tarik napas dalam...', subtext: 'Dan hembuskan ketakutan itu keluar', duration: 10000 },
+      { type: 'instruction', label: 'rel', text: 'Tarik napas dalam...', subtext: 'Dan hembuskan ketakutan itu keluar', duration: 10000 },
       { type: 'yesno', text: 'Bisakah kamu melepas ketakutan itu sekarang?', highlight: 'Bisa' },
       { type: 'yesno', text: 'Maukah kamu melepasnya?', highlight: 'Mau' },
       { type: 'when', text: 'Kapan?' },
+      { type: 'intensity', text: 'Seberapa kuat ketakutan terasa sekarang? (0–10)', store: 'i_takut' },
+      { type: 'loop', text: 'Mau melepaskan lagi?', subtext: 'Kalau masih terasa (di atas 1), kita ulangi pelepasannya.', backTo: 'rel', whileVar: 'i_takut', whileGt: 1 },
       { type: 'instruction', text: 'Biarkan ketakutan itu PERGI...', subtext: 'Seperti bayangan yang menghilang saat cahaya datang', duration: 10000 },
       { type: 'instruction', text: 'Yang tersisa apa?', subtext: 'Perhatikan... mungkin ada ketenangan? Keberanian?', duration: 10000 },
       { type: 'completion', text: 'Bagus! Kamu telah melepas sebagian ketakutan.', subtext: 'Di balik ketakutan selalu ada keberanian. Kamu sudah selangkah lebih berani.' },
@@ -101,14 +107,16 @@ const emosiScripts = {
       { type: 'instruction', text: 'Rasakan di mana keinginan itu berada di tubuhmu...', subtext: 'Mungkin di dada, perut, atau kepala', duration: 10000 },
       { type: 'yesno', text: 'Bisakah kamu menyambut keinginan ini?', highlight: 'Bisa' },
       { type: 'instruction', text: 'Perhatikan: Apakah mendapatkan hal itu akan membuatmu BENAR-BENAR puas?', subtext: 'Atau akan muncul keinginan baru?', duration: 10000 },
-      { type: 'instruction', text: 'Nafsu adalah KELANGKAAN dalam menyamar...', subtext: 'Pikiran bahwa kamu KURANG tanpa hal itu', duration: 10000 },
+      { type: 'instruction', text: 'Nafsu adalah KELANGKAAN dalam menyamar...', subtext: 'Pikiran bahwa kamu KURANG tanpa hal itu — biasanya wanting Security/Approval (rasa aman & diakui lewat benda/orang)', duration: 10000 },
       { type: 'yesno', text: 'Bisakah kamu melepas KEINGINAN akan hal itu?', highlight: 'Bisa' },
       { type: 'yesno', text: 'Maukah kamu melepasnya?', highlight: 'Mau' },
       { type: 'when', text: 'Kapan?' },
-      { type: 'instruction', text: 'Tarik napas dalam...', subtext: 'Dan hembuskan keinginan yang memperbudak itu', duration: 10000 },
+      { type: 'instruction', label: 'rel', text: 'Tarik napas dalam...', subtext: 'Dan hembuskan keinginan yang memperbudak itu', duration: 10000 },
       { type: 'yesno', text: 'Bisakah kamu melepas nafsu/craving itu sekarang?', highlight: 'Bisa' },
       { type: 'yesno', text: 'Maukah kamu melepasnya?', highlight: 'Mau' },
       { type: 'when', text: 'Kapan?' },
+      { type: 'intensity', text: 'Seberapa kuat keinginan/craving terasa sekarang? (0–10)', store: 'i_nafsu' },
+      { type: 'loop', text: 'Mau melepaskan lagi?', subtext: 'Kalau masih terasa (di atas 1), kita ulangi pelepasannya.', backTo: 'rel', whileVar: 'i_nafsu', whileGt: 1 },
       { type: 'instruction', text: 'Biarkan keinginan itu PERGI...', subtext: 'Kamu tetap utuh tanpanya', duration: 10000 },
       { type: 'instruction', text: 'Yang tersisa apa?', subtext: 'Perhatikan... mungkin ada kepuasan? Kecukupan?', duration: 10000 },
       { type: 'completion', text: 'Bagus! Kamu telah melepas sebagian nafsu.', subtext: 'Melepas keinginan bukan berarti tidak boleh punya. Justru dari tempat yang bebas, kamu bisa memilih dengan lebih bijak.' },
@@ -132,10 +140,12 @@ const emosiScripts = {
       { type: 'yesno', text: 'Bisakah kamu melepas KEINGINAN untuk mengontrol situasi/orang itu?', highlight: 'Bisa' },
       { type: 'yesno', text: 'Maukah kamu melepasnya?', highlight: 'Mau' },
       { type: 'when', text: 'Kapan?' },
-      { type: 'instruction', text: 'Tarik napas dalam...', subtext: 'Dan hembuskan kemarahan itu keluar', duration: 10000 },
+      { type: 'instruction', label: 'rel', text: 'Tarik napas dalam...', subtext: 'Dan hembuskan kemarahan itu keluar', duration: 10000 },
       { type: 'yesno', text: 'Bisakah kamu melepas kemarahan itu sekarang?', highlight: 'Bisa' },
       { type: 'yesno', text: 'Maukah kamu melepasnya?', highlight: 'Mau' },
       { type: 'when', text: 'Kapan?' },
+      { type: 'intensity', text: 'Seberapa kuat kemarahan terasa sekarang? (0–10)', store: 'i_marah' },
+      { type: 'loop', text: 'Mau melepaskan lagi?', subtext: 'Kalau masih terasa (di atas 1), kita ulangi pelepasannya.', backTo: 'rel', whileVar: 'i_marah', whileGt: 1 },
       { type: 'instruction', text: 'Biarkan kemarahan itu PERGI...', subtext: 'Seperti api yang padam, meninggalkan kehangatan', duration: 10000 },
       { type: 'instruction', text: 'Yang tersisa apa?', subtext: 'Perhatikan... mungkin ada ketenangan? Pengertian?', duration: 10000 },
       { type: 'completion', text: 'Bagus! Kamu telah melepas sebagian kemarahan.', subtext: 'Di balik kemarahan selalu ada cinta yang terluka. Melepas kemarahan membuka jalan untuk cinta.' },
@@ -159,10 +169,12 @@ const emosiScripts = {
       { type: 'yesno', text: 'Bisakah kamu melepas KEINGINAN untuk merasa lebih baik dari orang lain?', highlight: 'Bisa' },
       { type: 'yesno', text: 'Maukah kamu melepasnya?', highlight: 'Mau' },
       { type: 'when', text: 'Kapan?' },
-      { type: 'instruction', text: 'Tarik napas dalam...', subtext: 'Dan hembuskan kebanggaan yang memisahkan itu', duration: 10000 },
+      { type: 'instruction', label: 'rel', text: 'Tarik napas dalam...', subtext: 'Dan hembuskan kebanggaan yang memisahkan itu', duration: 10000 },
       { type: 'yesno', text: 'Bisakah kamu melepas kebanggaan/ego itu sekarang?', highlight: 'Bisa' },
       { type: 'yesno', text: 'Maukah kamu melepasnya?', highlight: 'Mau' },
       { type: 'when', text: 'Kapan?' },
+      { type: 'intensity', text: 'Seberapa kuat kebanggaan/ego terasa sekarang? (0–10)', store: 'i_bangga' },
+      { type: 'loop', text: 'Mau melepaskan lagi?', subtext: 'Kalau masih terasa (di atas 1), kita ulangi pelepasannya.', backTo: 'rel', whileVar: 'i_bangga', whileGt: 1 },
       { type: 'instruction', text: 'Biarkan kebanggaan itu PERGI...', subtext: 'Meninggalkan kerendahan hati yang sejati', duration: 10000 },
       { type: 'instruction', text: 'Yang tersisa apa?', subtext: 'Perhatikan... mungkin ada koneksi? Kesetaraan?', duration: 10000 },
       { type: 'completion', text: 'Bagus! Kamu telah melepas sebagian kebanggaan.', subtext: 'Kerendahan hati sejati bukan merasa rendah, tapi merasa SETARA dengan semua makhluk.' },
@@ -196,7 +208,8 @@ const emosiScripts = {
       { type: 'instruction', text: 'Keberanian terus MELUAS...', subtext: 'Memenuhi seluruh NEGARA', duration: 8000 },
       { type: 'instruction', text: 'Keberanian MENYEBAR ke seluruh DARAT dan LAUT...', duration: 8000 },
       { type: 'instruction', text: 'Dan akhirnya, keberanian MEMENUHI SELURUH ALAM SEMESTA...', subtext: 'Dari ujung ke ujung, tanpa batas', duration: 12000 },
-      { type: 'instruction', text: 'Rasakan bahwa keberanian ini TIDAK TERBATAS...', subtext: 'Selalu tersedia, selalu ada', duration: 10000 },
+      { type: 'instruction', label: 'deepen', text: 'Rasakan bahwa keberanian ini TIDAK TERBATAS...', subtext: 'Selalu tersedia, selalu ada — biarkan makin meluas, makin halus', duration: 10000 },
+      { type: 'loop', text: 'Bisa terasa lebih baik lagi nggak?', subtext: 'Pertanyaan khas Lester — selalu bisa lebih baik. Jika ya, kita perdalam.', backTo: 'deepen', yesText: '✨ Bisa, perdalam', noText: '🙏 Cukup, sudah penuh' },
       { type: 'completion', text: 'Selamat! Kamu telah memenuhi alam semesta dengan keberanian.', subtext: 'Keberanian ini selalu ada di dalam dirimu. Kapan saja butuh, tinggal akses.' },
       { type: 'insight', text: 'Insight tentang keberanian:', placeholder: 'Tulis insight...' }
     ]
@@ -226,7 +239,8 @@ const emosiScripts = {
       { type: 'instruction', text: 'Penerimaan terus MELUAS...', subtext: 'Memenuhi seluruh NEGARA', duration: 8000 },
       { type: 'instruction', text: 'Penerimaan MENYEBAR ke seluruh DARAT dan LAUT...', duration: 8000 },
       { type: 'instruction', text: 'Dan akhirnya, penerimaan MEMENUHI SELURUH ALAM SEMESTA...', subtext: 'Segala yang ada diterima dengan damai', duration: 12000 },
-      { type: 'instruction', text: 'Rasakan bahwa penerimaan ini TIDAK TERBATAS...', subtext: 'Selalu tersedia, selalu ada', duration: 10000 },
+      { type: 'instruction', label: 'deepen', text: 'Rasakan bahwa penerimaan ini TIDAK TERBATAS...', subtext: 'Selalu tersedia, selalu ada — biarkan makin meluas, makin halus', duration: 10000 },
+      { type: 'loop', text: 'Bisa terasa lebih baik lagi nggak?', subtext: 'Pertanyaan khas Lester — selalu bisa lebih baik. Jika ya, kita perdalam.', backTo: 'deepen', yesText: '✨ Bisa, perdalam', noText: '🙏 Cukup, sudah penuh' },
       { type: 'completion', text: 'Selamat! Kamu telah memenuhi alam semesta dengan penerimaan.', subtext: 'Dari tempat penerimaan, segala sesuatu menjadi lebih mudah.' },
       { type: 'insight', text: 'Insight tentang penerimaan:', placeholder: 'Tulis insight...' }
     ]
@@ -257,7 +271,8 @@ const emosiScripts = {
       { type: 'instruction', text: 'Kedamaian MENYEBAR ke seluruh DARAT dan LAUT...', subtext: 'Semua makhluk merasakan kedamaian', duration: 10000 },
       { type: 'instruction', text: 'Dan akhirnya, kedamaian MEMENUHI SELURUH ALAM SEMESTA...', subtext: 'Dari ujung ke ujung, tanpa batas, tanpa akhir', duration: 15000 },
       { type: 'instruction', text: 'Rasakan bahwa kedamaian ini adalah SIFAT SEJATI dirimu...', subtext: 'Tidak bisa hilang, tidak bisa berkurang', duration: 12000 },
-      { type: 'instruction', text: 'Kamu ADALAH kedamaian itu sendiri...', duration: 10000 },
+      { type: 'instruction', label: 'deepen', text: 'Kamu ADALAH kedamaian itu sendiri...', subtext: 'Biarkan kedamaian makin dalam, makin halus, makin penuh', duration: 10000 },
+      { type: 'loop', text: 'Bisa terasa lebih baik lagi nggak?', subtext: 'Pertanyaan khas Lester — selalu bisa lebih baik. Jika ya, kita perdalam.', backTo: 'deepen', yesText: '✨ Bisa, perdalam', noText: '🙏 Cukup, sudah penuh' },
       { type: 'completion', text: 'Selamat! Kamu telah memenuhi alam semesta dengan kedamaian.', subtext: 'Kedamaian ini selalu tersedia. Kamu hanya perlu mengingat.' },
       { type: 'insight', text: 'Insight tentang kedamaian:', placeholder: 'Tulis insight...' }
     ]
@@ -322,6 +337,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Render progress
   renderEmosiProgress();
+
+  // Auto-advance toggle (default OFF). Stored globally so the engine reads it.
+  var autoToggle = document.getElementById('autoAdvanceToggle');
+  if (autoToggle) {
+    autoToggle.checked = localStorage.getItem('sedonaAutoAdvance') === 'true';
+    autoToggle.addEventListener('change', function () {
+      localStorage.setItem('sedonaAutoAdvance', autoToggle.checked ? 'true' : 'false');
+    });
+  }
 
   // Initialize ReleasingEngine with emosi scripts
   if (typeof ReleasingEngine !== 'undefined') {
