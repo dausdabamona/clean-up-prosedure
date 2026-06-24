@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NLP Techniques - State Modeling & Submodalities</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+  <!-- PWA Support -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#667eea">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Sedona Release">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ==================== NLP THEME ==================== */
+    :root {
+      --nlp-primary: #2874a6;
+      --nlp-secondary: #3498db;
+      --nlp-accent: #1abc9c;
+      --nlp-gradient: linear-gradient(135deg, #2874a6, #3498db);
+    }
+    .header { background: var(--nlp-gradient); }
+    .card-header { background: var(--nlp-gradient); }
+    .btn-primary { background: var(--nlp-gradient); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(40, 116, 166, 0.3); }
+
+    /* Back link */
+    .back-link { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--white); text-decoration: none; font-size: 1.5rem; opacity: 0.8; }
+    .back-link:hover { opacity: 1; }
+
+    /* Tabs */
+    .nav-tabs { display: flex; background: var(--white); padding: 0.5rem; gap: 0.25rem; overflow-x: auto; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .nav-tab { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0.6rem 0.4rem; border: none; background: none; cursor: pointer; border-radius: 8px; transition: all 0.3s; min-width: 70px; }
+    .nav-tab .icon { font-size: 1.3rem; margin-bottom: 0.2rem; }
+    .nav-tab span:not(.icon) { font-size: 0.65rem; color: var(--text-light); }
+    .nav-tab.active { background: var(--nlp-primary); }
+    .nav-tab.active span { color: var(--white); }
+
+    /* Main Content */
+    .main-content { max-width: 600px; margin: 0 auto; padding: 1rem; padding-bottom: 2rem; }
+
+    /* Tab Content */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* Technique Card */
+    .technique-card { background: var(--white); border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; box-shadow: var(--shadow); cursor: pointer; transition: all 0.3s; border-left: 4px solid var(--nlp-primary); }
+    .technique-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+    .technique-card:active { transform: scale(0.98); }
+    .technique-header { display: flex; align-items: center; gap: 0.75rem; }
+    .technique-icon { font-size: 2rem; }
+    .technique-info { flex: 1; }
+    .technique-title { font-weight: 700; color: var(--nlp-primary); font-size: 1rem; margin-bottom: 0.25rem; }
+    .technique-desc { font-size: 0.8rem; color: var(--text-light); }
+    .technique-arrow { color: var(--text-light); font-size: 1.2rem; }
+
+    /* Category Header */
+    .category-header { display: flex; align-items: center; gap: 0.5rem; margin: 1.5rem 0 0.75rem 0; padding-bottom: 0.5rem; border-bottom: 2px solid var(--nlp-primary); }
+    .category-header .emoji { font-size: 1.5rem; }
+    .category-header h3 { font-size: 1rem; color: var(--nlp-primary); font-weight: 700; margin: 0; }
+
+    /* Submodalities Grid */
+    .submod-category { background: var(--white); border-radius: 12px; margin-bottom: 1rem; overflow: hidden; box-shadow: var(--shadow); }
+    .submod-header { background: var(--nlp-gradient); color: var(--white); padding: 0.75rem 1rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+    .submod-list { padding: 0.5rem; }
+    .submod-item { display: flex; align-items: center; padding: 0.6rem; border-bottom: 1px solid var(--border); }
+    .submod-item:last-child { border-bottom: none; }
+    .submod-label { flex: 1; font-size: 0.85rem; color: var(--text-dark); }
+    .submod-scale { display: flex; gap: 0.25rem; flex: 2; }
+    .scale-btn { flex: 1; padding: 0.4rem 0.2rem; font-size: 0.65rem; border: 1px solid var(--border); background: var(--bg-light); border-radius: 4px; cursor: pointer; transition: all 0.2s; text-align: center; }
+    .scale-btn:hover { border-color: var(--nlp-primary); }
+    .scale-btn.selected { background: var(--nlp-primary); color: var(--white); border-color: var(--nlp-primary); }
+
+    /* Quick Start Card */
+    .quick-start { background: linear-gradient(135deg, #ebf5fb, #d4e6f1); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; border: 2px solid var(--nlp-secondary); }
+    .quick-start h3 { color: var(--nlp-primary); font-size: 1rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+
+    /* Info Box */
+    .info-box { background: linear-gradient(135deg, #fef9e7, #fcf3cf); border: 1px solid #f7dc6f; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
+    .info-box h4 { color: #9a7d0a; font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .info-box p { font-size: 0.8rem; color: var(--text-dark); line-height: 1.6; }
+    .info-box ul { margin-left: 1rem; font-size: 0.8rem; line-height: 1.8; }
+
+    /* Quote Card */
+    .quote-card { background: linear-gradient(135deg, #f5f7fa, #e4e8ec); border-radius: 10px; padding: 1rem; text-align: center; margin-bottom: 1rem; }
+    .quote-text { font-style: italic; color: var(--text-dark); margin-bottom: 0.5rem; font-size: 0.9rem; }
+    .quote-author { font-size: 0.75rem; color: var(--text-light); }
+
+    /* Progress Section */
+    .progress-section { margin-top: 1.5rem; }
+    .progress-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
+    .progress-item { background: var(--white); border-radius: 8px; padding: 0.5rem; text-align: center; box-shadow: var(--shadow); }
+    .progress-item.done { background: #d5f5e3; }
+    .progress-emoji { font-size: 1.5rem; }
+    .progress-count { font-size: 0.7rem; color: var(--text-light); }
+
+    /* History Item */
+    .history-item { background: var(--white); border-radius: 10px; padding: 0.75rem; margin-bottom: 0.5rem; box-shadow: var(--shadow); border-left: 4px solid var(--nlp-accent); }
+    .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+    .history-title { font-weight: 600; color: var(--nlp-primary); font-size: 0.9rem; }
+    .history-date { font-size: 0.7rem; color: var(--text-light); }
+    .history-notes { font-size: 0.8rem; color: var(--text-dark); }
+
+    /* Empty State */
+    .empty-state { text-align: center; padding: 2rem; color: var(--text-light); }
+    .empty-state .emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+
+    /* Level Tabs */
+    .level-tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .level-tab { padding: 0.5rem 1rem; border: 2px solid var(--nlp-primary); background: var(--white); color: var(--nlp-primary); border-radius: 20px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.3s; }
+    .level-tab:hover { background: var(--nlp-secondary); color: var(--white); border-color: var(--nlp-secondary); }
+    .level-tab.active { background: var(--nlp-primary); color: var(--white); }
+
+    /* Level Badges */
+    .level-badge { display: inline-block; padding: 0.15rem 0.4rem; border-radius: 10px; font-size: 0.6rem; font-weight: 600; margin-left: 0.5rem; text-transform: uppercase; }
+    .level-badge.basic { background: #d5f5e3; color: #1e8449; }
+    .level-badge.intermediate { background: #fdebd0; color: #b9770e; }
+    .level-badge.advanced { background: #fadbd8; color: #c0392b; }
+
+    /* Level Sections */
+    .level-section { margin-bottom: 1rem; }
+    .level-section.hidden { display: none; }
+
+    /* Technique Card Levels */
+    .technique-card[data-level="basic"] { border-left-color: #27ae60; }
+    .technique-card[data-level="intermediate"] { border-left-color: #f39c12; }
+    .technique-card[data-level="advanced"] { border-left-color: #e74c3c; }
+
+    /* Responsive */
+    @media(max-width:480px) {
+      .header h1 { font-size: 1.2rem; }
+      .nav-tab { padding: 0.5rem 0.25rem; min-width: 60px; }
+      .nav-tab .icon { font-size: 1.1rem; }
+      .technique-title { font-size: 0.95rem; }
+      .scale-btn { padding: 0.35rem 0.15rem; font-size: 0.6rem; }
+      .progress-grid { grid-template-columns: repeat(2, 1fr); }
+      .level-tabs { gap: 0.25rem; }
+      .level-tab { padding: 0.4rem 0.6rem; font-size: 0.7rem; }
+      .level-badge { font-size: 0.55rem; padding: 0.1rem 0.3rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="sedona-app.html" class="back-link">←</a>
+    <h1>🧠 NLP Techniques</h1>
+    <p>Neuro-Linguistic Programming</p>
+  </header>
+
+  <nav class="nav-tabs">
+    <button class="nav-tab active" data-tab="beranda"><span class="icon">🏠</span><span>Beranda</span></button>
+    <button class="nav-tab" data-tab="modeling"><span class="icon">👤</span><span>Modeling</span></button>
+    <button class="nav-tab" data-tab="submod"><span class="icon">🔍</span><span>Submod</span></button>
+    <button class="nav-tab" data-tab="techniques"><span class="icon">⚡</span><span>Teknik</span></button>
+    <button class="nav-tab" data-tab="history"><span class="icon">📜</span><span>History</span></button>
+  </nav>
+
+  <main class="main-content">
+
+    <!-- ==================== TAB: BERANDA ==================== -->
+    <section class="tab-content active" id="berandaTab">
+      <!-- Quick Start -->
+      <div class="quick-start">
+        <h3><span>🚀</span> Quick Start</h3>
+        <button class="btn btn-primary btn-block" onclick="startNLP('stateModeling')" style="margin-bottom:0.5rem">
+          👤 State Modeling - Copy State Orang Lain
+        </button>
+        <button class="btn btn-secondary btn-block" onclick="startNLP('submodalitiesMapping')">
+          🔍 Submodalities Mapping
+        </button>
+      </div>
+
+      <!-- Info Box -->
+      <div class="info-box">
+        <h4>🧠 Apa itu NLP?</h4>
+        <p>Neuro-Linguistic Programming adalah metodologi untuk memahami dan mengubah pola pikiran dan perilaku manusia melalui:</p>
+        <ul>
+          <li><strong>Neuro:</strong> Cara otak memproses informasi</li>
+          <li><strong>Linguistic:</strong> Bahasa internal dan eksternal</li>
+          <li><strong>Programming:</strong> Pola perilaku yang bisa diubah</li>
+        </ul>
+      </div>
+
+      <!-- Quote -->
+      <div class="quote-card">
+        <p class="quote-text" id="nlpQuote">"The map is not the territory."</p>
+        <p class="quote-author" id="nlpQuoteAuthor">— Alfred Korzybski</p>
+      </div>
+
+      <!-- Progress -->
+      <div class="progress-section">
+        <h4 style="font-size:0.9rem;margin-bottom:0.75rem;color:var(--nlp-primary)">📊 Progress by Level</h4>
+        <div class="progress-grid" id="progressGrid">
+          <div class="progress-item">
+            <div class="progress-emoji">🌱</div>
+            <div class="progress-count"><span id="modelingCount">0</span> basic</div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-emoji">🌿</div>
+            <div class="progress-count"><span id="submodCount">0</span> inter</div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-emoji">🌳</div>
+            <div class="progress-count"><span id="anchorCount">0</span> adv</div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-emoji">⭐</div>
+            <div class="progress-count"><span id="totalCount">0</span> total</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB: MODELING ==================== -->
+    <section class="tab-content" id="modelingTab">
+      <div class="info-box" style="margin-bottom:1rem">
+        <h4>👤 NLP Modeling — Salin Kemampuan Orang Lain</h4>
+        <p>Modeling adalah inti NLP: menyalin pola orang yang sudah ahli agar kamu bisa mendapat hasil serupa dalam waktu lebih singkat.</p>
+        <p style="margin-top:0.5rem"><strong>3 Pilar Modeling:</strong></p>
+        <ul>
+          <li><strong>Fisiologi</strong> — Postur, napas, ritme tubuh (mirror neurons)</li>
+          <li><strong>Strategi Mental</strong> — Urutan V-A-K, submodalities, self-talk</li>
+          <li><strong>Keyakinan (Beliefs)</strong> — Sistem operasi batin yang menentukan batas</li>
+        </ul>
+        <p style="margin-top:0.5rem;font-size:0.75rem;color:var(--text-light)">Proses: Absorb → Decode → Install → Test → Integrate</p>
+      </div>
+
+      <!-- Modeling: Basic -->
+      <div class="category-header">
+        <span class="emoji">🌱</span>
+        <h3>Basic — Penyerapan Pola</h3>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('mirrorNeuronActivation')" data-level="basic">
+        <div class="technique-header">
+          <div class="technique-icon">🪞</div>
+          <div class="technique-info">
+            <div class="technique-title">Aktivasi Mirror Neuron <span class="level-badge basic">Basic</span></div>
+            <div class="technique-desc">Penyerapan pola bawah sadar melalui observasi aktif</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('secondPositionModeling')" data-level="basic">
+        <div class="technique-header">
+          <div class="technique-icon">🫂</div>
+          <div class="technique-info">
+            <div class="technique-title">Second Position Modeling <span class="level-badge basic">Basic</span></div>
+            <div class="technique-desc">Masuk ke tubuh model dan rasakan dari dalam</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <!-- Modeling: Intermediate -->
+      <div class="category-header">
+        <span class="emoji">🌿</span>
+        <h3>Intermediate — Decode & Salin</h3>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('stateModeling')" data-level="intermediate">
+        <div class="technique-header">
+          <div class="technique-icon">👤</div>
+          <div class="technique-info">
+            <div class="technique-title">State Modeling - Copy State <span class="level-badge intermediate">Intermediate</span></div>
+            <div class="technique-desc">Copy state excellence dari orang lain lengkap dengan submodalities</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('physiologyModeling')" data-level="intermediate">
+        <div class="technique-header">
+          <div class="technique-icon">🏋️</div>
+          <div class="technique-info">
+            <div class="technique-title">Physiology Modeling <span class="level-badge intermediate">Intermediate</span></div>
+            <div class="technique-desc">Salin postur, napas, dan ritme tubuh model</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('strategyDecoding')" data-level="intermediate">
+        <div class="technique-header">
+          <div class="technique-icon">🔓</div>
+          <div class="technique-info">
+            <div class="technique-title">Strategy Decoding <span class="level-badge intermediate">Intermediate</span></div>
+            <div class="technique-desc">Bongkar urutan proses mental model (V-A-K sequence)</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('newBehaviorGenerator')" data-level="intermediate">
+        <div class="technique-header">
+          <div class="technique-icon">🎬</div>
+          <div class="technique-info">
+            <div class="technique-title">New Behavior Generator <span class="level-badge intermediate">Intermediate</span></div>
+            <div class="technique-desc">Memprogram perilaku baru dengan visualisasi role model</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('perceptualPositions')" data-level="intermediate">
+        <div class="technique-header">
+          <div class="technique-icon">👁️</div>
+          <div class="technique-info">
+            <div class="technique-title">Perceptual Positions <span class="level-badge intermediate">Intermediate</span></div>
+            <div class="technique-desc">Melihat situasi dari 3 perspektif berbeda</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <!-- Modeling: Advanced -->
+      <div class="category-header">
+        <span class="emoji">🌳</span>
+        <h3>Advanced — Install & Integrate</h3>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('beliefAdoption')" data-level="advanced">
+        <div class="technique-header">
+          <div class="technique-icon">💠</div>
+          <div class="technique-info">
+            <div class="technique-title">Belief Adoption (As-If Frame) <span class="level-badge advanced">Advanced</span></div>
+            <div class="technique-desc">Adopsi sistem keyakinan yang memberdayakan dari model</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('deepTraceId')" data-level="advanced">
+        <div class="technique-header">
+          <div class="technique-icon">🌀</div>
+          <div class="technique-info">
+            <div class="technique-title">Deep Trance Identification <span class="level-badge advanced">Advanced</span></div>
+            <div class="technique-desc">Menyatu dengan model dan menyerap kemampuannya</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('fullModelingProtocol')" data-level="advanced">
+        <div class="technique-header">
+          <div class="technique-icon">🎯</div>
+          <div class="technique-info">
+            <div class="technique-title">Full Modeling Protocol <span class="level-badge advanced">Advanced</span></div>
+            <div class="technique-desc">Protokol lengkap: Absorb → Decode → Install → Test → Integrate</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB: SUBMODALITIES ==================== -->
+    <section class="tab-content" id="submodTab">
+      <div class="info-box" style="margin-bottom:1rem">
+        <h4>🔍 Submodalities</h4>
+        <p>Submodalities adalah "detail halus" dari representasi internal kita - brightness, size, location dari gambar mental; volume, pitch dari suara internal; intensitas dari perasaan.</p>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('submodalitiesMapping')" data-level="basic">
+        <div class="technique-header">
+          <div class="technique-icon">🗺️</div>
+          <div class="technique-info">
+            <div class="technique-title">Submodalities Mapping <span class="level-badge basic">Basic</span></div>
+            <div class="technique-desc">Pemetaan lengkap Visual, Auditory, Kinesthetic</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="technique-card" onclick="startNLP('swishPattern')" data-level="basic">
+        <div class="technique-header">
+          <div class="technique-icon">🔄</div>
+          <div class="technique-info">
+            <div class="technique-title">Swish Pattern <span class="level-badge basic">Basic</span></div>
+            <div class="technique-desc">Mengganti state tidak diinginkan dengan yang diinginkan</div>
+          </div>
+          <div class="technique-arrow">→</div>
+        </div>
+      </div>
+
+      <!-- Quick Reference -->
+      <div class="category-header">
+        <span class="emoji">📖</span>
+        <h3>Quick Reference: Submodalities</h3>
+      </div>
+
+      <div class="submod-category">
+        <div class="submod-header"><span>👁️</span> Visual (Penglihatan)</div>
+        <div class="submod-list">
+          <div class="submod-item">
+            <span class="submod-label">Brightness</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Gelap ↔ Terang</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Size</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Kecil ↔ Besar</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Distance</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Jauh ↔ Dekat</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Color</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">B/W ↔ Berwarna</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Focus</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Blur ↔ Tajam</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Associated/Dissociated</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Lihat diri ↔ Dari mata sendiri</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="submod-category">
+        <div class="submod-header"><span>👂</span> Auditory (Pendengaran)</div>
+        <div class="submod-list">
+          <div class="submod-item">
+            <span class="submod-label">Volume</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Pelan ↔ Keras</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Pitch</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Rendah ↔ Tinggi</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Tempo</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Lambat ↔ Cepat</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Location</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Internal ↔ External</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="submod-category">
+        <div class="submod-header"><span>✋</span> Kinesthetic (Perasaan)</div>
+        <div class="submod-list">
+          <div class="submod-item">
+            <span class="submod-label">Intensity</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Lemah ↔ Kuat</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Temperature</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Dingin ↔ Hangat</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Pressure</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Ringan ↔ Berat</span>
+          </div>
+          <div class="submod-item">
+            <span class="submod-label">Location</span>
+            <span style="font-size:0.75rem;color:var(--text-light)">Terpusat ↔ Menyebar</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB: TECHNIQUES ==================== -->
+    <section class="tab-content" id="techniquesTab">
+      <!-- Level Filter Tabs -->
+      <div class="level-tabs">
+        <button class="level-tab active" data-level="all">🎯 Semua</button>
+        <button class="level-tab" data-level="basic">🌱 Basic</button>
+        <button class="level-tab" data-level="intermediate">🌿 Intermediate</button>
+        <button class="level-tab" data-level="advanced">🌳 Advanced</button>
+      </div>
+
+      <!-- ===== BASIC LEVEL ===== -->
+      <div class="level-section" data-level="basic">
+        <div class="category-header">
+          <span class="emoji">🌱</span>
+          <h3>Basic Level - Fondasi NLP</h3>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('anchoring')" data-level="basic">
+          <div class="technique-header">
+            <div class="technique-icon">⚓</div>
+            <div class="technique-info">
+              <div class="technique-title">Anchoring <span class="level-badge basic">Basic</span></div>
+              <div class="technique-desc">Membuat trigger untuk mengakses state tertentu kapan saja</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('submodalitiesMapping')" data-level="basic">
+          <div class="technique-header">
+            <div class="technique-icon">🗺️</div>
+            <div class="technique-info">
+              <div class="technique-title">Submodalities Mapping <span class="level-badge basic">Basic</span></div>
+              <div class="technique-desc">Pemetaan lengkap Visual, Auditory, Kinesthetic</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('circleOfExcellence')" data-level="basic">
+          <div class="technique-header">
+            <div class="technique-icon">⭕</div>
+            <div class="technique-info">
+              <div class="technique-title">Circle of Excellence <span class="level-badge basic">Basic</span></div>
+              <div class="technique-desc">Membuat lingkaran imajiner berisi state-state powerful</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('swishPattern')" data-level="basic">
+          <div class="technique-header">
+            <div class="technique-icon">🔄</div>
+            <div class="technique-info">
+              <div class="technique-title">Swish Pattern <span class="level-badge basic">Basic</span></div>
+              <div class="technique-desc">Mengganti state tidak diinginkan dengan yang diinginkan</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('mirrorNeuronActivation')" data-level="basic">
+          <div class="technique-header">
+            <div class="technique-icon">🪞</div>
+            <div class="technique-info">
+              <div class="technique-title">Aktivasi Mirror Neuron <span class="level-badge basic">Basic</span></div>
+              <div class="technique-desc">Penyerapan pola bawah sadar melalui observasi aktif</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('secondPositionModeling')" data-level="basic">
+          <div class="technique-header">
+            <div class="technique-icon">🫂</div>
+            <div class="technique-info">
+              <div class="technique-title">Second Position Modeling <span class="level-badge basic">Basic</span></div>
+              <div class="technique-desc">Masuk ke tubuh model dan rasakan dari dalam</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== INTERMEDIATE LEVEL ===== -->
+      <div class="level-section" data-level="intermediate">
+        <div class="category-header">
+          <span class="emoji">🌿</span>
+          <h3>Intermediate Level - Teknik Lanjutan</h3>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('stateModeling')" data-level="intermediate">
+          <div class="technique-header">
+            <div class="technique-icon">👤</div>
+            <div class="technique-info">
+              <div class="technique-title">State Modeling <span class="level-badge intermediate">Intermediate</span></div>
+              <div class="technique-desc">Copy state excellence dari orang lain dengan submodalities</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('timelineTherapy')" data-level="intermediate">
+          <div class="technique-header">
+            <div class="technique-icon">⏳</div>
+            <div class="technique-info">
+              <div class="technique-title">Timeline Therapy <span class="level-badge intermediate">Intermediate</span></div>
+              <div class="technique-desc">Mengubah hubungan dengan masa lalu dan masa depan</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('metaModel')" data-level="intermediate">
+          <div class="technique-header">
+            <div class="technique-icon">🔍</div>
+            <div class="technique-info">
+              <div class="technique-title">Meta Model Questions <span class="level-badge intermediate">Intermediate</span></div>
+              <div class="technique-desc">Menggali lebih dalam dengan pertanyaan presisi</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('sixStepReframing')" data-level="intermediate">
+          <div class="technique-header">
+            <div class="technique-icon">🔧</div>
+            <div class="technique-info">
+              <div class="technique-title">Six-Step Reframing <span class="level-badge intermediate">Intermediate</span></div>
+              <div class="technique-desc">Mengubah perilaku dengan memenuhi niat positifnya</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('partsIntegration')" data-level="intermediate">
+          <div class="technique-header">
+            <div class="technique-icon">🤝</div>
+            <div class="technique-info">
+              <div class="technique-title">Parts Integration <span class="level-badge intermediate">Intermediate</span></div>
+              <div class="technique-desc">Mengintegrasikan bagian-bagian yang berkonflik</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('newBehaviorGenerator')" data-level="intermediate">
+          <div class="technique-header">
+            <div class="technique-icon">🎬</div>
+            <div class="technique-info">
+              <div class="technique-title">New Behavior Generator <span class="level-badge intermediate">Intermediate</span></div>
+              <div class="technique-desc">Memprogram perilaku baru ke sistem saraf</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('perceptualPositions')" data-level="intermediate">
+          <div class="technique-header">
+            <div class="technique-icon">👁️</div>
+            <div class="technique-info">
+              <div class="technique-title">Perceptual Positions <span class="level-badge intermediate">Intermediate</span></div>
+              <div class="technique-desc">Melihat situasi dari 3 perspektif berbeda</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('physiologyModeling')" data-level="intermediate">
+          <div class="technique-header">
+            <div class="technique-icon">🏋️</div>
+            <div class="technique-info">
+              <div class="technique-title">Physiology Modeling <span class="level-badge intermediate">Intermediate</span></div>
+              <div class="technique-desc">Salin postur, napas, dan ritme tubuh model</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('strategyDecoding')" data-level="intermediate">
+          <div class="technique-header">
+            <div class="technique-icon">🔓</div>
+            <div class="technique-info">
+              <div class="technique-title">Strategy Decoding <span class="level-badge intermediate">Intermediate</span></div>
+              <div class="technique-desc">Bongkar urutan proses mental model (V-A-K sequence)</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ADVANCED LEVEL ===== -->
+      <div class="level-section" data-level="advanced">
+        <div class="category-header">
+          <span class="emoji">🌳</span>
+          <h3>Advanced Level - Teknik Master</h3>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('beliefChange')" data-level="advanced">
+          <div class="technique-header">
+            <div class="technique-icon">💡</div>
+            <div class="technique-info">
+              <div class="technique-title">Belief Change Pattern <span class="level-badge advanced">Advanced</span></div>
+              <div class="technique-desc">Mengubah limiting belief menjadi empowering belief</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('coreTransformation')" data-level="advanced">
+          <div class="technique-header">
+            <div class="technique-icon">💎</div>
+            <div class="technique-info">
+              <div class="technique-title">Core Transformation <span class="level-badge advanced">Advanced</span></div>
+              <div class="technique-desc">Menemukan dan mengakses Core State terdalam</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('deepTraceId')" data-level="advanced">
+          <div class="technique-header">
+            <div class="technique-icon">🌀</div>
+            <div class="technique-info">
+              <div class="technique-title">Deep Trance Identification <span class="level-badge advanced">Advanced</span></div>
+              <div class="technique-desc">Menyatu dengan model dan menyerap kemampuannya</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('beliefAdoption')" data-level="advanced">
+          <div class="technique-header">
+            <div class="technique-icon">💠</div>
+            <div class="technique-info">
+              <div class="technique-title">Belief Adoption (As-If Frame) <span class="level-badge advanced">Advanced</span></div>
+              <div class="technique-desc">Adopsi sistem keyakinan yang memberdayakan dari model</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="technique-card" onclick="startNLP('fullModelingProtocol')" data-level="advanced">
+          <div class="technique-header">
+            <div class="technique-icon">🎯</div>
+            <div class="technique-info">
+              <div class="technique-title">Full Modeling Protocol <span class="level-badge advanced">Advanced</span></div>
+              <div class="technique-desc">Protokol lengkap: Absorb → Decode → Install → Test → Integrate</div>
+            </div>
+            <div class="technique-arrow">→</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB: HISTORY ==================== -->
+    <section class="tab-content" id="historyTab">
+      <h3 style="font-size:1rem;color:var(--nlp-primary);margin-bottom:1rem">📜 History Sesi NLP</h3>
+      <div id="historyContainer">
+        <div class="empty-state">
+          <div class="emoji">📭</div>
+          <p>Belum ada history sesi.</p>
+          <p style="font-size:0.8rem">Mulai sesi pertamamu!</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Releasing Modal -->
+  <div class="releasing-modal" id="releasingModal"></div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="config.js"></script>
+  <script src="common.js"></script>
+  <script src="releasing-engine.js"></script>
+  <script src="nlp-scripts.js"></script>
+
+  <script>
+    // ==================== TAB NAVIGATION ====================
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabId = tab.dataset.tab;
+
+        // Update active tab
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Show content
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById(tabId + 'Tab').classList.add('active');
+
+        // Load data if needed
+        if (tabId === 'history') loadHistory();
+      });
+    });
+
+    // ==================== LEVEL FILTER ====================
+    document.querySelectorAll('.level-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const level = tab.dataset.level;
+
+        // Update active level tab
+        document.querySelectorAll('.level-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Filter level sections
+        document.querySelectorAll('.level-section').forEach(section => {
+          if (level === 'all') {
+            section.classList.remove('hidden');
+          } else {
+            if (section.dataset.level === level) {
+              section.classList.remove('hidden');
+            } else {
+              section.classList.add('hidden');
+            }
+          }
+        });
+      });
+    });
+
+    // ==================== RANDOM QUOTE ====================
+    function updateQuote() {
+      if (typeof getRandomNLPQuote === 'function') {
+        const quote = getRandomNLPQuote();
+        document.getElementById('nlpQuote').textContent = '"' + quote.text + '"';
+        document.getElementById('nlpQuoteAuthor').textContent = '— ' + quote.author;
+      }
+    }
+
+    // ==================== PROGRESS ====================
+    function loadProgress() {
+      const history = JSON.parse(localStorage.getItem('nlp_history') || '[]');
+
+      // Count by level
+      const basicTechniques = ['anchoring', 'submodalitiesMapping', 'circleOfExcellence', 'swishPattern', 'mirrorNeuronActivation', 'secondPositionModeling'];
+      const intermediateTechniques = ['stateModeling', 'timelineTherapy', 'metaModel', 'sixStepReframing', 'partsIntegration', 'newBehaviorGenerator', 'perceptualPositions', 'physiologyModeling', 'strategyDecoding'];
+      const advancedTechniques = ['beliefChange', 'coreTransformation', 'deepTraceId', 'beliefAdoption', 'fullModelingProtocol'];
+
+      let basic = 0, intermediate = 0, advanced = 0;
+      history.forEach(h => {
+        if (basicTechniques.includes(h.scriptId)) basic++;
+        if (intermediateTechniques.includes(h.scriptId)) intermediate++;
+        if (advancedTechniques.includes(h.scriptId)) advanced++;
+      });
+
+      document.getElementById('modelingCount').textContent = basic;
+      document.getElementById('submodCount').textContent = intermediate;
+      document.getElementById('anchorCount').textContent = advanced;
+      document.getElementById('totalCount').textContent = history.length;
+    }
+
+    // ==================== HISTORY ====================
+    function loadHistory() {
+      const history = JSON.parse(localStorage.getItem('nlp_history') || '[]');
+      const container = document.getElementById('historyContainer');
+
+      if (history.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="emoji">📭</div>
+            <p>Belum ada history sesi.</p>
+            <p style="font-size:0.8rem">Mulai sesi pertamamu!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = history.slice().reverse().map(h => `
+        <div class="history-item">
+          <div class="history-header">
+            <div class="history-title">${h.title || h.scriptId}</div>
+            <div class="history-date">${formatDate(h.timestamp)}</div>
+          </div>
+          ${h.notes ? `<div class="history-notes">${h.notes}</div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function formatDate(timestamp) {
+      if (!timestamp) return '-';
+      const d = new Date(timestamp);
+      return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    // ==================== SAVE TO HISTORY ====================
+    // Override ReleasingEngine complete to save history
+    const originalStartNLP = window.startNLP;
+    window.startNLP = function(scriptId) {
+      if (typeof ReleasingEngine !== 'undefined') {
+        if (!ReleasingEngine.getScript(scriptId) && nlpScripts[scriptId]) {
+          ReleasingEngine.getScripts()[scriptId] = nlpScripts[scriptId];
+        }
+
+        ReleasingEngine.init({
+          onComplete: function(result) {
+            // Save to history
+            const history = JSON.parse(localStorage.getItem('nlp_history') || '[]');
+            history.push({
+              scriptId: scriptId,
+              title: nlpScripts[scriptId]?.title || scriptId,
+              timestamp: new Date().toISOString(),
+              notes: result?.insight || ''
+            });
+            localStorage.setItem('nlp_history', JSON.stringify(history));
+
+            loadProgress();
+            showToast('Sesi ' + (nlpScripts[scriptId]?.title || scriptId) + ' selesai!', 'success');
+          }
+        });
+
+        ReleasingEngine.startReleasing(scriptId);
+      } else {
+        showToast('ReleasingEngine tidak tersedia', 'error');
+      }
+    };
+
+    // ==================== INIT ====================
+    document.addEventListener('DOMContentLoaded', () => {
+      updateQuote();
+      loadProgress();
+    });
+  </script>
+  <script src="pwa-register.js"></script>
+</body>
+</html>
