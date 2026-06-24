@@ -151,7 +151,7 @@
   const SETTINGS_KEY = 'cleanupProcedure_settings';
 
   function defaultSettings() {
-    return { grounding: true, breath: true };
+    return { grounding: true, breath: true, tts: true };
   }
   let settings = defaultSettings();
 
@@ -185,7 +185,13 @@
     const card = el('div', { class: 'cup-screen' });
     if (opts.eyebrow) card.appendChild(el('div', { class: 'cup-eyebrow', text: opts.eyebrow }));
     if (opts.icon) card.appendChild(el('div', { class: 'cup-screen-icon', text: opts.icon }));
-    if (opts.question) card.appendChild(el('div', { class: 'cup-question', text: token(opts.question) }));
+    const q = opts.question ? token(opts.question) : '';
+    if (q) {
+      card.appendChild(el('div', { class: 'cup-question', text: q }));
+      if (ttsSupported) {
+        card.appendChild(el('button', { class: 'cup-speaker', text: '🔊 Dengar lagi', onClick: function () { speakNow(q); } }));
+      }
+    }
     if (opts.sub) card.appendChild(el('div', { class: 'cup-sub', text: token(opts.sub) }));
     if (opts.body) card.appendChild(opts.body);
     if (opts.controls) {
@@ -197,11 +203,55 @@
     card.classList.add('cup-fade');
     s.appendChild(card);
     requestAnimationFrame(function () { card.classList.add('cup-in'); });
+    if (q) speak(q); // read the question aloud (if TTS is on)
     return card;
   }
 
   function btn(label, onClick, variant) {
     return el('button', { class: 'cup-btn ' + (variant || 'cup-btn-primary'), text: label, onClick: onClick });
+  }
+
+  // ====================== TEXT-TO-SPEECH (Web Speech API) ======================
+  // Reads each question aloud in a calm Indonesian voice. No external library.
+  const ttsSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
+  let ttsVoice = null;
+
+  function pickVoice() {
+    if (!ttsSupported) return;
+    const voices = window.speechSynthesis.getVoices() || [];
+    ttsVoice = voices.find(function (v) { return /id[-_]?id/i.test(v.lang); }) ||
+               voices.find(function (v) { return /^id/i.test(v.lang); }) || null;
+  }
+  if (ttsSupported) {
+    pickVoice();
+    // Voices load asynchronously in most browsers.
+    window.speechSynthesis.onvoiceschanged = pickVoice;
+  }
+
+  function stopSpeak() {
+    if (ttsSupported) { try { window.speechSynthesis.cancel(); } catch (e) {} }
+  }
+  // Force-speak (used by the "Dengar lagi" button — ignores the auto toggle).
+  function speakNow(text) {
+    if (!ttsSupported || !text) return;
+    stopSpeak();
+    const u = new SpeechSynthesisUtterance(String(text));
+    u.lang = 'id-ID';
+    if (ttsVoice) u.voice = ttsVoice;
+    u.rate = 0.95;   // sedikit lambat, menenangkan
+    u.pitch = 1.0;
+    try { window.speechSynthesis.speak(u); } catch (e) {}
+  }
+  // Auto-speak (respects the on/off setting).
+  function speak(text) {
+    if (!settings.tts) return;
+    speakNow(text);
+  }
+  function updateTtsBtn() {
+    const b = document.getElementById('cup-tts-toggle');
+    if (!b) return;
+    b.textContent = settings.tts ? '🔊' : '🔇';
+    b.setAttribute('aria-label', settings.tts ? 'Matikan suara' : 'Nyalakan suara');
   }
 
   // ====================== PROGRESS HEADER ======================
@@ -549,6 +599,7 @@
     card.addEventListener('click', onDone);
     s.appendChild(card);
     requestAnimationFrame(function () { card.classList.add('cup-in'); });
+    speak('Tarik napas. Hembuskan perlahan.');
   }
 
   // ====================== WORKSHEET MODE ======================
@@ -701,6 +752,7 @@
 
   // ====================== TABS ======================
   function switchTab(name) {
+    stopSpeak();
     document.querySelectorAll('.cup-tab').forEach(function (b) { b.classList.toggle('active', b.dataset.tab === name); });
     document.querySelectorAll('.cup-panel').forEach(function (p) { p.classList.toggle('active', p.id === 'cup-tab-' + name); });
     if (name === 'riwayat') renderRiwayat();
@@ -851,11 +903,13 @@
     const modeIn = document.getElementById('cup-set-mode');
     const groundIn = document.getElementById('cup-set-grounding');
     const breathIn = document.getElementById('cup-set-breath');
+    const ttsIn = document.getElementById('cup-set-tts');
     if (apiIn) apiIn.value = (typeof getApiUrl === 'function' ? getApiUrl() : '') || '';
     if (nameIn) nameIn.value = (typeof getDefaultName === 'function' ? getDefaultName() : '') || '';
     if (modeIn) modeIn.value = settings.mode || 'guided';
     if (groundIn) groundIn.checked = settings.grounding !== false;
     if (breathIn) breathIn.checked = settings.breath !== false;
+    if (ttsIn) ttsIn.checked = settings.tts !== false;
 
     const saveBtn = document.getElementById('cup-set-save');
     if (saveBtn) saveBtn.addEventListener('click', function () {
@@ -864,7 +918,10 @@
       settings.mode = modeIn ? modeIn.value : 'guided';
       settings.grounding = groundIn ? groundIn.checked : true;
       settings.breath = breathIn ? breathIn.checked : true;
+      settings.tts = ttsIn ? ttsIn.checked : true;
       persistSettings();
+      updateTtsBtn();
+      if (!settings.tts) stopSpeak();
       showToast('Pengaturan disimpan', 'success');
     });
 
@@ -885,6 +942,24 @@
     document.querySelectorAll('.cup-tab').forEach(function (b) {
       b.addEventListener('click', function () { switchTab(b.dataset.tab); });
     });
+
+    // Wire TTS header toggle (hidden if the browser has no speech synthesis)
+    const ttsBtn = document.getElementById('cup-tts-toggle');
+    if (ttsBtn) {
+      if (!ttsSupported) { ttsBtn.style.display = 'none'; }
+      else {
+        updateTtsBtn();
+        ttsBtn.addEventListener('click', function () {
+          settings.tts = !settings.tts;
+          persistSettings();
+          updateTtsBtn();
+          const set = document.getElementById('cup-set-tts');
+          if (set) set.checked = settings.tts;
+          if (!settings.tts) stopSpeak();
+        });
+      }
+    }
+
     renderReference();
     initSettingsTab();
 
