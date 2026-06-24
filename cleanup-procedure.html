@@ -33,6 +33,8 @@
     }
     .cup-back { color: #fff; text-decoration: none; font-size: 1.4rem; line-height: 1; padding: 0.2rem 0.4rem; }
     .cup-header h1 { font-size: 1.05rem; margin: 0; font-weight: 600; }
+    .cup-tts-btn { margin-left: auto; background: rgba(255,255,255,0.18); border: none; color: #fff; font-size: 1.1rem; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; flex: 0 0 auto; }
+    .cup-tts-btn:active { transform: scale(0.94); }
 
     /* ====== Progress pills ====== */
     .cup-progress { display: flex; gap: 0.4rem; padding: 0.6rem 1rem; background: var(--cup-card); border-bottom: 1px solid var(--cup-border); overflow-x: auto; }
@@ -58,6 +60,8 @@
     .cup-eyebrow { font-size: 0.78rem; color: var(--cup-primary); font-weight: 600; letter-spacing: .02em; margin-bottom: 0.75rem; }
     .cup-screen-icon { font-size: 2.4rem; margin-bottom: 0.5rem; }
     .cup-question { font-size: 1.3rem; line-height: 1.5; font-weight: 600; margin-bottom: 0.6rem; }
+    .cup-speaker { display: inline-block; margin: 0 auto 0.5rem; background: #eef3f7; border: none; color: var(--cup-primary); font-size: 0.78rem; cursor: pointer; padding: 0.3rem 0.7rem; border-radius: 999px; }
+    .cup-speaker:active { transform: scale(0.96); }
     .cup-sub { font-size: 0.9rem; color: var(--cup-muted); line-height: 1.5; margin-bottom: 0.5rem; }
     .cup-controls { display: flex; flex-direction: column; gap: 0.55rem; margin-top: 1.25rem; }
 
@@ -164,6 +168,7 @@
   <header class="cup-header">
     <a class="cup-back" href="sedona-app.html" aria-label="Kembali">←</a>
     <h1>🤝 Clean Up Procedure</h1>
+    <button class="cup-tts-btn" id="cup-tts-toggle" type="button" aria-label="Suara">🔊</button>
   </header>
 
   <!-- Progress pills (per wanting) -->
@@ -228,6 +233,7 @@
     </div>
     <label class="cup-radio"><input type="checkbox" id="cup-set-grounding"> <span>Tampilkan Grounding sebelum mulai</span></label>
     <label class="cup-radio" style="margin-top:0.5rem;"><input type="checkbox" id="cup-set-breath"> <span>Jeda napas antar pertanyaan</span></label>
+    <label class="cup-radio" style="margin-top:0.5rem;"><input type="checkbox" id="cup-set-tts"> <span>🔊 Suara — bacakan pertanyaan (TTS)</span></label>
     <div class="cup-controls" style="margin-top:1rem;">
       <button class="cup-btn cup-btn-primary" id="cup-set-save">Simpan Pengaturan</button>
       <button class="cup-btn cup-btn-ghost" id="cup-set-clear">🗑️ Hapus Semua Data Lokal</button>
