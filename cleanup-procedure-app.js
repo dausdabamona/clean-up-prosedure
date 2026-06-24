@@ -151,7 +151,7 @@
   const SETTINGS_KEY = 'cleanupProcedure_settings';
 
   function defaultSettings() {
-    return { grounding: true, breath: true, tts: true };
+    return { grounding: true, breath: true, tts: true, voiceURI: '', rate: 0.95 };
   }
   let settings = defaultSettings();
 
@@ -215,17 +215,48 @@
   // Reads each question aloud in a calm Indonesian voice. No external library.
   const ttsSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
   let ttsVoice = null;
+  let ttsVoices = [];
 
-  function pickVoice() {
+  // Resolve the active voice: user's chosen voice if set, else first Indonesian.
+  function resolveVoice() {
+    ttsVoice = null;
+    if (settings.voiceURI) {
+      ttsVoice = ttsVoices.find(function (v) { return v.voiceURI === settings.voiceURI; }) || null;
+    }
+    if (!ttsVoice) {
+      ttsVoice = ttsVoices.find(function (v) { return /id[-_]?id/i.test(v.lang); }) ||
+                 ttsVoices.find(function (v) { return /^id/i.test(v.lang); }) || null;
+    }
+  }
+  function loadVoices() {
     if (!ttsSupported) return;
-    const voices = window.speechSynthesis.getVoices() || [];
-    ttsVoice = voices.find(function (v) { return /id[-_]?id/i.test(v.lang); }) ||
-               voices.find(function (v) { return /^id/i.test(v.lang); }) || null;
+    ttsVoices = window.speechSynthesis.getVoices() || [];
+    resolveVoice();
+    populateVoiceSelect();
+  }
+  // Fill the Settings voice dropdown (Indonesian voices first). Safe if absent.
+  function populateVoiceSelect() {
+    const sel = document.getElementById('cup-set-voice');
+    if (!sel) return;
+    const cur = settings.voiceURI || '';
+    while (sel.firstChild) sel.removeChild(sel.firstChild);
+    const auto = document.createElement('option');
+    auto.value = ''; auto.textContent = '(Otomatis — Bahasa Indonesia)';
+    sel.appendChild(auto);
+    const idVoices = ttsVoices.filter(function (v) { return /^id/i.test(v.lang); });
+    const rest = ttsVoices.filter(function (v) { return !/^id/i.test(v.lang); });
+    idVoices.concat(rest).forEach(function (v) {
+      const o = document.createElement('option');
+      o.value = v.voiceURI;
+      o.textContent = v.name + ' (' + v.lang + ')';
+      sel.appendChild(o);
+    });
+    sel.value = cur;
   }
   if (ttsSupported) {
-    pickVoice();
+    loadVoices();
     // Voices load asynchronously in most browsers.
-    window.speechSynthesis.onvoiceschanged = pickVoice;
+    window.speechSynthesis.onvoiceschanged = loadVoices;
   }
 
   function stopSpeak() {
@@ -236,9 +267,9 @@
     if (!ttsSupported || !text) return;
     stopSpeak();
     const u = new SpeechSynthesisUtterance(String(text));
-    u.lang = 'id-ID';
+    u.lang = (ttsVoice && ttsVoice.lang) || 'id-ID';
     if (ttsVoice) u.voice = ttsVoice;
-    u.rate = 0.95;   // sedikit lambat, menenangkan
+    u.rate = settings.rate || 0.95;   // dapat diatur di Settings
     u.pitch = 1.0;
     try { window.speechSynthesis.speak(u); } catch (e) {}
   }
@@ -925,6 +956,37 @@
       showToast('Pengaturan disimpan', 'success');
     });
 
+    // TTS voice + rate controls
+    const ttsOptions = document.getElementById('cup-tts-options');
+    if (ttsOptions && !ttsSupported) ttsOptions.style.display = 'none';
+
+    const voiceSel = document.getElementById('cup-set-voice');
+    if (voiceSel) {
+      populateVoiceSelect();
+      voiceSel.addEventListener('change', function () {
+        settings.voiceURI = voiceSel.value;
+        persistSettings();
+        resolveVoice();
+      });
+    }
+
+    const rateIn = document.getElementById('cup-set-rate');
+    const rateVal = document.getElementById('cup-set-rate-val');
+    if (rateIn) {
+      rateIn.value = settings.rate || 0.95;
+      if (rateVal) rateVal.textContent = (settings.rate || 0.95).toFixed(2) + '×';
+      rateIn.addEventListener('input', function () {
+        settings.rate = parseFloat(rateIn.value);
+        if (rateVal) rateVal.textContent = settings.rate.toFixed(2) + '×';
+        persistSettings();
+      });
+    }
+
+    const testBtn = document.getElementById('cup-set-voice-test');
+    if (testBtn) testBtn.addEventListener('click', function () {
+      speakNow('Halo. Ini contoh suara untuk sesi pelepasan. Bisakah kamu melepaskannya?');
+    });
+
     const clearBtn = document.getElementById('cup-set-clear');
     if (clearBtn) clearBtn.addEventListener('click', function () {
       if (!confirm('Hapus semua data cleanup (draft + riwayat lokal)? Tindakan ini tidak bisa dibatalkan.')) return;
@@ -937,6 +999,7 @@
   // ====================== INIT ======================
   function init() {
     loadSettings();
+    if (ttsSupported) loadVoices(); // apply saved voice + populate dropdown
 
     // Wire tabs
     document.querySelectorAll('.cup-tab').forEach(function (b) {
