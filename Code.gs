@@ -163,6 +163,11 @@ function doGet(e) {
         result = withLock(function() { return logManifestingEmotion(data); });
         break;
 
+      // Techniques (manifesting "Teknik" tab)
+      case 'saveTechniqueSession':
+        result = withLock(function() { return saveManifestingTechnique(data); });
+        break;
+
       // Progress
       case 'getManifestingProgress':
         result = getManifestingProgress();
@@ -1443,4 +1448,26 @@ function getCleanupStats() {
       avgReleases: totalSessions > 0 ? Math.round(totalReleases / totalSessions) : 0
     }
   };
+}
+
+// ==========================================================================
+// MANIFESTING TECHNIQUES (manifesting-workbook.html "Teknik" tab)
+// ==========================================================================
+// Stores one row per technique session. Field shapes vary per technique, so the
+// full payload is kept as JSON; ID/Timestamp/Technique are mirrored for queries.
+const MANIFESTING_TECHNIQUE_HEADERS = ['ID', 'Timestamp', 'Technique', 'Full_Data'];
+
+function saveManifestingTechnique(data) {
+  if (!data || !data.technique) {
+    return { success: false, message: 'Data teknik tidak valid (technique wajib).' };
+  }
+  const sheet = getOrCreateSheet('Manifesting_Techniques', MANIFESTING_TECHNIQUE_HEADERS);
+  const id = 'TECH-' + new Date().getTime();
+  sheet.appendRow([
+    id,
+    data.timestamp || new Date().toISOString(),
+    data.technique,
+    JSON.stringify(data)
+  ]);
+  return { success: true, message: 'Sesi teknik tersimpan', id: id };
 }
