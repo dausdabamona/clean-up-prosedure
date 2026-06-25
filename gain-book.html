@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gain Book - Sedona Method</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#27ae60">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .header.gain { background: linear-gradient(135deg, #1e8449, #27ae60); }
+    .gb-card { background: var(--bg-card); border-radius: 14px; padding: 1.1rem 1.25rem; box-shadow: var(--shadow); margin-bottom: 1.1rem; }
+    .gb-card h3 { font-size: 1.1rem; color: var(--text-dark); margin-bottom: 0.6rem; display:flex; align-items:center; gap:0.5rem; }
+    .gb-label { display:block; font-size: 0.9rem; color: var(--text-light); font-weight:600; margin: 0.6rem 0 0.3rem; }
+    .gb-input, .gb-select { width: 100%; padding: 0.8rem; border: 1.5px solid var(--border); border-radius: 10px; font-size: 1.05rem; font-family: inherit; background:#fff; color: var(--text-dark); }
+    textarea.gb-input { resize: vertical; }
+    .gb-row { display:flex; gap:0.6rem; flex-wrap:wrap; }
+    .gb-row > div { flex:1; min-width: 140px; }
+    .gb-btn { width:100%; padding: 0.9rem; border:none; border-radius:10px; font-size:1.1rem; font-weight:700; cursor:pointer; background: linear-gradient(135deg,#1e8449,#27ae60); color:#fff; margin-top:0.8rem; }
+    .gb-btn.alt { background:#eef7f0; color:#1e8449; font-weight:600; font-size:1rem; }
+    .gb-btn.ghost { background:transparent; color: var(--text-light); border:1.5px solid var(--border); }
+
+    /* Today target */
+    .gb-today { display:flex; align-items:center; gap:0.9rem; border-radius:12px; padding:0.9rem 1rem; margin-bottom:1.1rem; }
+    .gb-today.none { background:#fdecea; }
+    .gb-today.partial { background:#fef5e7; }
+    .gb-today.done { background:#eafaf1; }
+    .gb-today .num { font-size:2rem; font-weight:800; }
+    .gb-today.none .num { color:#c0392b; }
+    .gb-today.partial .num { color:#b9770e; }
+    .gb-today.done .num { color:#1e8449; }
+    .gb-today .sub { font-size:0.75rem; color: var(--text-light); }
+
+    /* Reminder */
+    .gb-badge { font-size:0.7rem; padding:0.15rem 0.5rem; border-radius:999px; font-weight:700; margin-left:auto; }
+    .gb-badge.on { background:#d5f5e3; color:#1e8449; }
+    .gb-badge.off { background:#f2f3f4; color:#7f8c8d; }
+
+    /* Banner */
+    .gb-banner { display:none; align-items:center; gap:0.6rem; background:linear-gradient(135deg,#f39c12,#e67e22); color:#fff; padding:0.8rem 1rem; border-radius:10px; margin-bottom:1rem; }
+    .gb-banner button { margin-left:auto; background:#fff; color:#e67e22; border:none; border-radius:8px; padding:0.5rem 0.8rem; font-weight:700; cursor:pointer; }
+    .gb-banner .x { background:transparent; color:#fff; font-size:1.2rem; padding:0 0.3rem; }
+
+    /* List */
+    .gb-group { margin-bottom:1.2rem; }
+    .gb-date { font-size:0.8rem; color: var(--text-light); font-weight:700; margin:0.6rem 0 0.4rem; text-transform:uppercase; letter-spacing:.03em; }
+    .gb-item { background: var(--bg-card); border:1px solid var(--border); border-left:4px solid #27ae60; border-radius:10px; padding:0.7rem 0.9rem; margin-bottom:0.5rem; }
+    .gb-item-top { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem; }
+    .gb-time { font-size:0.78rem; color: var(--text-light); }
+    .gb-cat { font-size:0.72rem; background:#eafaf1; color:#1e8449; padding:0.1rem 0.5rem; border-radius:999px; }
+    .gb-del { margin-left:auto; background:none; border:none; color:#c0392b; font-size:1.2rem; cursor:pointer; line-height:1; }
+    .gb-text { font-size:1.05rem; color: var(--text-dark); line-height:1.5; }
+    .gb-note { font-size:0.88rem; color: var(--text-light); margin-top:0.25rem; font-style:italic; }
+    .gb-empty { text-align:center; color: var(--text-light); padding:2rem 1rem; }
+    .gb-empty-icon { font-size:2.4rem; margin-bottom:0.4rem; }
+  </style>
+</head>
+<body>
+  <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+  <div class="overlay" onclick="toggleSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header"><h1>🧘 Sedona Method</h1><p>Release & Let Go</p></div>
+    <nav class="sidebar-menu">
+      <div class="menu-label">Modules</div>
+      <a href="sedona-app.html" class="menu-item"><span class="icon">🏠</span><span>Home</span></a>
+      <a href="gain-book.html" class="menu-item active"><span class="icon">📖</span><span>Gain Book</span></a>
+      <a href="core-wanting-release.html" class="menu-item"><span class="icon">🎯</span><span>4 Wanting Release</span></a>
+      <a href="14-days-resistance.html" class="menu-item"><span class="icon">🔓</span><span>14 Days Free From Resistance</span></a>
+      <div class="menu-divider"></div>
+      <div class="menu-label">Advanced</div>
+      <a href="9-emosi-dasar.html" class="menu-item"><span class="icon">🎭</span><span>9 Emosi Dasar</span></a>
+      <a href="manifesting-workbook.html" class="menu-item"><span class="icon">✨</span><span>Manifesting Workbook</span></a>
+      <a href="cleanup-procedure.html" class="menu-item"><span class="icon">🤝</span><span>Clean Up Procedure</span></a>
+      <a href="letting-go.html" class="menu-item"><span class="icon">🕊️</span><span>Letting Go</span></a>
+    </nav>
+  </aside>
+
+  <main class="main-content-sidebar">
+    <header class="header gain">
+      <div class="header-content">
+        <a href="sedona-app.html" class="back-btn">← Kembali</a>
+        <h1>📖 Gain Book</h1>
+        <p>Catat setiap "gain" — manfaat, insight, dan pergeseran positif</p>
+      </div>
+    </header>
+
+    <div class="container" style="padding: 1.5rem;">
+
+      <!-- Overdue banner -->
+      <div class="gb-banner" id="gbBanner">
+        <span>⏰ Belum cukup gain hari ini. Yuk catat satu sekarang.</span>
+        <button onclick="document.getElementById('gainText').focus()">Catat</button>
+        <button class="x" onclick="GainBook.dismissBanner()">×</button>
+      </div>
+
+      <!-- Today's target -->
+      <div class="gb-today none" id="gbTodayWrap">
+        <div class="num" id="gbTodayCount">0</div>
+        <div>
+          <div style="font-weight:700;">gain hari ini</div>
+          <div class="sub" id="gbTodayMsg">Target: minimal 2 gain hari ini</div>
+        </div>
+      </div>
+
+      <!-- Add gain -->
+      <div class="gb-card">
+        <h3>✍️ Catat Gain Baru</h3>
+        <label class="gb-label" for="gainText">Apa gain / hal positif yang kamu rasakan?</label>
+        <textarea class="gb-input" id="gainText" rows="3" placeholder="Contoh: Dada terasa lebih ringan setelah melepas marah ke atasan; lebih mudah mengiyakan..."></textarea>
+        <div class="gb-row">
+          <div>
+            <label class="gb-label" for="gainCategory">Area</label>
+            <select class="gb-select" id="gainCategory"><option value="">— pilih —</option></select>
+          </div>
+          <div>
+            <label class="gb-label" for="gainMood">Perasaan</label>
+            <select class="gb-select" id="gainMood">
+              <option value="">—</option>
+              <option value="😌 Lega">😌 Lega</option>
+              <option value="🙏 Bersyukur">🙏 Bersyukur</option>
+              <option value="💪 Berdaya">💪 Berdaya</option>
+              <option value="✨ Insight">✨ Insight</option>
+              <option value="🕊️ Damai">🕊️ Damai</option>
+              <option value="❤️ Terhubung">❤️ Terhubung</option>
+            </select>
+          </div>
+        </div>
+        <label class="gb-label" for="gainNote">Catatan (opsional)</label>
+        <textarea class="gb-input" id="gainNote" rows="2" placeholder="Konteks atau detail tambahan..."></textarea>
+        <button class="gb-btn" onclick="GainBook.addGain()">🌟 Simpan Gain</button>
+      </div>
+
+      <!-- Reminder settings -->
+      <div class="gb-card">
+        <h3>⏰ Pengingat Harian <span class="gb-badge off" id="gbReminderStatus">MATI</span></h3>
+        <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:0.4rem;">Diingatkan minimal 2× sehari untuk mencatat gain.</p>
+        <div class="gb-row">
+          <div><label class="gb-label" for="gbTime1">Pengingat 1</label><input class="gb-select" type="time" id="gbTime1" value="09:00"></div>
+          <div><label class="gb-label" for="gbTime2">Pengingat 2</label><input class="gb-select" type="time" id="gbTime2" value="21:00"></div>
+        </div>
+        <button class="gb-btn alt" onclick="GainBook.saveReminderSettings()">Simpan Jam</button>
+        <button class="gb-btn" id="gbEnableBtn" onclick="GainBook.enableReminders()">🔔 Aktifkan Pengingat</button>
+        <button class="gb-btn ghost" id="gbDisableBtn" style="display:none;" onclick="GainBook.disableReminders()">Matikan Pengingat</button>
+        <p style="font-size:0.78rem; color:var(--text-light); margin-top:0.5rem;">Catatan: agar pengingat tetap muncul saat aplikasi tertutup, install aplikasi ini ke layar utama (PWA) di Android.</p>
+      </div>
+
+      <!-- List -->
+      <h3 style="color:var(--text-dark); margin:0.5rem 0;">📚 Riwayat Gain</h3>
+      <div id="gainList"></div>
+
+    </div>
+  </main>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="config.js"></script>
+  <script src="common.js"></script>
+  <script src="gain-book.js"></script>
+  <script src="pwa-register.js"></script>
+</body>
+</html>

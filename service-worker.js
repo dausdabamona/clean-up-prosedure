@@ -2,7 +2,7 @@
 // Offline support. All paths are RELATIVE so it works under the GitHub Pages
 // project subpath (…/clean-up-prosedure/). Bump CACHE_NAME on any asset change.
 
-const CACHE_NAME = 'sedona-release-v12';
+const CACHE_NAME = 'sedona-release-v13';
 const OFFLINE_URL = 'sedona-app.html';
 
 // Files cached for offline use (relative to the service worker scope).
@@ -10,6 +10,7 @@ const ASSETS_TO_CACHE = [
   'index.html',
   'sedona-app.html',
   'cleanup-procedure.html',
+  'gain-book.html',
   'letting-go.html',
   'manifesting-workbook.html',
   'core-wanting-release.html',
@@ -31,6 +32,7 @@ const ASSETS_TO_CACHE = [
   'releasing-engine.js',
   'cleanup-procedure-app.js',
   'core-wanting-app.js',
+  'gain-book.js',
   'letting-go-app.js',
   'manifesting-app.js',
   'resistance-app.js',
@@ -113,4 +115,33 @@ self.addEventListener('fetch', (event) => {
 // Allow the page to trigger an immediate update.
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
+});
+
+// ==================== GAIN BOOK REMINDERS (best-effort) ====================
+// Periodic Background Sync wakes the SW ~2x/day (where supported, installed PWA)
+// to remind the user to log a gain.
+self.addEventListener('periodicsync', (event) => {
+  if (event.tag === 'gain-reminder') {
+    event.waitUntil(
+      self.registration.showNotification('🌟 Waktunya catat Gain', {
+        body: 'Sudah catat gain hari ini? Tulis satu hal positif sekarang.',
+        icon: 'icons/icon.svg',
+        tag: 'gain-reminder',
+        renotify: true
+      })
+    );
+  }
+});
+
+// Tapping a reminder opens (or focuses) the Gain Book.
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((wins) => {
+      for (const w of wins) {
+        if (w.url.indexOf('gain-book.html') !== -1 && 'focus' in w) return w.focus();
+      }
+      if (clients.openWindow) return clients.openWindow('gain-book.html');
+    })
+  );
 });
