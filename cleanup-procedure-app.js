@@ -218,7 +218,7 @@
     // run autoAction. Shows a countdown bar; tapping still advances immediately.
     // Paced 1.5x longer than the base autoMs for a calmer rhythm.
     if (opts.autoMs && opts.autoAction && cupAutoEnabled()) {
-      const ms = Math.round(opts.autoMs * 1.5);
+      const ms = Math.max(Math.round(opts.autoMs * 1.5), 20000);
       card.appendChild(cupAutoBar(ms));
       card.appendChild(el('div', { class: 'cup-sub', text: 'Lanjut otomatis bila tidak diketuk' }));
       cupAutoTimer = setTimeout(function () { clearCupAuto(); opts.autoAction(); }, ms);
@@ -669,10 +669,10 @@
     card.appendChild(el('div', { class: 'cup-sub', text: 'Tarik napas... hembuskan perlahan. Ketuk kalau sudah siap.' }));
     const go = function () { clearCupAuto(); onDone(); };
     card.addEventListener('click', go);
-    // Safety auto-advance after a calm breath (~12s, paced 1.5x) if not tapped.
+    // Safety auto-advance after a calm breath (20s floor) if not tapped.
     if (cupAutoEnabled()) {
-      card.appendChild(cupAutoBar(12000));
-      cupAutoTimer = setTimeout(go, 12000);
+      card.appendChild(cupAutoBar(20000));
+      cupAutoTimer = setTimeout(go, 20000);
     }
     s.appendChild(card);
     requestAnimationFrame(function () { card.classList.add('cup-in'); });
