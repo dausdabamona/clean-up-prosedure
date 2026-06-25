@@ -1438,6 +1438,7 @@ const ReleasingEngine = (function() {
         <div class="releasing-modal-content">
           <div class="releasing-modal-header">
             <h3 id="re-modal-title">Releasing</h3>
+            <button class="releasing-modal-close" id="re-tts-toggle" onclick="ReleasingEngine.toggleTts()" title="Suara" style="margin-left:auto;margin-right:0.3rem;">🔊</button>
             <button class="releasing-modal-close" onclick="ReleasingEngine.closeModal()">&times;</button>
           </div>
           <div class="releasing-modal-progress">
@@ -1976,6 +1977,10 @@ const ReleasingEngine = (function() {
       var slider0 = document.getElementById('re-intensity-input');
       if (slider0) updateIntensity(slider0);
     }
+
+    // Read the step aloud (TTS) and refresh the speaker toggle state.
+    updateReTtsBtn();
+    speakStep(step);
   }
 
   // ==================== AUTO-ADVANCE / INTENSITY / LOOP HELPERS ====================
@@ -2015,6 +2020,60 @@ const ReleasingEngine = (function() {
     }
     var target = findLabel(step.backTo);
     if (target >= 0) { renderStep(target); } else { nextStep(); }
+  }
+
+  // ==================== TEXT-TO-SPEECH (shared by all engine modules) ====================
+  // Reads each step aloud in a calm Indonesian voice (Web Speech API, no library).
+  // Global on/off via localStorage 'sedonaTTS' (default ON). Toggle in the modal header.
+  var reTtsSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
+  var reTtsVoice = null;
+  function reLoadVoices() {
+    if (!reTtsSupported) return;
+    var voices = window.speechSynthesis.getVoices() || [];
+    var want = '';
+    try { want = localStorage.getItem('sedonaTTSVoice') || ''; } catch (e) {}
+    reTtsVoice = (want && voices.find(function (v) { return v.voiceURI === want; })) ||
+                 voices.find(function (v) { return /id[-_]?id/i.test(v.lang); }) ||
+                 voices.find(function (v) { return /^id/i.test(v.lang); }) || null;
+  }
+  if (reTtsSupported) { reLoadVoices(); window.speechSynthesis.onvoiceschanged = reLoadVoices; }
+  function reTtsEnabled() {
+    try { return localStorage.getItem('sedonaTTS') !== 'false'; } catch (e) { return true; }
+  }
+  function reStopSpeak() {
+    if (reTtsSupported) { try { window.speechSynthesis.cancel(); } catch (e) {} }
+  }
+  function reSpeak(text) {
+    if (!reTtsEnabled() || !reTtsSupported || !text) return;
+    reStopSpeak();
+    var u = new SpeechSynthesisUtterance(String(text));
+    u.lang = (reTtsVoice && reTtsVoice.lang) || 'id-ID';
+    if (reTtsVoice) u.voice = reTtsVoice;
+    var rate = 0.95;
+    try { var r = parseFloat(localStorage.getItem('sedonaTTSRate')); if (!isNaN(r)) rate = r; } catch (e) {}
+    u.rate = rate; u.pitch = 1.0;
+    try { window.speechSynthesis.speak(u); } catch (e) {}
+  }
+  // Speak the visible text of a step (question + subtext where present).
+  function speakStep(step) {
+    if (!step) return;
+    var t = step.text || '';
+    if (step.subtext) t += '. ' + step.subtext;
+    reSpeak(t);
+  }
+  function updateReTtsBtn() {
+    var b = document.getElementById('re-tts-toggle');
+    if (!b) return;
+    var on = reTtsEnabled();
+    b.textContent = on ? '🔊' : '🔇';
+    b.title = on ? 'Matikan suara' : 'Nyalakan suara';
+  }
+  function toggleTts() {
+    var on = reTtsEnabled();
+    try { localStorage.setItem('sedonaTTS', on ? 'false' : 'true'); } catch (e) {}
+    updateReTtsBtn();
+    if (on) reStopSpeak(); // was on, now turning off
+    else { if (currentSession) speakStep(currentSession.script.steps[currentSession.currentStep]); }
   }
 
   // ==================== USER INTERACTIONS ====================
@@ -2080,6 +2139,7 @@ const ReleasingEngine = (function() {
         '<p class="releasing-step-text">' + ts.text + '</p>' +
         '<p class="releasing-step-subtext">' + ts.subtext + '</p>' +
         '<div class="releasing-breathing-animation"></div>';
+      reSpeak(ts.text + '. ' + ts.subtext);
 
       stepIndex++;
       currentSession.autoTimer = setTimeout(showTripleStep, ts.duration);
@@ -2203,6 +2263,7 @@ const ReleasingEngine = (function() {
 
   function closeModal() {
     clearAutoTimer();
+    reStopSpeak();
     if (modalElement) {
       modalElement.classList.remove('active');
     }
@@ -2234,6 +2295,7 @@ const ReleasingEngine = (function() {
     selectAnswer: selectAnswer,
     updateIntensity: updateIntensity,
     loopChoice: loopChoice,
+    toggleTts: toggleTts,
     getScripts: getScripts,
     getScript: getScript,
     getWantingScriptId: getWantingScriptId
