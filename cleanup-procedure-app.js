@@ -216,10 +216,12 @@
     }
     // Safety auto-advance for passive screens: after autoMs (if not tapped),
     // run autoAction. Shows a countdown bar; tapping still advances immediately.
+    // Paced 1.5x longer than the base autoMs for a calmer rhythm.
     if (opts.autoMs && opts.autoAction && cupAutoEnabled()) {
-      card.appendChild(cupAutoBar(opts.autoMs));
+      const ms = Math.round(opts.autoMs * 1.5);
+      card.appendChild(cupAutoBar(ms));
       card.appendChild(el('div', { class: 'cup-sub', text: 'Lanjut otomatis bila tidak diketuk' }));
-      cupAutoTimer = setTimeout(function () { clearCupAuto(); opts.autoAction(); }, opts.autoMs);
+      cupAutoTimer = setTimeout(function () { clearCupAuto(); opts.autoAction(); }, ms);
     }
     // fade-in
     card.classList.add('cup-fade');
@@ -667,10 +669,10 @@
     card.appendChild(el('div', { class: 'cup-sub', text: 'Tarik napas... hembuskan perlahan. Ketuk kalau sudah siap.' }));
     const go = function () { clearCupAuto(); onDone(); };
     card.addEventListener('click', go);
-    // Safety auto-advance after a calm breath (~8s) if not tapped.
+    // Safety auto-advance after a calm breath (~12s, paced 1.5x) if not tapped.
     if (cupAutoEnabled()) {
-      card.appendChild(cupAutoBar(8000));
-      cupAutoTimer = setTimeout(go, 8000);
+      card.appendChild(cupAutoBar(12000));
+      cupAutoTimer = setTimeout(go, 12000);
     }
     s.appendChild(card);
     requestAnimationFrame(function () { card.classList.add('cup-in'); });
