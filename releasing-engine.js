@@ -1438,8 +1438,19 @@ const ReleasingEngine = (function() {
         <div class="releasing-modal-content">
           <div class="releasing-modal-header">
             <h3 id="re-modal-title">Releasing</h3>
-            <button class="releasing-modal-close" id="re-tts-toggle" onclick="ReleasingEngine.toggleTts()" title="Suara" style="margin-left:auto;margin-right:0.3rem;">🔊</button>
+            <button class="releasing-modal-close" id="re-tts-toggle" onclick="ReleasingEngine.toggleTts()" title="Suara nyala/mati" style="margin-left:auto;">🔊</button>
+            <button class="releasing-modal-close" onclick="ReleasingEngine.openTtsPanel()" title="Pilih suara" style="margin-right:0.3rem;">⚙️</button>
             <button class="releasing-modal-close" onclick="ReleasingEngine.closeModal()">&times;</button>
+          </div>
+          <div class="re-tts-panel" id="re-tts-panel" style="display:none;">
+            <label class="re-tts-label">Pilihan suara</label>
+            <select id="re-tts-voice" onchange="ReleasingEngine.onVoiceChange(this)"></select>
+            <label class="re-tts-label">Kecepatan</label>
+            <div class="re-tts-rate-row">
+              <input type="range" id="re-tts-rate" min="0.6" max="1.3" step="0.05" value="0.95" oninput="ReleasingEngine.onRateChange(this)">
+              <span id="re-tts-rate-val">0.95×</span>
+            </div>
+            <button class="releasing-btn releasing-btn-secondary" onclick="ReleasingEngine.testVoice()">🔊 Tes suara</button>
           </div>
           <div class="releasing-modal-progress">
             <div class="releasing-progress-bar">
@@ -1712,6 +1723,16 @@ const ReleasingEngine = (function() {
         animation-fill-mode: forwards;
       }
       @keyframes reCountdown { from { width: 100%; } to { width: 0%; } }
+      .re-tts-panel {
+        padding: 0.8rem 1rem;
+        border-bottom: 1px solid #eee;
+        background: #f7f8fc;
+      }
+      .re-tts-label { display: block; font-size: 0.75rem; color: #666; font-weight: 600; margin: 0.3rem 0 0.2rem; }
+      .re-tts-panel select { width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; background: #fff; }
+      .re-tts-rate-row { display: flex; align-items: center; gap: 0.6rem; }
+      .re-tts-rate-row input[type=range] { flex: 1; }
+      .re-tts-panel .releasing-btn { width: 100%; margin-top: 0.6rem; }
     `;
   }
 
@@ -2052,16 +2073,75 @@ const ReleasingEngine = (function() {
   // Global on/off via localStorage 'sedonaTTS' (default ON). Toggle in the modal header.
   var reTtsSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
   var reTtsVoice = null;
+  var reTtsVoices = [];
   function reLoadVoices() {
     if (!reTtsSupported) return;
-    var voices = window.speechSynthesis.getVoices() || [];
+    reTtsVoices = window.speechSynthesis.getVoices() || [];
     var want = '';
     try { want = localStorage.getItem('sedonaTTSVoice') || ''; } catch (e) {}
-    reTtsVoice = (want && voices.find(function (v) { return v.voiceURI === want; })) ||
-                 voices.find(function (v) { return /id[-_]?id/i.test(v.lang); }) ||
-                 voices.find(function (v) { return /^id/i.test(v.lang); }) || null;
+    reTtsVoice = (want && reTtsVoices.find(function (v) { return v.voiceURI === want; })) ||
+                 reTtsVoices.find(function (v) { return /id[-_]?id/i.test(v.lang); }) ||
+                 reTtsVoices.find(function (v) { return /^id/i.test(v.lang); }) || null;
+    populateReVoiceSelect();
+  }
+  // Fill the voice dropdown (Indonesian voices first). Safe if the panel is absent.
+  function populateReVoiceSelect() {
+    var sel = document.getElementById('re-tts-voice');
+    if (!sel) return;
+    var cur = '';
+    try { cur = localStorage.getItem('sedonaTTSVoice') || ''; } catch (e) {}
+    while (sel.firstChild) sel.removeChild(sel.firstChild);
+    var auto = document.createElement('option');
+    auto.value = ''; auto.textContent = '(Otomatis — Bahasa Indonesia)';
+    sel.appendChild(auto);
+    var idV = reTtsVoices.filter(function (v) { return /^id/i.test(v.lang); });
+    var rest = reTtsVoices.filter(function (v) { return !/^id/i.test(v.lang); });
+    idV.concat(rest).forEach(function (v) {
+      var o = document.createElement('option');
+      o.value = v.voiceURI; o.textContent = v.name + ' (' + v.lang + ')';
+      sel.appendChild(o);
+    });
+    sel.value = cur;
   }
   if (reTtsSupported) { reLoadVoices(); window.speechSynthesis.onvoiceschanged = reLoadVoices; }
+  // Voice settings popover (⚙️) controls — shared by all engine modules.
+  function openTtsPanel() {
+    var p = document.getElementById('re-tts-panel');
+    if (!p) return;
+    var show = p.style.display === 'none' || !p.style.display;
+    p.style.display = show ? 'block' : 'none';
+    if (show) {
+      populateReVoiceSelect();
+      var r = document.getElementById('re-tts-rate');
+      var rv = document.getElementById('re-tts-rate-val');
+      var rate = 0.95;
+      try { var x = parseFloat(localStorage.getItem('sedonaTTSRate')); if (!isNaN(x)) rate = x; } catch (e) {}
+      if (r) r.value = rate;
+      if (rv) rv.textContent = rate.toFixed(2) + '×';
+    }
+  }
+  function onVoiceChange(sel) {
+    try { localStorage.setItem('sedonaTTSVoice', sel.value); } catch (e) {}
+    reLoadVoices();
+  }
+  function onRateChange(inp) {
+    try { localStorage.setItem('sedonaTTSRate', inp.value); } catch (e) {}
+    var rv = document.getElementById('re-tts-rate-val');
+    if (rv) rv.textContent = parseFloat(inp.value).toFixed(2) + '×';
+  }
+  function testVoice() { reSpeakNow('Halo. Ini contoh suara untuk sesi pelepasan. Bisakah kamu melepaskannya?'); }
+  // Force-speak ignoring the on/off toggle (used by the Tes button).
+  function reSpeakNow(text) {
+    if (!reTtsSupported || !text) return;
+    reStopSpeak();
+    var u = new SpeechSynthesisUtterance(String(text));
+    u.lang = (reTtsVoice && reTtsVoice.lang) || 'id-ID';
+    if (reTtsVoice) u.voice = reTtsVoice;
+    var rate = 0.95;
+    try { var r = parseFloat(localStorage.getItem('sedonaTTSRate')); if (!isNaN(r)) rate = r; } catch (e) {}
+    u.rate = rate;
+    try { window.speechSynthesis.speak(u); } catch (e) {}
+  }
   function reTtsEnabled() {
     try { return localStorage.getItem('sedonaTTS') !== 'false'; } catch (e) { return true; }
   }
@@ -2321,6 +2401,10 @@ const ReleasingEngine = (function() {
     updateIntensity: updateIntensity,
     loopChoice: loopChoice,
     toggleTts: toggleTts,
+    openTtsPanel: openTtsPanel,
+    onVoiceChange: onVoiceChange,
+    onRateChange: onRateChange,
+    testVoice: testVoice,
     getScripts: getScripts,
     getScript: getScript,
     getWantingScriptId: getWantingScriptId
