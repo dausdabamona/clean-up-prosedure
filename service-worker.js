@@ -2,7 +2,7 @@
 // Offline support. All paths are RELATIVE so it works under the GitHub Pages
 // project subpath (…/clean-up-prosedure/). Bump CACHE_NAME on any asset change.
 
-const CACHE_NAME = 'sedona-release-v10';
+const CACHE_NAME = 'sedona-release-v11';
 const OFFLINE_URL = 'sedona-app.html';
 
 // Files cached for offline use (relative to the service worker scope).
@@ -30,6 +30,7 @@ const ASSETS_TO_CACHE = [
   'common.js',
   'releasing-engine.js',
   'cleanup-procedure-app.js',
+  'core-wanting-app.js',
   'letting-go-app.js',
   'manifesting-app.js',
   'resistance-app.js',
