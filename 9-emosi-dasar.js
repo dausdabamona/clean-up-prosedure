@@ -279,26 +279,58 @@ const emosiScripts = {
   },
 
   // ==================== QUICK RELEASE - SEMUA EMOSI SEKALIGUS ====================
-  'fullRelease': {
-    title: 'Full Emotional Release',
-    description: 'Melepas semua emosi negatif dan memenuhi dengan positif',
-    steps: [
-      { type: 'instruction', text: 'Stop dulu... tarik napas dalam...', duration: 8000 },
-      { type: 'instruction', text: 'Rasakan apapun emosi yang sedang ada...', duration: 8000 },
-      { type: 'instruction', text: 'APATI - lepaskan...', subtext: 'Perasaan tidak berdaya', duration: 8000 },
-      { type: 'instruction', text: 'KESEDIHAN - lepaskan...', subtext: 'Duka dan kehilangan', duration: 8000 },
-      { type: 'instruction', text: 'KETAKUTAN - lepaskan...', subtext: 'Kecemasan dan khawatir', duration: 8000 },
-      { type: 'instruction', text: 'NAFSU - lepaskan...', subtext: 'Keinginan yang memperbudak', duration: 8000 },
-      { type: 'instruction', text: 'KEMARAHAN - lepaskan...', subtext: 'Frustrasi dan dendam', duration: 8000 },
-      { type: 'instruction', text: 'KEBANGGAAN - lepaskan...', subtext: 'Ego dan arogansi', duration: 8000 },
-      { type: 'instruction', text: 'Sekarang, izinkan KEBERANIAN memenuhi...', duration: 8000 },
-      { type: 'instruction', text: 'Izinkan PENERIMAAN memenuhi...', duration: 8000 },
-      { type: 'instruction', text: 'Izinkan KEDAMAIAN memenuhi...', duration: 8000 },
-      { type: 'instruction', text: 'Biarkan ketiga emosi positif itu MENYEBAR ke seluruh alam semesta...', duration: 12000 },
-      { type: 'completion', text: 'Full Release selesai!', subtext: 'Lakukan ini secara rutin untuk menjaga kebersihan emosional.' }
-    ]
-  }
 };
+
+// ==================== FULL RELEASE (Coach Lia sweep) ====================
+// Sapu lengkap 9 emosi: lepas 6 negatif dengan Bisakah/Maukah/Kapan + cek
+// intensitas (boleh ulang sapuan), lalu penuhi 3 positif + "bisa lebih baik?".
+function buildFullReleaseScript() {
+  const neg = [
+    { name: 'APATI', emoji: '😶', feel: 'rasa tidak berdaya, "aku tidak bisa"', wanting: 'keinginan untuk menyerah / tetap apatis' },
+    { name: 'KESEDIHAN', emoji: '😢', feel: 'duka, kehilangan, kerinduan', wanting: 'keinginan akan apa yang tidak ada (Approval/Security)' },
+    { name: 'KETAKUTAN', emoji: '😨', feel: 'cemas, khawatir tentang masa depan', wanting: 'keinginan untuk merasa aman (Security)' },
+    { name: 'NAFSU', emoji: '😋', feel: 'craving, "harus punya", obsesi', wanting: 'keinginan yang memperbudak (Security/Approval)' },
+    { name: 'KEMARAHAN', emoji: '😠', feel: 'frustrasi, dendam, kesal', wanting: 'keinginan untuk mengontrol (Control)' },
+    { name: 'KEBANGGAAN', emoji: '😤', feel: 'ego, merasa lebih atau lebih benar', wanting: 'keinginan untuk merasa terpisah & lebih (Separation)' }
+  ];
+  const pos = [
+    { name: 'KEBERANIAN', emoji: '💪', quality: 'kepercayaan diri & kesediaan untuk bertindak' },
+    { name: 'PENERIMAAN', emoji: '😌', quality: 'damai dengan apa adanya, tanpa perlawanan' },
+    { name: 'KEDAMAIAN', emoji: '🕊️', quality: 'ketenangan sempurna, sifat sejatimu' }
+  ];
+  const steps = [];
+
+  steps.push({ type: 'instruction', text: 'Stop sebentar... tarik napas dalam, hembuskan perlahan.', subtext: 'Biarkan tubuh rileks dan hadir di sini.', duration: 8000 });
+  steps.push({ type: 'instruction', text: 'Kita akan menyapu naik skala emosi — melepas yang berat satu per satu, lalu memenuhi diri dengan yang ringan.', subtext: 'Lembut saja. Releasing adalah keputusan; ketuk "Lanjut" kapan pun siap.', duration: 9000 });
+  steps.push({ type: 'input', text: 'Apa yang paling terasa mengganjal saat ini?', subtext: 'Boleh satu situasi, boleh perasaan umum.', placeholder: 'Tuliskan...' });
+
+  neg.forEach(function (e, idx) {
+    const welcome = { type: 'instruction', text: e.emoji + ' ' + e.name, subtext: 'Perhatikan ' + e.feel + '. Izinkan ia hadir... sambut saja, jangan dilawan.', duration: 8000 };
+    if (idx === 0) welcome.label = 'sweep'; // loop target for re-sweep
+    steps.push(welcome);
+    steps.push({ type: 'yesno', text: 'Bisakah kamu melepaskan ' + e.wanting + '?', subtext: 'Kedua jawaban valid. Yang penting jujur.', highlight: 'Bisa' });
+    steps.push({ type: 'yesno', text: 'Maukah kamu melepaskannya?', highlight: 'Mau' });
+    steps.push({ type: 'when', text: 'Kapan?' });
+    steps.push({ type: 'instruction', text: 'Tarik napas... hembuskan ' + e.name.toLowerCase() + ' itu keluar. Biarkan pergi.', duration: 6000 });
+  });
+
+  steps.push({ type: 'intensity', text: 'Setelah menyapu keenamnya, seberapa berat lagi rasanya? (0–10)', store: 'i' });
+  steps.push({ type: 'loop', text: 'Mau menyapu sekali lagi?', subtext: 'Kalau masih berat (di atas 1), kita ulangi dari atas.', backTo: 'sweep', whileVar: 'i', whileGt: 1, yesText: '🔄 Sapu lagi', noText: '✅ Cukup, lanjut' });
+
+  steps.push({ type: 'instruction', text: 'Emosi berat sudah lebih ringan. Sekarang kita PENUHI diri dengan yang positif.', duration: 7000 });
+  pos.forEach(function (e) {
+    steps.push({ type: 'instruction', text: e.emoji + ' Rasakan ' + e.name + ' — ' + e.quality + ' — yang sudah ada di dalammu.', subtext: 'Biarkan ia tumbuh di hati.', duration: 8000 });
+    steps.push({ type: 'instruction', text: 'Biarkan ' + e.name + ' MELUAS... mengisi tubuh, ruangan, lalu seluruh alam semesta.', duration: 8000 });
+  });
+
+  steps.push({ type: 'instruction', label: 'deepen', text: 'Rasakan ketiganya — keberanian, penerimaan, kedamaian — memenuhi segalanya tanpa batas.', duration: 9000 });
+  steps.push({ type: 'loop', text: 'Bisa terasa lebih baik lagi nggak?', subtext: 'Pertanyaan khas Lester — selalu bisa lebih baik. Jika ya, kita perdalam.', backTo: 'deepen', yesText: '✨ Bisa, perdalam', noText: '🙏 Cukup, sudah penuh' });
+  steps.push({ type: 'completion', text: '🎉 Full Release Selesai!', subtext: 'Kamu sudah menyapu dari apati menuju kedamaian. Lakukan rutin untuk menjaga kebersihan emosional.' });
+  steps.push({ type: 'insight', text: 'Ada insight dari sesi penuh ini?', placeholder: 'Tulis insight...' });
+
+  return { title: 'Full Emotional Release', description: 'Sapu lengkap 9 emosi gaya Coach Lia', steps: steps };
+}
+emosiScripts.fullRelease = buildFullReleaseScript();
 
 // ==================== QUOTES ====================
 const emosiQuotes = [
