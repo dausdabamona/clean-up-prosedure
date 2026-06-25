@@ -168,6 +168,17 @@ function doGet(e) {
         result = withLock(function() { return saveManifestingTechnique(data); });
         break;
 
+      // ===== GAIN BOOK =====
+      case 'saveGain':
+        result = withLock(function() { return saveGain(data); });
+        break;
+      case 'getGains':
+        result = getGains();
+        break;
+      case 'deleteGain':
+        result = withLock(function() { return deleteGain(id || (data ? data.id : null)); });
+        break;
+
       // Progress
       case 'getManifestingProgress':
         result = getManifestingProgress();
@@ -1470,4 +1481,60 @@ function saveManifestingTechnique(data) {
     JSON.stringify(data)
   ]);
   return { success: true, message: 'Sesi teknik tersimpan', id: id };
+}
+
+// ==========================================================================
+// GAIN BOOK (gain-book.html) — catatan "gain" / manfaat / insight Sedona
+// ==========================================================================
+const GAIN_HEADERS = ['ID', 'Timestamp', 'Date', 'Gain', 'Category', 'Mood', 'Note', 'Source'];
+
+function saveGain(data) {
+  if (!data || !data.gain) {
+    return { success: false, message: 'Gain tidak boleh kosong.' };
+  }
+  const sheet = getOrCreateSheet('Gains', GAIN_HEADERS);
+  const id = data.id || ('GAIN-' + new Date().getTime());
+  // Upsert by ID so edits don't duplicate.
+  const existing = findRowBySesiId(sheet, id);
+  const row = [
+    id,
+    new Date().toISOString(),
+    data.date || new Date().toISOString().split('T')[0],
+    data.gain,
+    data.category || '',
+    data.mood || '',
+    data.note || '',
+    data.source || 'gain-book'
+  ];
+  if (existing > 0) {
+    sheet.getRange(existing, 1, 1, row.length).setValues([row]);
+  } else {
+    sheet.appendRow(row);
+  }
+  return { success: true, message: 'Gain tersimpan', id: id };
+}
+
+function getGains() {
+  const sheet = getOrCreateSheet('Gains', GAIN_HEADERS);
+  const values = sheet.getDataRange().getValues();
+  const out = [];
+  for (let i = 1; i < values.length; i++) {
+    if (!values[i][0]) continue;
+    out.push({
+      id: values[i][0], timestamp: values[i][1], date: values[i][2],
+      gain: values[i][3], category: values[i][4], mood: values[i][5],
+      note: values[i][6], source: values[i][7]
+    });
+  }
+  // Newest first.
+  out.sort(function (a, b) { return String(b.timestamp || '').localeCompare(String(a.timestamp || '')); });
+  return { success: true, data: out };
+}
+
+function deleteGain(id) {
+  if (!id) return { success: false, message: 'ID gain wajib.' };
+  const sheet = getOrCreateSheet('Gains', GAIN_HEADERS);
+  const row = findRowBySesiId(sheet, id);
+  if (row > 0) { sheet.deleteRow(row); return { success: true, message: 'Gain dihapus' }; }
+  return { success: false, message: 'Gain tidak ditemukan' };
 }
