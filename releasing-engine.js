@@ -1873,7 +1873,7 @@ const ReleasingEngine = (function() {
       case 'instruction':
         html = '<p class="releasing-step-text">' + step.text + '</p>';
         if (step.subtext) html += '<p class="releasing-step-subtext">' + step.subtext + '</p>';
-        if (step.duration && autoAdvanceEnabled()) html += autoBar(step.duration);
+        if (step.duration && autoAdvanceEnabled()) html += autoBar(pacedMs(step.duration));
         document.getElementById('re-btn-next').textContent = 'Lanjut →';
         // Safety auto-advance after `duration` (Coach Lia pacing) if not tapped.
         if (step.duration && autoAdvanceEnabled()) {
@@ -1881,7 +1881,7 @@ const ReleasingEngine = (function() {
             if (currentSession && currentSession.currentStep === index) {
               nextStep();
             }
-          }, step.duration);
+          }, pacedMs(step.duration));
         }
         break;
 
@@ -1938,14 +1938,14 @@ const ReleasingEngine = (function() {
         html = '<p class="releasing-step-text">' + step.text + '</p>';
         if (step.subtext) html += '<p class="releasing-step-subtext">' + step.subtext + '</p>';
         html += '<div class="releasing-breathing-animation"></div>';
-        if (step.duration && autoAdvanceEnabled()) html += autoBar(step.duration);
+        if (step.duration && autoAdvanceEnabled()) html += autoBar(pacedMs(step.duration));
         document.getElementById('re-btn-next').textContent = 'Lanjut →';
         if (step.duration && autoAdvanceEnabled()) {
           currentSession.autoTimer = setTimeout(function() {
             if (currentSession && currentSession.currentStep === index) {
               nextStep();
             }
-          }, step.duration);
+          }, pacedMs(step.duration));
         }
         break;
 
@@ -2028,6 +2028,10 @@ const ReleasingEngine = (function() {
   function autoAdvanceEnabled() {
     try { return localStorage.getItem('sedonaAutoAdvance') !== 'false'; } catch (e) { return true; }
   }
+  // Auto-advance pacing: give 1.5x longer than the step's base duration so the
+  // user has ample time before it continues on its own.
+  var PACE_MULTIPLIER = 1.5;
+  function pacedMs(d) { return Math.round((d || 0) * PACE_MULTIPLIER); }
   // Visual countdown bar shown on auto-advancing steps so the user can see it
   // will continue on its own (and can tap to go faster).
   function autoBar(ms) {
