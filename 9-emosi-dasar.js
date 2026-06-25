@@ -341,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Auto-advance toggle (default OFF). Stored globally so the engine reads it.
   var autoToggle = document.getElementById('autoAdvanceToggle');
   if (autoToggle) {
-    autoToggle.checked = localStorage.getItem('sedonaAutoAdvance') === 'true';
+    autoToggle.checked = localStorage.getItem('sedonaAutoAdvance') !== 'false';
     autoToggle.addEventListener('change', function () {
       localStorage.setItem('sedonaAutoAdvance', autoToggle.checked ? 'true' : 'false');
     });
