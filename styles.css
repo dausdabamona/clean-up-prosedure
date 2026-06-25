@@ -50,11 +50,16 @@
   --sidebar-width: 260px;
 }
 
+/* Larger base type for comfortable reading (scales all rem-based sizes). */
+html {
+  font-size: 18px;
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, sans-serif;
   background: var(--bg-light);
   color: var(--text-dark);
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.7;
 }
 

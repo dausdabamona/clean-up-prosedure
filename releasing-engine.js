@@ -1576,10 +1576,10 @@ const ReleasingEngine = (function() {
       }
       .releasing-btn {
         flex: 1;
-        padding: 0.85rem 1.25rem;
+        padding: 0.95rem 1.25rem;
         border: none;
         border-radius: 8px;
-        font-size: 1rem;
+        font-size: 1.15rem;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s;
@@ -1604,15 +1604,16 @@ const ReleasingEngine = (function() {
         background: #d0d0d0;
       }
       .releasing-step-text {
-        font-size: 1.3rem;
+        font-size: 1.65rem;
         color: #2D2A26;
         margin-bottom: 0.75rem;
-        line-height: 1.4;
+        line-height: 1.5;
       }
       .releasing-step-subtext {
-        font-size: 0.95rem;
+        font-size: 1.15rem;
         color: #666;
         margin-top: 0.5rem;
+        line-height: 1.5;
       }
       .releasing-step-input textarea {
         width: 100%;
