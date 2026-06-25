@@ -1696,6 +1696,22 @@ const ReleasingEngine = (function() {
         font-size: 0.85rem;
         font-weight: 600;
       }
+      .re-autobar {
+        height: 4px;
+        background: rgba(0,0,0,0.08);
+        border-radius: 2px;
+        overflow: hidden;
+        margin: 1.2rem 0 0.2rem;
+      }
+      .re-autobar-fill {
+        height: 100%;
+        width: 100%;
+        background: #667eea;
+        animation-name: reCountdown;
+        animation-timing-function: linear;
+        animation-fill-mode: forwards;
+      }
+      @keyframes reCountdown { from { width: 100%; } to { width: 0%; } }
     `;
   }
 
@@ -1836,9 +1852,9 @@ const ReleasingEngine = (function() {
       case 'instruction':
         html = '<p class="releasing-step-text">' + step.text + '</p>';
         if (step.subtext) html += '<p class="releasing-step-subtext">' + step.subtext + '</p>';
-        document.getElementById('re-btn-next').textContent = 'Lanjut bila siap →';
-        // Auto-advance only when the user opted in (default OFF: releasing is a
-        // decision, not something forced by a timer). `duration` is kept as data.
+        if (step.duration && autoAdvanceEnabled()) html += autoBar(step.duration);
+        document.getElementById('re-btn-next').textContent = 'Lanjut →';
+        // Safety auto-advance after `duration` (Coach Lia pacing) if not tapped.
         if (step.duration && autoAdvanceEnabled()) {
           currentSession.autoTimer = setTimeout(function() {
             if (currentSession && currentSession.currentStep === index) {
@@ -1901,7 +1917,8 @@ const ReleasingEngine = (function() {
         html = '<p class="releasing-step-text">' + step.text + '</p>';
         if (step.subtext) html += '<p class="releasing-step-subtext">' + step.subtext + '</p>';
         html += '<div class="releasing-breathing-animation"></div>';
-        document.getElementById('re-btn-next').textContent = 'Lanjut bila siap →';
+        if (step.duration && autoAdvanceEnabled()) html += autoBar(step.duration);
+        document.getElementById('re-btn-next').textContent = 'Lanjut →';
         if (step.duration && autoAdvanceEnabled()) {
           currentSession.autoTimer = setTimeout(function() {
             if (currentSession && currentSession.currentStep === index) {
@@ -1984,9 +2001,17 @@ const ReleasingEngine = (function() {
   }
 
   // ==================== AUTO-ADVANCE / INTENSITY / LOOP HELPERS ====================
-  // Auto-advance is opt-in (default OFF) via localStorage 'sedonaAutoAdvance'.
+  // Auto-advance is a SAFETY fallback (default ON): a passive step advances on
+  // its own after `duration` (Coach Lia's pacing) if the user doesn't tap, but
+  // tapping "Lanjut" still advances immediately. Can be turned off per device.
   function autoAdvanceEnabled() {
-    try { return localStorage.getItem('sedonaAutoAdvance') === 'true'; } catch (e) { return false; }
+    try { return localStorage.getItem('sedonaAutoAdvance') !== 'false'; } catch (e) { return true; }
+  }
+  // Visual countdown bar shown on auto-advancing steps so the user can see it
+  // will continue on its own (and can tap to go faster).
+  function autoBar(ms) {
+    return '<div class="re-autobar"><div class="re-autobar-fill" style="animation-duration:' + ms + 'ms;"></div></div>'
+         + '<p class="releasing-step-subtext" style="font-size:0.72rem;opacity:0.7;margin-top:0.3rem;">Lanjut otomatis bila tidak diketuk · ketuk "Lanjut" untuk lebih cepat</p>';
   }
   // Intensity colour: 0-1 green, 2-3 yellow, 4-6 orange, 7-10 red.
   function intensityColor(v) {

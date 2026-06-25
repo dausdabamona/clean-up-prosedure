@@ -179,8 +179,23 @@
   function stage() { return document.getElementById('cup-stage'); }
   function clearStage() { const s = stage(); while (s.firstChild) s.removeChild(s.firstChild); return s; }
 
+  // ---- Safety auto-advance (shared global 'sedonaAutoAdvance', default ON) ----
+  // Passive screens advance on their own after a max time (Coach Lia pacing) if
+  // the user doesn't tap, so a session never stalls when the phone is out of reach.
+  let cupAutoTimer = null;
+  function clearCupAuto() { if (cupAutoTimer) { clearTimeout(cupAutoTimer); cupAutoTimer = null; } }
+  function cupAutoEnabled() { try { return localStorage.getItem('sedonaAutoAdvance') !== 'false'; } catch (e) { return true; } }
+  function cupAutoBar(ms) {
+    const bar = el('div', { class: 'cup-autobar' });
+    const fill = el('div', { class: 'cup-autobar-fill' });
+    fill.style.animationDuration = ms + 'ms';
+    bar.appendChild(fill);
+    return bar;
+  }
+
   // Build a standard guided screen: optional eyebrow, big question, controls.
   function screen(opts) {
+    clearCupAuto();
     const s = clearStage();
     const card = el('div', { class: 'cup-screen' });
     if (opts.eyebrow) card.appendChild(el('div', { class: 'cup-eyebrow', text: opts.eyebrow }));
@@ -198,6 +213,13 @@
       const row = el('div', { class: 'cup-controls' });
       opts.controls.forEach(function (b) { if (b) row.appendChild(b); });
       card.appendChild(row);
+    }
+    // Safety auto-advance for passive screens: after autoMs (if not tapped),
+    // run autoAction. Shows a countdown bar; tapping still advances immediately.
+    if (opts.autoMs && opts.autoAction && cupAutoEnabled()) {
+      card.appendChild(cupAutoBar(opts.autoMs));
+      card.appendChild(el('div', { class: 'cup-sub', text: 'Lanjut otomatis bila tidak diketuk' }));
+      cupAutoTimer = setTimeout(function () { clearCupAuto(); opts.autoAction(); }, opts.autoMs);
     }
     // fade-in
     card.classList.add('cup-fade');
@@ -369,7 +391,9 @@
       sub: 'Bayangkan ' + (state.targetPerson || 'orang ini') + ' ada di depanmu — wajahnya, suaranya. Izinkan semuanya apa adanya.',
       body: circle,
       controls: [btn('Saya Siap', function () { startWanting('control'); }),
-                 btn('Lewati', function () { startWanting('control'); }, 'cup-btn-ghost')]
+                 btn('Lewati', function () { startWanting('control'); }, 'cup-btn-ghost')],
+      autoMs: 10000,
+      autoAction: function () { startWanting('control'); }
     });
   }
 
@@ -384,7 +408,9 @@
       eyebrow: wd.icon + ' ' + wd.label,
       question: wd.intro,
       sub: 'Tempo dipegang kamu. Maju kalau sudah terasa pas.',
-      controls: [btn('Mulai', function () { breath(function () { showTrigger(w, 'setA'); }); })]
+      controls: [btn('Mulai', function () { breath(function () { showTrigger(w, 'setA'); }); })],
+      autoMs: 9000,
+      autoAction: function () { breath(function () { showTrigger(w, 'setA'); }); }
     });
   }
 
@@ -494,7 +520,9 @@
       eyebrow: '✓ ' + WANTINGS[w].label + ' selesai',
       question: 'Bagus. ' + WANTINGS[w].label + ' selesai. Tarik napas.',
       sub: 'Sekarang kita masuk ke ' + WANTINGS[nextW].label + '.',
-      controls: [btn('Lanjut →', function () { breath(function () { startWanting(nextW); }); })]
+      controls: [btn('Lanjut →', function () { breath(function () { startWanting(nextW); }); })],
+      autoMs: 9000,
+      autoAction: function () { breath(function () { startWanting(nextW); }); }
     });
   }
 
@@ -545,14 +573,17 @@
 
   // Generic welcoming sequence (one prompt per screen, TAP to advance).
   function twSequence(title, list, idx, onDone) {
+    const advance = function () {
+      if (idx + 1 < list.length) breath(function () { twSequence(title, list, idx + 1, onDone); });
+      else onDone();
+    };
     screen({
       eyebrow: title + ' · ' + (idx + 1) + '/' + list.length,
       question: list[idx],
       sub: 'Sambut saja. Tidak perlu mengubah apa pun.',
-      controls: [btn('Lanjut →', function () {
-        if (idx + 1 < list.length) breath(function () { twSequence(title, list, idx + 1, onDone); });
-        else onDone();
-      })]
+      controls: [btn('Lanjut →', advance)],
+      autoMs: 8000,
+      autoAction: advance
     });
   }
 
@@ -562,7 +593,9 @@
       eyebrow: '✨ Kesadaran',
       question: 'Apakah kamu adalah emosi, resistensi, dan ego itu — atau kamu yang SADAR akan semuanya?',
       sub: 'Mundur selangkah. Jadilah yang menyaksikan.',
-      controls: [btn('Lanjut →', twMelting)]
+      controls: [btn('Lanjut →', twMelting)],
+      autoMs: 9000,
+      autoAction: twMelting
     });
   }
 
@@ -576,7 +609,9 @@
       eyebrow: '🫧 Peleburan',
       question: 'Biarkan ketiganya melebur ke dalam kesadaran...',
       body: circles,
-      controls: [btn('Sudah melebur →', twWhen)]
+      controls: [btn('Sudah melebur →', twWhen)],
+      autoMs: 7000,
+      autoAction: twWhen
     });
     requestAnimationFrame(function () { card.querySelector('.cup-melt').classList.add('melting'); });
   }
@@ -616,18 +651,27 @@
     screen({
       eyebrow: '🔄 Triple Welcoming selesai',
       question: 'Mantap. Sekarang kita ulangi satu ronde penuh dulu, lalu coba completion lagi.',
-      controls: [btn('Lanjut →', function () { breath(function () { showTrigger(w, 'setA'); }); })]
+      controls: [btn('Lanjut →', function () { breath(function () { showTrigger(w, 'setA'); }); })],
+      autoMs: 9000,
+      autoAction: function () { breath(function () { showTrigger(w, 'setA'); }); }
     });
   }
 
   // ====================== BREATH INTERSTITIAL ======================
   function breath(onDone) {
     if (!settings.breath) { onDone(); return; }
+    clearCupAuto();
     const s = clearStage();
     const card = el('div', { class: 'cup-screen cup-breath cup-fade' });
     card.appendChild(el('div', { class: 'cup-breath-circle big' }, [el('span', { text: 'tarik · hembus' })]));
     card.appendChild(el('div', { class: 'cup-sub', text: 'Tarik napas... hembuskan perlahan. Ketuk kalau sudah siap.' }));
-    card.addEventListener('click', onDone);
+    const go = function () { clearCupAuto(); onDone(); };
+    card.addEventListener('click', go);
+    // Safety auto-advance after a calm breath (~8s) if not tapped.
+    if (cupAutoEnabled()) {
+      card.appendChild(cupAutoBar(8000));
+      cupAutoTimer = setTimeout(go, 8000);
+    }
     s.appendChild(card);
     requestAnimationFrame(function () { card.classList.add('cup-in'); });
     speak('Tarik napas. Hembuskan perlahan.');
@@ -784,6 +828,7 @@
   // ====================== TABS ======================
   function switchTab(name) {
     stopSpeak();
+    clearCupAuto();
     document.querySelectorAll('.cup-tab').forEach(function (b) { b.classList.toggle('active', b.dataset.tab === name); });
     document.querySelectorAll('.cup-panel').forEach(function (p) { p.classList.toggle('active', p.id === 'cup-tab-' + name); });
     if (name === 'riwayat') renderRiwayat();
