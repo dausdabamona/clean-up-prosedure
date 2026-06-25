@@ -14,11 +14,17 @@ Aplikasi ini berupa **situs statis** (HTML/CSS/JS murni, tanpa build step) denga
 | `cleanup-procedure.html` | **Clean Up Procedure** | Melepas resistensi terhadap satu orang melalui 4 wanting: Control, Approval, Security, Separation. |
 | `letting-go.html` | **Letting Go** | Sesi *guided releasing* + skrip Sedona Method gaya Coach Lia (mental miskin, keberlimpahan, healing, dll). |
 | `manifesting-workbook.html` | **Manifesting Workbook** | Goals, discover, release, action, dan log emosi untuk proses manifestasi. |
-| `daily-release.html` | **Daily Emotional Release** | Pelepasan emosi harian. |
-| `core-wanting-release.html` | **7 Core Wanting Release** | Pelepasan 7 keinginan inti. |
+| `core-wanting-release.html` | **4 Wanting Release** | Pelepasan 4 wanting dasar: Control, Approval, Security, Separation. |
+| `9-emosi-dasar.html` | **9 Emosi Dasar** | Naik skala emosi (apati → kedamaian) dengan loop intensitas & ekspansi. |
+| `advanced-techniques.html` | **Teknik Lanjutan** | Teknik releasing tingkat lanjut. |
+| `nlp-techniques.html` | **NLP Techniques** | Teknik NLP & modeling. |
+| `silva-method.html` | **Silva Method** | Meditasi level Alpha, mental screen, afirmasi. |
+| `wealth-protocol.html` | **Wealth Protocol** | Protokol target kekayaan & melepas mental kekurangan. |
 | `14-days-resistance.html` | **14 Days Free From Resistance** | Program 14 hari melepas resistensi per area kehidupan. |
 | `area-session.html` | **Area Session** | Sesi per area resistensi (uang, hubungan, tubuh, pikiran, dll). |
 | `resistance-session.html` | **Resistance Session** | Wizard sesi resistensi 8 langkah. |
+
+> Semua modul ini terpasang sebagai **PWA** (installable, offline) dan punya **suara (TTS)** untuk membacakan tiap langkah.
 
 ---
 
@@ -38,23 +44,30 @@ Aplikasi ini berupa **situs statis** (HTML/CSS/JS murni, tanpa build step) denga
 ├── cleanup-procedure.html     # Modul Clean Up Procedure
 ├── letting-go.html            # Modul Letting Go
 ├── manifesting-workbook.html  # Modul Manifesting Workbook
-├── daily-release.html         # Daily Emotional Release
-├── core-wanting-release.html  # 7 Core Wanting Release
+├── core-wanting-release.html  # 4 Wanting Release
+├── 9-emosi-dasar.html         # 9 Emosi Dasar
+├── advanced-techniques.html   # Teknik Lanjutan
+├── nlp-techniques.html        # NLP Techniques
+├── silva-method.html          # Silva Method
+├── wealth-protocol.html       # Wealth Protocol
 ├── 14-days-resistance.html    # Program 14 hari
 ├── area-session.html          # Sesi per area resistensi
 ├── resistance-session.html    # Wizard sesi resistensi
 │
 ├── config.js                  # Konfigurasi terpusat (URL API & nama default)
 ├── common.js                  # Utilitas bersama (apiCall, toast, storage, timer)
-├── releasing-engine.js        # Mesin sesi guided releasing + semua skrip
-├── cleanup-procedure-app.js   # Logika Clean Up Procedure (mode terpandu + worksheet)
+├── releasing-engine.js        # Mesin sesi guided releasing + TTS + intensity/loop
+├── cleanup-procedure-app.js   # Logika Clean Up Procedure (terpandu + worksheet)
 ├── letting-go-app.js          # Logika halaman Letting Go
-├── manifesting-app.js         # Logika halaman Manifesting Workbook
+├── manifesting-app.js         # Logika Manifesting Workbook (8 tab + Teknik)
+├── 9-emosi-dasar.js / advanced-techniques.js / nlp-scripts.js
+├── silva-scripts.js / wealth-scripts.js   # Skrip modul tambahan
 ├── resistance-app.js          # Logika wizard resistensi
 ├── area-session.js            # Logika sesi per area
 ├── resistance-areas-data.js   # Data 8 area resistensi
 ├── styles.css                 # Style global
 │
+├── manifest.json / service-worker.js / pwa-register.js   # PWA (offline)
 └── Code.gs                    # Backend Google Apps Script
 ```
 
