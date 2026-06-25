@@ -2028,10 +2028,11 @@ const ReleasingEngine = (function() {
   function autoAdvanceEnabled() {
     try { return localStorage.getItem('sedonaAutoAdvance') !== 'false'; } catch (e) { return true; }
   }
-  // Auto-advance pacing: give 1.5x longer than the step's base duration so the
-  // user has ample time before it continues on its own.
+  // Auto-advance pacing: 1.5x the step's base duration, with a 20s floor so the
+  // user always has ample time before it continues on its own.
   var PACE_MULTIPLIER = 1.5;
-  function pacedMs(d) { return Math.round((d || 0) * PACE_MULTIPLIER); }
+  var MIN_AUTO_MS = 20000;
+  function pacedMs(d) { return Math.max(Math.round((d || 0) * PACE_MULTIPLIER), MIN_AUTO_MS); }
   // Visual countdown bar shown on auto-advancing steps so the user can see it
   // will continue on its own (and can tap to go faster).
   function autoBar(ms) {
