@@ -1740,11 +1740,22 @@ const ReleasingEngine = (function() {
   // ==================== START RELEASING ====================
   function startReleasing(scriptId, options) {
     options = options || {};
-    const script = guidedScripts[scriptId];
+    let script = guidedScripts[scriptId];
 
     if (!script) {
       console.error('Script not found:', scriptId);
       return false;
+    }
+
+    // Hands-free (travel) mode: transform the script to an all-timer version so
+    // it runs without any taps. Triggered by the global toggle or options.travel.
+    // scriptId stays the base id so progress/logging are unaffected.
+    if (options.travel || travelModeEnabled()) {
+      script = buildTravelScript(script);
+      try {
+        localStorage.setItem('sedonaAutoAdvance', 'true');
+        localStorage.setItem('sedonaTTS', 'true');
+      } catch (e) {}
     }
 
     // Initialize if needed
@@ -2453,6 +2464,127 @@ const ReleasingEngine = (function() {
     return wantingToScript[wantingType] || null;
   }
 
+  // ==================== MODE PERJALANAN (hands-free / travel) ====================
+  // Global, lintas-modul: kalau 'sedonaTravelMode' nyala (atau dipaksa lewat
+  // options.travel), skrip apa pun diubah jadi versi bebas-tangan — SEMUA langkah
+  // jadi instruksi/breathing bertimer sehingga berjalan otomatis tanpa mengetuk.
+  // Urutan & pertanyaan tetap sama; jawaban interaktif jadi ajakan "dalam hati".
+  function travelModeEnabled() {
+    try { return localStorage.getItem('sedonaTravelMode') === 'true'; } catch (e) { return false; }
+  }
+
+  function buildTravelScript(src) {
+    if (!src || src._travel) return src; // sudah versi perjalanan -> jangan dobel
+    var body = [];
+    var completionStep = null;
+    var insightStep = null;
+
+    (src.steps || []).forEach(function (s) {
+      switch (s.type) {
+        case 'completion': completionStep = s; return;   // simpan, taruh paling akhir
+        case 'insight': insightStep = s; return;          // jadikan renungan sebelum akhir
+        case 'instruction':
+        case 'breathing':
+          body.push(Object.assign({}, s, { duration: s.duration || 9000 }));
+          return;
+        case 'input':
+          body.push({ type: 'instruction', text: s.text,
+            subtext: 'Jawab dalam hati saja — tak perlu menulis.' + (s.subtext ? ' ' + s.subtext : ''),
+            duration: 12000 });
+          return;
+        case 'choice':
+          body.push({ type: 'instruction', text: s.text,
+            subtext: (s.subtext ? s.subtext + ' ' : '') + 'Pilih jawabannya dalam hati.', duration: 10000 });
+          return;
+        case 'yesno': {
+          var hint = s.highlight
+            ? ('Dalam hati jawab: "' + s.highlight + '"… atau tidak. Dua-duanya valid.')
+            : 'Jawab dalam hati: bisa… atau tidak. Dua-duanya valid.';
+          body.push({ type: 'instruction', text: s.text,
+            subtext: (s.subtext ? s.subtext + ' ' : '') + hint, duration: 11000 });
+          return;
+        }
+        case 'completion-check':
+          body.push({ type: 'instruction', text: s.text, subtext: s.subtext || '', duration: 9000 });
+          return;
+        case 'when':
+          body.push({ type: 'instruction', text: s.text || 'Kapan kamu melepaskannya?',
+            subtext: 'Dalam hati: sekarang.', duration: 7000 });
+          return;
+        case 'intensity':
+          body.push({ type: 'instruction', text: s.text,
+            subtext: 'Rasakan angkanya dalam hati, dari 0 sampai 10. Tak perlu menggeser apa pun.',
+            duration: 9000 });
+          return;
+        case 'loop':
+          body.push({ type: 'breathing',
+            text: 'Tarik napas... biarkan satu putaran pelepasan lagi terjadi dengan sendirinya.',
+            subtext: 'Tak perlu memutuskan apa pun. Cukup biarkan.', duration: 9000 });
+          return;
+        default:
+          body.push({ type: 'instruction', text: s.text || '', subtext: s.subtext || '', duration: 9000 });
+      }
+    });
+
+    if (insightStep) {
+      body.push({ type: 'instruction', text: insightStep.text || 'Apa insight dari sesi ini?',
+        subtext: 'Biarkan satu insight muncul dan simpan dalam hati. Tak perlu menulis.', duration: 11000 });
+    }
+    var comp = completionStep || { text: '🎉 Selesai!', subtext: '' };
+    body.push({ type: 'completion', text: comp.text, subtext: comp.subtext || '',
+      duration: comp.duration || 12000, wantingType: src.wantingType || null });
+
+    return {
+      title: (src.title || 'Sesi') + ' · Mode Perjalanan',
+      description: 'Versi hands-free — semua otomatis dengan timer & suara',
+      wantingType: src.wantingType || null,
+      steps: body,
+      _travel: true
+    };
+  }
+
+  function setTravelMode(on) {
+    try { localStorage.setItem('sedonaTravelMode', on ? 'true' : 'false'); } catch (e) {}
+    if (on) {
+      try {
+        localStorage.setItem('sedonaAutoAdvance', 'true');
+        localStorage.setItem('sedonaTTS', 'true');
+      } catch (e) {}
+    }
+  }
+
+  // Auto-pasang toggle "Mode Perjalanan" di tiap halaman yang memuat engine,
+  // kecuali halaman yang sudah punya #travelModeToggle sendiri (mis. 9 Emosi).
+  function injectTravelToggle() {
+    try {
+      if (document.getElementById('travelModeToggle')) return;
+      var anchor = document.querySelector('.container') || document.querySelector('main') || document.body;
+      if (!anchor) return;
+      var wrap = document.createElement('label');
+      wrap.style.cssText = 'display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:#555;'
+        + 'margin:1rem auto;max-width:900px;padding:.6rem .8rem;cursor:pointer;'
+        + 'background:rgba(40,116,166,.06);border:1px solid rgba(40,116,166,.2);border-radius:10px;';
+      wrap.innerHTML = '<input type="checkbox" id="travelModeToggle">'
+        + '<span>🚗 <strong>Mode Perjalanan</strong> (hands-free) — semua langkah otomatis dengan '
+        + 'timer & suara, tanpa perlu mengetuk. Urutan & pertanyaan sama; jawaban cukup "dalam hati". '
+        + 'Cocok saat di jalan.</span>';
+      anchor.insertBefore(wrap, anchor.firstChild);
+      var cb = wrap.querySelector('#travelModeToggle');
+      cb.checked = travelModeEnabled();
+      cb.addEventListener('change', function () {
+        setTravelMode(cb.checked);
+      });
+    } catch (e) {}
+  }
+
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', injectTravelToggle);
+    } else {
+      injectTravelToggle();
+    }
+  }
+
   // ==================== PUBLIC API ====================
   return {
     init: init,
@@ -2472,7 +2604,10 @@ const ReleasingEngine = (function() {
     testVoice: testVoice,
     getScripts: getScripts,
     getScript: getScript,
-    getWantingScriptId: getWantingScriptId
+    getWantingScriptId: getWantingScriptId,
+    isTravelMode: travelModeEnabled,
+    setTravelMode: setTravelMode,
+    buildTravelScript: buildTravelScript
   };
 
 })();

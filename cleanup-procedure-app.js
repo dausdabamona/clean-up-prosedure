@@ -185,6 +185,9 @@
   let cupAutoTimer = null;
   function clearCupAuto() { if (cupAutoTimer) { clearTimeout(cupAutoTimer); cupAutoTimer = null; } }
   function cupAutoEnabled() { try { return localStorage.getItem('sedonaAutoAdvance') !== 'false'; } catch (e) { return true; } }
+  // Travel mode: hands-free — even question screens advance on a timer (via each
+  // screen's travelAction). Shares the global 'sedonaTravelMode' flag.
+  function cupTravelEnabled() { try { return localStorage.getItem('sedonaTravelMode') === 'true'; } catch (e) { return false; } }
   function cupAutoBar(ms) {
     const bar = el('div', { class: 'cup-autobar' });
     const fill = el('div', { class: 'cup-autobar-fill' });
@@ -214,14 +217,28 @@
       opts.controls.forEach(function (b) { if (b) row.appendChild(b); });
       card.appendChild(row);
     }
-    // Safety auto-advance for passive screens: after autoMs (if not tapped),
-    // run autoAction. Shows a countdown bar; tapping still advances immediately.
-    // Paced 1.5x longer than the base autoMs for a calmer rhythm.
-    if (opts.autoMs && opts.autoAction && cupAutoEnabled()) {
-      const ms = Math.max(Math.round(opts.autoMs * 1.5), 20000);
+    // Safety auto-advance: after a paced delay (if not tapped), run an action.
+    // Normal mode only auto-advances passive screens (autoMs + autoAction).
+    // Travel mode advances EVERY screen hands-free: it prefers the screen's
+    // travelAction (the forward path), else falls back to the first control.
+    // Paced 1.5x longer than the base, with a 20s floor for a calm rhythm.
+    let action = opts.autoAction;
+    let baseMs = opts.autoMs || 0;
+    if (cupTravelEnabled()) {
+      if (opts.travelAction) { action = opts.travelAction; baseMs = opts.travelMs || baseMs || 11000; }
+      else if (!action && opts.controls && opts.controls.length) {
+        const primary = opts.controls.find(function (b) { return b; });
+        action = function () { if (primary) primary.click(); };
+        baseMs = baseMs || 11000;
+      } else if (action) {
+        baseMs = baseMs || 11000;
+      }
+    }
+    if (cupAutoEnabled() && action && baseMs) {
+      const ms = Math.max(Math.round(baseMs * 1.5), 20000);
       card.appendChild(cupAutoBar(ms));
       card.appendChild(el('div', { class: 'cup-sub', text: 'Lanjut otomatis bila tidak diketuk' }));
-      cupAutoTimer = setTimeout(function () { clearCupAuto(); opts.autoAction(); }, ms);
+      cupAutoTimer = setTimeout(function () { clearCupAuto(); action(); }, ms);
     }
     // fade-in
     card.classList.add('cup-fade');
@@ -425,7 +442,8 @@
       controls: [
         btn('Ya / Mungkin', function () { showRelease(w, set, 0); }),
         btn('Tidak', function () { afterSet(w, set); }, 'cup-btn-ghost')
-      ]
+      ],
+      travelAction: function () { showRelease(w, set, 0); }
     });
   }
 
@@ -454,7 +472,13 @@
           if (idx + 1 < list.length) breath(function () { showRelease(w, set, idx + 1); });
           else afterSet(w, set);
         }, 'cup-btn-ghost')
-      ]
+      ],
+      // Hands-free: count one release, then move forward.
+      travelAction: function () {
+        bumpRelease();
+        if (idx + 1 < list.length) breath(function () { showRelease(w, set, idx + 1); });
+        else afterSet(w, set);
+      }
     });
   }
 
@@ -477,7 +501,8 @@
         controls: [
           btn('Lanjut', function () { roundChoice(w); }),
           btn('Simpan & Lanjut Nanti', saveAndExit, 'cup-btn-ghost')
-        ]
+        ],
+        travelAction: function () { roundChoice(w); }
       });
       return;
     }
@@ -492,7 +517,9 @@
       controls: [
         btn('Ulangi ronde', function () { breath(function () { showTrigger(w, 'setA'); }); }, 'cup-btn-secondary'),
         btn('Saya siap Completion →', function () { breath(function () { showCompletion(w, 0); }); })
-      ]
+      ],
+      // Hands-free: move toward completion rather than looping forever.
+      travelAction: function () { breath(function () { showCompletion(w, 0); }); }
     });
   }
 
@@ -508,7 +535,13 @@
           else completeWanting(w);
         }),
         btn('Belum / Tidak', function () { startTripleWelcoming(w); }, 'cup-btn-ghost')
-      ]
+      ],
+      // Hands-free: answer "Ya" path (avoids the input-heavy Triple Welcoming
+      // while driving). The user can always run TW manually later.
+      travelAction: function () {
+        if (idx + 1 < wd.completion.length) showCompletion(w, idx + 1);
+        else completeWanting(w);
+      }
     });
   }
 
@@ -1052,6 +1085,33 @@
     document.querySelectorAll('.cup-tab').forEach(function (b) {
       b.addEventListener('click', function () { switchTab(b.dataset.tab); });
     });
+
+    // Travel mode toggle (hands-free), inserted above the stage.
+    const stageEl = document.getElementById('cup-stage');
+    if (stageEl && !document.getElementById('cup-travel-toggle')) {
+      const cb = el('input', { attrs: { type: 'checkbox', id: 'cup-travel-toggle' } });
+      cb.checked = cupTravelEnabled();
+      cb.addEventListener('change', function () {
+        try {
+          localStorage.setItem('sedonaTravelMode', cb.checked ? 'true' : 'false');
+          if (cb.checked) {
+            localStorage.setItem('sedonaAutoAdvance', 'true');
+            localStorage.setItem('sedonaTTS', 'true');
+          }
+        } catch (e) {}
+        if (cb.checked) {
+          // Hands-free needs voice on; enable Clean Up's own TTS too.
+          settings.tts = true; persistSettings(); updateTtsBtn();
+          showToast('🚗 Mode Perjalanan aktif — sesi berjalan otomatis dengan suara', 'success');
+        }
+      });
+      const wrap = el('label', {}, [cb,
+        el('span', { text: '🚗 Mode Perjalanan (hands-free) — semua langkah otomatis dengan timer & suara, tanpa perlu mengetuk. Cocok saat di jalan.' })]);
+      wrap.style.cssText = 'display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:#555;'
+        + 'margin:0 auto 1rem;max-width:760px;padding:.6rem .8rem;cursor:pointer;'
+        + 'background:rgba(40,116,166,.06);border:1px solid rgba(40,116,166,.2);border-radius:10px;';
+      stageEl.parentNode.insertBefore(wrap, stageEl);
+    }
 
     // Wire TTS header toggle (hidden if the browser has no speech synthesis)
     const ttsBtn = document.getElementById('cup-tts-toggle');
