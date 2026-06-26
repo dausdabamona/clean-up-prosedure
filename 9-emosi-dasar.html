@@ -414,9 +414,15 @@
       </div>
 
       <!-- Auto-advance setting (default ON: timer pengaman; tap tetap mempercepat) -->
-      <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;color:#555;margin:0 0 1rem;cursor:pointer;">
+      <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;color:#555;margin:0 0 0.6rem;cursor:pointer;">
         <input type="checkbox" id="autoAdvanceToggle">
         <span>⏱️ Timer auto-lanjut (jaring pengaman). Default <strong>nyala</strong> — kalau tak sempat mengetuk, otomatis lanjut sesuai pacing; ketuk "Lanjut" untuk lebih cepat. Matikan kalau ingin murni ketukan.</span>
+      </label>
+
+      <!-- Travel mode: hands-free, semua otomatis dengan timer + suara -->
+      <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;color:#555;margin:0 0 1rem;cursor:pointer;">
+        <input type="checkbox" id="travelModeToggle">
+        <span>🚗 <strong>Mode Perjalanan</strong> (hands-free) — semua langkah berjalan otomatis dengan timer & suara, tanpa perlu mengetuk. Urutan & pertanyaan sama; jawaban cukup "dalam hati". Cocok saat di jalan. Suara & auto-lanjut otomatis nyala.</span>
       </label>
 
       <!-- Quick Release -->
@@ -425,6 +431,9 @@
         <p style="margin-bottom: 1rem; opacity: 0.9; font-size: 0.9rem;">Lepaskan semua emosi negatif dan penuhi dengan positif dalam satu sesi singkat</p>
         <button class="quick-btn" onclick="startEmosi('fullRelease')">
           🔄 Mulai Full Release
+        </button>
+        <button class="quick-btn" onclick="startEmosi('fullRelease', true)" style="margin-top:0.6rem;">
+          🚗 Full Release — Mode Perjalanan (hands-free)
         </button>
       </div>
 

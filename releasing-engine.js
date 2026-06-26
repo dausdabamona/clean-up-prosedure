@@ -1995,6 +1995,18 @@ const ReleasingEngine = (function() {
           wantingType: currentSession.script.wantingType || null,
           timestamp: new Date().toISOString()
         });
+
+        // Hands-free (travel) mode: a completion step carrying a duration
+        // auto-advances/finishes on a timer so no final tap is needed. Existing
+        // scripts set no duration on completion, so this is a no-op for them.
+        if (step.duration && autoAdvanceEnabled()) {
+          html += autoBar(pacedMs(step.duration));
+          currentSession.autoTimer = setTimeout(function() {
+            if (currentSession && currentSession.currentStep === index) {
+              nextStep();
+            }
+          }, pacedMs(step.duration));
+        }
         break;
 
       case 'insight':
