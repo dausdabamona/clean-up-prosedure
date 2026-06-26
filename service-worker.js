@@ -2,7 +2,7 @@
 // Offline support. All paths are RELATIVE so it works under the GitHub Pages
 // project subpath (…/clean-up-prosedure/). Bump CACHE_NAME on any asset change.
 
-const CACHE_NAME = 'sedona-release-v15';
+const CACHE_NAME = 'sedona-release-v16';
 const OFFLINE_URL = 'sedona-app.html';
 
 // Files cached for offline use (relative to the service worker scope).
