@@ -168,6 +168,14 @@ function doGet(e) {
         result = withLock(function() { return saveManifestingTechnique(data); });
         break;
 
+      // ===== UNIFIED SESSION LOG =====
+      case 'logSession':
+        result = withLock(function() { return logSession(data); });
+        break;
+      case 'getSessionLog':
+        result = getSessionLog();
+        break;
+
       // ===== GAIN BOOK =====
       case 'saveGain':
         result = withLock(function() { return saveGain(data); });
@@ -1537,4 +1545,45 @@ function deleteGain(id) {
   const row = findRowBySesiId(sheet, id);
   if (row > 0) { sheet.deleteRow(row); return { success: true, message: 'Gain dihapus' }; }
   return { success: false, message: 'Gain tidak ditemukan' };
+}
+
+// ==========================================================================
+// UNIFIED SESSION LOG — setiap sesi terpandu (releasing-engine) dicatat di sini
+// ==========================================================================
+const SESSIONLOG_HEADERS = ['ID', 'Timestamp', 'Date', 'Module', 'ScriptId', 'Title', 'DurationSec', 'Releases', 'Insight'];
+
+function logSession(data) {
+  if (!data || !data.module) {
+    return { success: false, message: 'Data sesi tidak valid.' };
+  }
+  const sheet = getOrCreateSheet('SessionLog', SESSIONLOG_HEADERS);
+  const id = data.id || ('SES-' + new Date().getTime());
+  sheet.appendRow([
+    id,
+    new Date().toISOString(),
+    data.date || new Date().toISOString().split('T')[0],
+    data.module,
+    data.scriptId || '',
+    data.title || '',
+    data.durationSec || 0,
+    data.releases || 0,
+    data.insight || ''
+  ]);
+  return { success: true, message: 'Sesi tercatat', id: id };
+}
+
+function getSessionLog() {
+  const sheet = getOrCreateSheet('SessionLog', SESSIONLOG_HEADERS);
+  const values = sheet.getDataRange().getValues();
+  const out = [];
+  for (let i = 1; i < values.length; i++) {
+    if (!values[i][0]) continue;
+    out.push({
+      id: values[i][0], timestamp: values[i][1], date: values[i][2],
+      module: values[i][3], scriptId: values[i][4], title: values[i][5],
+      durationSec: values[i][6], releases: values[i][7], insight: values[i][8]
+    });
+  }
+  out.sort(function (a, b) { return String(b.timestamp || '').localeCompare(String(a.timestamp || '')); });
+  return { success: true, data: out };
 }
