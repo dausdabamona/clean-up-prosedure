@@ -332,6 +332,35 @@ function buildFullReleaseScript() {
 }
 emosiScripts.fullRelease = buildFullReleaseScript();
 
+// ==================== JEDA PIKIRAN (Coach Lia) ====================
+// Pikiran sering ikut campur saat releasing. Setelah tiap akhir ronde
+// pelepasan ("Kapan?"), sisipkan undangan lembut untuk mengistirahatkan pikiran.
+const MIND_REST_PROMPTS = [
+  { text: 'Bisakah kamu mengizinkan pikiranmu beristirahat sejenak?', subtext: 'Tidak perlu memikirkan apa pun. Cukup hadir di sini.' },
+  { text: 'Maukah kamu membiarkan pikiran diam sebentar?', subtext: 'Kalau pikiran datang, biarkan lewat seperti awan — tak perlu diikuti.' },
+  { text: 'Bisakah kamu berhenti berusaha, dan hanya... ada?', subtext: 'Lepaskan juga keinginan untuk "melakukannya dengan benar".' },
+  { text: 'Perhatikan keheningan di antara dua pikiran.', subtext: 'Di ruang itu, kamu boleh beristirahat.' },
+  { text: 'Izinkan pikiran melembut, seperti air yang menjadi tenang.', subtext: 'Tidak ada yang perlu dipecahkan sekarang. Aman untuk berhenti berpikir.' }
+];
+
+// Sisipkan jeda pikiran setelah setiap langkah 'when' (akhir satu ronde).
+function injectMindRest(script) {
+  if (!script || !script.steps || script._restInjected) return script;
+  const out = [];
+  let ri = 0;
+  script.steps.forEach(function (step) {
+    out.push(step);
+    if (step.type === 'when') {
+      const p = MIND_REST_PROMPTS[ri % MIND_REST_PROMPTS.length];
+      ri++;
+      out.push({ type: 'breathing', text: p.text, subtext: p.subtext, duration: 9000 });
+    }
+  });
+  script.steps = out;
+  script._restInjected = true;
+  return script;
+}
+
 // ==================== QUOTES ====================
 const emosiQuotes = [
   { text: "Emosi adalah energi yang ingin bergerak. Biarkan bergerak.", author: "Coach Lia" },
@@ -382,7 +411,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initialize ReleasingEngine with emosi scripts
   if (typeof ReleasingEngine !== 'undefined') {
     Object.keys(emosiScripts).forEach(function(key) {
-      ReleasingEngine.getScripts()[key] = emosiScripts[key];
+      ReleasingEngine.getScripts()[key] = injectMindRest(emosiScripts[key]);
     });
   }
 });
@@ -406,7 +435,7 @@ function startEmosi(emosiId) {
   if (typeof ReleasingEngine !== 'undefined') {
     // Add script if not exists
     if (!ReleasingEngine.getScript(emosiId)) {
-      ReleasingEngine.getScripts()[emosiId] = emosiScripts[emosiId];
+      ReleasingEngine.getScripts()[emosiId] = injectMindRest(emosiScripts[emosiId]);
     }
 
     ReleasingEngine.init({
