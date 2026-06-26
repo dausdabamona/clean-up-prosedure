@@ -361,6 +361,84 @@ function injectMindRest(script) {
   return script;
 }
 
+// ==================== MODE PERJALANAN (hands-free / travel) ====================
+// Ubah skrip biasa menjadi versi bebas-tangan: SEMUA langkah jadi instruksi/
+// breathing bertimer sehingga berjalan otomatis tanpa perlu mengetuk. Urutan dan
+// pertanyaannya sama — hanya jawaban interaktif (input/yesno/when/intensity/loop/
+// insight) diubah jadi ajakan "jawab dalam hati" dengan jeda waktu. Cocok dipakai
+// saat di perjalanan: mata tetap fokus, panduan dibacakan lewat suara (TTS).
+function buildTravelScript(src) {
+  const body = [];
+  let completionStep = null;
+  let insightStep = null;
+
+  (src.steps || []).forEach(function (s) {
+    switch (s.type) {
+      case 'completion': completionStep = s; return;     // simpan, taruh paling akhir
+      case 'insight': insightStep = s; return;           // simpan, jadikan renungan sebelum akhir
+      case 'instruction':
+      case 'breathing':
+        // Pertahankan, pastikan ada durasi agar auto-lanjut.
+        body.push(Object.assign({}, s, { duration: s.duration || 9000 }));
+        return;
+      case 'input':
+        body.push({ type: 'instruction', text: s.text,
+          subtext: 'Jawab dalam hati saja — tak perlu menulis.' + (s.subtext ? ' ' + s.subtext : ''),
+          duration: 12000 });
+        return;
+      case 'yesno': {
+        const hint = s.highlight
+          ? ('Dalam hati jawab: "' + s.highlight + '"… atau tidak. Dua-duanya valid.')
+          : 'Jawab dalam hati: bisa… atau tidak. Dua-duanya valid.';
+        body.push({ type: 'instruction', text: s.text,
+          subtext: (s.subtext ? s.subtext + ' ' : '') + hint, duration: 11000 });
+        return;
+      }
+      case 'when':
+        body.push({ type: 'instruction', text: s.text || 'Kapan kamu melepaskannya?',
+          subtext: 'Dalam hati: sekarang.', duration: 7000 });
+        return;
+      case 'intensity':
+        body.push({ type: 'instruction', text: s.text,
+          subtext: 'Rasakan angkanya dalam hati, dari 0 sampai 10. Tak perlu menggeser apa pun.',
+          duration: 9000 });
+        return;
+      case 'loop':
+        // Tak ada percabangan saat hands-free: beri satu putaran napas lalu lanjut.
+        body.push({ type: 'breathing',
+          text: 'Tarik napas... biarkan satu putaran pelepasan lagi terjadi dengan sendirinya.',
+          subtext: 'Tak perlu memutuskan apa pun. Cukup biarkan.', duration: 9000 });
+        return;
+      case 'completion-check':
+        body.push({ type: 'instruction', text: s.text, subtext: s.subtext || '', duration: 9000 });
+        return;
+      default:
+        body.push({ type: 'instruction', text: s.text || '', subtext: s.subtext || '', duration: 9000 });
+    }
+  });
+
+  if (insightStep) {
+    body.push({ type: 'instruction', text: insightStep.text || 'Apa insight dari sesi ini?',
+      subtext: 'Biarkan satu insight muncul dan simpan dalam hati. Tak perlu menulis.', duration: 11000 });
+  }
+
+  const comp = completionStep || { text: '🎉 Selesai!', subtext: '' };
+  // Completion bertimer => auto-selesai (engine menutup & mencatat sesi sendiri).
+  body.push({ type: 'completion', text: comp.text, subtext: comp.subtext || '',
+    duration: comp.duration || 12000 });
+
+  return {
+    title: (src.title || 'Sesi') + ' · Mode Perjalanan',
+    description: 'Versi hands-free — semua otomatis dengan timer & suara',
+    steps: body,
+    _travel: true
+  };
+}
+
+function isTravelMode() {
+  try { return localStorage.getItem('sedonaTravelMode') === 'true'; } catch (e) { return false; }
+}
+
 // ==================== QUOTES ====================
 const emosiQuotes = [
   { text: "Emosi adalah energi yang ingin bergerak. Biarkan bergerak.", author: "Coach Lia" },
@@ -399,12 +477,28 @@ document.addEventListener('DOMContentLoaded', function() {
   // Render progress
   renderEmosiProgress();
 
-  // Auto-advance toggle (default OFF). Stored globally so the engine reads it.
+  // Auto-advance toggle (default ON). Stored globally so the engine reads it.
   var autoToggle = document.getElementById('autoAdvanceToggle');
   if (autoToggle) {
     autoToggle.checked = localStorage.getItem('sedonaAutoAdvance') !== 'false';
     autoToggle.addEventListener('change', function () {
       localStorage.setItem('sedonaAutoAdvance', autoToggle.checked ? 'true' : 'false');
+    });
+  }
+
+  // Travel mode toggle: when on, every session runs hands-free (timer + voice).
+  var travelToggle = document.getElementById('travelModeToggle');
+  if (travelToggle) {
+    travelToggle.checked = isTravelMode();
+    travelToggle.addEventListener('change', function () {
+      localStorage.setItem('sedonaTravelMode', travelToggle.checked ? 'true' : 'false');
+      if (travelToggle.checked) {
+        // Hands-free needs the safety timer on; reflect it in the other toggle UI.
+        localStorage.setItem('sedonaAutoAdvance', 'true');
+        localStorage.setItem('sedonaTTS', 'true');
+        if (autoToggle) autoToggle.checked = true;
+        showToast('🚗 Mode Perjalanan aktif — sesi berjalan otomatis dengan suara', 'success');
+      }
     });
   }
 
@@ -431,27 +525,41 @@ function rotateEmosiQuote() {
 }
 
 // ==================== START FUNCTIONS ====================
-function startEmosi(emosiId) {
-  if (typeof ReleasingEngine !== 'undefined') {
-    // Add script if not exists
-    if (!ReleasingEngine.getScript(emosiId)) {
-      ReleasingEngine.getScripts()[emosiId] = injectMindRest(emosiScripts[emosiId]);
-    }
-
-    ReleasingEngine.init({
-      onComplete: function(result) {
-        emosiProgress[emosiId]++;
-        emosiProgress.totalSessions++;
-        saveEmosiProgress();
-        renderEmosiProgress();
-        showToast('Sesi ' + emosiScripts[emosiId].title + ' selesai!', 'success');
-      }
-    });
-
-    ReleasingEngine.startReleasing(emosiId);
-  } else {
+function startEmosi(emosiId, forceTravel) {
+  if (typeof ReleasingEngine === 'undefined') {
     showToast('ReleasingEngine tidak tersedia', 'error');
+    return;
   }
+
+  var travel = forceTravel || isTravelMode();
+  var runId = emosiId;
+
+  if (travel) {
+    // Bangun (sekali) varian hands-free dari skrip yang sudah disisipi jeda pikiran.
+    runId = emosiId + '-travel';
+    if (!ReleasingEngine.getScript(runId)) {
+      ReleasingEngine.getScripts()[runId] = buildTravelScript(injectMindRest(emosiScripts[emosiId]));
+    }
+    // Mode perjalanan itu bebas-tangan: pastikan timer auto-lanjut & suara nyala.
+    try {
+      localStorage.setItem('sedonaAutoAdvance', 'true');
+      localStorage.setItem('sedonaTTS', 'true');
+    } catch (e) {}
+  } else if (!ReleasingEngine.getScript(runId)) {
+    ReleasingEngine.getScripts()[runId] = injectMindRest(emosiScripts[emosiId]);
+  }
+
+  ReleasingEngine.init({
+    onComplete: function(result) {
+      emosiProgress[emosiId]++;
+      emosiProgress.totalSessions++;
+      saveEmosiProgress();
+      renderEmosiProgress();
+      showToast('Sesi ' + emosiScripts[emosiId].title + ' selesai!', 'success');
+    }
+  });
+
+  ReleasingEngine.startReleasing(runId);
 }
 
 // ==================== PROGRESS ====================
