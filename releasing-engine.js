@@ -1989,6 +1989,7 @@ const ReleasingEngine = (function() {
         }
 
         // Trigger release callback
+        currentSession.releaseCount = (currentSession.releaseCount || 0) + 1;
         callbacks.onRelease({
           scriptId: currentSession.scriptId,
           wantingType: currentSession.script.wantingType || null,
@@ -2290,6 +2291,7 @@ const ReleasingEngine = (function() {
       }
 
       // Complete this session
+      logCurrentSession(insightText);
       callbacks.onComplete({
         scriptId: currentSession.scriptId,
         wantingType: currentSession.script.wantingType || null,
@@ -2331,6 +2333,7 @@ const ReleasingEngine = (function() {
       }
 
       // Complete this session
+      logCurrentSession('');
       callbacks.onComplete({
         scriptId: currentSession.scriptId,
         wantingType: currentSession.script.wantingType || null,
@@ -2370,6 +2373,50 @@ const ReleasingEngine = (function() {
     if (!currentSession || currentSession.currentStep === 0) return;
     currentSession.currentStep--;
     renderStep(currentSession.currentStep);
+  }
+
+  // Record a finished guided session to the unified SessionLog sheet (and a
+  // local fallback). Best-effort: never blocks or breaks the UI. Guarded by a
+  // per-session flag so it fires at most once even if onComplete runs twice.
+  function logCurrentSession(insightText) {
+    try {
+      if (!currentSession || currentSession.logged) return;
+      currentSession.logged = true;
+
+      var s = currentSession.script || {};
+      var moduleName = '';
+      try {
+        moduleName = (location.pathname.split('/').pop() || '').replace('.html', '');
+      } catch (e) { moduleName = ''; }
+
+      var rec = {
+        id: 'SES-' + new Date().getTime(),
+        date: new Date().toISOString().split('T')[0],
+        module: moduleName || 'releasing',
+        scriptId: currentSession.scriptId || '',
+        title: s.title || s.name || currentSession.scriptId || '',
+        durationSec: Math.round((Date.now() - (currentSession.startTime || Date.now())) / 1000),
+        releases: currentSession.releaseCount || 0,
+        insight: insightText || ''
+      };
+
+      // Local fallback log (newest-first, capped) so history survives offline.
+      try {
+        var key = 'sedonaSessionLog';
+        var arr = JSON.parse(localStorage.getItem(key) || '[]');
+        arr.unshift(rec);
+        if (arr.length > 200) arr = arr.slice(0, 200);
+        localStorage.setItem(key, JSON.stringify(arr));
+      } catch (e) { /* ignore storage errors */ }
+
+      // Send to Google Sheets if the shared apiCall helper is loaded.
+      if (typeof apiCall === 'function') {
+        try {
+          var p = apiCall('logSession', rec);
+          if (p && typeof p.catch === 'function') p.catch(function () {});
+        } catch (e) { /* ignore network errors */ }
+      }
+    } catch (e) { /* never let logging break completion */ }
   }
 
   function closeModal() {
