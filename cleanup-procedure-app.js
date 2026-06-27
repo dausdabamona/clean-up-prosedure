@@ -589,20 +589,26 @@
       el('div', { class: 'cup-slider-row' }, [slider, sliderVal])
     ]);
 
+    // Shared so both the button and travel mode use the same logic. In travel
+    // mode the fields keep their defaults (empty text -> "hambatan ini",
+    // emotion -> "perasaan ini", intensity slider default).
+    const proceed = function () {
+      tw.resistance = (document.getElementById('cup-tw-res').value || '').trim() || 'hambatan ini';
+      tw.intensityBefore = parseInt(document.getElementById('cup-tw-int').value, 10);
+      if (!tw.emotionLabel) tw.emotionLabel = 'perasaan ini';
+      twSequence('🌊 Menyambut Emosi', TW_WELCOME_EMOSI, 0, function () {
+        twSequence('🛡️ Menyambut Resistensi', TW_WELCOME_RESIST, 0, function () {
+          twSequence('🪞 Menyambut Ego', TW_WELCOME_EGO, 0, twAwareness);
+        });
+      });
+    };
     screen({
       eyebrow: '🔄 Triple Welcoming',
       question: 'Apa yang menghalangi kamu menjawab "ya"?',
+      sub: cupTravelEnabled() ? 'Mode Perjalanan: nilai default dipakai otomatis — lanjut sendiri.' : undefined,
       body: body,
-      controls: [btn('Lanjut →', function () {
-        tw.resistance = (document.getElementById('cup-tw-res').value || '').trim() || 'hambatan ini';
-        tw.intensityBefore = parseInt(document.getElementById('cup-tw-int').value, 10);
-        if (!tw.emotionLabel) tw.emotionLabel = 'perasaan ini';
-        twSequence('🌊 Menyambut Emosi', TW_WELCOME_EMOSI, 0, function () {
-          twSequence('🛡️ Menyambut Resistensi', TW_WELCOME_RESIST, 0, function () {
-            twSequence('🪞 Menyambut Ego', TW_WELCOME_EGO, 0, twAwareness);
-          });
-        });
-      })]
+      controls: [btn('Lanjut →', proceed)],
+      travelAction: proceed
     });
   }
 
@@ -658,7 +664,8 @@
       controls: [
         btn('🌟 Sekarang', twAfterIntensity),
         btn('Nanti', twAfterIntensity, 'cup-btn-ghost')
-      ]
+      ],
+      travelAction: twAfterIntensity
     });
   }
 
@@ -666,14 +673,17 @@
     const slider = el('input', { class: 'cup-slider', attrs: { type: 'range', min: '0', max: '10', value: '2', id: 'cup-tw-after' } });
     const sliderVal = el('span', { class: 'cup-slider-val', text: '2' });
     slider.addEventListener('input', function () { sliderVal.textContent = slider.value; });
+    const proceed = function () {
+      tw.intensityAfter = parseInt(document.getElementById('cup-tw-after').value, 10);
+      finishTripleWelcoming();
+    };
     screen({
       eyebrow: '📉 Cek Intensitas',
       question: 'Sekarang, seberapa kuat lagi rasanya (0–10)?',
+      sub: cupTravelEnabled() ? 'Mode Perjalanan: nilai default dipakai otomatis — lanjut sendiri.' : undefined,
       body: el('div', { class: 'cup-slider-row' }, [slider, sliderVal]),
-      controls: [btn('Selesai Triple Welcoming →', function () {
-        tw.intensityAfter = parseInt(document.getElementById('cup-tw-after').value, 10);
-        finishTripleWelcoming();
-      })]
+      controls: [btn('Selesai Triple Welcoming →', proceed)],
+      travelAction: proceed
     });
   }
 
