@@ -442,6 +442,48 @@ function injectWantingDeepening(script) {
   return script;
 }
 
+// ==================== ATUR ULANG JEDA (per kebutuhan) ====================
+// Sebelumnya engine memaksa lantai 20 dtk untuk SETIAP langkah (×1.5), jadi
+// langkah transisi singkat pun memakan 20 dtk → satu putaran sangat lama.
+// Di sini tiap langkah diberi jeda sesuai kebutuhannya (transisi = pendek,
+// merasakan/ekspansi = panjang) lalu engine memakai pace 1.0× tanpa lantai
+// 20 dtk khusus modul ini. Hasilnya total durasi ±0.7× dari sebelumnya.
+function retimeEmosi(script) {
+  if (!script || !script.steps) return script;
+  // Engine memakai durasi langkah apa adanya (±lantai kecil), bukan ×1.5 + 20s.
+  script.pace = { mult: 1.0, min: 5000 };
+  script.steps.forEach(function (s) {
+    if (s.type !== 'instruction' && s.type !== 'breathing') return; // hanya langkah bertimer
+    var t = (s.text || '') + ' ' + (s.subtext || '');
+    var d;
+    if (s.type === 'breathing') {
+      d = 10000;                                                  // jeda napas / istirahat pikiran
+    } else if (/SEUTUHNYA|berada di tubuh|Izinkan.*HADIR|HADIR sepenuhnya/i.test(t)) {
+      d = 19000;                                                  // merasakan penuh / body scan — paling lama
+    } else if (/SADAR|MENYAKSIKAN|menyaksikan|kesadaran/i.test(t)) {
+      d = 17000;                                                  // pertanyaan kesadaran — renungan
+    } else if (/MEMENUHI|MELUAS|MENYEBAR|MEMANCAR|alam semesta|BERKEMBANG|TIDAK TERBATAS|SIFAT SEJATI|ADALAH kedamaian/i.test(t)) {
+      d = 15000;                                                  // ekspansi positif
+    } else if (/Tarik napas|hembuskan/i.test(t)) {
+      d = 13000;                                                  // napas pelepasan
+    } else if (/PERGI|melebur/i.test(t)) {
+      d = 14000;                                                  // membiarkan pergi
+    } else if (/^Rasakan|Rasakan /i.test(s.text || '')) {
+      d = 15000;                                                  // merasakan kualitas positif
+    } else if (/Yang tersisa|Perhatikan|Tanyakan/i.test(t)) {
+      d = 10000;                                                  // refleksi singkat
+    } else if (/Stop dulu/i.test(t)) {
+      d = 9000;                                                   // pembuka
+    } else if (/adalah|sering berkaitan|proyeksi|skala emosi|emosi (negatif|positif)/i.test(t)) {
+      d = 9000;                                                   // definisi/penjelasan singkat
+    } else {
+      d = 10000;                                                  // default sedang-pendek
+    }
+    s.duration = d;
+  });
+  return script;
+}
+
 // ==================== MODE PERJALANAN (hands-free / travel) ====================
 // Logika transform skrip kini terpusat di releasing-engine.js (berlaku untuk
 // semua modul). Di sini hanya wrapper tipis untuk membaca status toggle.
@@ -520,7 +562,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initialize ReleasingEngine with emosi scripts
   if (typeof ReleasingEngine !== 'undefined') {
     Object.keys(emosiScripts).forEach(function(key) {
-      ReleasingEngine.getScripts()[key] = injectMindRest(injectWitness(injectWantingDeepening(emosiScripts[key])));
+      ReleasingEngine.getScripts()[key] = retimeEmosi(injectMindRest(injectWitness(injectWantingDeepening(emosiScripts[key]))));
     });
   }
 });
@@ -549,7 +591,7 @@ function startEmosi(emosiId, forceTravel) {
   // Register the base script once; the engine applies the hands-free transform
   // itself when travel mode is on (global toggle) or forced for this run.
   if (!ReleasingEngine.getScript(emosiId)) {
-    ReleasingEngine.getScripts()[emosiId] = injectMindRest(injectWitness(injectWantingDeepening(emosiScripts[emosiId])));
+    ReleasingEngine.getScripts()[emosiId] = retimeEmosi(injectMindRest(injectWitness(injectWantingDeepening(emosiScripts[emosiId]))));
   }
 
   ReleasingEngine.startReleasing(emosiId, {
