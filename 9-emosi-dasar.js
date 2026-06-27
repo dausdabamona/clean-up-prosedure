@@ -402,6 +402,46 @@ function injectWitness(script) {
   return script;
 }
 
+// ============ MEMUNCULKAN KEINGINAN DULU (gaya Coach Lia) ============
+// Sebelumnya alur langsung lompat ke "Bisakah kamu melepas KEINGINAN...".
+// Coach Lia selalu MEMUNCULKAN keinginannya dulu sebelum dilepas:
+//   1) Akui: apakah keinginan itu ADA sekarang?
+//   2) Naikkan: bisakah keinginan itu dibesarkan dengan sengaja?
+//   3) Rasakan seutuhnya — baru kemudian
+//   4) Bisa dilepaskan? -> 5) Mau melepaskan? -> 6) Kapan? (sudah ada)
+// Disisipkan tepat SEBELUM 'Bisakah kamu melepas KEINGINAN...' yang pertama,
+// hanya di skrip emosi negatif (sweep Full Release sengaja dibiarkan ringkas).
+function injectWantingDeepening(script) {
+  if (!script || !script.steps || script._wantingDeepened) return script;
+  if (script.type && script.type !== 'negative') { script._wantingDeepened = true; return script; }
+  const out = [];
+  let done = false;
+  script.steps.forEach(function (step) {
+    if (!done && step.type === 'yesno' && /KEINGINAN/.test(step.text || '') && /melepas/i.test(step.text || '')) {
+      // 1) Akui kehadiran keinginannya.
+      out.push({ type: 'yesno',
+        text: 'Sebelum dilepas, munculkan dulu: apakah keinginan itu ADA sekarang?',
+        subtext: 'Tidak untuk dilawan — cukup akui dengan jujur bahwa ia hadir.',
+        highlight: 'Ya, ada' });
+      // 2) Naikkan/perbesar dengan sengaja.
+      out.push({ type: 'yesno',
+        text: 'Bisakah kamu membiarkan keinginan itu MEMBESAR sebentar — menaikkannya dengan sengaja?',
+        subtext: 'Saat kamu sendiri yang menaikkannya, kamu sadar ini sesuatu yang kamu LAKUKAN, bukan yang menguasaimu. Justru itu yang membuatnya bisa dilepas.',
+        highlight: 'Bisa' });
+      // 3) Rasakan seutuhnya.
+      out.push({ type: 'instruction',
+        text: 'Sekarang rasakan keinginan itu SEUTUHNYA — penuh, tanpa ditahan. Di mana ia terasa di tubuh?',
+        subtext: 'Semakin penuh kamu merasakannya, semakin mudah ia dilepaskan.',
+        duration: 11000 });
+      done = true;
+    }
+    out.push(step);
+  });
+  script.steps = out;
+  script._wantingDeepened = true;
+  return script;
+}
+
 // ==================== MODE PERJALANAN (hands-free / travel) ====================
 // Logika transform skrip kini terpusat di releasing-engine.js (berlaku untuk
 // semua modul). Di sini hanya wrapper tipis untuk membaca status toggle.
@@ -480,7 +520,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initialize ReleasingEngine with emosi scripts
   if (typeof ReleasingEngine !== 'undefined') {
     Object.keys(emosiScripts).forEach(function(key) {
-      ReleasingEngine.getScripts()[key] = injectMindRest(injectWitness(emosiScripts[key]));
+      ReleasingEngine.getScripts()[key] = injectMindRest(injectWitness(injectWantingDeepening(emosiScripts[key])));
     });
   }
 });
@@ -509,7 +549,7 @@ function startEmosi(emosiId, forceTravel) {
   // Register the base script once; the engine applies the hands-free transform
   // itself when travel mode is on (global toggle) or forced for this run.
   if (!ReleasingEngine.getScript(emosiId)) {
-    ReleasingEngine.getScripts()[emosiId] = injectMindRest(injectWitness(emosiScripts[emosiId]));
+    ReleasingEngine.getScripts()[emosiId] = injectMindRest(injectWitness(injectWantingDeepening(emosiScripts[emosiId])));
   }
 
   ReleasingEngine.startReleasing(emosiId, {
