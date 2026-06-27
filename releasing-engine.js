@@ -2057,7 +2057,18 @@ const ReleasingEngine = (function() {
   // user always has ample time before it continues on its own.
   var PACE_MULTIPLIER = 1.5;
   var MIN_AUTO_MS = 20000;
-  function pacedMs(d) { return Math.max(Math.round((d || 0) * PACE_MULTIPLIER), MIN_AUTO_MS); }
+  // A script may override pacing via script.pace = { mult, min } (ms). Modules
+  // with many short steps (e.g. 9 Emosi) use a lower multiplier + floor so each
+  // step lasts only as long as it needs to, instead of a uniform 20s.
+  function pacedMs(d) {
+    var mult = PACE_MULTIPLIER, floor = MIN_AUTO_MS;
+    var pace = currentSession && currentSession.script && currentSession.script.pace;
+    if (pace) {
+      if (typeof pace.mult === 'number') mult = pace.mult;
+      if (typeof pace.min === 'number') floor = pace.min;
+    }
+    return Math.max(Math.round((d || 0) * mult), floor);
+  }
   // Visual countdown bar shown on auto-advancing steps so the user can see it
   // will continue on its own (and can tap to go faster).
   function autoBar(ms) {
@@ -2538,6 +2549,7 @@ const ReleasingEngine = (function() {
       title: (src.title || 'Sesi') + ' · Mode Perjalanan',
       description: 'Versi hands-free — semua otomatis dengan timer & suara',
       wantingType: src.wantingType || null,
+      pace: src.pace || null,   // pertahankan pacing kustom modul (mis. 9 Emosi)
       steps: body,
       _travel: true
     };
