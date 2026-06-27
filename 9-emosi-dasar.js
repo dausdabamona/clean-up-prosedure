@@ -361,6 +361,47 @@ function injectMindRest(script) {
   return script;
 }
 
+// ==================== KESADARAN / WITNESS (gaya Coach Lia) ====================
+// Pertanyaan khas: mengajak mundur dari emosi ke KESADARAN yang menyaksikannya —
+// "Apakah kamu emosi itu, atau kamu yang SADAR bahwa emosi itu ada?". Ini inti
+// self-inquiry Lester Levenson/Sedona yang sering dipakai Coach Lia. Disisipkan
+// tepat setelah langkah pertama "menyambut" emosi, sebelum mulai melepas.
+const WITNESS_PROMPTS = [
+  { text: 'Sekarang tanyakan pelan-pelan: Apakah kamu ADALAH perasaan ini — atau kamu yang SADAR bahwa perasaan ini ada?',
+    subtext: 'Perhatikan: ada perasaan, dan ada KAMU yang menyadarinya. Kamu bukan perasaannya; kamu ruang kesadaran tempat ia datang dan pergi.' },
+  { text: 'Apakah kamu perasaan ini, atau kamu yang MENYAKSIKAN perasaan ini?',
+    subtext: 'Kalau kamu bisa menyadarinya, berarti kamu bukan ia. Ia hanya tamu yang sedang lewat.' },
+  { text: 'Mundur selangkah... Siapa yang sedang menyadari perasaan ini?',
+    subtext: 'Yang menyaksikan selalu tenang — tak tersentuh oleh emosi yang datang dan pergi.' },
+  { text: 'Apakah perasaan ini DIRIMU, atau sesuatu yang sedang kamu ALAMI?',
+    subtext: 'Kamu adalah yang sadar — bukan yang muncul di dalam kesadaran itu. Dari sini, melepas jadi wajar.' }
+];
+
+// Sisipkan pertanyaan kesadaran setelah langkah 'yesno' pertama (saat menyambut
+// emosi). Hanya untuk skrip emosi negatif (positif fokusnya memenuhi, bukan
+// melepas). fullRelease (tanpa field type) ikut mendapat satu sisipan.
+function injectWitness(script) {
+  if (!script || !script.steps || script._witnessInjected) return script;
+  if (script.type && script.type !== 'negative') { script._witnessInjected = true; return script; }
+  const out = [];
+  let inserted = false;
+  const p = WITNESS_PROMPTS[(script.title ? script.title.length : 0) % WITNESS_PROMPTS.length];
+  script.steps.forEach(function (step) {
+    out.push(step);
+    if (!inserted && step.type === 'yesno') {
+      out.push({ type: 'instruction', text: p.text, subtext: p.subtext, duration: 13000 });
+      out.push({ type: 'instruction',
+        text: 'Kalau kamu yang SADAR akan perasaan itu... berarti perasaan itu bukan dirimu. Ia boleh ada, dan ia boleh pergi.',
+        subtext: 'Dari tempat kesadaran yang tenang ini, izinkan ia hadir — lalu biarkan ia berlalu.',
+        duration: 11000 });
+      inserted = true;
+    }
+  });
+  script.steps = out;
+  script._witnessInjected = true;
+  return script;
+}
+
 // ==================== MODE PERJALANAN (hands-free / travel) ====================
 // Logika transform skrip kini terpusat di releasing-engine.js (berlaku untuk
 // semua modul). Di sini hanya wrapper tipis untuk membaca status toggle.
@@ -439,7 +480,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initialize ReleasingEngine with emosi scripts
   if (typeof ReleasingEngine !== 'undefined') {
     Object.keys(emosiScripts).forEach(function(key) {
-      ReleasingEngine.getScripts()[key] = injectMindRest(emosiScripts[key]);
+      ReleasingEngine.getScripts()[key] = injectMindRest(injectWitness(emosiScripts[key]));
     });
   }
 });
@@ -468,7 +509,7 @@ function startEmosi(emosiId, forceTravel) {
   // Register the base script once; the engine applies the hands-free transform
   // itself when travel mode is on (global toggle) or forced for this run.
   if (!ReleasingEngine.getScript(emosiId)) {
-    ReleasingEngine.getScripts()[emosiId] = injectMindRest(emosiScripts[emosiId]);
+    ReleasingEngine.getScripts()[emosiId] = injectMindRest(injectWitness(emosiScripts[emosiId]));
   }
 
   ReleasingEngine.startReleasing(emosiId, {
