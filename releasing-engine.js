@@ -1792,6 +1792,8 @@ const ReleasingEngine = (function() {
 
     applyTravelSetTitle();
     modalElement.classList.add('active');
+    // Keep the screen awake during the session (helps TTS keep playing).
+    if (typeof acquireWakeLock === 'function') acquireWakeLock();
 
     // Update sequence indicator if in sequential mode
     updateSequenceIndicator();
@@ -2504,6 +2506,7 @@ const ReleasingEngine = (function() {
     sequentialTravel = false; // clear forced hands-free when the session ends
     travelSetsTotal = 1;
     travelSetIndex = 0;
+    if (typeof releaseWakeLock === 'function') releaseWakeLock();
   }
 
   // ==================== UTILITY ====================
