@@ -575,6 +575,95 @@ function skipTimer() {
 }
 
 // ==========================================================================
+// HANDS-FREE (Mode Perjalanan) — auto-advance + suara, tanpa ketukan
+// Memakai flag global 'sedonaTravelMode' (sama dgn modul lain). Modul ini
+// punya wizard sendiri, jadi auto-advance & TTS diimplementasikan di sini.
+// ==========================================================================
+function rsHandsFree() {
+  try { return localStorage.getItem('sedonaTravelMode') === 'true'; } catch (e) { return false; }
+}
+function rsTtsOn() {
+  try { return localStorage.getItem('sedonaTTS') !== 'false'; } catch (e) { return true; }
+}
+let rsTtsVoice = null;
+function rsLoadVoice() {
+  if (!('speechSynthesis' in window)) return;
+  const voices = window.speechSynthesis.getVoices() || [];
+  let uri = null; try { uri = localStorage.getItem('sedonaTTSVoice'); } catch (e) {}
+  rsTtsVoice = (uri && voices.find(v => v.voiceURI === uri)) ||
+               voices.find(v => /id[-_]?id/i.test(v.lang)) ||
+               voices.find(v => /^id/i.test(v.lang)) || null;
+}
+function rsSpeak(text) {
+  if (!rsHandsFree() || !rsTtsOn() || !('speechSynthesis' in window) || !text) return;
+  try {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(String(text));
+    u.lang = (rsTtsVoice && rsTtsVoice.lang) || 'id-ID';
+    if (rsTtsVoice) u.voice = rsTtsVoice;
+    let rate = 0.95; try { const r = parseFloat(localStorage.getItem('sedonaTTSRate')); if (!isNaN(r)) rate = r; } catch (e) {}
+    u.rate = rate; u.pitch = 1.0;
+    window.speechSynthesis.speak(u);
+  } catch (e) {}
+}
+function rsStopSpeak() { try { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); } catch (e) {} }
+
+let rsAutoTimer = null;
+function rsClearAuto() { if (rsAutoTimer) { clearTimeout(rsAutoTimer); rsAutoTimer = null; } }
+function rsScheduleAuto(ms, fn) {
+  rsClearAuto();
+  if (!rsHandsFree()) return;
+  rsAutoTimer = setTimeout(function () { rsClearAuto(); fn(); }, ms);
+}
+
+// Bacakan judul + teks utama langkah aktif.
+function rsSpeakStep(step) {
+  const el = document.getElementById('step-' + step);
+  if (!el) return;
+  const title = el.querySelector('.step-title');
+  const text = el.querySelector('.step-text') || el.querySelector('.step-subtext');
+  const parts = [];
+  if (title) parts.push(title.textContent.trim());
+  if (text) parts.push(text.textContent.replace(/\s+/g, ' ').trim());
+  rsSpeak(parts.join('. '));
+}
+
+// Auto-advance untuk langkah yang tidak mengatur timernya sendiri.
+// Langkah 1 & 6 (timer) dan 4,5,7 (reveal pertanyaan) menjadwalkan sendiri.
+function rsScheduleStep(step) {
+  if (!rsHandsFree()) return;
+  if (step === 2 || step === 3) {
+    rsScheduleAuto(15000, nextStep);          // langkah isian: pakai nilai default
+  } else if (step === 8) {
+    rsScheduleAuto(14000, completeSession);    // hasil: simpan & selesai otomatis
+  }
+}
+
+// Toggle Mode Perjalanan (disuntik di halaman utama & halaman sesi).
+function rsInjectTravelToggle() {
+  if (document.getElementById('travelModeToggle')) return;
+  const anchor = document.querySelector('main') || document.querySelector('.main-content');
+  if (!anchor || !anchor.parentNode) return;
+  const box = document.createElement('div');
+  box.style.cssText = 'margin:1rem auto;max-width:720px;padding:.6rem .8rem;'
+    + 'background:rgba(40,116,166,.06);border:1px solid rgba(40,116,166,.2);border-radius:10px;';
+  box.innerHTML = '<label style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:#555;cursor:pointer;">'
+    + '<input type="checkbox" id="travelModeToggle">'
+    + '<span>🚗 <strong>Mode Perjalanan</strong> (hands-free) — sesi berjalan otomatis dengan timer & suara, '
+    + 'tanpa perlu mengetuk. Aktifkan sebelum memulai sesi hari ini. Cocok saat di jalan.</span></label>';
+  anchor.parentNode.insertBefore(box, anchor);
+  const cb = box.querySelector('#travelModeToggle');
+  cb.checked = rsHandsFree();
+  cb.addEventListener('change', function () {
+    try {
+      localStorage.setItem('sedonaTravelMode', cb.checked ? 'true' : 'false');
+      if (cb.checked) { localStorage.setItem('sedonaAutoAdvance', 'true'); localStorage.setItem('sedonaTTS', 'true'); }
+    } catch (e) {}
+    if (cb.checked) showToast('🚗 Mode Perjalanan aktif — sesi berjalan otomatis dengan suara', 'success');
+  });
+}
+
+// ==========================================================================
 // SESSION WIZARD
 // ==========================================================================
 
@@ -631,6 +720,10 @@ function renderAreaOptions(defaultFocus) {
 }
 
 function showStep(step) {
+  // Cancel any pending hands-free auto-advance / speech from the previous step.
+  rsClearAuto();
+  rsStopSpeak();
+
   // Hide all steps
   document.querySelectorAll('.wizard-step').forEach(el => {
     el.classList.remove('active');
@@ -649,8 +742,11 @@ function showStep(step) {
 
   currentStep = step;
 
-  // Step-specific initialization
+  // Hands-free: read the step aloud, then run step-specific init (timers /
+  // question reveals schedule their own auto-advance), then schedule the rest.
+  rsSpeakStep(step);
   initStepContent(step);
+  rsScheduleStep(step);
 }
 
 function updateStepIndicator(step) {
@@ -678,6 +774,7 @@ function initStepContent(step) {
     case 1: // STOP
       startTimer(timerDuration, () => {
         enableNextButton(1);
+        if (rsHandsFree()) nextStep();
       });
       break;
 
@@ -692,6 +789,7 @@ function initStepContent(step) {
     case 6: // ISTIRAHAT
       startTimer(timerDuration, () => {
         enableNextButton(6);
+        if (rsHandsFree()) nextStep();
       });
       break;
 
@@ -719,6 +817,8 @@ function showQuestionsSequentially(stepId) {
 
   const questions = stepEl.querySelectorAll('.question-reveal');
   let index = 0;
+  const hf = rsHandsFree();
+  const myStep = currentStep; // guard against navigation mid-reveal
 
   // Hide all first
   questions.forEach(q => {
@@ -727,17 +827,23 @@ function showQuestionsSequentially(stepId) {
   });
 
   const showNext = () => {
+    if (currentStep !== myStep) return; // user moved on; stop
     if (index < questions.length) {
       const q = questions[index];
       q.style.transition = 'all 0.5s ease';
       q.style.opacity = '1';
       q.style.transform = 'translateY(0)';
+      if (hf) rsSpeak(q.textContent.replace(/\s+/g, ' ').trim()); // bacakan tiap pertanyaan
       index++;
       setTimeout(showNext, 3000);
+    } else if (hf) {
+      // Semua pertanyaan sudah tampil & dibacakan — lanjut otomatis.
+      rsScheduleAuto(3500, nextStep);
     }
   };
 
-  setTimeout(showNext, 500);
+  // Beri jeda awal lebih panjang saat hands-free agar judul selesai dibacakan.
+  setTimeout(showNext, hf ? 1800 : 500);
 }
 
 function nextStep() {
@@ -752,6 +858,8 @@ function nextStep() {
 function prevStep() {
   if (currentStep > 1) {
     stopTimer();
+    rsClearAuto();
+    rsStopSpeak();
     showStep(currentStep - 1);
   }
 }
@@ -788,6 +896,8 @@ function updateResultsComparison() {
 }
 
 function completeSession() {
+  rsClearAuto();
+  rsStopSpeak();
   // Save final data
   currentSession.afterRating = parseInt(document.getElementById('after-rating')?.value) || 0;
   currentSession.notes = document.getElementById('session-notes')?.value || '';
@@ -861,6 +971,13 @@ function updateSliderValue(sliderId, displayId) {
 // ==========================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Hands-free voice + travel toggle (shared across both pages).
+  rsLoadVoice();
+  if ('speechSynthesis' in window) {
+    try { window.speechSynthesis.onvoiceschanged = rsLoadVoice; } catch (e) {}
+  }
+  rsInjectTravelToggle();
+
   // Main page initialization
   if (document.getElementById('days-container')) {
     renderDayCards();
