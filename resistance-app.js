@@ -678,6 +678,8 @@ function initSessionWizard() {
 
   currentSession = createSession(day);
   sessionStartTime = Date.now();
+  // Keep the screen awake during the session (helps TTS keep playing).
+  if (typeof acquireWakeLock === 'function') acquireWakeLock();
 
   // Update UI
   const titleEl = document.getElementById('session-title');
@@ -898,6 +900,7 @@ function updateResultsComparison() {
 function completeSession() {
   rsClearAuto();
   rsStopSpeak();
+  if (typeof releaseWakeLock === 'function') releaseWakeLock();
   // Save final data
   currentSession.afterRating = parseInt(document.getElementById('after-rating')?.value) || 0;
   currentSession.notes = document.getElementById('session-notes')?.value || '';

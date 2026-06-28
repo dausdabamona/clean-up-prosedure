@@ -314,6 +314,46 @@ function saveSettings(settings) {
 }
 
 // ==========================================================================
+// SCREEN WAKE LOCK
+// Keeps the screen awake during a guided session so it doesn't auto-dim/lock
+// (and so TTS keeps running). NOTE: browser TTS still stops if the user locks
+// the screen manually or backgrounds the tab — this only prevents the
+// automatic timeout. Safe no-op where the Wake Lock API is unavailable.
+// ==========================================================================
+let _wakeSentinel = null;
+let _wakeWanted = false;
+
+async function acquireWakeLock() {
+  _wakeWanted = true;
+  if (!('wakeLock' in navigator)) return false;
+  try {
+    if (_wakeSentinel) return true;
+    _wakeSentinel = await navigator.wakeLock.request('screen');
+    _wakeSentinel.addEventListener('release', function () { _wakeSentinel = null; });
+    return true;
+  } catch (e) { return false; }
+}
+
+function releaseWakeLock() {
+  _wakeWanted = false;
+  if (_wakeSentinel) {
+    try { _wakeSentinel.release(); } catch (e) {}
+    _wakeSentinel = null;
+  }
+}
+
+// The OS releases the lock when the tab is hidden; re-acquire on return if we
+// still want it (e.g. user switched apps and came back to a running session).
+document.addEventListener('visibilitychange', function () {
+  if (_wakeWanted && document.visibilityState === 'visible' && !_wakeSentinel) {
+    acquireWakeLock();
+  }
+});
+
+window.acquireWakeLock = acquireWakeLock;
+window.releaseWakeLock = releaseWakeLock;
+
+// ==========================================================================
 // EXPORT FOR GLOBAL ACCESS
 // ==========================================================================
 window.SedonaCommon = {

@@ -399,6 +399,8 @@
     state.currentWanting = 'control';
     saveDraft();
     renderProgress();
+    // Keep the screen awake during the session (helps TTS keep playing).
+    if (typeof acquireWakeLock === 'function') acquireWakeLock();
     if (settings.grounding) showGrounding(); else startWanting('control');
   }
 
@@ -755,6 +757,7 @@
 
   // ====================== SUMMARY / FINISH ======================
   function showSummary() {
+    if (typeof releaseWakeLock === 'function') releaseWakeLock();
     state.status = 'complete';
     state.completedAt = new Date().toISOString();
     state.durationMin = state.startTime ? Math.round((Date.now() - state.startTime) / 60000) : 0;
@@ -814,6 +817,7 @@
   }
 
   function saveAndExit() {
+    if (typeof releaseWakeLock === 'function') releaseWakeLock();
     state.status = 'ongoing';
     saveDraft();
     persistSession();
@@ -1166,6 +1170,7 @@
 
   // Resume re-enters at the current wanting's intro (safe, never mid-screen).
   function resumeFlow() {
+    if (typeof acquireWakeLock === 'function') acquireWakeLock();
     const w = WANTING_ORDER.indexOf(state.currentWanting) >= 0 ? state.currentWanting : 'control';
     startWanting(w);
   }
