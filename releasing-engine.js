@@ -1402,6 +1402,7 @@ const ReleasingEngine = (function() {
   let currentSession = null;
   let sequentialQueue = [];
   let sequentialIndex = 0;
+  let sequentialTravel = false; // force hands-free across a whole sequence
   let modalElement = null;
   let callbacks = {};
 
@@ -1750,7 +1751,7 @@ const ReleasingEngine = (function() {
     // Hands-free (travel) mode: transform the script to an all-timer version so
     // it runs without any taps. Triggered by the global toggle or options.travel.
     // scriptId stays the base id so progress/logging are unaffected.
-    if (options.travel || travelModeEnabled()) {
+    if (options.travel || sequentialTravel || travelModeEnabled()) {
       script = buildTravelScript(script);
       try {
         localStorage.setItem('sedonaAutoAdvance', 'true');
@@ -1810,6 +1811,9 @@ const ReleasingEngine = (function() {
     }
 
     sequentialIndex = 0;
+    // Remember the hands-free choice so EVERY script in the sequence is paced
+    // the same way (proceedToNextInSequence calls startReleasing without opts).
+    sequentialTravel = !!options.travel;
 
     // Store sequence complete callback
     if (options.onSequenceComplete) {
@@ -2460,6 +2464,7 @@ const ReleasingEngine = (function() {
       modalElement.classList.remove('active');
     }
     currentSession = null;
+    sequentialTravel = false; // clear forced hands-free when the session ends
   }
 
   // ==================== UTILITY ====================
