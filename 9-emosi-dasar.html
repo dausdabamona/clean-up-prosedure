@@ -420,9 +420,17 @@
       </label>
 
       <!-- Travel mode: hands-free, semua otomatis dengan timer + suara -->
-      <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;color:#555;margin:0 0 1rem;cursor:pointer;">
+      <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;color:#555;margin:0 0 0.4rem;cursor:pointer;">
         <input type="checkbox" id="travelModeToggle">
         <span>🚗 <strong>Mode Perjalanan</strong> (hands-free) — semua langkah berjalan otomatis dengan timer & suara, tanpa perlu mengetuk. Urutan & pertanyaan sama; jawaban cukup "dalam hati". Cocok saat di jalan. Suara & auto-lanjut otomatis nyala.</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;color:#555;margin:0 0 1rem;cursor:pointer;">
+        <span>🔁 Ulangi</span>
+        <select id="travelSetsSelect" style="padding:0.2rem 0.4rem;border-radius:6px;">
+          <option value="1">1 set</option><option value="2">2 set</option><option value="3">3 set</option>
+          <option value="4">4 set</option><option value="5">5 set</option>
+        </select>
+        <span>otomatis berturut-turut (Mode Perjalanan)</span>
       </label>
 
       <!-- Quick Release -->
