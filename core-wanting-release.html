@@ -39,9 +39,14 @@
     .cw-start:hover { filter: brightness(1.08); }
 
     .cw-all {
-      display: block; width: 100%; margin: 0 0 1.25rem; padding: 0.95rem; border: none; border-radius: 10px;
+      display: block; width: 100%; margin: 0 0 0.6rem; padding: 0.95rem; border: none; border-radius: 10px;
       background: linear-gradient(135deg, #5D4E6D, #8B7355); color: #fff; font-weight: 700; font-size: 1.1rem; cursor: pointer;
     }
+    .cw-all-travel {
+      display: block; width: 100%; margin: 0 0 1.25rem; padding: 0.95rem; border: none; border-radius: 10px;
+      background: linear-gradient(135deg, #2874a6, #1f6391); color: #fff; font-weight: 700; font-size: 1.05rem; cursor: pointer;
+    }
+    .cw-all-travel small { display:block; font-weight:500; font-size:0.78rem; opacity:0.9; margin-top:0.15rem; }
 
     .cw-prog-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; margin-top: 0.75rem; }
     .cw-prog { background: var(--bg-light); border-radius: 10px; padding: 0.8rem; text-align: center; }
@@ -94,6 +99,9 @@
       </div>
 
       <button class="cw-all" onclick="startAllWantings()">🌊 Release Keempat Wanting Sekaligus</button>
+      <button class="cw-all-travel" onclick="startAllWantings(true)">🚗 Mode Lengkap Hands-Free
+        <small>Keempat wanting dalam 1 sesi, berjalan otomatis dengan suara — tanpa perlu mengetuk</small>
+      </button>
 
       <div class="cw-grid">
         <div class="cw-card" style="--c:#2874a6" onclick="startWanting('control')">

@@ -116,8 +116,10 @@ function startWanting(id) {
   ReleasingEngine.startReleasing(eid);
 }
 
-// Release the 4 wantings back-to-back (sequential).
-function startAllWantings() {
+// Release the 4 wantings back-to-back (sequential) in a single session.
+// forceTravel = true menjalankan seluruh sesi hands-free (timer + suara,
+// tanpa perlu mengetuk) — "mode lengkap mode perjalanan".
+function startAllWantings(forceTravel) {
   if (typeof ReleasingEngine === 'undefined') { showToast('ReleasingEngine tidak tersedia', 'error'); return; }
   const order = ['control', 'approval', 'security', 'separation'];
   // Ensure scripts are registered, then run by their prefixed engine ids.
@@ -126,7 +128,11 @@ function startAllWantings() {
       ReleasingEngine.getScripts()[cwEngineId(k)] = buildWantingScript(CORE_WANTINGS[k]);
     }
   });
+  if (forceTravel) {
+    showToast('🚗 Mode Perjalanan — keempat wanting berjalan otomatis dengan suara', 'success');
+  }
   ReleasingEngine.startSequentialReleasing(order.map(cwEngineId), {
+    travel: !!forceTravel,
     onSequenceComplete: function () {
       order.forEach(function (k) { cwProgress[k] = (cwProgress[k] || 0) + 1; });
       cwProgress.total = (cwProgress.total || 0) + 4;
