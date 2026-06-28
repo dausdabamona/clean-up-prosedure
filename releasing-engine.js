@@ -1403,6 +1403,8 @@ const ReleasingEngine = (function() {
   let sequentialQueue = [];
   let sequentialIndex = 0;
   let sequentialTravel = false; // force hands-free across a whole sequence
+  let travelSetsTotal = 1;      // how many times a travel session repeats
+  let travelSetIndex = 0;       // which set we're on (0-based)
   let modalElement = null;
   let callbacks = {};
 
@@ -1751,12 +1753,21 @@ const ReleasingEngine = (function() {
     // Hands-free (travel) mode: transform the script to an all-timer version so
     // it runs without any taps. Triggered by the global toggle or options.travel.
     // scriptId stays the base id so progress/logging are unaffected.
-    if (options.travel || sequentialTravel || travelModeEnabled()) {
+    var useTravel = options.travel || sequentialTravel || travelModeEnabled();
+    if (useTravel) {
       script = buildTravelScript(script);
       try {
         localStorage.setItem('sedonaAutoAdvance', 'true');
         localStorage.setItem('sedonaTTS', 'true');
       } catch (e) {}
+    }
+
+    // Travel mode can repeat the whole thing for several "sets". Initialize the
+    // counter on a FRESH standalone start (sequences are initialized in
+    // startSequentialReleasing; per-set restarts don't call startReleasing).
+    if (useTravel && sequentialQueue.length === 0) {
+      travelSetsTotal = getTravelSets();
+      travelSetIndex = 0;
     }
 
     // Initialize if needed
@@ -1779,7 +1790,7 @@ const ReleasingEngine = (function() {
       vars: {} // stores intensity values for loop steps
     };
 
-    document.getElementById('re-modal-title').textContent = script.title;
+    applyTravelSetTitle();
     modalElement.classList.add('active');
 
     // Update sequence indicator if in sequential mode
@@ -1814,6 +1825,10 @@ const ReleasingEngine = (function() {
     // Remember the hands-free choice so EVERY script in the sequence is paced
     // the same way (proceedToNextInSequence calls startReleasing without opts).
     sequentialTravel = !!options.travel;
+    // Sets repeat the whole sequence; initialize here (startReleasing skips its
+    // own init while a sequence is active).
+    travelSetsTotal = sequentialTravel ? getTravelSets() : 1;
+    travelSetIndex = 0;
 
     // Store sequence complete callback
     if (options.onSequenceComplete) {
@@ -2370,6 +2385,28 @@ const ReleasingEngine = (function() {
         return;
       }
 
+      // Travel mode "sets": if more sets remain, repeat the whole thing instead
+      // of finishing. Intermediate sets are silent (no log/onComplete spam);
+      // only the final set runs the normal completion below.
+      var moreInSequence = sequentialQueue.length > 0 && sequentialIndex < sequentialQueue.length - 1;
+      if (!moreInSequence && currentSession.script._travel && (travelSetIndex + 1) < travelSetsTotal) {
+        travelSetIndex++;
+        if (sequentialQueue.length > 0) {
+          // Restart the whole sequence from the first script.
+          sequentialIndex = 0;
+          setTimeout(function () { startReleasing(sequentialQueue[0]); }, 500);
+        } else {
+          // Restart this single script from the top.
+          currentSession.currentStep = 0;
+          currentSession.vars = {};
+          currentSession.releaseCount = 0;
+          currentSession.startTime = Date.now();
+          applyTravelSetTitle();
+          renderStep(0);
+        }
+        return;
+      }
+
       // Complete this session
       logCurrentSession('');
       callbacks.onComplete({
@@ -2465,6 +2502,8 @@ const ReleasingEngine = (function() {
     }
     currentSession = null;
     sequentialTravel = false; // clear forced hands-free when the session ends
+    travelSetsTotal = 1;
+    travelSetIndex = 0;
   }
 
   // ==================== UTILITY ====================
@@ -2487,6 +2526,24 @@ const ReleasingEngine = (function() {
   // Urutan & pertanyaan tetap sama; jawaban interaktif jadi ajakan "dalam hati".
   function travelModeEnabled() {
     try { return localStorage.getItem('sedonaTravelMode') === 'true'; } catch (e) { return false; }
+  }
+
+  // How many times a hands-free session should repeat (1–9 sets). Stored in the
+  // shared 'sedonaTravelSets' key so the choice applies across modules.
+  function getTravelSets() {
+    try {
+      var n = parseInt(localStorage.getItem('sedonaTravelSets'), 10);
+      return (n >= 1 && n <= 9) ? n : 1;
+    } catch (e) { return 1; }
+  }
+
+  // Show the session title plus the current set number when repeating.
+  function applyTravelSetTitle() {
+    var elTitle = document.getElementById('re-modal-title');
+    if (!elTitle || !currentSession) return;
+    var base = (currentSession.script && currentSession.script.title) || '';
+    if (travelSetsTotal > 1) base += ' · Set ' + (travelSetIndex + 1) + '/' + travelSetsTotal;
+    elTitle.textContent = base;
   }
 
   function buildTravelScript(src) {
@@ -2577,21 +2634,35 @@ const ReleasingEngine = (function() {
       if (document.getElementById('travelModeToggle')) return;
       var anchor = document.querySelector('.container') || document.querySelector('main') || document.body;
       if (!anchor) return;
-      var wrap = document.createElement('label');
-      wrap.style.cssText = 'display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:#555;'
-        + 'margin:1rem auto;max-width:900px;padding:.6rem .8rem;cursor:pointer;'
+      var box = document.createElement('div');
+      box.style.cssText = 'margin:1rem auto;max-width:900px;padding:.6rem .8rem;'
         + 'background:rgba(40,116,166,.06);border:1px solid rgba(40,116,166,.2);border-radius:10px;';
-      wrap.innerHTML = '<input type="checkbox" id="travelModeToggle">'
+      box.innerHTML =
+        '<label style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:#555;cursor:pointer;">'
+        + '<input type="checkbox" id="travelModeToggle">'
         + '<span>🚗 <strong>Mode Perjalanan</strong> (hands-free) — semua langkah otomatis dengan '
         + 'timer & suara, tanpa perlu mengetuk. Urutan & pertanyaan sama; jawaban cukup "dalam hati". '
-        + 'Cocok saat di jalan.</span>';
-      anchor.insertBefore(wrap, anchor.firstChild);
-      var cb = wrap.querySelector('#travelModeToggle');
+        + 'Cocok saat di jalan.</span></label>'
+        + '<label style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:#555;margin-top:.5rem;cursor:pointer;">'
+        + '<span>🔁 Ulangi</span><select id="travelSetsSelect" style="padding:.2rem .4rem;border-radius:6px;">'
+        + '<option value="1">1 set</option><option value="2">2 set</option><option value="3">3 set</option>'
+        + '<option value="4">4 set</option><option value="5">5 set</option></select>'
+        + '<span>otomatis berturut-turut</span></label>';
+      anchor.insertBefore(box, anchor.firstChild);
+      var cb = box.querySelector('#travelModeToggle');
       cb.checked = travelModeEnabled();
-      cb.addEventListener('change', function () {
-        setTravelMode(cb.checked);
-      });
+      cb.addEventListener('change', function () { setTravelMode(cb.checked); });
+      wireTravelSetsSelect(box.querySelector('#travelSetsSelect'));
     } catch (e) {}
+  }
+
+  // Wire any travel-sets <select> to the shared 'sedonaTravelSets' setting.
+  function wireTravelSetsSelect(sel) {
+    if (!sel) return;
+    sel.value = String(getTravelSets());
+    sel.addEventListener('change', function () {
+      try { localStorage.setItem('sedonaTravelSets', sel.value); } catch (e) {}
+    });
   }
 
   if (typeof document !== 'undefined') {
@@ -2624,7 +2695,9 @@ const ReleasingEngine = (function() {
     getWantingScriptId: getWantingScriptId,
     isTravelMode: travelModeEnabled,
     setTravelMode: setTravelMode,
-    buildTravelScript: buildTravelScript
+    buildTravelScript: buildTravelScript,
+    getTravelSets: getTravelSets,
+    wireTravelSetsSelect: wireTravelSetsSelect
   };
 
 })();

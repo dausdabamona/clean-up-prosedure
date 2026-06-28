@@ -559,6 +559,17 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // Jumlah set pengulangan untuk Mode Perjalanan (dipakai bersama via engine).
+  var setsSelect = document.getElementById('travelSetsSelect');
+  if (setsSelect && typeof ReleasingEngine !== 'undefined' && ReleasingEngine.wireTravelSetsSelect) {
+    ReleasingEngine.wireTravelSetsSelect(setsSelect);
+  } else if (setsSelect) {
+    setsSelect.value = localStorage.getItem('sedonaTravelSets') || '1';
+    setsSelect.addEventListener('change', function () {
+      localStorage.setItem('sedonaTravelSets', setsSelect.value);
+    });
+  }
+
   // Initialize ReleasingEngine with emosi scripts
   if (typeof ReleasingEngine !== 'undefined') {
     Object.keys(emosiScripts).forEach(function(key) {
